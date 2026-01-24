@@ -2,7 +2,8 @@
         const categories = {
         flags: (typeof flagData !== 'undefined') ? flagData : [],
         pokemon: (typeof pokemonData !== 'undefined') ? pokemonData : [],
-        hockey: (typeof hockeyData !== 'undefined') ? hockeyData : []
+        hockey: (typeof hockeyData !== 'undefined') ? hockeyData : [],
+        math: (typeof mathData !== 'undefined') ? mathData : []
     };
 
         // --- GAME LOGIC ---
@@ -151,8 +152,8 @@
                 document.getElementById('p2-boost-btn').textContent = 'Time Boost? (+5s)';
             }
             
-            // SHUFFLE: Randomize the order every time, unless in host mode
-            if (hostMode) {
+            // SHUFFLE: Randomize the order every time, unless in host mode or math (math keeps difficulty order)
+            if (hostMode || cat === 'math') {
                 currentPool = [...categories[cat]];
             } else {
                 currentPool = [...categories[cat]].sort(() => Math.random() - 0.5);
@@ -235,6 +236,7 @@
             imgFrame.innerHTML = `
                 <div id="overlay"></div>
                 <img id="prompt-image" src="" onerror="handleImageError(this)" style="display: none;">
+                <div id="math-problem" class="math-problem"></div>
                 <div id="pause-overlay">
                     <span class="pause-text">PAUSED</span>
                     <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
@@ -494,6 +496,7 @@
                 imgFrame.innerHTML = `
                     <div id="overlay"></div>
                     <img id="prompt-image" src="" onerror="handleImageError(this)">
+                    <div id="math-problem" class="math-problem"></div>
                     <div id="pause-overlay">
                         <span class="pause-text">PAUSED</span>
                         <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
@@ -595,6 +598,7 @@
                 container.innerHTML = `
                     <div id="overlay"></div>
                     <img id="prompt-image" src="" onerror="handleImageError(this)">
+                    <div id="math-problem" class="math-problem"></div>
                     <div id="pause-overlay">
                         <span class="pause-text">PAUSED</span>
                         <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
@@ -606,6 +610,9 @@
                 img = document.getElementById('prompt-image');
             }
             
+            const item = currentPool[currentIndex];
+            const isMath = item && typeof item.q === 'string';
+            
             // Reset error handler flag
             img.dataset.errorHandled = 'false';
             
@@ -614,12 +621,21 @@
                 fallback.remove();
             }
             
-            // Reset container display and show image
             container.style.display = 'block';
-            img.style.display = 'block';
             
-            // Load the new image
-            img.src = currentPool[currentIndex].u;
+            const mp = document.getElementById('math-problem');
+            if (isMath) {
+                img.style.display = 'none';
+                if (mp) {
+                    mp.textContent = item.q;
+                    mp.classList.add('show');
+                }
+                img.src = item.u;
+            } else {
+                img.style.display = 'block';
+                if (mp) mp.classList.remove('show');
+                img.src = item.u;
+            }
         }
 
         function updateDisplay() {
@@ -915,6 +931,7 @@
         imgFrame.innerHTML = `
             <div id="overlay"></div>
             <img id="prompt-image" src="" onerror="handleImageError(this)">
+            <div id="math-problem" class="math-problem"></div>
             <div id="pause-overlay">
                 <span class="pause-text">PAUSED</span>
                 <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>

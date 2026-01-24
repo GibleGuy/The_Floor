@@ -6,6 +6,7 @@
     <script src="Categories/flags.js"></script>
     <script src="Categories/pokemon.js"></script>
     <script src="Categories/hockey.js"></script>
+    <script src="Categories/math.js"></script>
 
     <link href="thefloor.css" rel="stylesheet">
 </head>
@@ -121,6 +122,7 @@
     <div class="image-container" id="img-frame">
         <div id="overlay"></div>
         <img id="prompt-image" src="" onerror="handleImageError(this)">
+        <div id="math-problem" class="math-problem"></div>
         <div id="pause-overlay">
             <span class="pause-text">PAUSED</span>
             <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
@@ -138,8 +140,9 @@
             <input type="text" id="category-dropdown" list="category-list" placeholder="Type or select category..." autocomplete="off">
             <datalist id="category-list">
                 <option value="flags">Flags</option>
-                <option value="pokemon">POKEMON</option>
+                <option value="pokemon">Pokemon</option>
                 <option value="hockey">Hockey</option>
+                <option value="math">Math</option>
             </datalist>
             <button class="play-btn" id="play-btn" onclick="startSelectedCategory()">PLAY</button>
         </div>
