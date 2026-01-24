@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Window — The Floor</title>
+    <style>
+        :root { --floor-blue: #001f3f; --floor-yellow: #ffcc00; --floor-green: #2ecc71; --floor-red: #e74c3c; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Arial Black', sans-serif; background: var(--floor-blue); color: white; margin: 0; padding: 16px; }
+        h1 { font-size: 1.5rem; color: var(--floor-yellow); margin: 0 0 16px; }
+        .admin-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+        .admin-header .category-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .admin-header input[type="text"] { padding: 8px 12px; font-size: 1rem; border-radius: 6px; border: 2px solid var(--floor-yellow); background: #222; color: white; min-width: 140px; }
+        .admin-header .play-btn { padding: 8px 20px; font-size: 1rem; background: var(--floor-green); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .admin-header .play-btn:hover { filter: brightness(1.1); }
+        .help-btn { width: 36px; height: 36px; border-radius: 6px; background: rgba(0,0,0,0.8); border: 2px solid var(--floor-yellow); color: var(--floor-yellow); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        .help-btn:hover { background: rgba(0,0,0,0.95); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; padding: 12px; }
+        .card h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 10px; }
+        .card .img-box { width: 100%; aspect-ratio: 3/2; background: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
+        .card .img-box img { width: 100%; height: 100%; object-fit: contain; }
+        .card .img-box .math-text { font-size: 2.5rem; font-weight: bold; color: var(--floor-yellow); }
+        .card .answer { font-size: 1.1rem; color: var(--floor-yellow); font-weight: bold; word-break: break-all; text-align: center; }
+        .timers { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+        .timer-box { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; padding: 12px 20px; min-width: 120px; }
+        .timer-box .label { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
+        .timer-box .value { font-size: 2rem; font-weight: bold; color: var(--floor-yellow); }
+        .admin-controls-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
+        .admin-controls-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
+        .admin-controls-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .admin-ctrl-btn { padding: 10px 15px; font-size: 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: var(--floor-yellow); color: var(--floor-blue); }
+        .admin-ctrl-btn:hover { filter: brightness(1.1); }
+        .admin-ctrl-btn.danger { background: var(--floor-red); color: white; }
+        .admin-ctrl-label { font-size: 0.9rem; color: #aaa; }
+        .admin-ctrl-select { padding: 8px 12px; font-size: 1rem; border-radius: 6px; border: 2px solid var(--floor-yellow); background: #222; color: white; }
+        .host-controls { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
+        .host-controls h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
+        .host-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+        .host-btn { padding: 12px 20px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .host-btn.j { background: var(--floor-green); color: white; }
+        .host-btn.k { background: var(--floor-yellow); color: var(--floor-blue); }
+        .host-btn.l { background: var(--floor-red); color: white; }
+        .host-btn:hover { filter: brightness(1.1); }
+        .help-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .help-overlay.show { display: flex; }
+        .help-content { background: rgba(0,0,0,0.9); border: 3px solid var(--floor-yellow); border-radius: 15px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .help-content h2 { color: var(--floor-yellow); margin-top: 0; }
+        .help-key { display: inline-block; background: #333; padding: 4px 8px; border-radius: 4px; font-family: monospace; margin: 0 4px; }
+        .placeholder { color: #555; font-size: 0.95rem; }
+        .custom-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
+        .custom-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
+        .custom-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
+        .custom-label { font-size: 0.9rem; color: #aaa; min-width: 100px; }
+        .custom-input { padding: 6px 10px; font-size: 0.95rem; border-radius: 6px; border: 2px solid #444; background: #222; color: white; flex: 1; min-width: 100px; }
+        .radio-group { display: flex; gap: 12px; }
+        .radio-option { display: flex; align-items: center; gap: 4px; }
+        .boost-btn { padding: 8px 14px; font-size: 0.9rem; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #444; color: white; }
+        .boost-btn:hover { filter: brightness(1.2); }
+        .boost-btn.used { background: var(--floor-green); color: white; }
+        .conn-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; }
+        .conn-badge.connected { background: var(--floor-green); color: white; }
+        .conn-badge.disconnected { background: var(--floor-red); color: white; }
+        .no-opener { background: rgba(231,76,60,0.2); border: 2px solid var(--floor-red); border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: center; }
+        .no-opener p { margin: 0 0 8px; }
+        .stats-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
+        .stats-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 10px; }
+        .stat-item { font-size: 0.9rem; margin-bottom: 4px; color: #ccc; }
+        .stat-item span { color: var(--floor-yellow); font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="no-opener-banner" class="no-opener" style="display: none;">
+        <p><strong>Open from the main game page</strong></p>
+        <p>Use the <strong>ADMIN WINDOW</strong> button (enable Host Mode first) on the main game to open this window. It cannot control the game when opened directly.</p>
+    </div>
+    <div class="admin-header">
+        <h1>ADMIN WINDOW</h1>
+        <span id="conn-badge" class="conn-badge disconnected">—</span>
+        <div class="category-row">
+            <input type="text" id="category-input" list="admin-category-list" placeholder="Category..." autocomplete="off">
+            <datalist id="admin-category-list">
+                <option value="flags">Flags</option>
+                <option value="pokemon">Pokemon</option>
+                <option value="hockey">Hockey</option>
+                <option value="math">Math</option>
+            </datalist>
+            <button type="button" class="play-btn" id="admin-load-btn">LOAD</button>
+            <button type="button" class="play-btn" id="admin-start-btn" disabled>START</button>
+            <button type="button" class="help-btn" id="admin-help-btn" title="Help">?</button>
+        </div>
+    </div>
+
+    <div class="timers">
+        <div class="timer-box"><div class="label" id="admin-p1-label">Player 1</div><div class="value" id="admin-p1-timer">45.0</div></div>
+        <div class="timer-box"><div class="label" id="admin-p2-label">Player 2</div><div class="value" id="admin-p2-timer">45.0</div></div>
+        <div class="timer-box"><div class="label">Game</div><div class="value" id="admin-game-timer">—</div></div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>CURRENT</h2>
+            <div class="img-box" id="admin-current-img">
+                <span class="placeholder">—</span>
+            </div>
+            <div class="answer" id="admin-current-answer">—</div>
+        </div>
+        <div class="card">
+            <h2>NEXT</h2>
+            <div class="img-box" id="admin-next-img">
+                <span class="placeholder">—</span>
+            </div>
+            <div class="answer" id="admin-next-answer">—</div>
+        </div>
+    </div>
+
+    <div class="host-controls">
+        <h2>HOST CONTROLS</h2>
+        <div class="host-btns">
+            <button type="button" class="host-btn j" id="admin-btn-j"><strong>J</strong> Correct</button>
+            <button type="button" class="host-btn k" id="admin-btn-k"><strong>K</strong> Pause</button>
+            <button type="button" class="host-btn l" id="admin-btn-l"><strong>L</strong> Pass</button>
+        </div>
+        <div id="admin-active-player" class="custom-row" style="display: none; margin-top: 12px;">
+            <span class="custom-label">Active Player:</span>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="admin-active-p1" name="admin-active" value="1"><label for="admin-active-p1">Player 1</label></div>
+                <div class="radio-option"><input type="radio" id="admin-active-p2" name="admin-active" value="2"><label for="admin-active-p2">Player 2</label></div>
+            </div>
+        </div>
+    </div>
+    <div class="admin-controls-section">
+        <h2>ADMIN CONTROLS</h2>
+        <div class="admin-controls-row">
+            <button type="button" class="admin-ctrl-btn" id="admin-btn-pause">PAUSE</button>
+            <button type="button" class="admin-ctrl-btn danger" id="admin-btn-reset">RESET</button>
+            <label class="admin-ctrl-label">Gamemode:</label>
+            <select id="admin-gamemode" class="admin-ctrl-select">
+                <option value="singleplayer">Singleplayer</option>
+                <option value="classic" selected>Classic</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="custom-section">
+        <h2>CUSTOMIZATION</h2>
+        <div class="custom-row">
+            <label class="custom-label">Left Player:</label>
+            <input type="text" id="admin-p1-name" class="custom-input" placeholder="Challenger">
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Right Player:</label>
+            <input type="text" id="admin-p2-name" class="custom-input" placeholder="Expert">
+        </div>
+        <div class="custom-row">
+            <span class="custom-label">First Player:</span>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="admin-first-left" name="admin-first" value="left" checked><label for="admin-first-left">Left</label></div>
+                <div class="radio-option"><input type="radio" id="admin-first-right" name="admin-first" value="right"><label for="admin-first-right">Right</label></div>
+            </div>
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Time Boosts:</label>
+            <button type="button" class="boost-btn" id="admin-boost-p1">P1 +5s</button>
+            <button type="button" class="boost-btn" id="admin-boost-p2">P2 +5s</button>
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Mute:</label>
+            <input type="checkbox" id="admin-mute" style="width: auto;">
+        </div>
+        <div class="custom-row">
+            <span class="custom-label">Theme:</span>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark" checked><label for="admin-theme-dark">Dark</label></div>
+                <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme" value="light"><label for="admin-theme-light">Light</label></div>
+                <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme" value="gible"><label for="admin-theme-gible">Gible</label></div>
+            </div>
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Confetti:</label>
+            <input type="checkbox" id="admin-confetti" style="width: auto;">
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Disable Extras:</label>
+            <input type="checkbox" id="admin-disable-extras" style="width: auto;">
+        </div>
+        <div class="custom-row">
+            <label class="custom-label">Show Timer Decimal (Players):</label>
+            <input type="checkbox" id="admin-show-timer-decimal" style="width: auto;">
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <h2>STATISTICS</h2>
+        <div class="stat-item">Last Round — Correct: <span id="admin-lr-correct">0</span> | Passed: <span id="admin-lr-passed">0</span></div>
+        <div class="stat-item">Session — Games: <span id="admin-ss-games">0</span> | Correct: <span id="admin-ss-correct">0</span> | Passed: <span id="admin-ss-passed">0</span></div>
+    </div>
+
+    <div class="help-overlay" id="admin-help-overlay">
+        <div class="help-content" onclick="event.stopPropagation()">
+            <h2>HOST CONTROLS</h2>
+            <p><span class="help-key">J</span> Mark as correct</p>
+            <p><span class="help-key">K</span> Pause / Resume</p>
+            <p><span class="help-key">L</span> Pass</p>
+            <button type="button" class="host-btn k" onclick="closeAdminHelp()" style="margin-top:12px">CLOSE</button>
+        </div>
+    </div>
+
+    <script>
+        let lastStateTime = 0;
+        let connCheckInterval = null;
+        let categoryLoaded = false;
+
+        function hasOpener() { return !!(window.opener && !window.opener.closed); }
+
+        function updateStartButton() {
+            var sb = document.getElementById('admin-start-btn');
+            if (sb) sb.disabled = !(hasOpener() && categoryLoaded);
+        }
+
+        function send(msg) {
+            if (hasOpener()) {
+                try { window.opener.postMessage({ source: 'admin', ...msg }, '*'); } catch (err) {}
+            }
+        }
+
+        function setConnected(status) {
+            var b = document.getElementById('conn-badge');
+            b.textContent = status === true ? 'Connected' : (status === false ? 'Disconnected' : 'Connecting…');
+            b.className = 'conn-badge ' + (status === true ? 'connected' : 'disconnected');
+        }
+
+        function setControlsEnabled(enabled) {
+            const ids = ['category-input', 'admin-load-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
+                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
+                'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
+                'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
+                'admin-show-timer-decimal', 'admin-active-p1', 'admin-active-p2'];
+            ids.forEach(function(id) {
+                const el = document.getElementById(id);
+                if (el) el.disabled = !enabled;
+            });
+            if (enabled) updateStartButton();
+        }
+
+        function closeAdminHelp() {
+            document.getElementById('admin-help-overlay').classList.remove('show');
+            send({ action: 'help', open: false });
+        }
+
+        document.getElementById('admin-help-overlay').addEventListener('click', closeAdminHelp);
+
+        document.getElementById('admin-help-btn').addEventListener('click', function() {
+            const el = document.getElementById('admin-help-overlay');
+            const open = !el.classList.contains('show');
+            el.classList.toggle('show', open);
+            send({ action: 'help', open });
+        });
+
+        document.getElementById('admin-load-btn').addEventListener('click', function() {
+            const v = document.getElementById('category-input').value.trim();
+            if (v && hasOpener()) {
+                send({ action: 'loadCategory', category: v });
+                document.getElementById('category-input').value = '';
+            }
+        });
+
+        document.getElementById('admin-start-btn').addEventListener('click', function() {
+            if (hasOpener()) send({ action: 'startGame' });
+        });
+
+        document.getElementById('category-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('admin-load-btn').click(); }
+        });
+
+        document.getElementById('admin-btn-j').addEventListener('click', function() { send({ action: 'correct' }); });
+        document.getElementById('admin-btn-k').addEventListener('click', function() { send({ action: 'pause' }); });
+        document.getElementById('admin-btn-l').addEventListener('click', function() { send({ action: 'pass' }); });
+        document.getElementById('admin-btn-pause').addEventListener('click', function() { send({ action: 'pause' }); });
+        document.getElementById('admin-btn-reset').addEventListener('click', function() { send({ action: 'reset' }); });
+        document.getElementById('admin-gamemode').addEventListener('change', function() {
+            send({ action: 'gamemode', value: this.value });
+        });
+
+        document.getElementById('admin-p1-name').addEventListener('change', function() {
+            send({ action: 'setPlayerNames', p1: this.value || 'Challenger', p2: document.getElementById('admin-p2-name').value || 'Expert' });
+        });
+        document.getElementById('admin-p2-name').addEventListener('change', function() {
+            send({ action: 'setPlayerNames', p1: document.getElementById('admin-p1-name').value || 'Challenger', p2: this.value || 'Expert' });
+        });
+        document.getElementById('admin-first-left').addEventListener('change', function() {
+            if (this.checked) send({ action: 'setFirstPlayer', left: true });
+        });
+        document.getElementById('admin-first-right').addEventListener('change', function() {
+            if (this.checked) send({ action: 'setFirstPlayer', left: false });
+        });
+        document.getElementById('admin-boost-p1').addEventListener('click', function() {
+            send({ action: 'applyTimeBoost', playerNum: 1 });
+        });
+        document.getElementById('admin-boost-p2').addEventListener('click', function() {
+            send({ action: 'applyTimeBoost', playerNum: 2 });
+        });
+        document.getElementById('admin-mute').addEventListener('change', function() {
+            send({ action: 'mute', value: this.checked });
+        });
+        document.getElementById('admin-theme-dark').addEventListener('change', function() {
+            if (this.checked) send({ action: 'theme', value: 'dark' });
+        });
+        document.getElementById('admin-theme-light').addEventListener('change', function() {
+            if (this.checked) send({ action: 'theme', value: 'light' });
+        });
+        document.getElementById('admin-theme-gible').addEventListener('change', function() {
+            if (this.checked) send({ action: 'theme', value: 'gible' });
+        });
+        document.getElementById('admin-confetti').addEventListener('change', function() {
+            send({ action: 'confetti', value: this.checked });
+        });
+        document.getElementById('admin-disable-extras').addEventListener('change', function() {
+            send({ action: 'disableExtras', value: this.checked });
+        });
+        document.getElementById('admin-show-timer-decimal').addEventListener('change', function() {
+            send({ action: 'showTimerDecimal', value: this.checked });
+        });
+        document.getElementById('admin-active-p1').addEventListener('change', function() {
+            if (this.checked) send({ action: 'changeActivePlayer', playerNum: 1 });
+        });
+        document.getElementById('admin-active-p2').addEventListener('change', function() {
+            if (this.checked) send({ action: 'changeActivePlayer', playerNum: 2 });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (!hasOpener()) return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'j' || e.key === 'J') { e.preventDefault(); send({ action: 'correct' }); }
+            else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); send({ action: 'pause' }); }
+            else if (e.key === 'l' || e.key === 'L') { e.preventDefault(); send({ action: 'pass' }); }
+        });
+
+        window.addEventListener('message', function(e) {
+            if (!e.data || e.data.source !== 'floor') return;
+            if (e.source !== window.opener || !hasOpener()) return;
+            const d = e.data;
+            if (d.type === 'state') {
+                lastStateTime = Date.now();
+                document.getElementById('admin-p1-timer').textContent = (d.t1 != null ? d.t1 : 45).toFixed(1);
+                document.getElementById('admin-p2-timer').textContent = (d.t2 != null ? d.t2 : 45).toFixed(1);
+                if (d.gamemode) {
+                    const sel = document.getElementById('admin-gamemode');
+                    if (sel && sel.value !== d.gamemode) sel.value = d.gamemode;
+                }
+                const p1Label = document.getElementById('admin-p1-label');
+                const p2Label = document.getElementById('admin-p2-label');
+                if (d.playerNames && d.playerNames[0]) p1Label.textContent = d.playerNames[0];
+                if (d.playerNames && d.playerNames[1]) p2Label.textContent = d.playerNames[1];
+                if (d.gamemode === 'singleplayer') document.querySelector('.timers .timer-box:nth-child(2)').style.display = 'none';
+                else document.querySelector('.timers .timer-box:nth-child(2)').style.display = '';
+
+                if (d.playerNames) {
+                    const a1 = document.getElementById('admin-p1-name');
+                    const a2 = document.getElementById('admin-p2-name');
+                    if (a1 && document.activeElement !== a1 && a1.value !== (d.playerNames[0] || '')) a1.value = d.playerNames[0] || '';
+                    if (a2 && document.activeElement !== a2 && a2.value !== (d.playerNames[1] || '')) a2.value = d.playerNames[1] || '';
+                    const apL1 = document.querySelector('label[for="admin-active-p1"]');
+                    const apL2 = document.querySelector('label[for="admin-active-p2"]');
+                    if (apL1) apL1.textContent = d.playerNames[0] || 'Player 1';
+                    if (apL2) apL2.textContent = d.playerNames[1] || 'Player 2';
+                    const fpL1 = document.querySelector('label[for="admin-first-left"]');
+                    const fpL2 = document.querySelector('label[for="admin-first-right"]');
+                    if (fpL1) fpL1.textContent = d.playerNames[0] || 'Left';
+                    if (fpL2) fpL2.textContent = d.playerNames[1] || 'Right';
+                }
+                if (d.firstPlayerIsLeft != null) {
+                    document.getElementById('admin-first-left').checked = !!d.firstPlayerIsLeft;
+                    document.getElementById('admin-first-right').checked = !d.firstPlayerIsLeft;
+                }
+                if (d.timeBoostsUsed) {
+                    const b1 = document.getElementById('admin-boost-p1');
+                    const b2 = document.getElementById('admin-boost-p2');
+                    if (b1) { b1.classList.toggle('used', !!d.timeBoostsUsed[0]); b1.textContent = d.timeBoostsUsed[0] ? 'P1 Undo' : 'P1 +5s'; }
+                    if (b2) { b2.classList.toggle('used', !!d.timeBoostsUsed[1]); b2.textContent = d.timeBoostsUsed[1] ? 'P2 Undo' : 'P2 +5s'; }
+                }
+                if (d.isMuted != null) {
+                    const m = document.getElementById('admin-mute');
+                    if (m && m.checked !== d.isMuted) m.checked = !!d.isMuted;
+                }
+                categoryLoaded = !!d.categoryLoaded;
+                updateStartButton();
+                if (d.gameTimerStart === 3 || d.gameTimerStart === 2) {
+                    var sec = d.gameTimerStart;
+                    if (window._adminGameTimerIv) clearInterval(window._adminGameTimerIv);
+                    var gtEl = document.getElementById('admin-game-timer');
+                    var v = sec;
+                    function tick() {
+                        v = Math.max(0, v - 0.1);
+                        if (gtEl) gtEl.textContent = v > 0 ? v.toFixed(1) : '—';
+                        if (v <= 0) {
+                            clearInterval(window._adminGameTimerIv);
+                            window._adminGameTimerIv = null;
+                        }
+                    }
+                    tick();
+                    window._adminGameTimerIv = setInterval(tick, 100);
+                }
+                var gt = document.getElementById('admin-game-timer');
+                if (gt && !window._adminGameTimerIv) gt.textContent = '—';
+                if (d.currentTheme) {
+                    var th = document.getElementById('admin-theme-' + d.currentTheme);
+                    if (th && !th.checked) th.checked = true;
+                }
+                if (d.confettiEnabled != null) {
+                    var cf = document.getElementById('admin-confetti');
+                    if (cf && cf.checked !== d.confettiEnabled) cf.checked = !!d.confettiEnabled;
+                }
+                if (d.disableExtras != null) {
+                    var dx = document.getElementById('admin-disable-extras');
+                    if (dx && dx.checked !== d.disableExtras) dx.checked = !!d.disableExtras;
+                }
+                if (d.showTimerDecimal != null) {
+                    var std = document.getElementById('admin-show-timer-decimal');
+                    if (std && std.checked !== d.showTimerDecimal) std.checked = !!d.showTimerDecimal;
+                }
+                if (d.lastRound) {
+                    document.getElementById('admin-lr-correct').textContent = d.lastRound.totalCorrect != null ? d.lastRound.totalCorrect : 0;
+                    document.getElementById('admin-lr-passed').textContent = d.lastRound.totalPassed != null ? d.lastRound.totalPassed : 0;
+                }
+                if (d.session) {
+                    document.getElementById('admin-ss-games').textContent = d.session.gamesPlayed != null ? d.session.gamesPlayed : 0;
+                    document.getElementById('admin-ss-correct').textContent = d.session.totalCorrect != null ? d.session.totalCorrect : 0;
+                    document.getElementById('admin-ss-passed').textContent = d.session.totalPassed != null ? d.session.totalPassed : 0;
+                }
+                if (d.isPaused && d.gameActive) {
+                    const ap = document.getElementById('admin-active-player');
+                    ap.style.display = 'flex';
+                    document.getElementById('admin-active-p1').checked = d.activePlayer === 1;
+                    document.getElementById('admin-active-p2').checked = d.activePlayer === 2;
+                } else {
+                    document.getElementById('admin-active-player').style.display = 'none';
+                }
+
+                const curBox = document.getElementById('admin-current-img');
+                const curAns = document.getElementById('admin-current-answer');
+                if (d.current) {
+                    curAns.textContent = d.current.answer;
+                    curBox.innerHTML = '';
+                    if (d.current.isMath) {
+                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
+                    } else if (d.current.imageUrl) {
+                        const img = document.createElement('img'); img.src = d.current.imageUrl; img.alt = d.current.answer; curBox.appendChild(img);
+                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; curBox.appendChild(s); }
+                } else { curAns.textContent = '—'; curBox.innerHTML = '<span class="placeholder">—</span>'; }
+
+                const nextBox = document.getElementById('admin-next-img');
+                const nextAns = document.getElementById('admin-next-answer');
+                if (d.next) {
+                    nextAns.textContent = d.next.answer;
+                    nextBox.innerHTML = '';
+                    if (d.next.isMath) {
+                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);
+                    } else if (d.next.imageUrl) {
+                        const img = document.createElement('img'); img.src = d.next.imageUrl; img.alt = d.next.answer; nextBox.appendChild(img);
+                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; nextBox.appendChild(s); }
+                } else { nextAns.textContent = '—'; nextBox.innerHTML = '<span class="placeholder">—</span>'; }
+            }
+        });
+
+        function init() {
+            if (!hasOpener()) {
+                document.getElementById('no-opener-banner').style.display = 'block';
+                setControlsEnabled(false);
+                setConnected(false);
+                return;
+            }
+            setControlsEnabled(true);
+            setConnected('connecting');
+            send({ action: 'adminReady' });
+            connCheckInterval = setInterval(function() {
+                if (!hasOpener()) { clearInterval(connCheckInterval); connCheckInterval = null; setConnected(false); return; }
+                var received = lastStateTime > 0;
+                var recent = received && (Date.now() - lastStateTime < 1500);
+                setConnected(recent ? true : (received ? false : 'connecting'));
+            }, 400);
+        }
+
+        window.addEventListener('beforeunload', function() { send({ action: 'adminClosed' }); });
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    </script>
+</body>
+</html>

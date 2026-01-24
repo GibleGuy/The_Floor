@@ -15,9 +15,15 @@
         let inputLocked = true;
         let clockInterval = null;
         let isPaused = false;
-        let gamemode = 'singleplayer'; // 'singleplayer' or 'classic'
+        let gamemode = 'classic'; // 'singleplayer' or 'classic'
         let hostMode = false; // Separate toggle that works with either gamemode
         let isPinned = false;
+        let adminWindow = null;
+        let adminWindowOpen = false;
+        let adminInterval = null;
+        let gameTimerRemaining = null;
+        let gameTimerStartNext = null;
+        let categoryLoadedForHost = false;
         let playerNames = ["Challenger", "Expert"];
         let firstPlayerIsLeft = true;
         let timeBoostsUsed = [false, false];
@@ -30,7 +36,10 @@
         let currentTheme = 'dark';
         let confettiEnabled = false;
         let disableExtras = false;
+        let showTimerDecimal = false;
         let currentStreak = 0;
+        let inPassPhase = false;
+        let unpauseCountdownActive = false;
         
         // Stats tracking
         let answerStartTime = 0;
@@ -99,8 +108,26 @@
             passIndex = (passIndex + 1) % PASS_COUNT;
         }
 
-        async function setupGame(cat) {
+        const PRELOAD_COUNT = 5;
+        function preloadCategoryImages() {
+            if (!currentPool || !currentPool.length) return;
+            const n = Math.min(PRELOAD_COUNT, currentPool.length);
+            for (let i = 0; i < n; i++) {
+                const item = currentPool[i];
+                const url = item && item.u;
+                if (url) {
+                    const img = new Image();
+                    img.src = url;
+                }
+            }
+        }
+
+        async function setupGame(cat, opts) {
             if (gameActive) return;
+            const fromAdminWindow = !!(opts && opts.fromAdminWindow);
+            const loadOnly = !!(opts && opts.loadOnly);
+            const w = document.getElementById('welcome-message');
+            if (w) w.classList.add('hide');
             
             // Reset background
             document.body.classList.remove('game-ended');
@@ -177,28 +204,40 @@
             }
             
             // Handle host mode differently
-            if (hostMode) {
-                // Show category and start button instead of auto-starting
+            if (hostMode && !fromAdminWindow) {
+                // Main-page host: show category and start button instead of auto-starting
                 const imgFrame = document.getElementById('img-frame');
-                // Clear any existing image
                 const img = document.getElementById('prompt-image');
-                if (img) {
-                    img.src = '';
-                    img.style.display = 'none';
-                }
+                if (img) { img.src = ''; img.style.display = 'none'; }
                 imgFrame.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-yellow);">
                         <div style="font-size: 4rem; font-weight: bold; margin-bottom: 30px;">${currentCategory}</div>
                         <button onclick="startGameFromHost()" style="padding: 20px 40px; font-size: 2rem; background: var(--floor-green); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">START</button>
                     </div>
                 `;
-                
-                // Hide answer input
                 const answerInput = document.getElementById('answer-input');
                 answerInput.disabled = true;
                 answerInput.style.display = 'none';
-                
-                // Clear reveal text
+                document.getElementById('reveal-text').innerText = "";
+            } else if (hostMode && fromAdminWindow && loadOnly) {
+                // Admin Window LOAD: show category in display, preload, enable START on admin
+                const imgFrame = document.getElementById('img-frame');
+                const img = document.getElementById('prompt-image');
+                if (img) { img.src = ''; img.style.display = 'none'; }
+                imgFrame.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-yellow); text-align: center;">
+                        <div style="font-size: 4rem; font-weight: bold;">${currentCategory}</div>
+                    </div>
+                `;
+                const answerInput = document.getElementById('answer-input');
+                if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
+                document.getElementById('reveal-text').innerText = "";
+                preloadCategoryImages();
+                categoryLoadedForHost = true;
+            } else if (hostMode && fromAdminWindow) {
+                // Admin Window start (legacy): leave img-frame as-is; startGameFromHost will overwrite it
+                const answerInput = document.getElementById('answer-input');
+                if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
                 document.getElementById('reveal-text').innerText = "";
             } else {
                 // Normal mode - 3-Second Countdown
@@ -231,6 +270,12 @@
         }
 
         async function startGameFromHost() {
+            categoryLoadedForHost = false;
+            // Apply first-player selection (from main or admin) before starting
+            const fl = document.getElementById('first-left');
+            if (fl) firstPlayerIsLeft = fl.checked;
+            activePlayer = firstPlayerIsLeft ? 1 : 2;
+            updateDisplay();
             // Restore image container and ensure it's empty/hidden
             const imgFrame = document.getElementById('img-frame');
             imgFrame.innerHTML = `
@@ -290,8 +335,8 @@
                     timers[0] += 0.1;
                 }
             } else {
-                // Classic/Host: count down
-                if (!inputLocked && !isPaused) timers[activePlayer - 1] -= 0.1;
+                // Classic/Host: count down (continue during pass phase)
+                if ((!inputLocked || inPassPhase) && !isPaused) timers[activePlayer - 1] -= 0.1;
                 
                 if (timers[activePlayer - 1] <= 0) {
                     timers[activePlayer - 1] = 0;
@@ -411,7 +456,14 @@
                 createConfetti();
             }
             
-            await new Promise(r => setTimeout(r, 2000));
+            gameTimerRemaining = 2;
+            gameTimerStartNext = 2;
+            for (let i = 0; i < 20; i++) {
+                if (!gameActive) break;
+                await new Promise(r => setTimeout(r, 100));
+                gameTimerRemaining = Math.max(0, 2 - (i + 1) * 0.1);
+            }
+            gameTimerRemaining = null;
             // Switch players only in classic mode
             if (gamemode === 'classic') {
                 activePlayer = (activePlayer === 1) ? 2 : 1;
@@ -422,6 +474,7 @@
 
         async function handlePass() {
             inputLocked = true;
+            inPassPhase = true;
             document.getElementById('img-frame').classList.add('pass-border');
             document.getElementById('reveal-text').innerText = `PASSED: ${currentPool[currentIndex].n}`;
             
@@ -467,11 +520,15 @@
             // Play sound
             playPassSound();
 
-            // Wait 3 seconds while timer continues (input stays locked so you can't spam pass/correct)
+            gameTimerRemaining = 3;
+            gameTimerStartNext = 3;
             for (let i = 0; i < 30; i++) {
                 if (!gameActive) break;
                 await new Promise(r => setTimeout(r, 100));
+                gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
             }
+            gameTimerRemaining = null;
+            inPassPhase = false;
             answerStartTime = Date.now();
             nextSlide();
         }
@@ -532,8 +589,8 @@
             const p1Display = document.getElementById('p1-display');
             const p2Display = document.getElementById('p2-display');
             
-            p1Display.innerHTML = Math.max(0, timers[0]).toFixed(1);
-            p2Display.innerHTML = Math.max(0, timers[1]).toFixed(1);
+            p1Display.innerHTML = formatTimer(timers[0]);
+            p2Display.innerHTML = formatTimer(timers[1]);
             
             // Remove all classes first
             p1Display.className = 'clock';
@@ -638,9 +695,14 @@
             }
         }
 
+        function formatTimer(val) {
+            const n = Math.max(0, val);
+            return showTimerDecimal ? n.toFixed(1) : Math.floor(n).toString();
+        }
+
         function updateDisplay() {
-            let t1 = Math.max(0, timers[0]).toFixed(1);
-            let t2 = Math.max(0, timers[1]).toFixed(1);
+            let t1 = formatTimer(timers[0]);
+            let t2 = formatTimer(timers[1]);
             
             const p1Display = document.getElementById('p1-display');
             const p2Display = document.getElementById('p2-display');
@@ -731,13 +793,25 @@
             }
         }
 
+        const CATEGORY_KEYS = { flags: 'flags', pokemon: 'pokemon', hockey: 'hockey', math: 'math' };
+        function resolveCategoryKey(input) {
+            const v = String(input || '').toLowerCase().trim();
+            if (CATEGORY_KEYS[v]) return v;
+            const k = Object.keys(categories).find(function(c) { return c.toLowerCase() === v; });
+            return k || null;
+        }
+
         function startSelectedCategory() {
             const dropdown = document.getElementById('category-dropdown');
-            const category = dropdown.value.toLowerCase().trim();
-            
-            if (category && categories[category]) {
-                setupGame(category);
-                dropdown.value = '';
+            const raw = dropdown && dropdown.value ? dropdown.value.trim() : '';
+            const cat = resolveCategoryKey(raw);
+            if (!cat || !categories[cat]) return;
+            dropdown.value = '';
+            if (hostMode) {
+                setupGame(cat, { fromAdminWindow: false });
+                startGameFromHost();
+            } else {
+                setupGame(cat);
             }
         }
 
@@ -800,8 +874,43 @@
     }
 
     // ADMIN FUNCTIONS
+    async function runUnpauseCountdown() {
+        const overlay = document.getElementById('overlay');
+        if (!overlay) return;
+        overlay.style.display = 'flex';
+        overlay.style.zIndex = '30';
+        overlay.style.background = 'rgba(0,0,0,1)';
+        if (!isMuted) {
+            const c = sounds.countdown.cloneNode();
+            c.volume = 0.5;
+            c.currentTime = 0;
+            c.play().catch(() => {});
+        }
+        for (let i = 3; i > 0; i--) {
+            overlay.innerText = i;
+            await new Promise(r => setTimeout(r, 1000));
+        }
+        overlay.style.display = 'none';
+        overlay.style.background = '';
+        overlay.style.zIndex = '20';
+        isPaused = false;
+        unpauseCountdownActive = false;
+        updatePauseButton();
+        updateDisplay();
+        updatePauseOverlay();
+        const hostControls = document.getElementById('host-pause-controls');
+        if (hostControls) hostControls.style.display = 'none';
+        postStateToAdmin();
+    }
+
     function togglePause() {
         if (!gameActive || categoryComplete) return;
+        if (unpauseCountdownActive) return;
+        if (isPaused) {
+            unpauseCountdownActive = true;
+            runUnpauseCountdown();
+            return;
+        }
         isPaused = !isPaused;
         updatePauseButton();
         updateDisplay(); // Update to show/hide editable timers
@@ -811,11 +920,25 @@
         const hostControls = document.getElementById('host-pause-controls');
         if (hostMode && isPaused && gameActive) {
             hostControls.style.display = 'block';
-            // Update radio buttons to match current active player
+            updateActivePlayerLabels();
             document.getElementById(`active-p${activePlayer}`).checked = true;
         } else {
             hostControls.style.display = 'none';
         }
+    }
+
+    function updateActivePlayerLabels() {
+        const l1 = document.querySelector('label[for="active-p1"]');
+        const l2 = document.querySelector('label[for="active-p2"]');
+        if (l1) l1.textContent = playerNames[0] || 'Player 1';
+        if (l2) l2.textContent = playerNames[1] || 'Player 2';
+    }
+
+    function updateFirstPlayerLabels() {
+        const l1 = document.querySelector('label[for="first-left"]');
+        const l2 = document.querySelector('label[for="first-right"]');
+        if (l1) l1.textContent = playerNames[0] || 'Left Player';
+        if (l2) l2.textContent = playerNames[1] || 'Right Player';
     }
 
     function updatePauseOverlay() {
@@ -892,6 +1015,7 @@
         currentIndex = 0;
         itemsCompleted = 0;
         categoryComplete = false;
+        inPassPhase = false;
         // Reset time boosts on reset
         timeBoostsUsed = [false, false];
         
@@ -919,6 +1043,7 @@
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('category-display').style.display = 'none';
         currentCategory = "";
+        categoryLoadedForHost = false;
         
         // Clear any fallback text
         const fallback = document.getElementById('text-fallback');
@@ -929,6 +1054,7 @@
         // Reset image
         const imgFrame = document.getElementById('img-frame');
         imgFrame.innerHTML = `
+            <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
             <div id="overlay"></div>
             <img id="prompt-image" src="" onerror="handleImageError(this)">
             <div id="math-problem" class="math-problem"></div>
@@ -1004,9 +1130,13 @@
             answerInput.style.display = 'block';
         }
         
-        // Show Gallery button only in host mode
+        const categoryDropdown = document.getElementById('category-dropdown');
+        if (categoryDropdown) categoryDropdown.disabled = !!hostMode;
+        
         const galleryBtn = document.getElementById('gallery-btn');
         if (galleryBtn) galleryBtn.style.display = hostMode ? 'block' : 'none';
+        const adminWindowBtn = document.getElementById('admin-window-btn');
+        if (adminWindowBtn) adminWindowBtn.style.display = hostMode ? 'block' : 'none';
         
         updateDisplay();
     }
@@ -1022,6 +1152,202 @@
             document.body.classList.remove('pinned-admin');
         }
     }
+
+    function openAdminWindow() {
+        if (adminWindowOpen && adminWindow && !adminWindow.closed) {
+            adminWindow.focus();
+            return;
+        }
+        adminWindow = window.open('admin.html', 'floor-admin', 'width=720,height=720,menubar=no,toolbar=no,location=no');
+        if (!adminWindow) return;
+        adminWindowOpen = true;
+        hostMode = true;
+        const hostToggle = document.getElementById('host-mode-toggle');
+        if (hostToggle) hostToggle.checked = true;
+        disableExtras = true;
+        const deToggle = document.getElementById('disable-extras-toggle');
+        if (deToggle) deToggle.checked = true;
+        const helpBtn = document.getElementById('help-button');
+        const fullscreenBtn = document.getElementById('fullscreen-button');
+        const streakDisplay = document.getElementById('streak-display');
+        const scoreDisplay = document.getElementById('score-display');
+        if (helpBtn) helpBtn.classList.add('hidden');
+        if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
+        if (streakDisplay) streakDisplay.classList.add('hidden');
+        if (scoreDisplay) scoreDisplay.classList.add('hidden');
+        updateDisplay();
+        const galleryBtn = document.getElementById('gallery-btn');
+        if (galleryBtn) galleryBtn.style.display = 'block';
+        document.getElementById('admin-board').style.display = 'none';
+        document.querySelector('.menu').style.display = 'none';
+        document.getElementById('help-button').style.display = 'none';
+        if (adminInterval) clearInterval(adminInterval);
+        postStateToAdmin();
+        adminInterval = setInterval(function() {
+            if (!adminWindow || adminWindow.closed) {
+                closeAdminWindow();
+                return;
+            }
+            postStateToAdmin();
+        }, 150);
+    }
+
+    function closeAdminWindow() {
+        if (adminInterval) { clearInterval(adminInterval); adminInterval = null; }
+        adminWindow = null;
+        adminWindowOpen = false;
+        hostMode = false;
+        const hostToggle = document.getElementById('host-mode-toggle');
+        if (hostToggle) hostToggle.checked = false;
+        const galleryBtn = document.getElementById('gallery-btn');
+        if (galleryBtn) galleryBtn.style.display = 'none';
+        const adminBoard = document.getElementById('admin-board');
+        if (adminBoard) adminBoard.style.display = '';
+        const menu = document.querySelector('.menu');
+        if (menu) menu.style.display = '';
+        const helpBtn = document.getElementById('help-button');
+        if (helpBtn) helpBtn.style.display = '';
+        toggleHostMode();
+        updateDisplay();
+    }
+
+    function postStateToAdmin() {
+        if (!adminWindow || adminWindow.closed) return;
+        const t1 = Math.max(0, timers[0]);
+        const t2 = Math.max(0, timers[1]);
+        let current = null, next = null;
+        if (currentPool.length) {
+            const cur = currentPool[currentIndex];
+            if (cur) {
+                current = { answer: cur.n, isMath: !!cur.q, question: cur.q || null, imageUrl: (!cur.q && cur.u) ? cur.u : null };
+            }
+            const nextIdx = (currentIndex + 1) % currentPool.length;
+            const nxt = currentPool[nextIdx];
+            if (nxt) next = { answer: nxt.n, isMath: !!nxt.q, question: nxt.q || null, imageUrl: (!nxt.q && nxt.u) ? nxt.u : null };
+        }
+        try {
+            adminWindow.postMessage({
+                source: 'floor',
+                type: 'state',
+                t1, t2,
+                playerNames: playerNames.slice(),
+                gamemode,
+                current,
+                next,
+                firstPlayerIsLeft,
+                timeBoostsUsed: timeBoostsUsed.slice(),
+                isMuted,
+                gameActive,
+                isPaused,
+                activePlayer,
+                categoryLoaded: categoryLoadedForHost,
+                gameTimer: gameTimerRemaining,
+                gameTimerStart: gameTimerStartNext,
+                currentTheme: currentTheme,
+                confettiEnabled: confettiEnabled,
+                disableExtras: disableExtras,
+                showTimerDecimal: showTimerDecimal,
+                lastRound: lastRoundStats,
+                session: sessionStats
+            }, '*');
+            if (gameTimerStartNext != null) gameTimerStartNext = null;
+        } catch (e) {}
+    }
+
+    window.addEventListener('message', function(e) {
+        if (!e.data || e.data.source !== 'admin') return;
+        if (e.source !== adminWindow || !adminWindow || adminWindow.closed) return;
+        const d = e.data;
+        if (d.action === 'adminClosed' || d.action === 'adminReady') {
+            if (d.action === 'adminClosed') closeAdminWindow();
+            else if (d.action === 'adminReady' && adminWindow && !adminWindow.closed) postStateToAdmin();
+            return;
+        }
+        if (d.action === 'loadCategory' && d.category) {
+            const cat = resolveCategoryKey(d.category);
+            if (cat && categories[cat]) {
+                setupGame(cat, { fromAdminWindow: true, loadOnly: true });
+            }
+            return;
+        }
+        if (d.action === 'startGame') {
+            if (categoryLoadedForHost) startGameFromHost();
+            return;
+        }
+        if (d.action === 'correct' && gameActive && !inputLocked) handleCorrect();
+        else if (d.action === 'pause' && gameActive) togglePause();
+        else if (d.action === 'pass' && gameActive && !inputLocked) handlePass();
+        else if (d.action === 'reset') resetGame();
+        else if (d.action === 'gamemode' && d.value) {
+            const sel = document.getElementById('gamemode-select');
+            if (sel && (sel.value !== d.value)) { sel.value = d.value; changeGamemode(); }
+        }
+        else if (d.action === 'setPlayerNames') {
+            if (d.p1 != null) playerNames[0] = String(d.p1) || 'Challenger';
+            if (d.p2 != null) playerNames[1] = String(d.p2) || 'Expert';
+            updateActivePlayerLabels();
+            updateFirstPlayerLabels();
+            updateDisplay();
+        }
+        else if (d.action === 'setFirstPlayer' && d.left != null) {
+            firstPlayerIsLeft = !!d.left;
+            if (document.getElementById('first-left')) document.getElementById('first-left').checked = firstPlayerIsLeft;
+            if (document.getElementById('first-right')) document.getElementById('first-right').checked = !firstPlayerIsLeft;
+            updateFirstPlayerLabels();
+            updateDisplay();
+        }
+        else if (d.action === 'applyTimeBoost' && (d.playerNum === 1 || d.playerNum === 2)) {
+            applyTimeBoost(d.playerNum);
+        }
+        else if (d.action === 'mute' && d.value != null) {
+            isMuted = !!d.value;
+            const mt = document.getElementById('mute-toggle');
+            if (mt && mt.checked !== isMuted) mt.checked = isMuted;
+        }
+        else if (d.action === 'changeActivePlayer' && (d.playerNum === 1 || d.playerNum === 2)) {
+            changeActivePlayer(d.playerNum);
+        }
+        else if (d.action === 'theme' && d.value) {
+            currentTheme = d.value;
+            changeTheme(d.value);
+        }
+        else if (d.action === 'confetti' && d.value != null) {
+            confettiEnabled = !!d.value;
+            var ct = document.getElementById('confetti-toggle');
+            if (ct && ct.checked !== confettiEnabled) ct.checked = confettiEnabled;
+        }
+        else if (d.action === 'disableExtras' && d.value != null) {
+            disableExtras = !!d.value;
+            var de = document.getElementById('disable-extras-toggle');
+            if (de && de.checked !== disableExtras) de.checked = disableExtras;
+            if (disableExtras) {
+                var helpBtn = document.getElementById('help-button');
+                var fullscreenBtn = document.getElementById('fullscreen-button');
+                var streakDisplay = document.getElementById('streak-display');
+                var scoreDisplay = document.getElementById('score-display');
+                if (helpBtn) helpBtn.classList.add('hidden');
+                if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
+                if (streakDisplay) streakDisplay.classList.add('hidden');
+                if (scoreDisplay) scoreDisplay.classList.add('hidden');
+            } else {
+                var helpBtn = document.getElementById('help-button');
+                var fullscreenBtn = document.getElementById('fullscreen-button');
+                var streakDisplay = document.getElementById('streak-display');
+                var scoreDisplay = document.getElementById('score-display');
+                if (helpBtn) helpBtn.classList.remove('hidden');
+                if (fullscreenBtn) fullscreenBtn.classList.remove('hidden');
+                if (streakDisplay) streakDisplay.classList.remove('hidden');
+                if (scoreDisplay) scoreDisplay.classList.remove('hidden');
+            }
+            updateDisplay();
+        }
+        else if (d.action === 'showTimerDecimal' && d.value != null) {
+            showTimerDecimal = !!d.value;
+            var st = document.getElementById('show-timer-decimal-toggle');
+            if (st && st.checked !== showTimerDecimal) st.checked = showTimerDecimal;
+            updateDisplay();
+        }
+    });
 
     // CUSTOMIZATION FUNCTIONS
     function openCustomization() {
@@ -1040,6 +1366,8 @@
         }
         document.getElementById('confetti-toggle').checked = confettiEnabled;
         document.getElementById('disable-extras-toggle').checked = disableExtras;
+        document.getElementById('show-timer-decimal-toggle').checked = showTimerDecimal;
+        updateFirstPlayerLabels();
         
         // Update button visibility
         const helpBtn = document.getElementById('help-button');
@@ -1084,7 +1412,8 @@
         playerNames[1] = document.getElementById('p2-name-input').value || 'Expert';
         // Save first player setting
         firstPlayerIsLeft = document.getElementById('first-left').checked;
-        // Update display
+        updateActivePlayerLabels();
+        updateFirstPlayerLabels();
         updateDisplay();
     }
 
@@ -1297,6 +1626,12 @@
             streakDisplay.classList.remove('hidden');
             scoreDisplay.classList.remove('hidden');
         }
+        updateDisplay();
+    }
+
+    function toggleShowTimerDecimal() {
+        showTimerDecimal = document.getElementById('show-timer-decimal-toggle').checked;
+        updateDisplay();
     }
 
     function toggleHelp() {

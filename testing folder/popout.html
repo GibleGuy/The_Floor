@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pop out</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #222;
+            color: #eee;
+        }
+        .red-btn {
+            width: 200px;
+            height: 200px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.4);
+        }
+        .red-btn:hover { background: #d62839; filter: brightness(1.1); }
+        .red-btn:active { transform: scale(0.96); }
+        .no-opener {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(230, 57, 70, 0.2);
+            border: 1px solid #e63946;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+        .no-opener.show { display: block; }
+    </style>
+</head>
+<body>
+    <button type="button" class="red-btn" id="red-btn">CLICK</button>
+    <p class="no-opener" id="no-opener">Open this via &quot;Open pop out&quot; on the main page. It won&apos;t work when opened directly.</p>
+
+    <script>
+        var btn = document.getElementById('red-btn');
+        var noOpener = document.getElementById('no-opener');
+
+        function hasOpener() {
+            return !!(window.opener && !window.opener.closed);
+        }
+
+        btn.addEventListener('click', function() {
+            if (!hasOpener()) {
+                noOpener.classList.add('show');
+                return;
+            }
+            try {
+                window.opener.postMessage({ type: 'increment' }, '*');
+            } catch (err) {
+                noOpener.textContent = 'Error sending message: ' + err.message;
+                noOpener.classList.add('show');
+            }
+        });
+
+        if (!hasOpener()) {
+            noOpener.classList.add('show');
+        }
+    </script>
+</body>
+</html>

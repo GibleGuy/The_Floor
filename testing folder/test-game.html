@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test Game</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        .number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        .open-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            background: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .open-btn:hover { background: #3a56d4; }
+    </style>
+</head>
+<body>
+    <div class="number" id="number">0</div>
+    <button type="button" class="open-btn" id="open-btn">Open pop out</button>
+
+    <script>
+        var count = 0;
+        var popout = null;
+
+        function updateDisplay() {
+            document.getElementById('number').textContent = count;
+        }
+
+        document.getElementById('open-btn').addEventListener('click', function() {
+            if (popout && !popout.closed) {
+                popout.focus();
+                return;
+            }
+            popout = window.open('popout.html', 'test-popout', 'width=400,height=300,menubar=no,toolbar=no');
+        });
+
+        window.addEventListener('message', function(e) {
+            if (e.source !== popout || !popout || popout.closed) return;
+            if (e.data && e.data.type === 'increment') {
+                count++;
+                updateDisplay();
+            }
+        });
+    </script>
+</body>
+</html>

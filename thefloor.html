@@ -121,6 +121,7 @@
     </div>
 
     <div class="image-container" id="img-frame">
+        <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
         <div id="overlay"></div>
         <img id="prompt-image" src="" onerror="handleImageError(this)">
         <div id="math-problem" class="math-problem"></div>
@@ -158,8 +159,8 @@
             <div class="custom-row">
                 <label class="custom-label">Gamemode:</label>
                 <select id="gamemode-select" class="custom-input" onchange="changeGamemode()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
-                    <option value="singleplayer" selected>Singleplayer</option>
-                    <option value="classic">Classic</option>
+                    <option value="singleplayer">Singleplayer</option>
+                    <option value="classic" selected>Classic</option>
                 </select>
             </div>
             <div class="switch-container">
@@ -177,7 +178,8 @@
                 </label>
             </div>
             <button class="admin-btn" onclick="openCustomization()">CUSTOMIZE</button>
-            <a href="gallery.html" id="gallery-btn" class="admin-btn" style="display: none; text-align: center; text-decoration: none;">GALLERY</a>
+            <button class="admin-btn" id="admin-window-btn" onclick="openAdminWindow()" style="display: none;">ADMIN WINDOW</button>
+            <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='gallery.html'" style="display: none;">GALLERY</button>
             <div id="host-pause-controls" style="display: none;">
                 <div class="custom-row" style="margin-top: 15px;">
                     <label class="custom-label">Active Player:</label>
@@ -266,6 +268,13 @@
             <span class="switch-label">Disable Extras</span>
             <label class="switch">
                 <input type="checkbox" id="disable-extras-toggle" onchange="toggleDisableExtras()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="switch-container">
+            <span class="switch-label">Show Timer Decimal (Player Screen)</span>
+            <label class="switch">
+                <input type="checkbox" id="show-timer-decimal-toggle" onchange="toggleShowTimerDecimal()">
                 <span class="slider"></span>
             </label>
         </div>
