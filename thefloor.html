@@ -1276,6 +1276,9 @@
             gameActive = true;
             inputLocked = false;
             
+            // Reset answerStartTime now that the game actually begins (after countdown)
+            answerStartTime = Date.now();
+            
             // Now show and load the image after countdown
             const img = document.getElementById('prompt-image');
             img.style.display = 'block';
@@ -1737,7 +1740,11 @@
         clearInterval(clockInterval);
         
         // Determine winner (only in classic/host mode)
+        // When endGame() is called, activePlayer's timer expired, so the opponent wins
         if (gamemode !== 'singleplayer') {
+            // activePlayer's timer expired (they lost), so the opponent wins
+            // If activePlayer is 1 (lost), winner is player 2 (index 1)
+            // If activePlayer is 2 (lost), winner is player 1 (index 0)
             const winnerIndex = activePlayer === 1 ? 1 : 0;
             const winnerName = playerNames[winnerIndex];
             const winnerSlot = winnerIndex === 0 ? 'left' : 'right';
