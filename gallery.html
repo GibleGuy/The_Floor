@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery — The Floor</title>
+    <style>
+        :root {
+            --floor-blue: #001f3f;
+            --floor-yellow: #ffcc00;
+            --floor-red: #e74c3c;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background: var(--floor-blue);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .gallery-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--floor-yellow);
+        }
+        .gallery-header h1 { margin: 0; font-size: 2rem; }
+        .back-link {
+            padding: 10px 20px;
+            background: var(--floor-yellow);
+            color: var(--floor-blue);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .back-link:hover { background: #ffd700; }
+        .category-selector {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .category-selector label {
+            font-size: 1.1rem;
+            color: var(--floor-yellow);
+        }
+        .category-selector select {
+            padding: 10px 15px;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: 2px solid var(--floor-yellow);
+            border-radius: 8px;
+            font-family: 'Arial Black', sans-serif;
+            cursor: pointer;
+        }
+        .category-selector select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .category-section {
+            margin-bottom: 50px;
+            display: none;
+        }
+        .category-section.show {
+            display: block;
+        }
+        .category-section h2 {
+            color: var(--floor-yellow);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid #333;
+        }
+        .gallery-item .img-wrap {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .gallery-item .img-fallback {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--floor-red);
+        }
+        .gallery-item .img-fallback.show {
+            display: flex;
+        }
+        .gallery-item img.hide { display: none; }
+        .gallery-name {
+            font-size: 0.85rem;
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <header class="gallery-header">
+        <h1>GALLERY</h1>
+        <a href="thefloor.html" class="back-link">← Back to Game</a>
+    </header>
+    <div class="category-selector">
+        <label for="category-select">Category:</label>
+        <select id="category-select" onchange="showCategory(this.value)">
+            <option value="">Select a category...</option>
+        </select>
+    </div>
+    <main id="gallery-main"></main>
+
+    <script src="Categories/flags.js"></script>
+    <script src="Categories/pokemon.js"></script>
+    <script src="Categories/hockey.js"></script>
+    <script>
+        const categories = {
+            flags: (typeof flagData !== 'undefined') ? flagData : [],
+            pokemon: (typeof pokemonData !== 'undefined') ? pokemonData : [],
+            hockey: (typeof hockeyData !== 'undefined') ? hockeyData : []
+        };
+        const categoryLabels = { flags: 'Flags', pokemon: 'POKEMON', hockey: 'Hockey' };
+
+        function galleryImageError(el) {
+            const wrap = el.closest('.img-wrap');
+            const img = wrap.querySelector('img');
+            const fallback = wrap.querySelector('.img-fallback');
+            if (img && fallback) {
+                img.classList.add('hide');
+                fallback.classList.add('show');
+            }
+        }
+
+        const main = document.getElementById('gallery-main');
+        const select = document.getElementById('category-select');
+        
+        // Populate dropdown
+        for (const [key, label] of Object.entries(categoryLabels)) {
+            const items = categories[key] || [];
+            if (items.length === 0) continue;
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = label;
+            select.appendChild(option);
+        }
+        
+        // Create sections for each category
+        for (const [key, label] of Object.entries(categoryLabels)) {
+            const items = categories[key] || [];
+            if (items.length === 0) continue;
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'category-' + key;
+            section.innerHTML = '<h2>' + label + '</h2>';
+            const grid = document.createElement('div');
+            grid.className = 'gallery-grid';
+            items.forEach(function (item) {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'img-wrap';
+                const img = document.createElement('img');
+                img.src = item.u;
+                img.alt = item.n;
+                img.loading = 'lazy';
+                img.onerror = function () { galleryImageError(this); };
+                const fallback = document.createElement('div');
+                fallback.className = 'img-fallback';
+                fallback.textContent = '?';
+                imgWrap.appendChild(img);
+                imgWrap.appendChild(fallback);
+                const nameEl = document.createElement('div');
+                nameEl.className = 'gallery-name';
+                nameEl.textContent = item.n;
+                div.appendChild(imgWrap);
+                div.appendChild(nameEl);
+                grid.appendChild(div);
+            });
+            section.appendChild(grid);
+            main.appendChild(section);
+        }
+        
+        function showCategory(key) {
+            // Hide all sections
+            document.querySelectorAll('.category-section').forEach(function(section) {
+                section.classList.remove('show');
+            });
+            // Show selected section
+            if (key) {
+                const section = document.getElementById('category-' + key);
+                if (section) section.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>
