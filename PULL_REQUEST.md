@@ -1,81 +1,103 @@
-# Pull Request: Admin Window, UX Improvements & Gameplay Fixes
+# Pull Request: Backgrounds, Customization Tabs, Preferences & UX Polish
 
-**Branch:** `add-sounds-refactor` → `main`
+All work since the previous PR (Admin window, UX improvements, gameplay fixes).
 
 ---
 
 ## Summary
 
-This PR adds an Admin Window pop-out for hosts, improves several UX and display options, and fixes gameplay behavior (first player, pass-phase timer, unpause countdown, etc.).
+- **Backgrounds:** Geometric patterns (Grid, Tiles, Diagonal, Pop), drift speed slider, blue variants, diagonal static.
+- **Customization:** Gameplay vs Graphics tabs, persisted preferences, keyboard hints, high-contrast / reduced-motion.
+- **UX:** Customization glow fixes, default Pop + Blue B, game explanation doc.
 
 ---
 
-## Changes
+## Backgrounds & Patterns
 
-### Admin Window
-- **New `admin.html`**: Pop-out window for hosts with:
-  - Host controls (J Correct, K Pause, L Pass) and keyboard shortcuts
-  - **LOAD** / **START** flow: select category → LOAD (preload, show category on main) → START (3–2–1 countdown, begin game)
-  - Current image/answer and next image/answer
-  - P1/P2 timers and **Game** timer (local 3s/2s countdown)
-  - Full admin controls (Pause, Reset, Gamemode)
-  - Customization: Theme, Confetti, Disable Extras, Show Timer Decimal
-  - Statistics: Last Round and Session stats
-  - Player names, First Player, Time Boosts, Mute
-- When Admin Window is open: main page hides admin board, category selector, and help button; host mode is auto-enabled; Gallery button appears.
-- When Admin Window is closed: those elements return to the main page.
-- Cross-window sync via `postMessage`; admin always shows decimals on timers.
+### Geometric background styles
+- **Solid** — flat color (unchanged).
+- **Grid** — horizontal/vertical grid lines, slow drift **down-and-left**.
+- **Tiles** — diamond tile pattern, drift down-and-left; positions use **positive-only** values to avoid glitchy animation at different speeds.
+- **Diagonal** — continuous **stripes** (no triangles), `repeating-linear-gradient`; **static** (no animation) to avoid tiling issues.
+- **Pop** — grid of squares that scale/opacity animate in and out; **random** per-cell `animation-delay` and `animation-duration`, plus **negative** delays so all cells are moving immediately on load.
 
-### Disable Extras
-- Disable Extras now also hides **STREAK** (top right) and the **score counter** (answered/passed).
-- **Disable Extras is turned ON by default when the Admin Window is opened** (can still be turned off).
-- Toggle available on main (Customize) and in Admin Window; state synced.
+### Drift speed
+- **Slider** (0.25×–2×) in Customization (main + admin). Persisted.
+- Effective speed doubled: **1×** matches previous **2×**; formula uses `(var(--bg-drift-speed) * 2)` in duration calc.
+- Affects Grid and Tiles only (Diagonal is static).
 
-### Gameplay & Timers
-- **Pass phase:** The active player’s timer **continues counting down** during the 3‑second pass delay (no longer paused).
-- **Admin Game timer:** Uses a **local** 3s or 2s countdown instead of syncing with main (smoother, no stagger).
-- **Player timers:** Default is **seconds only** (no decimal). New **“Show Timer Decimal (Player Screen)”** toggle in Customize; Admin timers always show decimal.
+### Blue variants
+- **Blue Style** A/B/C/D in Customization. **B** is default for new users.
+- Body classes `blue-a`–`blue-d` override `--floor-blue` (navy → vibrant).
 
-### Unpause
-- **Unpause countdown:** Before resuming, a **3–2–1 countdown** with **countdown.mp3** plays (same overlay as game start).
-- Sound uses clone-and-play for reliable playback when unpausing.
-
-### First Player & Active Player
-- **First Player** selection is **applied when START is pressed** (not only at LOAD), so the choice before START is used.
-- The correct player is **highlighted** (name + clock) when the game begins.
-- **First Player** and **Active Player** options now use **player names** instead of “Left”/“Right” or “Player 1”/“Player 2” (on both main and Admin).
-
-### Defaults & Misc
-- **Default gamemode** is now **Classic** (was Singleplayer) on main and Admin.
-- **Admin player name inputs:** No longer overwritten while focused; you can edit/delete without instant reset. Values sync on blur (change).
-
-### Testing
-- **`testing folder/`**: Simple `postMessage` demo (`test-game.html` + `popout.html`) used to validate cross-window communication patterns for the Admin Window.
-
-### Other
-- **`thefloor.css`**: Styles for Disable Extras (streak/score hidden), overlay, pause UI, etc.
-- **`thefloor.html`**: Customize toggles (Disable Extras, Show Timer Decimal), gamemode default, First Player labels.
-- **`thefloor.js`**: All of the above logic (admin window, state sync, countdowns, first player, timers, etc.).
+### Defaults
+- **Background:** Pop (new users).
+- **Blue:** B (new users). Returning users keep saved preferences.
 
 ---
 
-## How to Test
+## Customization
 
-1. Open `thefloor.html`, enable Host Mode, open **Admin Window**.
-2. Confirm Disable Extras is ON and STREAK/score are hidden; toggle off/on as desired.
-3. Select a category, **LOAD**, then **START**; confirm 3–2–1 countdown and that the chosen First Player is highlighted.
-4. During game: Pass (L) and confirm active timer keeps counting; unpause and confirm 3–2–1 + countdown sound.
-5. Edit player names in Admin; confirm they don’t reset while typing and update on blur.
-6. Check Admin Game timer countdown (3s/2s) and player timers (default no decimal; toggle decimal in Customize).
+### Tabs
+- **Gameplay** — player names, first player, time boosts, View Statistics, Mute.
+- **Graphics** — theme, confetti, disable extras, show timer decimal, high contrast & reduced motion, background style, drift speed, blue style.
+- Tabs + panels on **main** and **admin**; tab switch updates visible panel.
+
+### Glow fixes
+- **Yellow border** restored on the customization box (3px, theme-aware).
+- **Inner glow** removed: `.custom-tab.active` and `.custom-tab-panel.active` both use class `active` (shared with clock). Generic `.active` added `box-shadow: 0 0 30px rgba(255,204,0,0.5)`, which created a glow inside the options area.
+  - **Fix:** `box-shadow: none` and `border: none` on `.custom-tab` and `.custom-tab-panel` (and `.active`), plus `color: inherit` on `.custom-tab-panel.active`, so the options area has no yellow glow. Outer box-shadow on the whole customization box unchanged.
 
 ---
 
-## Checklist
+## Preferences & persistence
 
-- [x] Admin Window opens, syncs state, and closes cleanly.
-- [x] LOAD → START flow works; first player and highlighting correct.
-- [x] Disable Extras hides STREAK + score; default ON when Admin opens.
-- [x] Pass-phase timer counts down; unpause countdown + sound.
-- [x] Admin Game timer local; player timer decimal toggle.
-- [x] First Player / Active Player use names; default gamemode Classic.
-- [x] Admin player names editable without reset while focused.
+- **localStorage** key `floorPreferences` stores: theme, mute, show timer decimal, disable extras, confetti, gamemode, player names, first player, background style, drift speed, blue variant, high contrast & reduced motion.
+- **Load** on init; **save** on change. Admin updates (theme, confetti, etc.) sync to main and persist.
+
+---
+
+## Accessibility & UX
+
+### High contrast & reduced motion
+- Toggle in Customization (Gameplay tab → **Graphics** in new layout: it’s under Graphics). Persisted.
+- **High contrast:** stronger borders, clearer UI.
+- **Reduced motion:** disables background drift, pop-cell animation, confetti, timer pulse, etc.
+
+### Keyboard shortcut hints
+- **Main:** subtle hint bar (J/K/L/R/F/?) when host mode on and admin window closed; hidden when “Disable extras” is on.
+- **Admin:** hint bar at bottom. Both remind users of host shortcuts.
+
+---
+
+## Other
+
+- **HOW_THE_GAME_WORKS.md** — user-facing explanation of modes, flow, and controls.
+- **Admin customization** — same Gameplay/Graphics tabs, drift speed, blue style; synced with main.
+- **Removed** `update-hockey-extensions.js` (unused).
+- **Removed** previous `PULL_REQUEST.md` (replaced by this writeup).
+
+---
+
+## Files changed
+
+| File | Changes |
+|------|---------|
+| `thefloor.html` | Gameplay/Graphics tabs, Pop layer, default checked states (Pop, Blue B), drift speed + blue variant UI. |
+| `thefloor.css` | Blue variants, grid/tiles/diagonal/pop styles, drift keyframes, speed formula, tabs, customization border/glow fixes, high-contrast/reduced-motion overrides. |
+| `thefloor.js` | `BG_STYLES`, drift speed, blue variant, pop randomness, tabs, preferences load/save, `switchCustomizationTab`, `setBackgroundDriftSpeed`, `setBlueVariant`, `createPopLayer`, admin message handlers. |
+| `admin.html` | Gameplay/Graphics tabs, drift speed + blue style controls, tab switch logic, Pop option. |
+| `HOW_THE_GAME_WORKS.md` | New; user guide. |
+| `PULL_REQUEST.md` | New PR writeup (this file). |
+| `update-hockey-extensions.js` | Removed. |
+
+---
+
+## How to test
+
+1. **Backgrounds:** Customize → Graphics → try Solid, Grid, Tiles, Diagonal, Pop. Use drift speed slider with Grid/Tiles.
+2. **Blue style:** Switch A/B/C/D; confirm default B for new users (clear `floorPreferences` if needed).
+3. **Tabs:** Open Customize → switch Gameplay / Graphics; confirm options and persistence.
+4. **Glow:** Open Customize → confirm yellow border on box, no yellow glow inside the options area.
+5. **Preferences:** Change theme, mute, etc. → refresh → confirm settings restored.
+6. **Admin:** Open Admin Window → use tabs, drift speed, blue style; confirm sync with main and persistence.

@@ -13,6 +13,8 @@
 </head>
 <body>
 
+    <div id="bg-pop-layer" aria-hidden="true"></div>
+
     <!-- HELP BUTTON & FULLSCREEN BUTTON -->
     <button id="help-button" onclick="toggleHelp()" class="help-button">?</button>
     <button id="fullscreen-button" onclick="toggleFullscreen()" class="fullscreen-button" title="Toggle Fullscreen">⛶</button>
@@ -150,6 +152,10 @@
         </div>
     </div>
 
+    <div id="keyboard-hints" class="keyboard-hints" style="display: none;">
+        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span> Fullscreen · <span class="hint-key">?</span> Help
+    </div>
+
     <!-- ADMIN BOARD -->
     <div class="admin-board" id="admin-board">
         <h3>ADMIN CONTROLS</h3>
@@ -201,82 +207,148 @@
     <!-- CUSTOMIZATION TABLE -->
     <div class="customization-table" id="customization-table">
         <h3>CUSTOMIZATION</h3>
-        <div class="custom-row">
-            <label class="custom-label">Left Player Name (First by default):</label>
-            <input type="text" id="p1-name-input" class="custom-input" value="Challenger">
+        <div class="custom-tabs">
+            <button type="button" class="custom-tab active" data-tab="gameplay" onclick="switchCustomizationTab('gameplay')">Gameplay</button>
+            <button type="button" class="custom-tab" data-tab="graphics" onclick="switchCustomizationTab('graphics')">Graphics</button>
         </div>
-        <div class="custom-row">
-            <label class="custom-label">Right Player Name (Second by default):</label>
-            <input type="text" id="p2-name-input" class="custom-input" value="Expert">
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">First Player:</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="first-left" name="first-player" value="left" checked>
-                    <label for="first-left">Left Player</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="first-right" name="first-player" value="right">
-                    <label for="first-right">Right Player</label>
+        <div id="custom-tab-gameplay" class="custom-tab-panel active">
+            <div class="custom-row">
+                <label class="custom-label">Left Player Name (First by default):</label>
+                <input type="text" id="p1-name-input" class="custom-input" value="Challenger">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Right Player Name (Second by default):</label>
+                <input type="text" id="p2-name-input" class="custom-input" value="Expert">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">First Player:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="first-left" name="first-player" value="left" checked>
+                        <label for="first-left">Left Player</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="first-right" name="first-player" value="right">
+                        <label for="first-right">Right Player</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Left Player Time Boost:</label>
-            <button id="p1-boost-btn" class="boost-btn" onclick="applyTimeBoost(1)">Time Boost? (+5s)</button>
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Right Player Time Boost:</label>
-            <button id="p2-boost-btn" class="boost-btn" onclick="applyTimeBoost(2)">Time Boost? (+5s)</button>
-        </div>
-        <div class="custom-row">
-            <button class="admin-btn" onclick="openStatsMenu()" style="width: auto; margin: 10px auto 0; display: block; padding: 10px 20px;">VIEW STATISTICS</button>
-        </div>
-        <div class="switch-container">
-            <span class="switch-label">Mute Sounds</span>
-            <label class="switch">
-                <input type="checkbox" id="mute-toggle" onchange="toggleMute()">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Theme:</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="theme-dark" name="theme" value="dark" checked onchange="changeTheme('dark')">
-                    <label for="theme-dark">Dark</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="theme-light" name="theme" value="light" onchange="changeTheme('light')">
-                    <label for="theme-light">Light</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="theme-gible" name="theme" value="gible" onchange="changeTheme('gible')">
-                    <label for="theme-gible">Gible</label>
-                </div>
+            <div class="custom-row">
+                <label class="custom-label">Left Player Time Boost:</label>
+                <button id="p1-boost-btn" class="boost-btn" onclick="applyTimeBoost(1)">Time Boost? (+5s)</button>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Right Player Time Boost:</label>
+                <button id="p2-boost-btn" class="boost-btn" onclick="applyTimeBoost(2)">Time Boost? (+5s)</button>
+            </div>
+            <div class="custom-row">
+                <button class="admin-btn" onclick="openStatsMenu()" style="width: auto; margin: 10px auto 0; display: block; padding: 10px 20px;">VIEW STATISTICS</button>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">Mute Sounds</span>
+                <label class="switch">
+                    <input type="checkbox" id="mute-toggle" onchange="toggleMute()">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
-        <div class="switch-container">
-            <span class="switch-label">Confetti</span>
-            <label class="switch">
-                <input type="checkbox" id="confetti-toggle" onchange="toggleConfetti()">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="switch-container">
-            <span class="switch-label">Disable Extras</span>
-            <label class="switch">
-                <input type="checkbox" id="disable-extras-toggle" onchange="toggleDisableExtras()">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="switch-container">
-            <span class="switch-label">Show Timer Decimal (Player Screen)</span>
-            <label class="switch">
-                <input type="checkbox" id="show-timer-decimal-toggle" onchange="toggleShowTimerDecimal()">
-                <span class="slider"></span>
-            </label>
+        <div id="custom-tab-graphics" class="custom-tab-panel">
+            <div class="custom-row">
+                <label class="custom-label">Theme:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="theme-dark" name="theme" value="dark" checked onchange="changeTheme('dark')">
+                        <label for="theme-dark">Dark</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="theme-light" name="theme" value="light" onchange="changeTheme('light')">
+                        <label for="theme-light">Light</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="theme-gible" name="theme" value="gible" onchange="changeTheme('gible')">
+                        <label for="theme-gible">Gible</label>
+                    </div>
+                </div>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">Confetti</span>
+                <label class="switch">
+                    <input type="checkbox" id="confetti-toggle" onchange="toggleConfetti()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">Disable Extras</span>
+                <label class="switch">
+                    <input type="checkbox" id="disable-extras-toggle" onchange="toggleDisableExtras()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">Show Timer Decimal (Player Screen)</span>
+                <label class="switch">
+                    <input type="checkbox" id="show-timer-decimal-toggle" onchange="toggleShowTimerDecimal()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">High Contrast &amp; Reduced Motion</span>
+                <label class="switch">
+                    <input type="checkbox" id="high-contrast-reduced-motion-toggle" onchange="toggleHighContrastReducedMotion()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Background Style:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="bg-solid" name="background-style" value="solid" onchange="setBackgroundStyle('solid')">
+                        <label for="bg-solid">Solid</label>
+                    </div>
+                    <div class="radio-option">
+                    <input type="radio" id="bg-grid" name="background-style" value="grid" onchange="setBackgroundStyle('grid')">
+                    <label for="bg-grid">Grid</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="bg-tiles" name="background-style" value="tiles" onchange="setBackgroundStyle('tiles')">
+                        <label for="bg-tiles">Tiles</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="bg-diagonal" name="background-style" value="diagonal" onchange="setBackgroundStyle('diagonal')">
+                        <label for="bg-diagonal">Diagonal</label>
+                    </div>
+                    <div class="radio-option">
+                    <input type="radio" id="bg-pop" name="background-style" value="pop" checked onchange="setBackgroundStyle('pop')">
+                    <label for="bg-pop">Pop</label>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Background Drift Speed:</label>
+                <input type="range" id="bg-drift-speed-slider" min="0.25" max="2" step="0.25" value="1" oninput="setBackgroundDriftSpeed(parseFloat(this.value))" style="width: 180px; vertical-align: middle;">
+                <span id="bg-drift-speed-label" style="margin-left: 8px; min-width: 4em;">1×</span>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Blue Style:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                    <input type="radio" id="blue-a" name="blue-variant" value="a" onchange="setBlueVariant('a')">
+                    <label for="blue-a">A</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="blue-b" name="blue-variant" value="b" checked onchange="setBlueVariant('b')">
+                    <label for="blue-b">B</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="blue-c" name="blue-variant" value="c" onchange="setBlueVariant('c')">
+                        <label for="blue-c">C</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="blue-d" name="blue-variant" value="d" onchange="setBlueVariant('d')">
+                        <label for="blue-d">D</label>
+                    </div>
+                </div>
+            </div>
         </div>
         <button class="custom-close" onclick="closeCustomization()" style="width: auto; margin: 20px auto 0; display: block; padding: 10px 20px;">CLOSE</button>
     </div>

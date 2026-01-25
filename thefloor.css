@@ -314,15 +314,54 @@
             max-height: 90vh;
             overflow-y: auto;
             overflow-x: hidden;
+            box-shadow: 0 0 32px rgba(255, 204, 0, 0.35);
         }
         .customization-table.show {
             display: block;
         }
         .customization-table h3 {
-            margin: 0 0 20px 0;
+            margin: 0 0 16px 0;
             color: var(--floor-yellow);
             font-size: 1.5rem;
             text-align: center;
+        }
+        .custom-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #444;
+        }
+        .custom-tab {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #999;
+            background: #222;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .custom-tab:hover {
+            color: #ccc;
+        }
+        .custom-tab.active {
+            color: var(--floor-yellow);
+            border-bottom-color: var(--floor-yellow);
+            background: transparent;
+            box-shadow: none;
+        }
+        .custom-tab-panel {
+            display: none;
+            box-shadow: none;
+            border: none;
+        }
+        .custom-tab-panel.active {
+            display: block;
+            box-shadow: none;
+            border: none;
+            color: inherit;
         }
         .custom-row {
             margin: 15px 0;
@@ -593,6 +632,10 @@
             background: rgba(255, 255, 255, 0.98);
             border-color: #333;
         }
+        body.light-theme .customization-table {
+            border-color: #333;
+            box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);
+        }
         body.light-theme .custom-label,
         body.light-theme .stat-item,
         body.light-theme .stats-section h3,
@@ -662,6 +705,10 @@
         body.gible-theme .help-content,
         body.gible-theme .stats-menu {
             border-color: #ff8800;
+        }
+        body.gible-theme .customization-table {
+            border-color: #ff8800;
+            box-shadow: 0 0 32px rgba(255, 136, 0, 0.3);
         }
         body.gible-theme .admin-board h3,
         body.gible-theme .customization-table h3,
@@ -736,6 +783,10 @@
         .streak-display.hidden, .score-display.hidden {
             display: none;
         }
+        body.admin-window-open #answer-input,
+        body.admin-window-open .answer-reveal {
+            display: none !important;
+        }
 
         .confetti-container {
             position: fixed;
@@ -770,4 +821,192 @@
         }
         body.pinned-admin {
             padding-bottom: 150px;
+        }
+
+        /* KEYBOARD HINTS */
+        .keyboard-hints {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 204, 0, 0.8);
+            margin: 12px 0;
+            padding: 6px 12px;
+        }
+        .keyboard-hints .hint-key {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 0 2px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 204, 0, 0.6);
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* HIGH CONTRAST & REDUCED MOTION */
+        body.high-contrast-reduced-motion .clock,
+        body.high-contrast-reduced-motion .admin-btn,
+        body.high-contrast-reduced-motion .play-btn,
+        body.high-contrast-reduced-motion input[type="text"],
+        body.high-contrast-reduced-motion .image-container {
+            border-width: 3px !important;
+            border-color: #fff !important;
+        }
+        body.high-contrast-reduced-motion .clock.danger {
+            animation: none;
+        }
+        body.high-contrast-reduced-motion .confetti {
+            animation: none;
+            opacity: 0;
+        }
+        body.high-contrast-reduced-motion,
+        body.high-contrast-reduced-motion .clock,
+        body.high-contrast-reduced-motion .admin-btn,
+        body.high-contrast-reduced-motion .play-btn {
+            transition: none !important;
+        }
+
+        /* Blue variants (override --floor-blue) */
+        body.blue-a { --floor-blue: #001f3f; }
+        body.blue-b { --floor-blue: #0d3d6e; }
+        body.blue-c { --floor-blue: #1a5a9e; }
+        body.blue-d { --floor-blue: #1565c0; }
+
+        /* BACKGROUND STYLES (geometric / playful, drift down-and-left) */
+        @keyframes bg-drift-grid {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 36px -36px, 36px -36px; }
+        }
+        @keyframes bg-drift-tiles {
+            0% { background-position: 0 0, 0 24px, 24px 24px, 24px 0; }
+            100% { background-position: 48px 48px, 48px 72px, 72px 72px, 72px 48px; }
+        }
+        @keyframes bg-drift-diagonal {
+            0% { background-position: 0 0; }
+            100% { background-position: 17px 17px; }
+        }
+        @keyframes bg-pop-cell {
+            0%, 100% { transform: scale(0.6); opacity: 0.15; box-shadow: none; }
+            50% { transform: scale(1.05); opacity: 0.5; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        }
+
+        body.bg-grid {
+            --bg-drift-duration: calc(50s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 36px 36px;
+            animation: bg-drift-grid var(--bg-drift-duration) linear infinite;
+        }
+        body.bg-tiles {
+            --bg-drift-duration: calc(60s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(45deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.06) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.06) 75%);
+            background-size: 48px 48px;
+            background-position: 0 0, 0 24px, 24px 24px, 24px 0;
+            animation: bg-drift-tiles var(--bg-drift-duration) linear infinite;
+        }
+        body.bg-diagonal {
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent 0,
+                transparent 12px,
+                rgba(255,255,255,0.07) 12px,
+                rgba(255,255,255,0.07) 24px
+            );
+            background-size: auto;
+        }
+        body.light-theme.bg-grid {
+            --bg-drift-duration: calc(50s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(rgba(0,0,0,0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.07) 1px, transparent 1px);
+            background-size: 36px 36px;
+            animation: bg-drift-grid var(--bg-drift-duration) linear infinite;
+        }
+        body.light-theme.bg-tiles {
+            --bg-drift-duration: calc(60s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(45deg, rgba(0,0,0,0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(0,0,0,0.05) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.05) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.05) 75%);
+            background-size: 48px 48px;
+            background-position: 0 0, 0 24px, 24px 24px, 24px 0;
+            animation: bg-drift-tiles var(--bg-drift-duration) linear infinite;
+        }
+        body.light-theme.bg-diagonal {
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent 0,
+                transparent 12px,
+                rgba(0,0,0,0.06) 12px,
+                rgba(0,0,0,0.06) 24px
+            );
+            background-size: auto;
+        }
+        body.gible-theme.bg-grid {
+            --bg-drift-duration: calc(50s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(rgba(255,136,0,0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,136,0,0.12) 1px, transparent 1px);
+            background-size: 36px 36px;
+            animation: bg-drift-grid var(--bg-drift-duration) linear infinite;
+        }
+        body.gible-theme.bg-tiles {
+            --bg-drift-duration: calc(60s / (var(--bg-drift-speed, 1) * 2));
+            background-image:
+                linear-gradient(45deg, rgba(255,136,0,0.08) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,136,0,0.08) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,136,0,0.08) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,136,0,0.08) 75%);
+            background-size: 48px 48px;
+            background-position: 0 0, 0 24px, 24px 24px, 24px 0;
+            animation: bg-drift-tiles var(--bg-drift-duration) linear infinite;
+        }
+        body.gible-theme.bg-diagonal {
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent 0,
+                transparent 12px,
+                rgba(255,136,0,0.1) 12px,
+                rgba(255,136,0,0.1) 24px
+            );
+            background-size: auto;
+        }
+
+        /* Pop squares layer */
+        #bg-pop-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            display: none;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(15, 1fr);
+            gap: 2px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        body.bg-pop #bg-pop-layer { display: grid; }
+        #bg-pop-layer .pop-cell {
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            animation: bg-pop-cell ease-in-out infinite;
+        }
+        body.light-theme #bg-pop-layer .pop-cell { background: rgba(0,0,0,0.06); }
+        body.gible-theme #bg-pop-layer .pop-cell { background: rgba(255,136,0,0.12); }
+        body.high-contrast-reduced-motion #bg-pop-layer .pop-cell { animation: none; }
+
+        body.high-contrast-reduced-motion.bg-grid,
+        body.high-contrast-reduced-motion.bg-tiles,
+        body.high-contrast-reduced-motion.bg-diagonal,
+        body.high-contrast-reduced-motion.light-theme.bg-grid,
+        body.high-contrast-reduced-motion.light-theme.bg-tiles,
+        body.high-contrast-reduced-motion.light-theme.bg-diagonal,
+        body.high-contrast-reduced-motion.gible-theme.bg-grid,
+        body.high-contrast-reduced-motion.gible-theme.bg-tiles,
+        body.high-contrast-reduced-motion.gible-theme.bg-diagonal {
+            animation: none;
         }

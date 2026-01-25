@@ -69,6 +69,14 @@
         .stats-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 10px; }
         .stat-item { font-size: 0.9rem; margin-bottom: 4px; color: #ccc; }
         .stat-item span { color: var(--floor-yellow); font-weight: bold; }
+        .admin-keyboard-hints { text-align: center; font-size: 0.85rem; color: rgba(255,204,0,0.85); margin: 12px 0; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 8px; }
+        .admin-keyboard-hints .hint-key { display: inline-block; padding: 2px 6px; margin: 0 2px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,204,0,0.6); border-radius: 4px; font-weight: bold; }
+        .custom-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid #444; }
+        .custom-tabs .custom-tab { flex: 1; padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: #888; background: #222; border: none; border-bottom: 3px solid transparent; cursor: pointer; }
+        .custom-tabs .custom-tab:hover { color: #bbb; }
+        .custom-tabs .custom-tab.active { color: var(--floor-yellow); border-bottom-color: var(--floor-yellow); background: transparent; }
+        .custom-tab-panel { display: none; }
+        .custom-tab-panel.active { display: block; }
     </style>
 </head>
 <body>
@@ -146,49 +154,85 @@
 
     <div class="custom-section">
         <h2>CUSTOMIZATION</h2>
-        <div class="custom-row">
-            <label class="custom-label">Left Player:</label>
-            <input type="text" id="admin-p1-name" class="custom-input" placeholder="Challenger">
+        <div class="custom-tabs">
+            <button type="button" class="custom-tab active" data-tab="gameplay">Gameplay</button>
+            <button type="button" class="custom-tab" data-tab="graphics">Graphics</button>
         </div>
-        <div class="custom-row">
-            <label class="custom-label">Right Player:</label>
-            <input type="text" id="admin-p2-name" class="custom-input" placeholder="Expert">
-        </div>
-        <div class="custom-row">
-            <span class="custom-label">First Player:</span>
-            <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="admin-first-left" name="admin-first" value="left" checked><label for="admin-first-left">Left</label></div>
-                <div class="radio-option"><input type="radio" id="admin-first-right" name="admin-first" value="right"><label for="admin-first-right">Right</label></div>
+        <div id="admin-tab-gameplay" class="custom-tab-panel active">
+            <div class="custom-row">
+                <label class="custom-label">Left Player:</label>
+                <input type="text" id="admin-p1-name" class="custom-input" placeholder="Challenger">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Right Player:</label>
+                <input type="text" id="admin-p2-name" class="custom-input" placeholder="Expert">
+            </div>
+            <div class="custom-row">
+                <span class="custom-label">First Player:</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="admin-first-left" name="admin-first" value="left" checked><label for="admin-first-left">Left</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-first-right" name="admin-first" value="right"><label for="admin-first-right">Right</label></div>
+                </div>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Time Boosts:</label>
+                <button type="button" class="boost-btn" id="admin-boost-p1">P1 +5s</button>
+                <button type="button" class="boost-btn" id="admin-boost-p2">P2 +5s</button>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Mute:</label>
+                <input type="checkbox" id="admin-mute" style="width: auto;">
             </div>
         </div>
-        <div class="custom-row">
-            <label class="custom-label">Time Boosts:</label>
-            <button type="button" class="boost-btn" id="admin-boost-p1">P1 +5s</button>
-            <button type="button" class="boost-btn" id="admin-boost-p2">P2 +5s</button>
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Mute:</label>
-            <input type="checkbox" id="admin-mute" style="width: auto;">
-        </div>
-        <div class="custom-row">
-            <span class="custom-label">Theme:</span>
-            <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark" checked><label for="admin-theme-dark">Dark</label></div>
-                <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme" value="light"><label for="admin-theme-light">Light</label></div>
-                <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme" value="gible"><label for="admin-theme-gible">Gible</label></div>
+        <div id="admin-tab-graphics" class="custom-tab-panel">
+            <div class="custom-row">
+                <span class="custom-label">Theme:</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark" checked><label for="admin-theme-dark">Dark</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme" value="light"><label for="admin-theme-light">Light</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme" value="gible"><label for="admin-theme-gible">Gible</label></div>
+                </div>
             </div>
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Confetti:</label>
-            <input type="checkbox" id="admin-confetti" style="width: auto;">
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Disable Extras:</label>
-            <input type="checkbox" id="admin-disable-extras" style="width: auto;">
-        </div>
-        <div class="custom-row">
-            <label class="custom-label">Show Timer Decimal (Players):</label>
-            <input type="checkbox" id="admin-show-timer-decimal" style="width: auto;">
+            <div class="custom-row">
+                <label class="custom-label">Confetti:</label>
+                <input type="checkbox" id="admin-confetti" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Disable Extras:</label>
+                <input type="checkbox" id="admin-disable-extras" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Show Timer Decimal (Players):</label>
+                <input type="checkbox" id="admin-show-timer-decimal" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">High Contrast &amp; Reduced Motion:</label>
+                <input type="checkbox" id="admin-high-contrast-reduced-motion" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <span class="custom-label">Background Style:</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="admin-bg-solid" name="admin-bg" value="solid"><label for="admin-bg-solid">Solid</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-grid" name="admin-bg" value="grid"><label for="admin-bg-grid">Grid</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-tiles" name="admin-bg" value="tiles"><label for="admin-bg-tiles">Tiles</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-diagonal" name="admin-bg" value="diagonal"><label for="admin-bg-diagonal">Diagonal</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-pop" name="admin-bg" value="pop" checked><label for="admin-bg-pop">Pop</label></div>
+                </div>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Drift Speed:</label>
+                <input type="range" id="admin-bg-drift-speed" min="0.25" max="2" step="0.25" value="1" style="width: 120px; vertical-align: middle;">
+                <span id="admin-bg-drift-speed-label" style="margin-left: 6px; min-width: 3em;">1×</span>
+            </div>
+            <div class="custom-row">
+                <span class="custom-label">Blue Style:</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="admin-blue-a" name="admin-blue" value="a"><label for="admin-blue-a">A</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-b" name="admin-blue" value="b" checked><label for="admin-blue-b">B</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-c" name="admin-blue" value="c"><label for="admin-blue-c">C</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-d" name="admin-blue" value="d"><label for="admin-blue-d">D</label></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -198,12 +242,17 @@
         <div class="stat-item">Session — Games: <span id="admin-ss-games">0</span> | Correct: <span id="admin-ss-correct">0</span> | Passed: <span id="admin-ss-passed">0</span></div>
     </div>
 
+    <div class="admin-keyboard-hints">
+        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span> Fullscreen · <span class="hint-key">?</span> Help
+    </div>
+
     <div class="help-overlay" id="admin-help-overlay">
         <div class="help-content" onclick="event.stopPropagation()">
             <h2>HOST CONTROLS</h2>
             <p><span class="help-key">J</span> Mark as correct</p>
             <p><span class="help-key">K</span> Pause / Resume</p>
             <p><span class="help-key">L</span> Pass</p>
+            <p><span class="help-key">R</span> Reset (with confirmation)</p>
             <button type="button" class="host-btn k" onclick="closeAdminHelp()" style="margin-top:12px">CLOSE</button>
         </div>
     </div>
@@ -237,7 +286,10 @@
                 'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
                 'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
-                'admin-show-timer-decimal', 'admin-active-p1', 'admin-active-p2'];
+                'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
+                'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
+                'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
+                'admin-active-p1', 'admin-active-p2'];
             ids.forEach(function(id) {
                 const el = document.getElementById(id);
                 if (el) el.disabled = !enabled;
@@ -251,6 +303,18 @@
         }
 
         document.getElementById('admin-help-overlay').addEventListener('click', closeAdminHelp);
+
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.custom-section .custom-tab').forEach(function(t) {
+                t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+            });
+            document.querySelectorAll('.custom-section .custom-tab-panel').forEach(function(p) {
+                p.classList.toggle('active', p.id === 'admin-tab-' + tab);
+            });
+        }
+        document.querySelectorAll('.custom-section .custom-tab').forEach(function(btn) {
+            btn.addEventListener('click', function() { switchAdminTab(this.getAttribute('data-tab')); });
+        });
 
         document.getElementById('admin-help-btn').addEventListener('click', function() {
             const el = document.getElementById('admin-help-overlay');
@@ -275,11 +339,15 @@
             if (e.key === 'Enter') { e.preventDefault(); document.getElementById('admin-load-btn').click(); }
         });
 
+        function doAdminReset() {
+            if (!confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) return;
+            send({ action: 'reset' });
+        }
         document.getElementById('admin-btn-j').addEventListener('click', function() { send({ action: 'correct' }); });
         document.getElementById('admin-btn-k').addEventListener('click', function() { send({ action: 'pause' }); });
         document.getElementById('admin-btn-l').addEventListener('click', function() { send({ action: 'pass' }); });
         document.getElementById('admin-btn-pause').addEventListener('click', function() { send({ action: 'pause' }); });
-        document.getElementById('admin-btn-reset').addEventListener('click', function() { send({ action: 'reset' }); });
+        document.getElementById('admin-btn-reset').addEventListener('click', doAdminReset);
         document.getElementById('admin-gamemode').addEventListener('change', function() {
             send({ action: 'gamemode', value: this.value });
         });
@@ -323,6 +391,21 @@
         document.getElementById('admin-show-timer-decimal').addEventListener('change', function() {
             send({ action: 'showTimerDecimal', value: this.checked });
         });
+        document.getElementById('admin-high-contrast-reduced-motion').addEventListener('change', function() {
+            send({ action: 'highContrastReducedMotion', value: this.checked });
+        });
+        ['solid','grid','tiles','diagonal','pop'].forEach(function(bgVal) {
+            var el = document.getElementById('admin-bg-' + bgVal);
+            if (el) el.addEventListener('change', function() { if (this.checked) send({ action: 'backgroundStyle', value: bgVal }); });
+        });
+        document.getElementById('admin-bg-drift-speed').addEventListener('input', function() {
+            var v = parseFloat(this.value);
+            if (!isNaN(v)) { send({ action: 'backgroundDriftSpeed', value: v }); document.getElementById('admin-bg-drift-speed-label').textContent = v + '×'; }
+        });
+        ['a','b','c','d'].forEach(function(bv) {
+            var el = document.getElementById('admin-blue-' + bv);
+            if (el) el.addEventListener('change', function() { if (this.checked) send({ action: 'blueVariant', value: bv }); });
+        });
         document.getElementById('admin-active-p1').addEventListener('change', function() {
             if (this.checked) send({ action: 'changeActivePlayer', playerNum: 1 });
         });
@@ -336,6 +419,7 @@
             if (e.key === 'j' || e.key === 'J') { e.preventDefault(); send({ action: 'correct' }); }
             else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); send({ action: 'pause' }); }
             else if (e.key === 'l' || e.key === 'L') { e.preventDefault(); send({ action: 'pass' }); }
+            else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); doAdminReset(); }
         });
 
         window.addEventListener('message', function(e) {
@@ -420,6 +504,24 @@
                 if (d.showTimerDecimal != null) {
                     var std = document.getElementById('admin-show-timer-decimal');
                     if (std && std.checked !== d.showTimerDecimal) std.checked = !!d.showTimerDecimal;
+                }
+                if (d.highContrastReducedMotion != null) {
+                    var hc = document.getElementById('admin-high-contrast-reduced-motion');
+                    if (hc && hc.checked !== d.highContrastReducedMotion) hc.checked = !!d.highContrastReducedMotion;
+                }
+                if (d.backgroundStyle) {
+                    var ab = document.getElementById('admin-bg-' + d.backgroundStyle);
+                    if (ab && !ab.checked) ab.checked = true;
+                }
+                if (typeof d.backgroundDriftSpeed === 'number') {
+                    var sp = document.getElementById('admin-bg-drift-speed');
+                    var spl = document.getElementById('admin-bg-drift-speed-label');
+                    if (sp && sp.value !== String(d.backgroundDriftSpeed)) { sp.value = d.backgroundDriftSpeed; }
+                    if (spl) spl.textContent = d.backgroundDriftSpeed + '×';
+                }
+                if (d.blueVariant) {
+                    var bv = document.getElementById('admin-blue-' + d.blueVariant);
+                    if (bv && !bv.checked) bv.checked = true;
                 }
                 if (d.lastRound) {
                     document.getElementById('admin-lr-correct').textContent = d.lastRound.totalCorrect != null ? d.lastRound.totalCorrect : 0;
