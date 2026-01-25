@@ -100,3 +100,4 @@ const flagData = [
     {n: "ETHIOPIA", u: "https://flagcdn.com/w640/et.png"},
     {n: "GHANA", u: "https://flagcdn.com/w640/gh.png"}
 ];
+if (typeof window !== 'undefined') window.flagData = flagData;

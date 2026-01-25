@@ -6,6 +6,7 @@ const hockeyData = [
     {n: "PUCK", u: "images/hockey/puck.webp"},
     {n: "WAYNE GRETZKY", u: "images/hockey/gretzky.jpeg"},
     {n: "HELMET", u: "images/hockey/helmet.jpg"},
+    {n: "JERSEY", u: "images/hockey/jersey.webp"},
     {n: "TORONTO MAPLE LEAFS", u: "images/hockey/maple-leafs-logo.png"},
     {n: "SKATES", u: "images/hockey/skates.jpg"},
     {n: "STANLEY CUP", u: "images/hockey/stanley-cup.jpeg"},
@@ -27,7 +28,6 @@ const hockeyData = [
     {n: "ELBOW PADS", u: "images/hockey/elbow-pads.jpg"},
     {n: "EDMONTON OILERS", u: "images/hockey/oilers-logo.jpg"},
     {n: "HOCKEY BAG", u: "images/hockey/hockey-bag.jpg"},
-    {n: "JERSEY", u: "images/hockey/jersey.webp"},
     {n: "SKATE BLADE", u: "images/hockey/skate-blade.webp"},
     {n: "WATER BOTTLE", u: "images/hockey/water-bottle.jpg"},
     {n: "GOAL LIGHT", u: "images/hockey/goal-light.webp"},
@@ -41,3 +41,4 @@ const hockeyData = [
     {n: "BENCH", u: "images/hockey/bench.jpg"},
     {n: "REFEREE", u: "images/hockey/referee.webp"}
 ];
+if (typeof window !== 'undefined') window.hockeyData = hockeyData;

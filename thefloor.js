@@ -1,10 +1,26 @@
-        // 'flagData' is loaded from flags.js automatically
-        const categories = {
-        flags: (typeof flagData !== 'undefined') ? flagData : [],
-        pokemon: (typeof pokemonData !== 'undefined') ? pokemonData : [],
-        hockey: (typeof hockeyData !== 'undefined') ? hockeyData : [],
-        math: (typeof mathData !== 'undefined') ? mathData : []
-    };
+        // ========== CATEGORIES & STATE ==========
+        const CATEGORY_SCRIPTS = { flags: 'categories/flags.js', pokemon: 'categories/pokemon.js', hockey: 'categories/hockey.js', math: 'categories/math.js' };
+        const CATEGORY_GLOBALS = { flags: 'flagData', pokemon: 'pokemonData', hockey: 'hockeyData', math: 'mathData' };
+        const categoryScriptsLoaded = new Set();
+
+        function loadCategoryScript(cat) {
+            if (categoryScriptsLoaded.has(cat)) return Promise.resolve();
+            const src = CATEGORY_SCRIPTS[cat];
+            if (!src) return Promise.reject(new Error('Unknown category'));
+            return new Promise(function(resolve, reject) {
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = function() { categoryScriptsLoaded.add(cat); resolve(); };
+                s.onerror = function() { reject(new Error('Failed to load ' + src)); };
+                document.head.appendChild(s);
+            });
+        }
+
+        async function getCategoryData(cat) {
+            await loadCategoryScript(cat);
+            const g = typeof window !== 'undefined' ? window[CATEGORY_GLOBALS[cat]] : undefined;
+            return Array.isArray(g) ? g : [];
+        }
 
         // --- GAME LOGIC ---
         let activePlayer = 1;
@@ -179,7 +195,8 @@
             } catch (e) {}
         }
         
-        // Sound effects: ding1–ding10 (correct), pass1–pass5 (pass). Play in order, loop after last.
+        // ========== SOUNDS ==========
+        // ding1–ding10 (correct), pass1–pass5 (pass). Play in order, loop after last.
         const DING_COUNT = 10;
         const PASS_COUNT = 5;
         let sounds = {
@@ -196,20 +213,16 @@
 
         function playDingSound() {
             if (isMuted) return;
-            const src = sounds.dings[dingIndex];
-            const s = src.cloneNode();
+            const s = new Audio('sounds/ding' + (dingIndex + 1) + '.mp3');
             s.volume = 0.5;
-            s.currentTime = 0;
             s.play().catch(() => {});
             dingIndex = (dingIndex + 1) % DING_COUNT;
         }
 
         function playPassSound() {
             if (isMuted) return;
-            const src = sounds.passes[passIndex];
-            const s = src.cloneNode();
+            const s = new Audio('sounds/pass' + (passIndex + 1) + '.mp3');
             s.volume = 0.5;
-            s.currentTime = 0;
             s.play().catch(() => {});
             passIndex = (passIndex + 1) % PASS_COUNT;
         }
@@ -228,14 +241,15 @@
             }
         }
 
+        // ========== GAME FLOW (setup, start, loop, correct, pass, end) ==========
         async function setupGame(cat, opts) {
             if (gameActive) return;
             const fromAdminWindow = !!(opts && opts.fromAdminWindow);
             const loadOnly = !!(opts && opts.loadOnly);
+            const data = await getCategoryData(cat);
+            if (!data || !data.length) return;
             const w = document.getElementById('welcome-message');
             if (w) w.classList.add('hide');
-            
-            // Reset background
             document.body.classList.remove('game-ended');
             
             // Reset last round stats
@@ -284,12 +298,10 @@
                 document.getElementById('p2-boost-btn').disabled = false;
                 document.getElementById('p2-boost-btn').textContent = 'Time Boost? (+5s)';
             }
-            
-            // SHUFFLE: Randomize the order every time, unless in host mode or math (math keeps difficulty order)
             if (hostMode || cat === 'math') {
-                currentPool = [...categories[cat]];
+                currentPool = [...data];
             } else {
-                currentPool = [...categories[cat]].sort(() => Math.random() - 0.5);
+                currentPool = [...data].sort(function() { return Math.random() - 0.5; });
             }
             
             // In single player, always use player 1
@@ -363,7 +375,7 @@
                 gameActive = true;
                 inputLocked = false;
                 loadImage();
-                
+                updateMenuVisibility();
                 if(clockInterval) clearInterval(clockInterval);
                 clockInterval = setInterval(gameLoop, 100);
                 
@@ -428,6 +440,7 @@
             img.style.display = 'block';
             loadImage();
             
+            updateMenuVisibility();
             if(clockInterval) clearInterval(clockInterval);
             clockInterval = setInterval(gameLoop, 100);
         }
@@ -744,6 +757,7 @@
                 perSlotStats[winnerSlot].wins++;
             }
             
+            updateMenuVisibility();
             sessionStats.gamesPlayed++;
             lifetimeStats.gamesPlayed++;
             saveLifetimeStats();
@@ -903,22 +917,24 @@
         function resolveCategoryKey(input) {
             const v = String(input || '').toLowerCase().trim();
             if (CATEGORY_KEYS[v]) return v;
-            const k = Object.keys(categories).find(function(c) { return c.toLowerCase() === v; });
+            const k = Object.keys(CATEGORY_SCRIPTS).find(function(c) { return c.toLowerCase() === v; });
             return k || null;
         }
 
-        function startSelectedCategory() {
+        async function startSelectedCategory() {
             const dropdown = document.getElementById('category-dropdown');
             const raw = dropdown && dropdown.value ? dropdown.value.trim() : '';
             const cat = resolveCategoryKey(raw);
-            if (!cat || !categories[cat]) return;
+            if (!cat || !CATEGORY_SCRIPTS[cat]) return;
             dropdown.value = '';
-            if (hostMode) {
-                setupGame(cat, { fromAdminWindow: false });
-                startGameFromHost();
-            } else {
-                setupGame(cat);
-            }
+            try {
+                if (hostMode) {
+                    await setupGame(cat, { fromAdminWindow: false });
+                    startGameFromHost();
+                } else {
+                    await setupGame(cat);
+                }
+            } catch (e) { console.error('Category load failed:', e); }
         }
 
         // Allow Enter key to start game from dropdown
@@ -977,6 +993,7 @@
         // Update pause button and hide pause overlay
         updatePauseButton();
         updatePauseOverlay();
+        updateMenuVisibility();
     }
 
     // ADMIN FUNCTIONS
@@ -1051,6 +1068,12 @@
         const el = document.getElementById('keyboard-hints');
         if (!el) return;
         el.style.display = (hostMode && !adminWindowOpen && !disableExtras) ? 'block' : 'none';
+    }
+
+    function updateMenuVisibility() {
+        const menu = document.querySelector('.menu');
+        if (!menu) return;
+        menu.style.display = (adminWindowOpen || gameActive) ? 'none' : '';
     }
 
     function updatePauseOverlay() {
@@ -1183,10 +1206,7 @@
         img.style.display = 'block';
         img.dataset.errorHandled = 'false';
         
-        // Remove red border
-        imgFrame.classList.remove('pass-border');
-        
-        // Reset timer colors
+        // Reset timer colors and classes (clear winner/loser styling)
         const p1Display = document.getElementById('p1-display');
         const p2Display = document.getElementById('p2-display');
         p1Display.style.borderColor = '';
@@ -1195,10 +1215,16 @@
         p2Display.style.borderColor = '';
         p2Display.style.color = '';
         p2Display.style.boxShadow = '';
+        p1Display.className = 'clock';
+        p2Display.className = 'clock';
+        
+        imgFrame.classList.remove('correct-border');
+        imgFrame.classList.remove('pass-border');
         
         // Hide overlay
         document.getElementById('overlay').style.display = 'none';
         
+        updateMenuVisibility();
         updatePauseButton();
         updateDisplay();
     }
@@ -1315,8 +1341,7 @@
         const galleryBtn = document.getElementById('gallery-btn');
         if (galleryBtn) galleryBtn.style.display = 'block';
         document.getElementById('admin-board').style.display = 'none';
-        const menu = document.querySelector('.menu');
-        if (menu) menu.style.display = 'none';
+        updateMenuVisibility();
         document.getElementById('help-button').style.display = 'none';
         document.body.classList.add('admin-window-open');
         if (!gameActive) showWelcomeOnMain();
@@ -1329,7 +1354,7 @@
                 return;
             }
             postStateToAdmin();
-        }, 150);
+        }, 250);
     }
 
     function closeAdminWindow() {
@@ -1343,8 +1368,7 @@
         if (galleryBtn) galleryBtn.style.display = 'none';
         const adminBoard = document.getElementById('admin-board');
         if (adminBoard) adminBoard.style.display = '';
-        const menu = document.querySelector('.menu');
-        if (menu) menu.style.display = '';
+        updateMenuVisibility();
         const helpBtn = document.getElementById('help-button');
         if (helpBtn) helpBtn.style.display = '';
         document.body.classList.remove('admin-window-open');
@@ -1352,6 +1376,7 @@
         updateDisplay();
     }
 
+    // ========== ADMIN WINDOW & POST-MESSAGE ==========
     function postStateToAdmin() {
         if (!adminWindow || adminWindow.closed) return;
         const t1 = Math.max(0, timers[0]);
@@ -1410,8 +1435,8 @@
         }
         if (d.action === 'loadCategory' && d.category) {
             const cat = resolveCategoryKey(d.category);
-            if (cat && categories[cat]) {
-                setupGame(cat, { fromAdminWindow: true, loadOnly: true });
+            if (cat && CATEGORY_SCRIPTS[cat]) {
+                setupGame(cat, { fromAdminWindow: true, loadOnly: true }).catch(function(e) { console.error('Category load failed:', e); });
             }
             return;
         }
@@ -1598,6 +1623,7 @@
         }
     }
 
+    // ========== CUSTOMIZATION & TABS ==========
     function switchCustomizationTab(tab) {
         const tabs = document.querySelectorAll('.custom-tab');
         const panels = document.querySelectorAll('.custom-tab-panel');
@@ -1940,7 +1966,7 @@
     function createPopLayer() {
         const layer = document.getElementById('bg-pop-layer');
         if (!layer || layer.children.length) return;
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 150; i++) {
             const cell = document.createElement('div');
             cell.className = 'pop-cell';
             cell.style.animationDelay = -(Math.random() * 7) + 's';
@@ -1949,6 +1975,7 @@
         }
     }
 
+    // ========== INIT ==========
     function initPage() {
         createPopLayer();
         loadPreferences();

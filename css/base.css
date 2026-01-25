@@ -1,0 +1,21 @@
+        /* ========== BASE (vars, body, layout) ========== */
+        :root {
+            --floor-blue: #001f3f;
+            --floor-yellow: #ffcc00;
+            --floor-green: #2ecc71;
+            --floor-red: #e74c3c;
+        }
+
+        body { 
+            font-family: 'Arial Black', sans-serif; 
+            text-align: center; 
+            background: var(--floor-blue); 
+            color: white; 
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+        body.game-ended {
+            background: #000511;
+        }
+

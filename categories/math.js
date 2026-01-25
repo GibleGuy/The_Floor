@@ -105,3 +105,4 @@ const mathData = [
     ...interleave(mult, div),
     ...interleave(exp, roots)
 ];
+if (typeof window !== 'undefined') window.mathData = mathData;
