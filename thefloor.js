@@ -37,6 +37,11 @@
         let confettiEnabled = false;
         let disableExtras = false;
         let showTimerDecimal = false;
+        let highContrastReducedMotion = false;
+        const BG_STYLES = ['solid','grid','tiles','diagonal','pop'];
+        let backgroundStyle = 'pop';
+        let backgroundDriftSpeed = 1;   // 0.25–2, multiplier for drift
+        let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
         let currentStreak = 0;
         let inPassPhase = false;
         let unpauseCountdownActive = false;
@@ -71,6 +76,107 @@
         
         function saveLifetimeStats() {
             localStorage.setItem('floorLifetimeStats', JSON.stringify(lifetimeStats));
+        }
+
+        const PREFS_KEY = 'floorPreferences';
+        function loadPreferences() {
+            try {
+                const raw = localStorage.getItem(PREFS_KEY);
+                if (!raw) return;
+                const p = JSON.parse(raw);
+                if (p.theme && ['dark','light','gible'].includes(p.theme)) currentTheme = p.theme;
+                if (typeof p.mute === 'boolean') isMuted = p.mute;
+                if (typeof p.showTimerDecimal === 'boolean') showTimerDecimal = p.showTimerDecimal;
+                if (typeof p.disableExtras === 'boolean') disableExtras = p.disableExtras;
+                if (typeof p.confettiEnabled === 'boolean') confettiEnabled = p.confettiEnabled;
+                if (p.gamemode && ['singleplayer','classic'].includes(p.gamemode)) gamemode = p.gamemode;
+                if (Array.isArray(p.playerNames) && p.playerNames.length >= 2) {
+                    playerNames[0] = String(p.playerNames[0] || 'Challenger');
+                    playerNames[1] = String(p.playerNames[1] || 'Expert');
+                }
+                if (typeof p.firstPlayerIsLeft === 'boolean') firstPlayerIsLeft = p.firstPlayerIsLeft;
+                if (typeof p.highContrastReducedMotion === 'boolean') highContrastReducedMotion = p.highContrastReducedMotion;
+                if (p.backgroundStyle && BG_STYLES.includes(p.backgroundStyle)) backgroundStyle = p.backgroundStyle;
+                if (typeof p.backgroundDriftSpeed === 'number' && p.backgroundDriftSpeed >= 0.25 && p.backgroundDriftSpeed <= 2) backgroundDriftSpeed = p.backgroundDriftSpeed;
+                if (p.blueVariant && ['a','b','c','d'].includes(p.blueVariant)) blueVariant = p.blueVariant;
+            } catch (e) {}
+        }
+        function applyPreferencesToDOM() {
+            const gs = document.getElementById('gamemode-select');
+            if (gs) gs.value = gamemode;
+            const p1 = document.getElementById('p1-name-input');
+            const p2 = document.getElementById('p2-name-input');
+            if (p1) p1.value = playerNames[0];
+            if (p2) p2.value = playerNames[1];
+            const fl = document.getElementById('first-left');
+            const fr = document.getElementById('first-right');
+            if (fl) fl.checked = firstPlayerIsLeft;
+            if (fr) fr.checked = !firstPlayerIsLeft;
+            const mt = document.getElementById('mute-toggle');
+            if (mt) mt.checked = isMuted;
+            const ct = document.getElementById('confetti-toggle');
+            if (ct) ct.checked = confettiEnabled;
+            const de = document.getElementById('disable-extras-toggle');
+            if (de) de.checked = disableExtras;
+            const std = document.getElementById('show-timer-decimal-toggle');
+            if (std) std.checked = showTimerDecimal;
+            const hc = document.getElementById('high-contrast-reduced-motion-toggle');
+            if (hc) hc.checked = highContrastReducedMotion;
+            const td = document.getElementById('theme-dark');
+            const tl = document.getElementById('theme-light');
+            const tg = document.getElementById('theme-gible');
+            if (td) td.checked = (currentTheme === 'dark');
+            if (tl) tl.checked = (currentTheme === 'light');
+            if (tg) tg.checked = (currentTheme === 'gible');
+            changeTheme(currentTheme);
+            document.body.classList.toggle('high-contrast-reduced-motion', highContrastReducedMotion);
+            document.body.style.setProperty('--bg-drift-speed', String(backgroundDriftSpeed));
+            ['a','b','c','d'].forEach(function(v) { document.body.classList.remove('blue-' + v); });
+            document.body.classList.add('blue-' + blueVariant);
+            BG_STYLES.forEach(function(b) { document.body.classList.remove('bg-' + b); });
+            document.body.classList.add('bg-' + backgroundStyle);
+            const bsRadios = document.querySelectorAll('input[name="background-style"]');
+            bsRadios.forEach(function(r) { r.checked = (r.value === backgroundStyle); });
+            const speedSlider = document.getElementById('bg-drift-speed-slider');
+            if (speedSlider) { speedSlider.value = backgroundDriftSpeed; }
+            const speedLabel = document.getElementById('bg-drift-speed-label');
+            if (speedLabel) speedLabel.textContent = backgroundDriftSpeed + '×';
+            const bvRadios = document.querySelectorAll('input[name="blue-variant"]');
+            bvRadios.forEach(function(r) { r.checked = (r.value === blueVariant); });
+            const helpBtn = document.getElementById('help-button');
+            const fullscreenBtn = document.getElementById('fullscreen-button');
+            const streakDisplay = document.getElementById('streak-display');
+            const scoreDisplay = document.getElementById('score-display');
+            if (disableExtras) {
+                if (helpBtn) helpBtn.classList.add('hidden');
+                if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
+                if (streakDisplay) streakDisplay.classList.add('hidden');
+                if (scoreDisplay) scoreDisplay.classList.add('hidden');
+            } else {
+                if (helpBtn) helpBtn.classList.remove('hidden');
+                if (fullscreenBtn) fullscreenBtn.classList.remove('hidden');
+                if (streakDisplay) streakDisplay.classList.remove('hidden');
+                if (scoreDisplay) scoreDisplay.classList.remove('hidden');
+            }
+        }
+        function savePreferences() {
+            try {
+                const p = {
+                    theme: currentTheme,
+                    mute: isMuted,
+                    showTimerDecimal,
+                    disableExtras,
+                    confettiEnabled,
+                    gamemode,
+                    playerNames: playerNames.slice(),
+                firstPlayerIsLeft,
+                highContrastReducedMotion,
+                backgroundStyle,
+                backgroundDriftSpeed,
+                blueVariant
+                };
+                localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+            } catch (e) {}
         }
         
         // Sound effects: ding1–ding10 (correct), pass1–pass5 (pass). Play in order, loop after last.
@@ -452,7 +558,7 @@
             playDingSound();
 
             // Confetti
-            if (confettiEnabled) {
+            if (confettiEnabled && !highContrastReducedMotion) {
                 createConfetti();
             }
             
@@ -941,6 +1047,12 @@
         if (l2) l2.textContent = playerNames[1] || 'Right Player';
     }
 
+    function updateKeyboardHintsVisibility() {
+        const el = document.getElementById('keyboard-hints');
+        if (!el) return;
+        el.style.display = (hostMode && !adminWindowOpen && !disableExtras) ? 'block' : 'none';
+    }
+
     function updatePauseOverlay() {
         const po = document.getElementById('pause-overlay');
         const ph = document.getElementById('pause-hide-bar');
@@ -989,8 +1101,8 @@
         }
     }
 
-    function resetGame() {
-        if (!confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) {
+    function resetGame(skipConfirm) {
+        if (!skipConfirm && !confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) {
             return;
         }
         
@@ -1091,9 +1203,35 @@
         updateDisplay();
     }
 
+    function showWelcomeOnMain() {
+        const imgFrame = document.getElementById('img-frame');
+        if (!imgFrame) return;
+        imgFrame.className = 'image-container';
+        imgFrame.innerHTML = `
+            <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
+            <div id="overlay"></div>
+            <img id="prompt-image" src="" onerror="handleImageError(this)" style="display: none;">
+            <div id="math-problem" class="math-problem"></div>
+            <div id="pause-overlay">
+                <span class="pause-text">PAUSED</span>
+                <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
+            </div>
+            <div id="pause-hide-bar">
+                <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
+            </div>
+        `;
+        document.getElementById('reveal-text').innerText = '';
+        const ai = document.getElementById('answer-input');
+        if (ai) { ai.value = ''; ai.disabled = true; ai.style.display = 'block'; }
+        document.getElementById('category-display').style.display = 'none';
+        currentCategory = '';
+        categoryLoadedForHost = false;
+    }
+
     function changeGamemode() {
         const select = document.getElementById('gamemode-select');
         gamemode = select.value;
+        savePreferences();
         
         // Update UI for single player mode
         const p2Container = document.querySelector('.clocks > div:nth-child(2)');
@@ -1130,14 +1268,12 @@
             answerInput.style.display = 'block';
         }
         
-        const categoryDropdown = document.getElementById('category-dropdown');
-        if (categoryDropdown) categoryDropdown.disabled = !!hostMode;
-        
         const galleryBtn = document.getElementById('gallery-btn');
         if (galleryBtn) galleryBtn.style.display = hostMode ? 'block' : 'none';
         const adminWindowBtn = document.getElementById('admin-window-btn');
         if (adminWindowBtn) adminWindowBtn.style.display = hostMode ? 'block' : 'none';
         
+        updateKeyboardHintsVisibility();
         updateDisplay();
     }
 
@@ -1179,8 +1315,12 @@
         const galleryBtn = document.getElementById('gallery-btn');
         if (galleryBtn) galleryBtn.style.display = 'block';
         document.getElementById('admin-board').style.display = 'none';
-        document.querySelector('.menu').style.display = 'none';
+        const menu = document.querySelector('.menu');
+        if (menu) menu.style.display = 'none';
         document.getElementById('help-button').style.display = 'none';
+        document.body.classList.add('admin-window-open');
+        if (!gameActive) showWelcomeOnMain();
+        updateKeyboardHintsVisibility();
         if (adminInterval) clearInterval(adminInterval);
         postStateToAdmin();
         adminInterval = setInterval(function() {
@@ -1207,6 +1347,7 @@
         if (menu) menu.style.display = '';
         const helpBtn = document.getElementById('help-button');
         if (helpBtn) helpBtn.style.display = '';
+        document.body.classList.remove('admin-window-open');
         toggleHostMode();
         updateDisplay();
     }
@@ -1247,6 +1388,10 @@
                 confettiEnabled: confettiEnabled,
                 disableExtras: disableExtras,
                 showTimerDecimal: showTimerDecimal,
+                highContrastReducedMotion: highContrastReducedMotion,
+                backgroundStyle: backgroundStyle,
+                backgroundDriftSpeed: backgroundDriftSpeed,
+                blueVariant: blueVariant,
                 lastRound: lastRoundStats,
                 session: sessionStats
             }, '*');
@@ -1277,7 +1422,7 @@
         if (d.action === 'correct' && gameActive && !inputLocked) handleCorrect();
         else if (d.action === 'pause' && gameActive) togglePause();
         else if (d.action === 'pass' && gameActive && !inputLocked) handlePass();
-        else if (d.action === 'reset') resetGame();
+        else if (d.action === 'reset') resetGame(true);
         else if (d.action === 'gamemode' && d.value) {
             const sel = document.getElementById('gamemode-select');
             if (sel && (sel.value !== d.value)) { sel.value = d.value; changeGamemode(); }
@@ -1288,6 +1433,7 @@
             updateActivePlayerLabels();
             updateFirstPlayerLabels();
             updateDisplay();
+            savePreferences();
         }
         else if (d.action === 'setFirstPlayer' && d.left != null) {
             firstPlayerIsLeft = !!d.left;
@@ -1295,6 +1441,7 @@
             if (document.getElementById('first-right')) document.getElementById('first-right').checked = !firstPlayerIsLeft;
             updateFirstPlayerLabels();
             updateDisplay();
+            savePreferences();
         }
         else if (d.action === 'applyTimeBoost' && (d.playerNum === 1 || d.playerNum === 2)) {
             applyTimeBoost(d.playerNum);
@@ -1315,6 +1462,7 @@
             confettiEnabled = !!d.value;
             var ct = document.getElementById('confetti-toggle');
             if (ct && ct.checked !== confettiEnabled) ct.checked = confettiEnabled;
+            savePreferences();
         }
         else if (d.action === 'disableExtras' && d.value != null) {
             disableExtras = !!d.value;
@@ -1340,12 +1488,47 @@
                 if (scoreDisplay) scoreDisplay.classList.remove('hidden');
             }
             updateDisplay();
+            savePreferences();
+            updateKeyboardHintsVisibility();
         }
         else if (d.action === 'showTimerDecimal' && d.value != null) {
             showTimerDecimal = !!d.value;
             var st = document.getElementById('show-timer-decimal-toggle');
             if (st && st.checked !== showTimerDecimal) st.checked = showTimerDecimal;
             updateDisplay();
+            savePreferences();
+        }
+        else if (d.action === 'highContrastReducedMotion' && d.value != null) {
+            highContrastReducedMotion = !!d.value;
+            document.body.classList.toggle('high-contrast-reduced-motion', highContrastReducedMotion);
+            var hc = document.getElementById('high-contrast-reduced-motion-toggle');
+            if (hc && hc.checked !== highContrastReducedMotion) hc.checked = highContrastReducedMotion;
+            savePreferences();
+        }
+        else if (d.action === 'backgroundStyle' && d.value && BG_STYLES.includes(d.value)) {
+            backgroundStyle = d.value;
+            BG_STYLES.forEach(function(b) { document.body.classList.remove('bg-' + b); });
+            document.body.classList.add('bg-' + backgroundStyle);
+            var bs = document.querySelectorAll('input[name="background-style"]');
+            bs.forEach(function(r) { r.checked = (r.value === backgroundStyle); });
+            savePreferences();
+        }
+        else if (d.action === 'backgroundDriftSpeed' && typeof d.value === 'number' && d.value >= 0.25 && d.value <= 2) {
+            backgroundDriftSpeed = d.value;
+            document.body.style.setProperty('--bg-drift-speed', String(backgroundDriftSpeed));
+            var sl = document.getElementById('bg-drift-speed-slider');
+            if (sl) sl.value = backgroundDriftSpeed;
+            var lbl = document.getElementById('bg-drift-speed-label');
+            if (lbl) lbl.textContent = backgroundDriftSpeed + '×';
+            savePreferences();
+        }
+        else if (d.action === 'blueVariant' && d.value && ['a','b','c','d'].includes(d.value)) {
+            blueVariant = d.value;
+            ['a','b','c','d'].forEach(function(v) { document.body.classList.remove('blue-' + v); });
+            document.body.classList.add('blue-' + blueVariant);
+            var bv = document.querySelectorAll('input[name="blue-variant"]');
+            bv.forEach(function(r) { r.checked = (r.value === blueVariant); });
+            savePreferences();
         }
     });
 
@@ -1367,6 +1550,16 @@
         document.getElementById('confetti-toggle').checked = confettiEnabled;
         document.getElementById('disable-extras-toggle').checked = disableExtras;
         document.getElementById('show-timer-decimal-toggle').checked = showTimerDecimal;
+        const hcToggle = document.getElementById('high-contrast-reduced-motion-toggle');
+        if (hcToggle) hcToggle.checked = highContrastReducedMotion;
+        const bsRadios = document.querySelectorAll('input[name="background-style"]');
+        if (bsRadios.length) bsRadios.forEach(function(r) { r.checked = (r.value === backgroundStyle); });
+        const speedSlider = document.getElementById('bg-drift-speed-slider');
+        if (speedSlider) speedSlider.value = backgroundDriftSpeed;
+        const speedLabel = document.getElementById('bg-drift-speed-label');
+        if (speedLabel) speedLabel.textContent = backgroundDriftSpeed + '×';
+        const bvRadios = document.querySelectorAll('input[name="blue-variant"]');
+        if (bvRadios.length) bvRadios.forEach(function(r) { r.checked = (r.value === blueVariant); });
         updateFirstPlayerLabels();
         
         // Update button visibility
@@ -1405,6 +1598,17 @@
         }
     }
 
+    function switchCustomizationTab(tab) {
+        const tabs = document.querySelectorAll('.custom-tab');
+        const panels = document.querySelectorAll('.custom-tab-panel');
+        tabs.forEach(function(t) {
+            t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+        });
+        panels.forEach(function(p) {
+            p.classList.toggle('active', p.id === 'custom-tab-' + tab);
+        });
+    }
+
     function closeCustomization() {
         document.getElementById('customization-table').classList.remove('show');
         // Save player names
@@ -1415,6 +1619,7 @@
         updateActivePlayerLabels();
         updateFirstPlayerLabels();
         updateDisplay();
+        savePreferences();
     }
 
     function applyTimeBoost(playerNum) {
@@ -1490,6 +1695,7 @@
     // NEW FEATURE FUNCTIONS
     function toggleMute() {
         isMuted = document.getElementById('mute-toggle').checked;
+        savePreferences();
     }
 
     function changeTheme(theme) {
@@ -1500,6 +1706,7 @@
         } else if (theme === 'gible') {
             document.body.classList.add('gible-theme');
         }
+        savePreferences();
     }
 
     function openStatsMenu() {
@@ -1606,6 +1813,7 @@
 
     function toggleConfetti() {
         confettiEnabled = document.getElementById('confetti-toggle').checked;
+        savePreferences();
     }
 
     function toggleDisableExtras() {
@@ -1627,11 +1835,46 @@
             scoreDisplay.classList.remove('hidden');
         }
         updateDisplay();
+        updateKeyboardHintsVisibility();
+        savePreferences();
     }
 
     function toggleShowTimerDecimal() {
         showTimerDecimal = document.getElementById('show-timer-decimal-toggle').checked;
         updateDisplay();
+        savePreferences();
+    }
+
+    function toggleHighContrastReducedMotion() {
+        highContrastReducedMotion = document.getElementById('high-contrast-reduced-motion-toggle').checked;
+        document.body.classList.toggle('high-contrast-reduced-motion', highContrastReducedMotion);
+        savePreferences();
+    }
+
+    function setBackgroundStyle(style) {
+        backgroundStyle = style;
+        BG_STYLES.forEach(function(b) { document.body.classList.remove('bg-' + b); });
+        document.body.classList.add('bg-' + backgroundStyle);
+        savePreferences();
+    }
+
+    function setBackgroundDriftSpeed(speed) {
+        const v = parseFloat(speed);
+        if (isNaN(v)) return;
+        backgroundDriftSpeed = Math.max(0.25, Math.min(2, v));
+        document.body.style.setProperty('--bg-drift-speed', String(backgroundDriftSpeed));
+        var sl = document.getElementById('bg-drift-speed-slider');
+        if (sl) sl.value = backgroundDriftSpeed;
+        var lbl = document.getElementById('bg-drift-speed-label');
+        if (lbl) lbl.textContent = backgroundDriftSpeed + '×';
+        savePreferences();
+    }
+
+    function setBlueVariant(v) {
+        blueVariant = v;
+        ['a','b','c','d'].forEach(function(x) { document.body.classList.remove('blue-' + x); });
+        document.body.classList.add('blue-' + blueVariant);
+        savePreferences();
     }
 
     function toggleHelp() {
@@ -1693,14 +1936,31 @@
         }
     });
     
-    // Initialize gamemode UI on page load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            changeGamemode(); // Set initial UI state
-        });
-    } else {
-        // DOM already loaded
+    // Initialize: load persisted preferences, apply to DOM, then gamemode UI
+    function createPopLayer() {
+        const layer = document.getElementById('bg-pop-layer');
+        if (!layer || layer.children.length) return;
+        for (let i = 0; i < 300; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'pop-cell';
+            cell.style.animationDelay = -(Math.random() * 7) + 's';
+            cell.style.animationDuration = (3.5 + Math.random() * 3.5) + 's';
+            layer.appendChild(cell);
+        }
+    }
+
+    function initPage() {
+        createPopLayer();
+        loadPreferences();
+        applyPreferencesToDOM();
         changeGamemode();
+        updateFirstPlayerLabels();
+        updateKeyboardHintsVisibility();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPage);
+    } else {
+        initPage();
     }
 
     function createConfetti() {
