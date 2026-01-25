@@ -43,3 +43,4 @@ const pokemonData = [
     {n: "DROWZEE", u: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/96.png"},
     {n: "FARFETCHD", u: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/83.png"}
 ];
+if (typeof window !== 'undefined') window.pokemonData = pokemonData;
