@@ -1,0 +1,630 @@
+/**
+ * Floor Host — Grid & tile styling.
+ * Matches thefloor.html: clean borders, high contrast, screen-share readability.
+ */
+
+/* ---------- Header & controls ---------- */
+.floor-host-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--floor-yellow);
+}
+
+.floor-host-header h1 {
+    margin: 0 0 16px 0;
+    font-size: 2rem;
+    color: var(--floor-yellow);
+    font-weight: bold;
+}
+
+.floor-host-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 24px;
+    align-items: center;
+}
+
+.floor-control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.floor-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+}
+
+.floor-input {
+    width: 56px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid var(--floor-yellow);
+    border-radius: 8px;
+    background: #111;
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-input:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+
+.floor-sep {
+    color: var(--floor-yellow);
+    font-weight: bold;
+}
+
+.floor-btn {
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: var(--floor-yellow);
+    color: var(--floor-blue);
+    cursor: pointer;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-btn:hover {
+    filter: brightness(1.1);
+}
+
+.floor-btn-pick {
+    background: var(--floor-green);
+    color: #000;
+}
+
+.floor-radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.floor-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.floor-radio input {
+    accent-color: var(--floor-yellow);
+}
+
+/* ---------- Grid ---------- */
+.floor-host-main {
+    max-width: 100%;
+    overflow: auto;
+    padding: 0 20px 20px;
+}
+
+.floor-grid {
+    display: grid;
+    gap: 4px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: min(calc(100vw - 48px), 1200px);
+    min-height: 320px;
+    aspect-ratio: 1;
+    max-height: min(calc(100vh - 200px), 80vw);
+}
+
+.floor-grid-loading {
+    grid-column: 1 / -1;
+    align-self: center;
+    justify-self: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+}
+
+/* Grid dimensions set inline by JS (grid-template-rows/columns) */
+
+/* ---------- Tile ---------- */
+.floor-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 0;
+    min-width: 0;
+    padding: 6px;
+    background: #111;
+    border: 3px solid #333;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+    text-align: center;
+}
+
+.floor-tile-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.floor-tile-category {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.5rem, 2.2vw, 1.1rem);
+    font-weight: bold;
+    color: var(--floor-yellow);
+    line-height: 1.15;
+    word-break: break-word;
+    text-transform: uppercase;
+}
+
+.floor-tile-name {
+    flex: 0;
+    font-size: clamp(0.4rem, 1.4vw, 0.7rem);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.floor-tile--both .floor-tile-name {
+    margin-top: 4px;
+}
+
+/* +5 badge — glow/pulse (time boost) */
+.floor-tile-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    padding: 2px 6px;
+    font-size: clamp(0.45rem, 1.5vw, 0.65rem);
+    font-weight: bold;
+    background: var(--floor-green);
+    color: #000;
+    border-radius: 4px;
+    animation: badge-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(46, 204, 113, 0.8);
+        filter: brightness(1);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(46, 204, 113, 1);
+        filter: brightness(1.2);
+    }
+}
+
+/* Display modes */
+.floor-tile--both .floor-tile-category {
+    display: flex;
+}
+
+.floor-tile--both .floor-tile-name {
+    display: block;
+}
+
+.floor-tile--categories-only .floor-tile-category {
+    display: flex;
+}
+
+.floor-tile--categories-only .floor-tile-name {
+    display: none;
+}
+
+.floor-tile--names-only .floor-tile-category {
+    display: none;
+}
+
+.floor-tile--names-only .floor-tile-name {
+    display: block;
+    margin-top: 0;
+    flex: none;
+}
+
+.floor-tile--names-only .floor-tile-inner {
+    justify-content: center;
+}
+
+/* Unowned / empty tile */
+.floor-tile--empty {
+    border-color: #444;
+    background: #0a0a0a;
+}
+
+.floor-tile--empty .floor-tile-category,
+.floor-tile--empty .floor-tile-name {
+    color: #555;
+}
+
+/* Clickable tiles */
+.floor-tile {
+    cursor: pointer;
+}
+
+.floor-tile:focus {
+    outline: 2px solid var(--floor-yellow);
+    outline-offset: 2px;
+}
+
+.floor-tile:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Swap mode: selected tile */
+.floor-tile.floor-tile--swap-selected {
+    border-color: var(--floor-yellow);
+    box-shadow: 0 0 12px rgba(255, 204, 0, 0.5);
+}
+
+/* Battle mode: defender tile */
+.floor-tile.floor-tile--battle-defender {
+    border-color: var(--floor-yellow);
+    box-shadow: 0 0 12px rgba(255, 204, 0, 0.5);
+}
+
+/* ---------- Area takeover (battle win) ---------- */
+.floor-tile.floor-tile--takeover {
+    border-color: var(--floor-yellow);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
+    animation: takeover-fill 1s ease-out forwards;
+}
+
+@keyframes takeover-fill {
+    0% {
+        background: #111;
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
+    }
+    100% {
+        background: linear-gradient(180deg, rgba(255, 204, 0, 0.35) 0%, rgba(255, 204, 0, 0.15) 100%);
+        box-shadow: 0 0 24px rgba(255, 204, 0, 1);
+    }
+}
+
+/* ---------- Undo revert flash ---------- */
+.floor-grid.floor-grid--undo-revert .floor-tile {
+    animation: undo-flash 0.5s ease-out;
+}
+
+@keyframes undo-flash {
+    0% { filter: brightness(1.5); }
+    100% { filter: brightness(1); }
+}
+
+/* ---------- Category swap overlay ---------- */
+.floor-swap-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    pointer-events: none;
+}
+
+.floor-swap-overlay[aria-hidden="false"] {
+    display: block;
+}
+
+.floor-swap-fly {
+    position: fixed;
+    padding: 6px 12px;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    font-weight: bold;
+    color: var(--floor-yellow);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--floor-yellow);
+    border-radius: 6px;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floor-swap-arrow {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
+    animation: swap-arrow-spin 0.5s ease-in-out infinite;
+}
+
+.floor-swap-arrow::after {
+    content: '⇄';
+    font-size: 28px;
+    color: var(--floor-yellow);
+    line-height: 1;
+}
+
+@keyframes swap-arrow-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.floor-tile-category.floor-tile-category--swap-shrink {
+    transform: scale(0.3);
+    opacity: 0.3;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.floor-tile-category.floor-tile-category--swap-reappear {
+    animation: swap-reappear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes swap-reappear {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Randomizer ---------- */
+.floor-randomizer-result {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--floor-green);
+    border-radius: 8px;
+}
+
+.floor-randomizer-result[aria-hidden="false"] {
+    display: flex;
+}
+
+.floor-randomizer-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--floor-green);
+}
+
+.floor-grid--randomizer-active .floor-tile {
+    opacity: 0.4;
+    transition: opacity 0.15s ease;
+}
+
+.floor-grid--randomizer-active .floor-tile.floor-tile--randomizer-active,
+.floor-grid--randomizer-active .floor-tile.floor-tile--randomizer-selected {
+    opacity: 1;
+    z-index: 1;
+}
+
+.floor-tile.floor-tile--randomizer-active {
+    border-color: var(--floor-yellow);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+    transform: scale(1.05);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.floor-tile.floor-tile--randomizer-selected {
+    border-color: var(--floor-green);
+    box-shadow: 0 0 24px rgba(46, 204, 113, 0.9);
+    animation: randomizer-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes randomizer-pulse {
+    0%, 100% { box-shadow: 0 0 24px rgba(46, 204, 113, 0.9); }
+    50% { box-shadow: 0 0 32px rgba(46, 204, 113, 1); }
+}
+
+/* Swap bar & prompt */
+.floor-swap-bar {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    min-height: 2.5em;
+}
+
+body.floor-swap-mode .floor-swap-bar,
+body.floor-battle-mode .floor-swap-bar {
+    display: flex;
+}
+
+.floor-swap-prompt {
+    font-size: 1rem;
+    color: var(--floor-yellow);
+}
+
+.floor-swap-cancel {
+    display: inline-block;
+}
+
+/* ---------- Context menu ---------- */
+.floor-context-menu {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    min-width: 160px;
+    padding: 4px 0;
+    background: #111;
+    border: 3px solid var(--floor-yellow);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.floor-context-menu[aria-hidden="false"] {
+    display: block;
+}
+
+.floor-context-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-context-item:hover {
+    background: rgba(255, 204, 0, 0.2);
+    color: var(--floor-yellow);
+}
+
+/* ---------- Edit Details modal ---------- */
+.floor-edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.floor-edit-modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.floor-edit-content {
+    background: #111;
+    border: 3px solid var(--floor-yellow);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 320px;
+    max-width: 90vw;
+}
+
+.floor-edit-title {
+    margin: 0 0 20px 0;
+    font-size: 1.4rem;
+    color: var(--floor-yellow);
+}
+
+.floor-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.floor-edit-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.floor-edit-label {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.floor-edit-input {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 2px solid #444;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-edit-input:focus {
+    outline: none;
+    border-color: var(--floor-yellow);
+}
+
+.floor-edit-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.floor-edit-check input {
+    accent-color: var(--floor-yellow);
+}
+
+.floor-edit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.floor-btn-secondary {
+    background: #333;
+    color: white;
+}
+
+.floor-btn-secondary:hover {
+    filter: brightness(1.15);
+}
+
+/* ---------- Duel overlay (full-screen) ---------- */
+.floor-duel-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.92);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.floor-duel-overlay[aria-hidden="false"] {
+    display: flex;
+    pointer-events: auto;
+}
+
+.floor-duel-overlay.floor-duel-overlay--visible {
+    opacity: 1;
+}
+
+.floor-duel-content {
+    text-align: center;
+    padding: 48px;
+    max-width: 90vw;
+}
+
+.floor-duel-vs {
+    margin: 0 0 16px 0;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    font-weight: bold;
+    color: var(--floor-yellow);
+    line-height: 1.2;
+}
+
+.floor-duel-category {
+    margin: 0 0 32px 0;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: rgba(255, 255, 255, 0.95);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.floor-duel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.floor-duel-btn {
+    min-width: 160px;
+    font-size: 1.1rem;
+}
+
+.floor-duel-cancel {
+    display: block;
+    margin: 0 auto;
+}

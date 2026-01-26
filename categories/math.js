@@ -88,21 +88,21 @@ const roots = [
     item(8, "√64")
 ];
 
-function interleave(a, b) {
+/** Interleave in pairs of 2: a[0],a[1], b[0],b[1], a[2],a[3], b[2],b[3], ... (add-add sub-sub, etc.) */
+function interleavePairs(a, b) {
     const out = [];
-    for (let i = 0; i < a.length; i++) {
-        if (Math.random() < 0.5) {
-            out.push(a[i], b[i]);
-        } else {
-            out.push(b[i], a[i]);
-        }
+    for (let i = 0; i < a.length || i < b.length; i += 2) {
+        if (a[i] != null) out.push(a[i]);
+        if (a[i + 1] != null) out.push(a[i + 1]);
+        if (b[i] != null) out.push(b[i]);
+        if (b[i + 1] != null) out.push(b[i + 1]);
     }
     return out;
 }
 
 const mathData = [
-    ...interleave(add, sub),
-    ...interleave(mult, div),
-    ...interleave(exp, roots)
+    ...interleavePairs(add, sub),
+    ...interleavePairs(mult, div),
+    ...interleavePairs(exp, roots)
 ];
 if (typeof window !== 'undefined') window.mathData = mathData;
