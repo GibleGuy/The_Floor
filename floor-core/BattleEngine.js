@@ -57,15 +57,22 @@ function validateBattle(state, cr, cc, dr, dc) {
 
 /**
  * Apply battle result. Host has declared winner.
- * - Loser: eliminated, loses all tiles, loses category.
- * - Winner: gains all tiles. Gains loser's category only if winner was defender; keeps category if challenger.
+ * 
+ * BATTLE RULES:
+ * - First player selected = Challenger
+ * - Second player selected = Expert (defender)
+ * - Battle category = Expert's category
+ * - Challenger wins → takes Expert's tiles, KEEPS own category
+ * - Expert wins → takes Challenger's tiles, INHERITS Challenger's category
+ * 
+ * - Loser: eliminated, loses all tiles
  *
  * @param {GameState} state
  * @param {number} cr Challenger row
  * @param {number} cc Challenger col
- * @param {number} dr Defender row
- * @param {number} dc Defender col
- * @param {boolean} winnerIsChallenger true => challenger wins, false => defender wins
+ * @param {number} dr Defender/Expert row
+ * @param {number} dc Defender/Expert col
+ * @param {boolean} winnerIsChallenger true => challenger wins, false => expert/defender wins
  * @returns {{ success: boolean, loserId?: string, winnerId?: string, error?: string }}
  */
 function applyBattleResult(state, cr, cc, dr, dc, winnerIsChallenger) {
@@ -75,25 +82,40 @@ function applyBattleResult(state, cr, cc, dr, dc, winnerIsChallenger) {
     const { challenger, defender } = v;
     const winnerId = winnerIsChallenger ? challenger.ownerId : defender.ownerId;
     const loserId = winnerIsChallenger ? defender.ownerId : challenger.ownerId;
-    const winnerWasDefender = !winnerIsChallenger;
 
     const loser = state.getPlayer(loserId);
     const winner = state.getPlayer(winnerId);
     if (!loser || !winner) return { success: false, error: 'Player not found' };
 
-    // Category for transferred tiles: loser's expert if winner was defender, else winner's expert
-    const transferredCategory = winnerWasDefender ? loser.expertCategory : winner.expertCategory;
+    // Store the challenger's category before any changes
+    const challengerCategory = challenger.category;
 
-    // Loser loses all tiles -> reassign to winner (collect first, then reassign)
-    const tiles = state.getTilesOwnedBy(loserId).map((t) => ({ r: t.row, c: t.col }));
-    for (const { r, c } of tiles) {
-        state.setTileOwner(r, c, winnerId, transferredCategory);
+    // 1. Transfer all loser tiles to winner
+    const loserTiles = state.getTilesOwnedBy(loserId).map((t) => ({ r: t.row, c: t.col }));
+    for (const { r, c } of loserTiles) {
+        // Temporarily set to winner's current category, will fix in step 3
+        state.setTileOwner(r, c, winnerId, winner.expertCategory);
     }
 
-    // Eliminate loser
+    // 2. Apply Category Inheritance Rules
+    if (winnerIsChallenger) {
+        // Challenger Won: Keep own category (no change needed)
+        // winner.expertCategory stays the same
+    } else {
+        // Expert/Defender Won: Inherit Challenger's category
+        winner.expertCategory = challengerCategory;
+    }
+
+    // 3. Synchronize All Winner Tiles to current Expert Category
+    const allWinnerTiles = state.getTilesOwnedBy(winnerId);
+    for (const t of allWinnerTiles) {
+        state.setTileCategory(t.row, t.col, winner.expertCategory);
+    }
+
+    // 4. Eliminate loser
     state.eliminatePlayer(loserId);
 
-    // Increment duel counts for both (loser is already eliminated, but we still record they fought)
+    // 5. Stats
     loser.duelCount++;
     winner.duelCount++;
 

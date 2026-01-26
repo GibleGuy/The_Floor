@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- // test -->
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Floor Simulator</title>
-    <link href="css/base.css" rel="stylesheet">
-    <link href="css/game.css" rel="stylesheet">
-    <link href="css/customization.css" rel="stylesheet">
-    <link href="css/backgrounds.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/game.css" rel="stylesheet">
+    <link href="../css/customization.css" rel="stylesheet">
+    <link href="../css/backgrounds.css" rel="stylesheet">
 </head>
+
 <body>
 
     <div id="bg-pop-layer" aria-hidden="true"></div>
 
     <!-- HELP BUTTON & FULLSCREEN BUTTON -->
     <button id="help-button" onclick="toggleHelp()" class="help-button">?</button>
-    <button id="fullscreen-button" onclick="toggleFullscreen()" class="fullscreen-button" title="Toggle Fullscreen">⛶</button>
-    
-    <div id="category-display" style="font-size: 3.5rem; color: var(--floor-yellow); margin-bottom: 20px; text-align: center; font-weight: bold; text-transform: uppercase; display: none;"></div>
-    
+    <button id="fullscreen-button" onclick="toggleFullscreen()" class="fullscreen-button"
+        title="Toggle Fullscreen">⛶</button>
+
+    <div id="category-display"
+        style="font-size: 3.5rem; color: var(--floor-yellow); margin-bottom: 20px; text-align: center; font-weight: bold; text-transform: uppercase; display: none;">
+    </div>
+
     <!-- STATS DISPLAY (In-game) -->
     <div class="streak-display" id="streak-display">STREAK: 0</div>
     <div class="score-display" id="score-display">0 / 0</div>
-    
+
     <!-- STATS MENU -->
     <div class="stats-menu" id="stats-menu">
         <h2>STATISTICS</h2>
@@ -33,7 +38,7 @@
             <button class="stats-tab" onclick="switchStatsTab('session', this)">Session</button>
             <button class="stats-tab" onclick="switchStatsTab('lifetime', this)">Lifetime</button>
         </div>
-        
+
         <div id="stats-last-round" class="stats-section show">
             <h3>Last Round Statistics</h3>
             <div class="stat-item">Total Correct: <span id="lr-correct">0</span></div>
@@ -47,7 +52,7 @@
             <div class="stat-item">Correct: <span id="lr-p2-correct">0</span></div>
             <div class="stat-item">Passed: <span id="lr-p2-passed">0</span></div>
         </div>
-        
+
         <div id="stats-per-player" class="stats-section">
             <h3>Per Player Statistics</h3>
             <div class="stat-grid">
@@ -67,7 +72,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="stats-per-slot" class="stats-section">
             <h3>Per Slot Statistics</h3>
             <div class="stat-grid">
@@ -87,7 +92,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="stats-session" class="stats-section">
             <h3>Session Statistics</h3>
             <div class="stat-item">Games Played: <span id="ss-games">0</span></div>
@@ -96,7 +101,7 @@
             <div class="stat-item">Accuracy: <span id="ss-accuracy">0%</span></div>
             <div class="stat-item">Avg Time/Answer: <span id="ss-avg-time">0.0s</span></div>
         </div>
-        
+
         <div id="stats-lifetime" class="stats-section">
             <h3>Lifetime Statistics</h3>
             <div class="stat-item">Games Played: <span id="lt-games">0</span></div>
@@ -105,10 +110,11 @@
             <div class="stat-item">Accuracy: <span id="lt-accuracy">0%</span></div>
             <div class="stat-item">Avg Time/Answer: <span id="lt-avg-time">0.0s</span></div>
         </div>
-        
-        <button class="custom-close" onclick="closeStatsMenu()" style="margin-top: 20px; width: auto; padding: 10px 20px;">CLOSE</button>
+
+        <button class="custom-close" onclick="closeStatsMenu()"
+            style="margin-top: 20px; width: auto; padding: 10px 20px;">CLOSE</button>
     </div>
-    
+
     <div class="clocks">
         <div>
             <div id="p1-name" style="font-size: 1.2rem; margin-bottom: 5px; color: #888;">Challenger</div>
@@ -121,7 +127,8 @@
     </div>
 
     <div class="image-container" id="img-frame">
-        <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
+        <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span
+                class="welcome-line2">The Floor!</span></div>
         <div id="overlay"></div>
         <img id="prompt-image" src="" onerror="handleImageError(this)">
         <div id="math-problem" class="math-problem"></div>
@@ -136,10 +143,11 @@
 
     <div class="answer-reveal" id="reveal-text"></div>
     <input type="text" id="answer-input" placeholder="SELECT CATEGORY" disabled autocomplete="off">
-    
+
     <div class="menu">
         <div class="category-selector">
-            <input type="text" id="category-dropdown" list="category-list" placeholder="Type or select category..." autocomplete="off">
+            <input type="text" id="category-dropdown" list="category-list" placeholder="Type or select category..."
+                autocomplete="off">
             <datalist id="category-list">
                 <option value="flags">Flags</option>
                 <option value="pokemon">Pokemon</option>
@@ -151,7 +159,9 @@
     </div>
 
     <div id="keyboard-hints" class="keyboard-hints" style="display: none;">
-        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span> Fullscreen · <span class="hint-key">?</span> Help
+        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span
+            class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span>
+        Fullscreen · <span class="hint-key">?</span> Help
     </div>
 
     <!-- ADMIN BOARD -->
@@ -162,7 +172,8 @@
             <button id="reset-btn" class="admin-btn danger" onclick="resetGame()">RESET</button>
             <div class="custom-row">
                 <label class="custom-label">Gamemode:</label>
-                <select id="gamemode-select" class="custom-input" onchange="changeGamemode()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                <select id="gamemode-select" class="custom-input" onchange="changeGamemode()"
+                    style="width: 100%; padding: 8px; font-size: 0.9rem;">
                     <option value="singleplayer">Singleplayer</option>
                     <option value="classic" selected>Classic</option>
                 </select>
@@ -182,18 +193,22 @@
                 </label>
             </div>
             <button class="admin-btn" onclick="openCustomization()">CUSTOMIZE</button>
-            <button class="admin-btn" id="admin-window-btn" onclick="openAdminWindow()" style="display: none;">ADMIN WINDOW</button>
-            <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='gallery.html'" style="display: none;">GALLERY</button>
+            <button class="admin-btn" id="admin-window-btn" onclick="openAdminWindow()" style="display: none;">ADMIN
+                WINDOW</button>
+            <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='../gallery.html'"
+                style="display: none;">GALLERY</button>
             <div id="host-pause-controls" style="display: none;">
                 <div class="custom-row" style="margin-top: 15px;">
                     <label class="custom-label">Active Player:</label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="active-p1" name="active-player" value="1" onchange="changeActivePlayer(1)">
+                            <input type="radio" id="active-p1" name="active-player" value="1"
+                                onchange="changeActivePlayer(1)">
                             <label for="active-p1">Player 1</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="active-p2" name="active-player" value="2" onchange="changeActivePlayer(2)">
+                            <input type="radio" id="active-p2" name="active-player" value="2"
+                                onchange="changeActivePlayer(2)">
                             <label for="active-p2">Player 2</label>
                         </div>
                     </div>
@@ -206,8 +221,10 @@
     <div class="customization-table" id="customization-table">
         <h3>CUSTOMIZATION</h3>
         <div class="custom-tabs">
-            <button type="button" class="custom-tab active" data-tab="gameplay" onclick="switchCustomizationTab('gameplay')">Gameplay</button>
-            <button type="button" class="custom-tab" data-tab="graphics" onclick="switchCustomizationTab('graphics')">Graphics</button>
+            <button type="button" class="custom-tab active" data-tab="gameplay"
+                onclick="switchCustomizationTab('gameplay')">Gameplay</button>
+            <button type="button" class="custom-tab" data-tab="graphics"
+                onclick="switchCustomizationTab('graphics')">Graphics</button>
         </div>
         <div id="custom-tab-gameplay" class="custom-tab-panel active">
             <div class="custom-row">
@@ -240,7 +257,9 @@
                 <button id="p2-boost-btn" class="boost-btn" onclick="applyTimeBoost(2)">Time Boost? (+5s)</button>
             </div>
             <div class="custom-row">
-                <button class="admin-btn" onclick="openStatsMenu()" style="width: auto; margin: 10px auto 0; display: block; padding: 10px 20px;">VIEW STATISTICS</button>
+                <button class="admin-btn" onclick="openStatsMenu()"
+                    style="width: auto; margin: 10px auto 0; display: block; padding: 10px 20px;">VIEW
+                    STATISTICS</button>
             </div>
             <div class="switch-container">
                 <span class="switch-label">Mute Sounds</span>
@@ -255,7 +274,8 @@
                 <label class="custom-label">Theme:</label>
                 <div class="radio-group">
                     <div class="radio-option">
-                        <input type="radio" id="theme-dark" name="theme" value="dark" checked onchange="changeTheme('dark')">
+                        <input type="radio" id="theme-dark" name="theme" value="dark" checked
+                            onchange="changeTheme('dark')">
                         <label for="theme-dark">Dark</label>
                     </div>
                     <div class="radio-option">
@@ -292,7 +312,8 @@
             <div class="switch-container">
                 <span class="switch-label">High Contrast &amp; Reduced Motion</span>
                 <label class="switch">
-                    <input type="checkbox" id="high-contrast-reduced-motion-toggle" onchange="toggleHighContrastReducedMotion()">
+                    <input type="checkbox" id="high-contrast-reduced-motion-toggle"
+                        onchange="toggleHighContrastReducedMotion()">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -300,42 +321,50 @@
                 <label class="custom-label">Background Style:</label>
                 <div class="radio-group">
                     <div class="radio-option">
-                        <input type="radio" id="bg-solid" name="background-style" value="solid" onchange="setBackgroundStyle('solid')">
+                        <input type="radio" id="bg-solid" name="background-style" value="solid"
+                            onchange="setBackgroundStyle('solid')">
                         <label for="bg-solid">Solid</label>
                     </div>
                     <div class="radio-option">
-                    <input type="radio" id="bg-grid" name="background-style" value="grid" onchange="setBackgroundStyle('grid')">
-                    <label for="bg-grid">Grid</label>
+                        <input type="radio" id="bg-grid" name="background-style" value="grid"
+                            onchange="setBackgroundStyle('grid')">
+                        <label for="bg-grid">Grid</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-tiles" name="background-style" value="tiles" onchange="setBackgroundStyle('tiles')">
+                        <input type="radio" id="bg-tiles" name="background-style" value="tiles"
+                            onchange="setBackgroundStyle('tiles')">
                         <label for="bg-tiles">Tiles</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-diagonal" name="background-style" value="diagonal" onchange="setBackgroundStyle('diagonal')">
+                        <input type="radio" id="bg-diagonal" name="background-style" value="diagonal"
+                            onchange="setBackgroundStyle('diagonal')">
                         <label for="bg-diagonal">Diagonal</label>
                     </div>
                     <div class="radio-option">
-                    <input type="radio" id="bg-pop" name="background-style" value="pop" checked onchange="setBackgroundStyle('pop')">
-                    <label for="bg-pop">Pop</label>
+                        <input type="radio" id="bg-pop" name="background-style" value="pop" checked
+                            onchange="setBackgroundStyle('pop')">
+                        <label for="bg-pop">Pop</label>
                     </div>
                 </div>
             </div>
             <div class="custom-row">
                 <label class="custom-label">Background Drift Speed:</label>
-                <input type="range" id="bg-drift-speed-slider" min="0.25" max="2" step="0.25" value="1" oninput="setBackgroundDriftSpeed(parseFloat(this.value))" style="width: 180px; vertical-align: middle;">
+                <input type="range" id="bg-drift-speed-slider" min="0.25" max="2" step="0.25" value="1"
+                    oninput="setBackgroundDriftSpeed(parseFloat(this.value))"
+                    style="width: 180px; vertical-align: middle;">
                 <span id="bg-drift-speed-label" style="margin-left: 8px; min-width: 4em;">1×</span>
             </div>
             <div class="custom-row">
                 <label class="custom-label">Blue Style:</label>
                 <div class="radio-group">
                     <div class="radio-option">
-                    <input type="radio" id="blue-a" name="blue-variant" value="a" onchange="setBlueVariant('a')">
-                    <label for="blue-a">A</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="blue-b" name="blue-variant" value="b" checked onchange="setBlueVariant('b')">
-                    <label for="blue-b">B</label>
+                        <input type="radio" id="blue-a" name="blue-variant" value="a" onchange="setBlueVariant('a')">
+                        <label for="blue-a">A</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="blue-b" name="blue-variant" value="b" checked
+                            onchange="setBlueVariant('b')">
+                        <label for="blue-b">B</label>
                     </div>
                     <div class="radio-option">
                         <input type="radio" id="blue-c" name="blue-variant" value="c" onchange="setBlueVariant('c')">
@@ -348,14 +377,15 @@
                 </div>
             </div>
         </div>
-        <button class="custom-close" onclick="closeCustomization()" style="width: auto; margin: 20px auto 0; display: block; padding: 10px 20px;">CLOSE</button>
+        <button class="custom-close" onclick="closeCustomization()"
+            style="width: auto; margin: 20px auto 0; display: block; padding: 10px 20px;">CLOSE</button>
     </div>
 
     <!-- HELP OVERLAY -->
     <div class="help-overlay" id="help-overlay" onclick="closeHelp()">
         <div class="help-content" onclick="event.stopPropagation()">
             <h2>HELP & SHORTCUTS</h2>
-            
+
             <div class="help-section">
                 <h3>How to Play</h3>
                 <p><strong>Objective:</strong> Identify the images shown on screen before your time runs out!</p>
@@ -371,11 +401,12 @@
                 <p><strong>Tips:</strong></p>
                 <ul style="text-align: left; margin: 10px 0; padding-left: 20px;">
                     <li>Answers are case-insensitive</li>
-                    <li>You can pass by pressing Enter with an empty input, or press <span class="help-key">`</span></li>
+                    <li>You can pass by pressing Enter with an empty input, or press <span class="help-key">`</span>
+                    </li>
                     <li>Use time boosts in customization for an extra 5 seconds</li>
                 </ul>
             </div>
-            
+
             <div class="help-section">
                 <h3>Keyboard Shortcuts</h3>
                 <p><strong>General:</strong></p>
@@ -390,7 +421,7 @@
                 <p><span class="help-key">Enter</span> (empty input) - Pass</p>
                 <p><span class="help-key">`</span> - Pass</p>
             </div>
-            
+
             <button class="custom-close" onclick="closeHelp()" style="margin-top: 20px;">CLOSE</button>
         </div>
     </div>
@@ -398,6 +429,7 @@
     <!-- CONFETTI CONTAINER -->
     <div class="confetti-container" id="confetti-container"></div>
 
-    <script src="thefloor.js"></script>
+    <script src="game.js"></script>
 </body>
+
 </html>

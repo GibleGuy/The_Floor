@@ -9,7 +9,7 @@ import { createPlayer, clonePlayer } from './Player.js';
 const DEFAULT_ROWS = 10;
 const DEFAULT_COLS = 10;
 const MIN_PLAYERS = 4;
-const MAX_PLAYERS = 100;
+const MAX_PLAYERS = 400;
 
 /**
  * Build a fresh game state.
