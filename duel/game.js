@@ -1,5 +1,5 @@
 // ========== CATEGORIES & STATE ==========
-const CATEGORY_SCRIPTS = { flags: '../categories/flags.js', pokemon: '../categories/pokemon.js', hockey: '../categories/hockey.js', math: '../categories/math.js' };
+const CATEGORY_SCRIPTS = { flags: '../categories/flags.js?v=2', pokemon: '../categories/pokemon.js?v=2', hockey: '../categories/hockey.js?v=2', math: '../categories/math.js?v=2' };
 const CATEGORY_GLOBALS = { flags: 'flagData', pokemon: 'pokemonData', hockey: 'hockeyData', math: 'mathData' };
 const categoryScriptsLoaded = new Set();
 
@@ -55,7 +55,7 @@ let disableExtras = false;
 let showTimerDecimal = false;
 let highContrastReducedMotion = false;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
-let backgroundStyle = 'pop';
+let backgroundStyle = 'grid';
 let backgroundDriftSpeed = 1;   // 0.25–2, multiplier for drift
 let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
 let currentStreak = 0;
@@ -383,6 +383,7 @@ async function setupGame(cat, opts) {
         const answerInput = document.getElementById('answer-input');
         answerInput.disabled = false;
         answerInput.style.display = 'block';
+        answerInput.placeholder = 'TYPE ANSWER HERE';
         answerInput.focus();
     }
 }
@@ -474,7 +475,20 @@ document.getElementById('answer-input').addEventListener('input', (e) => {
 
 document.getElementById('answer-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && gameActive && !inputLocked) {
-        if (e.target.value.trim() === "") handlePass();
+        const val = e.target.value.trim();
+        if (val === "") {
+            handlePass();
+        } else if (val.toUpperCase() !== currentPool[currentIndex].n) {
+            // Incorrect answer - flash red and clear
+            const input = e.target;
+            input.style.backgroundColor = 'rgba(231, 76, 60, 0.3)';
+            input.style.borderColor = 'var(--floor-red)';
+            setTimeout(() => {
+                input.style.backgroundColor = '';
+                input.style.borderColor = '';
+            }, 300);
+            input.value = '';
+        }
     }
     // Add ` key to pass in non-host mode
     if ((e.key === '`' || e.key === '~') && gameActive && !inputLocked && !hostMode) {
@@ -763,6 +777,10 @@ function handleCategoryComplete() {
     saveLifetimeStats();
 
     updatePauseButton();
+
+    // Reset placeholder text
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) answerInput.placeholder = 'SELECT A CATEGORY';
 }
 
 function loadImage() {
@@ -1006,6 +1024,10 @@ function endGame() {
     updatePauseButton();
     updatePauseOverlay();
     updateMenuVisibility();
+
+    // Reset placeholder text
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) answerInput.placeholder = 'SELECT A CATEGORY';
 }
 
 // ADMIN FUNCTIONS
@@ -1239,6 +1261,10 @@ function resetGame(skipConfirm) {
     updateMenuVisibility();
     updatePauseButton();
     updateDisplay();
+
+    // Reset placeholder text
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) answerInput.placeholder = 'SELECT A CATEGORY';
 }
 
 function showWelcomeOnMain() {
@@ -1332,7 +1358,7 @@ function openAdminWindow() {
         adminWindow.focus();
         return;
     }
-    adminWindow = window.open('../admin.html', 'floor-admin', 'width=720,height=720,menubar=no,toolbar=no,location=no');
+    adminWindow = window.open('admin.html', 'floor-admin', 'width=720,height=720,menubar=no,toolbar=no,location=no');
     if (!adminWindow) return;
     adminWindowOpen = true;
     hostMode = true;
@@ -1709,7 +1735,16 @@ function handleImageError(img) {
     if (img.dataset.errorHandled === 'true') return;
     img.dataset.errorHandled = 'true';
 
-    const itemName = currentPool[currentIndex].n;
+    const item = currentPool[currentIndex];
+    const itemName = item.n;
+    const isMath = item && typeof item.q === 'string';
+
+    // Skip fallback for math category - it uses its own display element
+    if (isMath) {
+        img.style.display = 'none';
+        return;
+    }
+
     const container = document.getElementById('img-frame');
 
     // Hide the image

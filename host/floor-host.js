@@ -49,10 +49,19 @@ const importBtn = document.getElementById('floor-import-btn');
 const exportBtn = document.getElementById('floor-export-btn');
 const randomizeCheck = document.getElementById('floor-randomize-check');
 const muteBtn = document.getElementById('floor-mute-btn');
+const bgStyleSelect = document.getElementById('floor-bg-style');
+const blueVariantSelect = document.getElementById('floor-blue-variant');
+const driftSpeedInput = document.getElementById('floor-drift-speed');
 
 /** Audio mute state */
 let isMuted = false;
 let currentAudio = null;
+
+/** Background settings */
+let backgroundStyle = 'pop';
+let blueVariant = 'b';
+let driftSpeed = 1;
+const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
 let state = null;
@@ -293,13 +302,24 @@ function runSwapAnimation(first, second, t1, t2) {
         swapReappearTiles = [first, second];
         cancelSwapMode();
         render();
-        const a = getTileEl(first.r, first.c)?.querySelector('.floor-tile-category');
-        const b = getTileEl(second.r, second.c)?.querySelector('.floor-tile-category');
-        if (a) a.classList.add('floor-tile-category--swap-reappear');
-        if (b) b.classList.add('floor-tile-category--swap-reappear');
+
+        // Highlight all tiles in both cell groups for visual feedback
+        const group1 = state.getContiguousTileGroup(first.r, first.c);
+        const group2 = state.getContiguousTileGroup(second.r, second.c);
+        const allAffectedTiles = [...group1, ...group2];
+
+        for (const pos of allAffectedTiles) {
+            const el = getTileEl(pos.r, pos.c);
+            const catEl = el?.querySelector('.floor-tile-category');
+            if (catEl) catEl.classList.add('floor-tile-category--swap-reappear');
+        }
+
         setTimeout(() => {
-            a?.classList.remove('floor-tile-category--swap-reappear');
-            b?.classList.remove('floor-tile-category--swap-reappear');
+            for (const pos of allAffectedTiles) {
+                const el = getTileEl(pos.r, pos.c);
+                const catEl = el?.querySelector('.floor-tile-category');
+                catEl?.classList.remove('floor-tile-category--swap-reappear');
+            }
             swapReappearTiles = null;
         }, 400);
         updateUndoButton();
@@ -1069,7 +1089,10 @@ function render() {
             if (mode !== 'names') {
                 const cat = document.createElement('div');
                 cat.className = 'label-cat';
-                cat.textContent = player.expertCategory;
+                // Read category from the actual tile data (which updates during swaps)
+                // instead of player.expertCategory (which is immutable)
+                const firstTile = state.getTile(pc.tiles[0].r, pc.tiles[0].c);
+                cat.textContent = firstTile?.category || player.expertCategory;
                 label.appendChild(cat);
             }
 
@@ -1302,6 +1325,100 @@ function importSimpleList(rowsData) {
     }
 }
 
+
+
+function createPopLayer() {
+    const layer = document.getElementById('bg-pop-layer');
+    if (!layer || layer.children.length) return;
+    for (let i = 0; i < 150; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'pop-cell';
+        cell.style.animationDelay = -(Math.random() * 7) + 's';
+        cell.style.animationDuration = (3.5 + Math.random() * 3.5) + 's';
+        layer.appendChild(cell);
+    }
+}
+
+function setBackgroundStyle(style) {
+    if (!BG_STYLES.includes(style)) return;
+    backgroundStyle = style;
+    applyHostPreferencesToDOM();
+    saveHostPreferences();
+}
+
+function setBlueVariant(variant) {
+    if (!['a', 'b', 'c', 'd'].includes(variant)) return;
+    blueVariant = variant;
+    applyHostPreferencesToDOM();
+    saveHostPreferences();
+}
+
+function setDriftSpeed(speed) {
+    if (isNaN(speed)) return;
+    driftSpeed = speed;
+    applyHostPreferencesToDOM();
+    saveHostPreferences();
+}
+
+const HOST_PREFS_KEY = 'floorHostPreferences';
+
+function loadHostPreferences() {
+    try {
+        const raw = localStorage.getItem(HOST_PREFS_KEY);
+        if (!raw) return;
+        const p = JSON.parse(raw);
+        if (p.backgroundStyle && BG_STYLES.includes(p.backgroundStyle)) backgroundStyle = p.backgroundStyle;
+        if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
+        if (typeof p.driftSpeed === 'number') driftSpeed = p.driftSpeed;
+        if (typeof p.isMuted === 'boolean') {
+            isMuted = p.isMuted;
+            updateMuteButton();
+        }
+    } catch (e) { console.error('Failed to load prefs', e); }
+}
+
+function saveHostPreferences() {
+    try {
+        const p = {
+            backgroundStyle,
+            blueVariant,
+            driftSpeed,
+            isMuted
+        };
+        localStorage.setItem(HOST_PREFS_KEY, JSON.stringify(p));
+    } catch (e) { }
+}
+
+function updateHostPreferencesUI() {
+    if (bgStyleSelect) bgStyleSelect.value = backgroundStyle;
+    if (blueVariantSelect) blueVariantSelect.value = blueVariant;
+    if (driftSpeedInput) driftSpeedInput.value = driftSpeed;
+}
+
+function applyHostPreferencesToDOM() {
+    // Remove old classes
+    BG_STYLES.forEach(s => document.body.classList.remove('bg-' + s));
+    ['a', 'b', 'c', 'd'].forEach(v => document.body.classList.remove('blue-' + v));
+
+    // Add new classes
+    document.body.classList.add('bg-' + backgroundStyle);
+    document.body.classList.add('blue-' + blueVariant);
+    document.body.style.setProperty('--bg-drift-speed', String(driftSpeed));
+}
+
+function updateMuteButton() {
+    if (muteBtn) {
+        muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
+        if (isMuted) {
+            muteBtn.classList.add('floor-btn-danger'); // optional style
+            // or just keep secondary, depending on taste. Let's stick to simple text change
+        } else {
+            muteBtn.classList.remove('floor-btn-danger');
+            muteBtn.classList.add('floor-btn-secondary');
+        }
+    }
+}
+
 function init() {
     state = buildState(DEFAULT_ROWS, DEFAULT_COLS);
 
@@ -1328,11 +1445,26 @@ function init() {
     if (undoBtn) undoBtn.addEventListener('click', handleUndo);
     if (muteBtn) muteBtn.addEventListener('click', () => {
         isMuted = !isMuted;
-        muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
-        if (currentAudio) {
-            currentAudio.muted = isMuted;
-        }
+        updateMuteButton();
+        if (currentAudio) currentAudio.muted = isMuted;
+        saveHostPreferences();
     });
+
+    // Background controls
+    if (bgStyleSelect) {
+        bgStyleSelect.addEventListener('change', (e) => setBackgroundStyle(e.target.value));
+    }
+    if (blueVariantSelect) {
+        blueVariantSelect.addEventListener('change', (e) => setBlueVariant(e.target.value));
+    }
+    if (driftSpeedInput) {
+        driftSpeedInput.addEventListener('input', (e) => setDriftSpeed(parseFloat(e.target.value)));
+    }
+
+    createPopLayer();
+    loadHostPreferences();
+    updateHostPreferencesUI();
+    applyHostPreferencesToDOM();
 
     document.addEventListener('keydown', handleKeydown);
     document.addEventListener('click', handleClickOutside);

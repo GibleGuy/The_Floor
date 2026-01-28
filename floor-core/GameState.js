@@ -92,14 +92,73 @@ function createGameState(opts = {}) {
             return true;
         },
 
-        /** Swap categories between two tiles. Owners unchanged. */
+        /**
+         * Get all tiles in a contiguous cell group (flood-fill).
+         * Returns all orthogonally connected tiles with the same ownerId.
+         * @param {number} r - Row of starting tile
+         * @param {number} c - Column of starting tile
+         * @returns {Array<{r: number, c: number}>} Array of tile coordinates in the group
+         */
+        getContiguousTileGroup(r, c) {
+            const startTile = this.getTile(r, c);
+            if (!startTile || !startTile.ownerId) return [{ r, c }];
+
+            const targetOwnerId = startTile.ownerId;
+            const visited = new Set();
+            const group = [];
+            const queue = [{ r, c }];
+
+            while (queue.length > 0) {
+                const current = queue.shift();
+                const key = `${current.r},${current.c}`;
+
+                if (visited.has(key)) continue;
+                visited.add(key);
+
+                const tile = this.getTile(current.r, current.c);
+                if (!tile || tile.ownerId !== targetOwnerId) continue;
+
+                group.push({ r: current.r, c: current.c });
+
+                // Add orthogonally adjacent tiles to queue
+                queue.push({ r: current.r - 1, c: current.c }); // Top
+                queue.push({ r: current.r + 1, c: current.c }); // Bottom
+                queue.push({ r: current.r, c: current.c - 1 }); // Left
+                queue.push({ r: current.r, c: current.c + 1 }); // Right
+            }
+
+            return group;
+        },
+
+        /**
+         * Swap categories between two cell groups. Owners unchanged.
+         * Finds all contiguous tiles with the same owner and swaps their categories.
+         */
         swapTileCategories(r1, c1, r2, c2) {
             const a = this.getTile(r1, c1);
             const b = this.getTile(r2, c2);
             if (!a || !b) return false;
-            const tmp = a.category;
-            a.category = b.category;
-            b.category = tmp;
+
+            // Get all tiles in each cell group
+            const group1 = this.getContiguousTileGroup(r1, c1);
+            const group2 = this.getContiguousTileGroup(r2, c2);
+
+            // Store the categories to swap
+            const category1 = a.category;
+            const category2 = b.category;
+
+            // Update all tiles in group 1 with category from group 2
+            for (const pos of group1) {
+                const tile = this.getTile(pos.r, pos.c);
+                if (tile) tile.category = category2;
+            }
+
+            // Update all tiles in group 2 with category from group 1
+            for (const pos of group2) {
+                const tile = this.getTile(pos.r, pos.c);
+                if (tile) tile.category = category1;
+            }
+
             return true;
         },
 

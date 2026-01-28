@@ -231,7 +231,7 @@
 <body>
     <header class="gallery-header">
         <h1>GALLERY</h1>
-        <a href="duel/game.html" class="back-link">← Back to Game</a>
+        <a href="game.html" class="back-link">← Back to Game</a>
     </header>
     <div class="category-selector">
         <label for="category-select">Category:</label>
@@ -245,10 +245,10 @@
         <div id="sound-effects-content"></div>
     </section>
 
-    <script src="categories/flags.js"></script>
-    <script src="categories/pokemon.js"></script>
-    <script src="categories/hockey.js"></script>
-    <script src="categories/math.js"></script>
+    <script src="../categories/flags.js?v=2"></script>
+    <script src="../categories/pokemon.js?v=2"></script>
+    <script src="../categories/hockey.js?v=2"></script>
+    <script src="../categories/math.js?v=2"></script>
     <script>
         const categories = {
             flags: (typeof flagData !== 'undefined') ? flagData : [],
@@ -348,9 +348,9 @@
 
         // Sound effects (categorized): ding1–10, pass1–5
         const soundGroups = {
-            'Correct (Dings)': Array.from({ length: 10 }, (_, i) => ({ name: 'ding' + (i + 1), file: 'sounds/ding' + (i + 1) + '.mp3' })),
-            'Pass': Array.from({ length: 5 }, (_, i) => ({ name: 'pass' + (i + 1), file: 'sounds/pass' + (i + 1) + '.mp3' })),
-            'Countdown': [{ name: 'countdown', file: 'sounds/countdown.mp3' }]
+            'Correct (Dings)': Array.from({ length: 10 }, (_, i) => ({ name: 'ding' + (i + 1), file: '../sounds/ding' + (i + 1) + '.mp3' })),
+            'Pass': Array.from({ length: 5 }, (_, i) => ({ name: 'pass' + (i + 1), file: '../sounds/pass' + (i + 1) + '.mp3' })),
+            'Countdown': [{ name: 'countdown', file: '../sounds/countdown.mp3' }]
         };
 
         const soundContainer = document.getElementById('sound-effects-content');

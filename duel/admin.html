@@ -1,94 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Window — The Floor</title>
     <style>
-        :root { --floor-blue: #001f3f; --floor-yellow: #ffcc00; --floor-green: #2ecc71; --floor-red: #e74c3c; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Arial Black', sans-serif; background: var(--floor-blue); color: white; margin: 0; padding: 16px; }
-        h1 { font-size: 1.5rem; color: var(--floor-yellow); margin: 0 0 16px; }
-        .admin-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
-        .admin-header .category-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .admin-header input[type="text"] { padding: 8px 12px; font-size: 1rem; border-radius: 6px; border: 2px solid var(--floor-yellow); background: #222; color: white; min-width: 140px; }
-        .admin-header .play-btn { padding: 8px 20px; font-size: 1rem; background: var(--floor-green); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .admin-header .play-btn:hover { filter: brightness(1.1); }
-        .help-btn { width: 36px; height: 36px; border-radius: 6px; background: rgba(0,0,0,0.8); border: 2px solid var(--floor-yellow); color: var(--floor-yellow); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-        .help-btn:hover { background: rgba(0,0,0,0.95); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
-        .card { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; padding: 12px; }
-        .card h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 10px; }
-        .card .img-box { width: 100%; aspect-ratio: 3/2; background: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
-        .card .img-box img { width: 100%; height: 100%; object-fit: contain; }
-        .card .img-box .math-text { font-size: 2.5rem; font-weight: bold; color: var(--floor-yellow); }
-        .card .answer { font-size: 1.1rem; color: var(--floor-yellow); font-weight: bold; word-break: break-all; text-align: center; }
-        .timers { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-        .timer-box { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; padding: 12px 20px; min-width: 120px; }
-        .timer-box .label { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
-        .timer-box .value { font-size: 2rem; font-weight: bold; color: var(--floor-yellow); }
-        .admin-controls-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
-        .admin-controls-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
-        .admin-controls-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-        .admin-ctrl-btn { padding: 10px 15px; font-size: 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: var(--floor-yellow); color: var(--floor-blue); }
-        .admin-ctrl-btn:hover { filter: brightness(1.1); }
-        .admin-ctrl-btn.danger { background: var(--floor-red); color: white; }
-        .admin-ctrl-label { font-size: 0.9rem; color: #aaa; }
-        .admin-ctrl-select { padding: 8px 12px; font-size: 1rem; border-radius: 6px; border: 2px solid var(--floor-yellow); background: #222; color: white; }
-        .host-controls { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
-        .host-controls h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
-        .host-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        .host-btn { padding: 12px 20px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .host-btn.j { background: var(--floor-green); color: white; }
-        .host-btn.k { background: var(--floor-yellow); color: var(--floor-blue); }
-        .host-btn.l { background: var(--floor-red); color: white; }
-        .host-btn:hover { filter: brightness(1.1); }
-        .help-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; }
-        .help-overlay.show { display: flex; }
-        .help-content { background: rgba(0,0,0,0.9); border: 3px solid var(--floor-yellow); border-radius: 15px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; }
-        .help-content h2 { color: var(--floor-yellow); margin-top: 0; }
-        .help-key { display: inline-block; background: #333; padding: 4px 8px; border-radius: 4px; font-family: monospace; margin: 0 4px; }
-        .placeholder { color: #555; font-size: 0.95rem; }
-        .custom-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
-        .custom-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 12px; }
-        .custom-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
-        .custom-label { font-size: 0.9rem; color: #aaa; min-width: 100px; }
-        .custom-input { padding: 6px 10px; font-size: 0.95rem; border-radius: 6px; border: 2px solid #444; background: #222; color: white; flex: 1; min-width: 100px; }
-        .radio-group { display: flex; gap: 12px; }
-        .radio-option { display: flex; align-items: center; gap: 4px; }
-        .boost-btn { padding: 8px 14px; font-size: 0.9rem; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #444; color: white; }
-        .boost-btn:hover { filter: brightness(1.2); }
-        .boost-btn.used { background: var(--floor-green); color: white; }
-        .conn-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; }
-        .conn-badge.connected { background: var(--floor-green); color: white; }
-        .conn-badge.disconnected { background: var(--floor-red); color: white; }
-        .no-opener { background: rgba(231,76,60,0.2); border: 2px solid var(--floor-red); border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: center; }
-        .no-opener p { margin: 0 0 8px; }
-        .stats-section { margin-top: 16px; padding-top: 16px; border-top: 2px solid #333; }
-        .stats-section h2 { font-size: 1rem; color: var(--floor-yellow); margin: 0 0 10px; }
-        .stat-item { font-size: 0.9rem; margin-bottom: 4px; color: #ccc; }
-        .stat-item span { color: var(--floor-yellow); font-weight: bold; }
-        .admin-keyboard-hints { text-align: center; font-size: 0.85rem; color: rgba(255,204,0,0.85); margin: 12px 0; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 8px; }
-        .admin-keyboard-hints .hint-key { display: inline-block; padding: 2px 6px; margin: 0 2px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,204,0,0.6); border-radius: 4px; font-weight: bold; }
-        .custom-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid #444; }
-        .custom-tabs .custom-tab { flex: 1; padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: #888; background: #222; border: none; border-bottom: 3px solid transparent; cursor: pointer; }
-        .custom-tabs .custom-tab:hover { color: #bbb; }
-        .custom-tabs .custom-tab.active { color: var(--floor-yellow); border-bottom-color: var(--floor-yellow); background: transparent; }
-        .custom-tab-panel { display: none; }
-        .custom-tab-panel.active { display: block; }
+        :root {
+            --floor-blue: #001f3f;
+            --floor-yellow: #ffcc00;
+            --floor-green: #2ecc71;
+            --floor-red: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background: var(--floor-blue);
+            color: white;
+            margin: 0;
+            padding: 16px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--floor-yellow);
+            margin: 0 0 16px;
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .admin-header .category-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-header input[type="text"] {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 2px solid var(--floor-yellow);
+            background: #222;
+            color: white;
+            min-width: 140px;
+        }
+
+        .admin-header .play-btn {
+            padding: 8px 20px;
+            font-size: 1rem;
+            background: var(--floor-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-header .play-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .help-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--floor-yellow);
+            color: var(--floor-yellow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .help-btn:hover {
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            color: var(--floor-yellow);
+            margin: 0 0 10px;
+        }
+
+        .card .img-box {
+            width: 100%;
+            aspect-ratio: 3/2;
+            background: #111;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .card .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .card .img-box .math-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--floor-yellow);
+        }
+
+        .card .answer {
+            font-size: 1.1rem;
+            color: var(--floor-yellow);
+            font-weight: bold;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .timers {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .timer-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 12px 20px;
+            min-width: 120px;
+        }
+
+        .timer-box .label {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .timer-box .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--floor-yellow);
+        }
+
+        .timer-box.active-turn {
+            border-color: var(--floor-yellow);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+        }
+
+        .admin-controls-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #333;
+        }
+
+        .admin-controls-section h2 {
+            font-size: 1rem;
+            color: var(--floor-yellow);
+            margin: 0 0 12px;
+        }
+
+        .admin-controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-ctrl-btn {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            background: var(--floor-yellow);
+            color: var(--floor-blue);
+        }
+
+        .admin-ctrl-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .admin-ctrl-btn.danger {
+            background: var(--floor-red);
+            color: white;
+        }
+
+        .admin-ctrl-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .admin-ctrl-select {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 2px solid var(--floor-yellow);
+            background: #222;
+            color: white;
+        }
+
+        .host-controls {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #333;
+        }
+
+        .host-controls h2 {
+            font-size: 1rem;
+            color: var(--floor-yellow);
+            margin: 0 0 12px;
+        }
+
+        .host-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .host-btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .host-btn.j {
+            background: var(--floor-green);
+            color: white;
+        }
+
+        .host-btn.k {
+            background: var(--floor-yellow);
+            color: var(--floor-blue);
+        }
+
+        .host-btn.l {
+            background: var(--floor-red);
+            color: white;
+        }
+
+        .host-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .help-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-overlay.show {
+            display: flex;
+        }
+
+        .help-content {
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--floor-yellow);
+            border-radius: 15px;
+            padding: 24px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .help-content h2 {
+            color: var(--floor-yellow);
+            margin-top: 0;
+        }
+
+        .help-key {
+            display: inline-block;
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 4px;
+        }
+
+        .placeholder {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .custom-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #333;
+        }
+
+        .custom-section h2 {
+            font-size: 1rem;
+            color: var(--floor-yellow);
+            margin: 0 0 12px;
+        }
+
+        .custom-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            margin-bottom: 10px;
+        }
+
+        .custom-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            min-width: 100px;
+        }
+
+        .custom-input {
+            padding: 6px 10px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            border: 2px solid #444;
+            background: #222;
+            color: white;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .boost-btn {
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #444;
+            color: white;
+        }
+
+        .boost-btn:hover {
+            filter: brightness(1.2);
+        }
+
+        .boost-btn.used {
+            background: var(--floor-green);
+            color: white;
+        }
+
+        .conn-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .conn-badge.connected {
+            background: var(--floor-green);
+            color: white;
+        }
+
+        .conn-badge.disconnected {
+            background: var(--floor-red);
+            color: white;
+        }
+
+        .no-opener {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid var(--floor-red);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .no-opener p {
+            margin: 0 0 8px;
+        }
+
+        .stats-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #333;
+        }
+
+        .stats-section h2 {
+            font-size: 1rem;
+            color: var(--floor-yellow);
+            margin: 0 0 10px;
+        }
+
+        .stat-item {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            color: #ccc;
+        }
+
+        .stat-item span {
+            color: var(--floor-yellow);
+            font-weight: bold;
+        }
+
+        .admin-keyboard-hints {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 204, 0, 0.85);
+            margin: 12px 0;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .admin-keyboard-hints .hint-key {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 0 2px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 204, 0, 0.6);
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .custom-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #444;
+        }
+
+        .custom-tabs .custom-tab {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #888;
+            background: #222;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .custom-tabs .custom-tab:hover {
+            color: #bbb;
+        }
+
+        .custom-tabs .custom-tab.active {
+            color: var(--floor-yellow);
+            border-bottom-color: var(--floor-yellow);
+            background: transparent;
+        }
+
+        .custom-tab-panel {
+            display: none;
+        }
+
+        .custom-tab-panel.active {
+            display: block;
+        }
     </style>
 </head>
+
 <body>
     <div id="no-opener-banner" class="no-opener" style="display: none;">
         <p><strong>Open from the main game page</strong></p>
-        <p>Use the <strong>ADMIN WINDOW</strong> button (enable Host Mode first) on the main game to open this window. It cannot control the game when opened directly.</p>
+        <p>Use the <strong>ADMIN WINDOW</strong> button (enable Host Mode first) on the main game to open this window.
+            It cannot control the game when opened directly.</p>
     </div>
     <div class="admin-header">
         <h1>ADMIN WINDOW</h1>
         <span id="conn-badge" class="conn-badge disconnected">—</span>
         <div class="category-row">
-            <input type="text" id="category-input" list="admin-category-list" placeholder="Category..." autocomplete="off">
+            <input type="text" id="category-input" list="admin-category-list" placeholder="Category..."
+                autocomplete="off">
             <datalist id="admin-category-list">
                 <option value="flags">Flags</option>
                 <option value="pokemon">Pokemon</option>
@@ -102,9 +525,18 @@
     </div>
 
     <div class="timers">
-        <div class="timer-box"><div class="label" id="admin-p1-label">Player 1</div><div class="value" id="admin-p1-timer">45.0</div></div>
-        <div class="timer-box"><div class="label" id="admin-p2-label">Player 2</div><div class="value" id="admin-p2-timer">45.0</div></div>
-        <div class="timer-box"><div class="label">Game</div><div class="value" id="admin-game-timer">—</div></div>
+        <div class="timer-box" id="admin-p1-box">
+            <div class="label" id="admin-p1-label">Player 1</div>
+            <div class="value" id="admin-p1-timer">45.0</div>
+        </div>
+        <div class="timer-box" id="admin-p2-box">
+            <div class="label" id="admin-p2-label">Player 2</div>
+            <div class="value" id="admin-p2-timer">45.0</div>
+        </div>
+        <div class="timer-box">
+            <div class="label">Game</div>
+            <div class="value" id="admin-game-timer">—</div>
+        </div>
     </div>
 
     <div class="grid">
@@ -134,8 +566,10 @@
         <div id="admin-active-player" class="custom-row" style="display: none; margin-top: 12px;">
             <span class="custom-label">Active Player:</span>
             <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="admin-active-p1" name="admin-active" value="1"><label for="admin-active-p1">Player 1</label></div>
-                <div class="radio-option"><input type="radio" id="admin-active-p2" name="admin-active" value="2"><label for="admin-active-p2">Player 2</label></div>
+                <div class="radio-option"><input type="radio" id="admin-active-p1" name="admin-active" value="1"><label
+                        for="admin-active-p1">Player 1</label></div>
+                <div class="radio-option"><input type="radio" id="admin-active-p2" name="admin-active" value="2"><label
+                        for="admin-active-p2">Player 2</label></div>
             </div>
         </div>
     </div>
@@ -170,8 +604,10 @@
             <div class="custom-row">
                 <span class="custom-label">First Player:</span>
                 <div class="radio-group">
-                    <div class="radio-option"><input type="radio" id="admin-first-left" name="admin-first" value="left" checked><label for="admin-first-left">Left</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-first-right" name="admin-first" value="right"><label for="admin-first-right">Right</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-first-left" name="admin-first" value="left"
+                            checked><label for="admin-first-left">Left</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-first-right" name="admin-first"
+                            value="right"><label for="admin-first-right">Right</label></div>
                 </div>
             </div>
             <div class="custom-row">
@@ -188,9 +624,12 @@
             <div class="custom-row">
                 <span class="custom-label">Theme:</span>
                 <div class="radio-group">
-                    <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark" checked><label for="admin-theme-dark">Dark</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme" value="light"><label for="admin-theme-light">Light</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme" value="gible"><label for="admin-theme-gible">Gible</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark"
+                            checked><label for="admin-theme-dark">Dark</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme"
+                            value="light"><label for="admin-theme-light">Light</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme"
+                            value="gible"><label for="admin-theme-gible">Gible</label></div>
                 </div>
             </div>
             <div class="custom-row">
@@ -212,25 +651,35 @@
             <div class="custom-row">
                 <span class="custom-label">Background Style:</span>
                 <div class="radio-group">
-                    <div class="radio-option"><input type="radio" id="admin-bg-solid" name="admin-bg" value="solid"><label for="admin-bg-solid">Solid</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-bg-grid" name="admin-bg" value="grid"><label for="admin-bg-grid">Grid</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-bg-tiles" name="admin-bg" value="tiles"><label for="admin-bg-tiles">Tiles</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-bg-diagonal" name="admin-bg" value="diagonal"><label for="admin-bg-diagonal">Diagonal</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-bg-pop" name="admin-bg" value="pop" checked><label for="admin-bg-pop">Pop</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-solid" name="admin-bg"
+                            value="solid"><label for="admin-bg-solid">Solid</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-grid" name="admin-bg" value="grid"><label
+                            for="admin-bg-grid">Grid</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-tiles" name="admin-bg"
+                            value="tiles"><label for="admin-bg-tiles">Tiles</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-diagonal" name="admin-bg"
+                            value="diagonal"><label for="admin-bg-diagonal">Diagonal</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-bg-pop" name="admin-bg" value="pop"
+                            checked><label for="admin-bg-pop">Pop</label></div>
                 </div>
             </div>
             <div class="custom-row">
                 <label class="custom-label">Drift Speed:</label>
-                <input type="range" id="admin-bg-drift-speed" min="0.25" max="2" step="0.25" value="1" style="width: 120px; vertical-align: middle;">
+                <input type="range" id="admin-bg-drift-speed" min="0.25" max="2" step="0.25" value="1"
+                    style="width: 120px; vertical-align: middle;">
                 <span id="admin-bg-drift-speed-label" style="margin-left: 6px; min-width: 3em;">1×</span>
             </div>
             <div class="custom-row">
                 <span class="custom-label">Blue Style:</span>
                 <div class="radio-group">
-                    <div class="radio-option"><input type="radio" id="admin-blue-a" name="admin-blue" value="a"><label for="admin-blue-a">A</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-blue-b" name="admin-blue" value="b" checked><label for="admin-blue-b">B</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-blue-c" name="admin-blue" value="c"><label for="admin-blue-c">C</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-blue-d" name="admin-blue" value="d"><label for="admin-blue-d">D</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-a" name="admin-blue" value="a"><label
+                            for="admin-blue-a">A</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-b" name="admin-blue" value="b"
+                            checked><label for="admin-blue-b">B</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-c" name="admin-blue" value="c"><label
+                            for="admin-blue-c">C</label></div>
+                    <div class="radio-option"><input type="radio" id="admin-blue-d" name="admin-blue" value="d"><label
+                            for="admin-blue-d">D</label></div>
                 </div>
             </div>
         </div>
@@ -238,12 +687,16 @@
 
     <div class="stats-section">
         <h2>STATISTICS</h2>
-        <div class="stat-item">Last Round — Correct: <span id="admin-lr-correct">0</span> | Passed: <span id="admin-lr-passed">0</span></div>
-        <div class="stat-item">Session — Games: <span id="admin-ss-games">0</span> | Correct: <span id="admin-ss-correct">0</span> | Passed: <span id="admin-ss-passed">0</span></div>
+        <div class="stat-item">Last Round — Correct: <span id="admin-lr-correct">0</span> | Passed: <span
+                id="admin-lr-passed">0</span></div>
+        <div class="stat-item">Session — Games: <span id="admin-ss-games">0</span> | Correct: <span
+                id="admin-ss-correct">0</span> | Passed: <span id="admin-ss-passed">0</span></div>
     </div>
 
     <div class="admin-keyboard-hints">
-        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span> Fullscreen · <span class="hint-key">?</span> Help
+        <span class="hint-key">J</span> Correct · <span class="hint-key">K</span> Pause · <span
+            class="hint-key">L</span> Pass · <span class="hint-key">R</span> Reset · <span class="hint-key">F</span>
+        Fullscreen · <span class="hint-key">?</span> Help
     </div>
 
     <div class="help-overlay" id="admin-help-overlay">
@@ -271,7 +724,7 @@
 
         function send(msg) {
             if (hasOpener()) {
-                try { window.opener.postMessage({ source: 'admin', ...msg }, '*'); } catch (err) {}
+                try { window.opener.postMessage({ source: 'admin', ...msg }, '*'); } catch (err) { }
             }
         }
 
@@ -290,7 +743,7 @@
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
                 'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
                 'admin-active-p1', 'admin-active-p2'];
-            ids.forEach(function(id) {
+            ids.forEach(function (id) {
                 const el = document.getElementById(id);
                 if (el) el.disabled = !enabled;
             });
@@ -305,25 +758,25 @@
         document.getElementById('admin-help-overlay').addEventListener('click', closeAdminHelp);
 
         function switchAdminTab(tab) {
-            document.querySelectorAll('.custom-section .custom-tab').forEach(function(t) {
+            document.querySelectorAll('.custom-section .custom-tab').forEach(function (t) {
                 t.classList.toggle('active', t.getAttribute('data-tab') === tab);
             });
-            document.querySelectorAll('.custom-section .custom-tab-panel').forEach(function(p) {
+            document.querySelectorAll('.custom-section .custom-tab-panel').forEach(function (p) {
                 p.classList.toggle('active', p.id === 'admin-tab-' + tab);
             });
         }
-        document.querySelectorAll('.custom-section .custom-tab').forEach(function(btn) {
-            btn.addEventListener('click', function() { switchAdminTab(this.getAttribute('data-tab')); });
+        document.querySelectorAll('.custom-section .custom-tab').forEach(function (btn) {
+            btn.addEventListener('click', function () { switchAdminTab(this.getAttribute('data-tab')); });
         });
 
-        document.getElementById('admin-help-btn').addEventListener('click', function() {
+        document.getElementById('admin-help-btn').addEventListener('click', function () {
             const el = document.getElementById('admin-help-overlay');
             const open = !el.classList.contains('show');
             el.classList.toggle('show', open);
             send({ action: 'help', open });
         });
 
-        document.getElementById('admin-load-btn').addEventListener('click', function() {
+        document.getElementById('admin-load-btn').addEventListener('click', function () {
             const v = document.getElementById('category-input').value.trim();
             if (v && hasOpener()) {
                 send({ action: 'loadCategory', category: v });
@@ -331,11 +784,11 @@
             }
         });
 
-        document.getElementById('admin-start-btn').addEventListener('click', function() {
+        document.getElementById('admin-start-btn').addEventListener('click', function () {
             if (hasOpener()) send({ action: 'startGame' });
         });
 
-        document.getElementById('category-input').addEventListener('keydown', function(e) {
+        document.getElementById('category-input').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') { e.preventDefault(); document.getElementById('admin-load-btn').click(); }
         });
 
@@ -343,77 +796,77 @@
             if (!confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) return;
             send({ action: 'reset' });
         }
-        document.getElementById('admin-btn-j').addEventListener('click', function() { send({ action: 'correct' }); });
-        document.getElementById('admin-btn-k').addEventListener('click', function() { send({ action: 'pause' }); });
-        document.getElementById('admin-btn-l').addEventListener('click', function() { send({ action: 'pass' }); });
-        document.getElementById('admin-btn-pause').addEventListener('click', function() { send({ action: 'pause' }); });
+        document.getElementById('admin-btn-j').addEventListener('click', function () { send({ action: 'correct' }); });
+        document.getElementById('admin-btn-k').addEventListener('click', function () { send({ action: 'pause' }); });
+        document.getElementById('admin-btn-l').addEventListener('click', function () { send({ action: 'pass' }); });
+        document.getElementById('admin-btn-pause').addEventListener('click', function () { send({ action: 'pause' }); });
         document.getElementById('admin-btn-reset').addEventListener('click', doAdminReset);
-        document.getElementById('admin-gamemode').addEventListener('change', function() {
+        document.getElementById('admin-gamemode').addEventListener('change', function () {
             send({ action: 'gamemode', value: this.value });
         });
 
-        document.getElementById('admin-p1-name').addEventListener('change', function() {
+        document.getElementById('admin-p1-name').addEventListener('change', function () {
             send({ action: 'setPlayerNames', p1: this.value || 'Challenger', p2: document.getElementById('admin-p2-name').value || 'Expert' });
         });
-        document.getElementById('admin-p2-name').addEventListener('change', function() {
+        document.getElementById('admin-p2-name').addEventListener('change', function () {
             send({ action: 'setPlayerNames', p1: document.getElementById('admin-p1-name').value || 'Challenger', p2: this.value || 'Expert' });
         });
-        document.getElementById('admin-first-left').addEventListener('change', function() {
+        document.getElementById('admin-first-left').addEventListener('change', function () {
             if (this.checked) send({ action: 'setFirstPlayer', left: true });
         });
-        document.getElementById('admin-first-right').addEventListener('change', function() {
+        document.getElementById('admin-first-right').addEventListener('change', function () {
             if (this.checked) send({ action: 'setFirstPlayer', left: false });
         });
-        document.getElementById('admin-boost-p1').addEventListener('click', function() {
+        document.getElementById('admin-boost-p1').addEventListener('click', function () {
             send({ action: 'applyTimeBoost', playerNum: 1 });
         });
-        document.getElementById('admin-boost-p2').addEventListener('click', function() {
+        document.getElementById('admin-boost-p2').addEventListener('click', function () {
             send({ action: 'applyTimeBoost', playerNum: 2 });
         });
-        document.getElementById('admin-mute').addEventListener('change', function() {
+        document.getElementById('admin-mute').addEventListener('change', function () {
             send({ action: 'mute', value: this.checked });
         });
-        document.getElementById('admin-theme-dark').addEventListener('change', function() {
+        document.getElementById('admin-theme-dark').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'dark' });
         });
-        document.getElementById('admin-theme-light').addEventListener('change', function() {
+        document.getElementById('admin-theme-light').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'light' });
         });
-        document.getElementById('admin-theme-gible').addEventListener('change', function() {
+        document.getElementById('admin-theme-gible').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'gible' });
         });
-        document.getElementById('admin-confetti').addEventListener('change', function() {
+        document.getElementById('admin-confetti').addEventListener('change', function () {
             send({ action: 'confetti', value: this.checked });
         });
-        document.getElementById('admin-disable-extras').addEventListener('change', function() {
+        document.getElementById('admin-disable-extras').addEventListener('change', function () {
             send({ action: 'disableExtras', value: this.checked });
         });
-        document.getElementById('admin-show-timer-decimal').addEventListener('change', function() {
+        document.getElementById('admin-show-timer-decimal').addEventListener('change', function () {
             send({ action: 'showTimerDecimal', value: this.checked });
         });
-        document.getElementById('admin-high-contrast-reduced-motion').addEventListener('change', function() {
+        document.getElementById('admin-high-contrast-reduced-motion').addEventListener('change', function () {
             send({ action: 'highContrastReducedMotion', value: this.checked });
         });
-        ['solid','grid','tiles','diagonal','pop'].forEach(function(bgVal) {
+        ['solid', 'grid', 'tiles', 'diagonal', 'pop'].forEach(function (bgVal) {
             var el = document.getElementById('admin-bg-' + bgVal);
-            if (el) el.addEventListener('change', function() { if (this.checked) send({ action: 'backgroundStyle', value: bgVal }); });
+            if (el) el.addEventListener('change', function () { if (this.checked) send({ action: 'backgroundStyle', value: bgVal }); });
         });
-        document.getElementById('admin-bg-drift-speed').addEventListener('input', function() {
+        document.getElementById('admin-bg-drift-speed').addEventListener('input', function () {
             var v = parseFloat(this.value);
             if (!isNaN(v)) { send({ action: 'backgroundDriftSpeed', value: v }); document.getElementById('admin-bg-drift-speed-label').textContent = v + '×'; }
         });
-        ['a','b','c','d'].forEach(function(bv) {
+        ['a', 'b', 'c', 'd'].forEach(function (bv) {
             var el = document.getElementById('admin-blue-' + bv);
-            if (el) el.addEventListener('change', function() { if (this.checked) send({ action: 'blueVariant', value: bv }); });
+            if (el) el.addEventListener('change', function () { if (this.checked) send({ action: 'blueVariant', value: bv }); });
         });
-        document.getElementById('admin-active-p1').addEventListener('change', function() {
+        document.getElementById('admin-active-p1').addEventListener('change', function () {
             if (this.checked) send({ action: 'changeActivePlayer', playerNum: 1 });
         });
-        document.getElementById('admin-active-p2').addEventListener('change', function() {
+        document.getElementById('admin-active-p2').addEventListener('change', function () {
             if (this.checked) send({ action: 'changeActivePlayer', playerNum: 2 });
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (!hasOpener()) return;
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             if (e.key === 'j' || e.key === 'J') { e.preventDefault(); send({ action: 'correct' }); }
@@ -422,7 +875,7 @@
             else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); doAdminReset(); }
         });
 
-        window.addEventListener('message', function(e) {
+        window.addEventListener('message', function (e) {
             if (!e.data || e.data.source !== 'floor') return;
             if (e.source !== window.opener || !hasOpener()) return;
             const d = e.data;
@@ -541,6 +994,18 @@
                     document.getElementById('admin-active-player').style.display = 'none';
                 }
 
+                if (d.gameActive && d.gamemode !== 'singleplayer') {
+                    const p1Box = document.getElementById('admin-p1-box');
+                    const p2Box = document.getElementById('admin-p2-box');
+                    if (p1Box) p1Box.classList.toggle('active-turn', d.activePlayer === 1);
+                    if (p2Box) p2Box.classList.toggle('active-turn', d.activePlayer === 2);
+                } else {
+                    const p1Box = document.getElementById('admin-p1-box');
+                    const p2Box = document.getElementById('admin-p2-box');
+                    if (p1Box) p1Box.classList.remove('active-turn');
+                    if (p2Box) p2Box.classList.remove('active-turn');
+                }
+
                 const curBox = document.getElementById('admin-current-img');
                 const curAns = document.getElementById('admin-current-answer');
                 if (d.current) {
@@ -577,7 +1042,7 @@
             setControlsEnabled(true);
             setConnected('connecting');
             send({ action: 'adminReady' });
-            connCheckInterval = setInterval(function() {
+            connCheckInterval = setInterval(function () {
                 if (!hasOpener()) { clearInterval(connCheckInterval); connCheckInterval = null; setConnected(false); return; }
                 var received = lastStateTime > 0;
                 var recent = received && (Date.now() - lastStateTime < 1500);
@@ -585,9 +1050,10 @@
             }, 400);
         }
 
-        window.addEventListener('beforeunload', function() { send({ action: 'adminClosed' }); });
+        window.addEventListener('beforeunload', function () { send({ action: 'adminClosed' }); });
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
         else init();
     </script>
 </body>
+
 </html>

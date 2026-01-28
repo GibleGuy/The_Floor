@@ -142,7 +142,7 @@
     </div>
 
     <div class="answer-reveal" id="reveal-text"></div>
-    <input type="text" id="answer-input" placeholder="SELECT CATEGORY" disabled autocomplete="off">
+    <input type="text" id="answer-input" placeholder="SELECT A CATEGORY" disabled autocomplete="off">
 
     <div class="menu">
         <div class="category-selector">
@@ -195,7 +195,7 @@
             <button class="admin-btn" onclick="openCustomization()">CUSTOMIZE</button>
             <button class="admin-btn" id="admin-window-btn" onclick="openAdminWindow()" style="display: none;">ADMIN
                 WINDOW</button>
-            <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='../gallery.html'"
+            <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='gallery.html'"
                 style="display: none;">GALLERY</button>
             <div id="host-pause-controls" style="display: none;">
                 <div class="custom-row" style="margin-top: 15px;">
@@ -326,7 +326,7 @@
                         <label for="bg-solid">Solid</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-grid" name="background-style" value="grid"
+                        <input type="radio" id="bg-grid" name="background-style" value="grid" checked
                             onchange="setBackgroundStyle('grid')">
                         <label for="bg-grid">Grid</label>
                     </div>
@@ -341,9 +341,9 @@
                         <label for="bg-diagonal">Diagonal</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-pop" name="background-style" value="pop" checked
+                        <input type="radio" id="bg-pop" name="background-style" value="pop"
                             onchange="setBackgroundStyle('pop')">
-                        <label for="bg-pop">Pop</label>
+                        <label for="bg-pop">Pop (WARNING: May cause lag)</label>
                     </div>
                 </div>
             </div>
@@ -429,7 +429,7 @@
     <!-- CONFETTI CONTAINER -->
     <div class="confetti-container" id="confetti-container"></div>
 
-    <script src="game.js"></script>
+    <script src="game.js?v=3"></script>
 </body>
 
 </html>

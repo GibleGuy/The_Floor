@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Floor — Host</title>
     <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/backgrounds.css" rel="stylesheet">
     <link href="floor-host.css?v=2.1" rel="stylesheet">
 </head>
 
 <body>
+    <div id="bg-pop-layer" aria-hidden="true"></div>
     <header class="floor-host-header">
         <div class="floor-header-title-row">
             <h1>The Floor — Host</h1>
@@ -67,6 +69,32 @@
                         Randomizer</button>
                     <button type="button" id="floor-undo-btn" class="floor-btn floor-btn-secondary">Undo</button>
                     <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound</button>
+                </div>
+
+                <!-- NEW: Background pattern controls -->
+                <div class="floor-control-row">
+                    <span class="floor-label">Background</span>
+                    <select id="floor-bg-style" class="floor-select">
+                        <option value="pop">Pop</option>
+                        <option value="grid">Grid</option>
+                        <option value="tiles">Tiles</option>
+                        <option value="diagonal">Diagonal</option>
+                        <option value="solid">Solid</option>
+                    </select>
+
+                    <span class="floor-sep"></span>
+                    <span class="floor-label">Blue</span>
+                    <select id="floor-blue-variant" class="floor-select">
+                        <option value="a">A (Darkest)</option>
+                        <option value="b" selected>B (Default)</option>
+                        <option value="c">C (Lighter)</option>
+                        <option value="d">D (Vivid)</option>
+                    </select>
+
+                    <span class="floor-sep"></span>
+                    <span class="floor-label">Drift</span>
+                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="1"
+                        style="width: 80px; vertical-align: middle;">
                 </div>
             </div>
             <div id="floor-randomizer-result" class="floor-randomizer-result" role="status" aria-live="polite"
