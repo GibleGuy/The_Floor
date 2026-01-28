@@ -190,11 +190,20 @@ function saveEditDetails() {
     updateUndoButton();
 }
 
-function startSwapMode() {
-    swapState = { active: true, first: null, second: null };
-    if (swapPromptEl) swapPromptEl.textContent = 'Select first tile';
+function startSwapMode(initialTile) {
+    if (initialTile) {
+        swapState = { active: true, first: { r: initialTile.r, c: initialTile.c }, second: null };
+        // Immediately prompt for the target
+        if (swapPromptEl) swapPromptEl.textContent = 'Select category to steal from';
+    } else {
+        // Fallback or manual start
+        swapState = { active: true, first: null, second: null };
+        if (swapPromptEl) swapPromptEl.textContent = 'Select "thief" tile';
+    }
+
     if (gridEl) gridEl.classList.add('floor-swap-mode');
     document.body.classList.add('floor-swap-mode');
+    render();
 }
 
 function cancelSwapMode() {
@@ -233,97 +242,168 @@ function runSwap(first, second) {
     runSwapAnimation(first, second, t1, t2);
 }
 
+// Helper to get visual center of a tile group
+function getGroupCentroid(tiles) {
+    if (!tiles || tiles.length === 0) return null;
+    let rSum = 0, cSum = 0;
+    for (const t of tiles) {
+        rSum += t.r;
+        cSum += t.c;
+    }
+    const r = rSum / tiles.length;
+    const c = cSum / tiles.length;
+
+    // Convert to pixels relative to viewport
+    // We can use the first tile element to get dimensions
+    const el = getTileEl(tiles[0].r, tiles[0].c);
+    if (!el) return null;
+
+    // Estimate based on tile size + gap
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    // Calculate top-left of the tile at (0,0) conceptually?
+    // Easier: get avg of rect centers
+    // Wait, grid might not be perfectly regular if responsive...
+    // Let's just average the rects of first and last? Or all?
+    // Averaging all rects is safest
+    let xSum = 0, ySum = 0;
+    let count = 0;
+    for (const t of tiles) {
+        const tEl = getTileEl(t.r, t.c);
+        if (tEl) {
+            const r = tEl.getBoundingClientRect();
+            xSum += r.left + r.width / 2;
+            ySum += r.top + r.height / 2;
+            count++;
+        }
+    }
+    return count > 0 ? { x: xSum / count, y: ySum / count } : null;
+}
+
 function runSwapAnimation(first, second, t1, t2) {
     animationHooks.onSwapStart(t1, t2);
-    const el1 = getTileEl(first.r, first.c);
-    const el2 = getTileEl(second.r, second.c);
-    if (!el1 || !el2 || !swapOverlayEl) {
+
+    // Get full groups for proper centering
+    const group1 = state.getContiguousTileGroup(first.r, first.c);
+    const group2 = state.getContiguousTileGroup(second.r, second.c);
+
+    // Calculate centroids for "Epic" text spawn
+    const c1 = getGroupCentroid(group1);
+    const c2 = getGroupCentroid(group2);
+
+    if (!c1 || !c2 || !swapOverlayEl) {
         finishSwap(first, second);
         return;
     }
+
     const cat1 = t1.category || '—';
     const cat2 = t2.category || '—';
-    const catEl1 = el1.querySelector('.floor-tile-category');
-    const catEl2 = el2.querySelector('.floor-tile-category');
-    if (!catEl1 || !catEl2) {
-        finishSwap(first, second);
-        return;
+
+    // 1. Activate Dimming Mode
+    gridEl.classList.add('floor-grid--steal-active');
+
+    // 2. Highlight active tiles (Spotlight)
+    const allActiveTiles = [...group1, ...group2];
+    for (const t of allActiveTiles) {
+        const el = getTileEl(t.r, t.c);
+        if (el) el.classList.add('floor-tile--steal-focus');
     }
 
-    catEl1.classList.add('floor-tile-category--swap-shrink');
-    catEl2.classList.add('floor-tile-category--swap-shrink');
-
-    const r1 = el1.getBoundingClientRect();
-    const r2 = el2.getBoundingClientRect();
-    const x1 = r1.left + r1.width / 2;
-    const y1 = r1.top + r1.height / 2;
-    const x2 = r2.left + r2.width / 2;
-    const y2 = r2.top + r2.height / 2;
-
+    // 3. Create Flying Text
     swapOverlayEl.setAttribute('aria-hidden', 'false');
-    swapOverlayEl.innerHTML = '';
+    swapOverlayEl.innerHTML = ''; // Clear prev
 
     const fly1 = document.createElement('div');
     fly1.className = 'floor-swap-fly';
     fly1.textContent = cat1;
-    fly1.style.left = x1 + 'px';
-    fly1.style.top = y1 + 'px';
+    fly1.style.left = c1.x + 'px';
+    fly1.style.top = c1.y + 'px';
     swapOverlayEl.appendChild(fly1);
 
     const fly2 = document.createElement('div');
     fly2.className = 'floor-swap-fly';
     fly2.textContent = cat2;
-    fly2.style.left = x2 + 'px';
-    fly2.style.top = y2 + 'px';
+    fly2.style.left = c2.x + 'px';
+    fly2.style.top = c2.y + 'px';
     swapOverlayEl.appendChild(fly2);
 
-    const arrow = document.createElement('div');
-    arrow.className = 'floor-swap-arrow';
-    arrow.style.left = (x1 + x2) / 2 + 'px';
-    arrow.style.top = (y1 + y2) / 2 + 'px';
-    swapOverlayEl.appendChild(arrow);
-
+    // Trigger animation via class for easier keyframe management
+    // We use a small timeout to allow browser to paint initial position/scale
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            fly1.style.left = x2 + 'px';
-            fly1.style.top = y2 + 'px';
-            fly2.style.left = x1 + 'px';
-            fly2.style.top = y1 + 'px';
+            fly1.classList.add('floor-swap-fly--animate');
+            fly2.classList.add('floor-swap-fly--animate');
+
+            // Set dynamic targets for the keyframe to use? 
+            // CSS Keyframes are hard to dynamicize without Vars.
+            // Let's use WAAPI or just set vars on the element
+
+            // Actually, for keyframes, we can just move the `left`/`top` to the target
+            // and have the keyframe handle scale/opacity.
+            // But if we move `left`/`top`, the starting position in keyframe 0% needs to be offset?
+            // No, transition! 
+
+            // HYBRID APPROACH:
+            // Use Transition for X/Y translation
+            // Use Animation for Scale/Opacity/Bounce
+
+            // Set transition duration to match animation (2.5s)
+            fly1.style.transition = 'left 2.5s cubic-bezier(0.22, 1, 0.36, 1), top 2.5s cubic-bezier(0.22, 1, 0.36, 1)';
+            fly2.style.transition = 'left 2.5s cubic-bezier(0.22, 1, 0.36, 1), top 2.5s cubic-bezier(0.22, 1, 0.36, 1)';
+
+            fly1.style.left = c2.x + 'px';
+            fly1.style.top = c2.y + 'px';
+
+            fly2.style.left = c1.x + 'px';
+            fly2.style.top = c1.y + 'px';
         });
     });
 
+    // 4. IMPACT (at ~3.6s - mid impact phase)
     setTimeout(() => {
-        catEl1.classList.remove('floor-tile-category--swap-shrink');
-        catEl2.classList.remove('floor-tile-category--swap-shrink');
-        swapOverlayEl.setAttribute('aria-hidden', 'true');
+        // Force flyers to vanish immediately at impact
         swapOverlayEl.innerHTML = '';
-        state.swapTileCategories(first.r, first.c, second.r, second.c);
-        animationHooks.onSwapEnd();
-        swapReappearTiles = [first, second];
-        cancelSwapMode();
-        render();
 
-        // Highlight all tiles in both cell groups for visual feedback
-        const group1 = state.getContiguousTileGroup(first.r, first.c);
-        const group2 = state.getContiguousTileGroup(second.r, second.c);
-        const allAffectedTiles = [...group1, ...group2];
-
-        for (const pos of allAffectedTiles) {
-            const el = getTileEl(pos.r, pos.c);
-            const catEl = el?.querySelector('.floor-tile-category');
-            if (catEl) catEl.classList.add('floor-tile-category--swap-reappear');
+        // SCREEN SHAKE
+        const main = document.querySelector('.floor-host-main');
+        if (main) {
+            main.classList.remove('floor-shake');
+            void main.offsetWidth; // trigger reflow
+            main.classList.add('floor-shake');
         }
 
+        // FLASH
+        swapOverlayEl.classList.add('floor-flash');
         setTimeout(() => {
-            for (const pos of allAffectedTiles) {
-                const el = getTileEl(pos.r, pos.c);
-                const catEl = el?.querySelector('.floor-tile-category');
-                catEl?.classList.remove('floor-tile-category--swap-reappear');
-            }
-            swapReappearTiles = null;
-        }, 400);
+            swapOverlayEl.classList.remove('floor-flash');
+            swapOverlayEl.classList.add('floor-flash-fade');
+        }, 50); // Short white burst
+
+        // EXECUTE SWAP DATA
+        state.swapTileCategories(first.r, first.c, second.r, second.c);
+        animationHooks.onSwapEnd();
+        render(); // Re-renders grid with new categories
+
+        // Cleanup visuals
+        gridEl.classList.remove('floor-grid--steal-active');
+        // Remove individual highlights
+        // (Render likely nuked the DOM elements anyway, but if not...)
+        gridEl.querySelectorAll('.floor-tile--steal-focus').forEach(el => el.classList.remove('floor-tile--steal-focus'));
+
+        cancelSwapMode();
         updateUndoButton();
-    }, 450);
+
+        // 5. Cleanup Overlay (after flash fades)
+        setTimeout(() => {
+            swapOverlayEl.setAttribute('aria-hidden', 'true');
+            swapOverlayEl.innerHTML = '';
+            swapOverlayEl.classList.remove('floor-flash-fade');
+            if (main) main.classList.remove('floor-shake');
+        }, 800);
+
+    }, 2500); // Wait for flight to finish
 }
 
 function finishSwap(first, second) {
@@ -360,7 +440,7 @@ function handleTileClick(tile) {
     if (!swapState.active || !tile) return;
     if (!swapState.first) {
         swapState.first = { r: tile.r, c: tile.c };
-        if (swapPromptEl) swapPromptEl.textContent = 'Select second tile';
+        if (swapPromptEl) swapPromptEl.textContent = 'Select category to steal from';
         render();
         return;
     }
@@ -487,7 +567,7 @@ function handleContextAction(e) {
     }
 
     if (action === 'swap') {
-        startSwapMode();
+        startSwapMode(tile);
         return;
     }
 }

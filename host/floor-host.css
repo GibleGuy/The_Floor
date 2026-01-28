@@ -681,59 +681,135 @@
     inset: 0;
     z-index: 1500;
     pointer-events: none;
+    /* Optional: Flash effect background */
+    background: rgba(255, 255, 255, 0);
+    transition: background 0.1s;
 }
 
 .floor-swap-overlay[aria-hidden="false"] {
     display: block;
 }
 
+/* Dim grid when swap is active */
+.floor-grid--steal-active .floor-tile {
+    opacity: 0.15;
+    filter: grayscale(0.8) blur(1px);
+    transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+/* Spotlight active tiles */
+.floor-grid--steal-active .floor-tile.floor-tile--steal-focus {
+    opacity: 1;
+    filter: none;
+    z-index: 100;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.5) !important;
+}
+
+/* EPIC Flying Text */
 .floor-swap-fly {
     position: fixed;
-    padding: 6px 12px;
-    font-size: clamp(0.6rem, 2vw, 1rem);
-    font-weight: bold;
-    color: var(--floor-yellow);
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid var(--floor-yellow);
-    border-radius: 6px;
+    /* Center alignment for scaling */
+    transform: translate(-50%, -50%);
+
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #FFF;
+    text-shadow:
+        0 0 10px var(--floor-yellow),
+        0 0 20px var(--floor-yellow),
+        0 4px 0 #000;
+
+    /* Start invisible */
+    opacity: 0;
+    scale: 0;
+
+    z-index: 2000;
     white-space: nowrap;
-    transform: translate(-50%, -50%);
-    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.floor-swap-arrow {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    transform: translate(-50%, -50%);
-    animation: swap-arrow-spin 0.5s ease-in-out infinite;
+/* Animation Classes applied by JS */
+.floor-swap-fly--animate {
+    animation: epic-steal-fly 4.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.floor-swap-arrow::after {
-    content: '⇄';
-    font-size: 28px;
-    color: var(--floor-yellow);
-    line-height: 1;
-}
-
-@keyframes swap-arrow-spin {
+@keyframes epic-steal-fly {
     0% {
-        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 0;
+        scale: 0;
+        /* Start at initial position set by JS */
+    }
+
+    10% {
+        opacity: 1;
+        scale: 1.5;
+        /* Appear quickly! */
+    }
+
+    85% {
+        opacity: 1;
+        scale: 1.5;
+        /* Stay visible and large during flight */
+    }
+
+    90% {
+        opacity: 0;
+        /* Vanish exactly at impact! */
+        scale: 2.5;
+        /* Surge and gone */
     }
 
     100% {
-        transform: translate(-50%, -50%) rotate(360deg);
+        opacity: 0;
+        scale: 3.0;
     }
 }
 
-.floor-tile-category.floor-tile-category--swap-shrink {
-    transform: scale(0.3);
-    opacity: 0.3;
-    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+/* Screen Shake effect */
+.floor-host-main.floor-shake {
+    animation: screen-shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
 }
 
+@keyframes screen-shake {
+
+    10%,
+    90% {
+        transform: translate3d(-2px, -1px, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(3px, 1px, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-5px, -3px, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(5px, 3px, 0);
+    }
+}
+
+/* Flash effect */
+.floor-swap-overlay.floor-flash {
+    background: rgba(255, 255, 255, 0.8);
+    transition: background 0.05s ease-out;
+}
+
+.floor-swap-overlay.floor-flash-fade {
+    background: rgba(255, 255, 255, 0);
+    transition: background 0.8s ease-out;
+}
+
+
+/* Reappear animation for tiles */
 .floor-tile-category.floor-tile-category--swap-reappear {
-    animation: swap-reappear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: swap-reappear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes swap-reappear {
