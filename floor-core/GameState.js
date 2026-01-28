@@ -6,8 +6,8 @@
 import { createTile, cloneTile } from './Tile.js';
 import { createPlayer, clonePlayer } from './Player.js';
 
-const DEFAULT_ROWS = 10;
-const DEFAULT_COLS = 10;
+const DEFAULT_ROWS = 5;
+const DEFAULT_COLS = 5;
 const MIN_PLAYERS = 4;
 const MAX_PLAYERS = 400;
 

@@ -58,9 +58,9 @@ let isMuted = false;
 let currentAudio = null;
 
 /** Background settings */
-let backgroundStyle = 'pop';
+let backgroundStyle = 'tiles';
 let blueVariant = 'b';
-let driftSpeed = 1;
+let driftSpeed = 2;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
@@ -98,7 +98,7 @@ const animationHooks = {
 
 const playerConfig = [];
 // Generate enough unique players for a standard grid (e.g. 400 for 20x20)
-const NAMES = ['Alice', 'Bob', 'Carol', 'Dave', 'Eve', 'Frank', 'Grace', 'Heidi', 'Ivan', 'Judy', 'Kevin', 'Laura', 'Mike', 'Nina', 'Oscar', 'Patty', 'Quinn', 'Rupert', 'Sybil', 'Ted', 'Ursula', 'Victor', 'Wendy', 'Xavier', 'Yvonne', 'Zelda'];
+const NAMES = ['Boston Rob', 'Parvati', 'Sandra', 'Tony', 'Kim', 'Jeremy', 'Sarah', 'Yul', 'Natalie', 'Tyson', 'Sophie', 'Denise', 'Ethan', 'Amber', 'Todd', 'Earl', 'JT', 'Fabio', 'Cochran', 'Wendell', 'Tommy', 'Ben', 'Adam', 'Nick', 'Chris', 'Michele'];
 const CATEGORIES = ['History', 'Geography', 'Science', 'Math', 'Literature', 'Art', 'Music', 'Movies', 'Sports', 'Food', 'Animals', 'Technology', 'Politics', 'Religion', 'Mythology', 'Language', 'Fashion', 'Architecture', 'Business', 'Economics', 'Psychology', 'Sociology', 'Philosophy', 'Physics', 'Chemistry', 'Biology'];
 
 for (let i = 0; i < 400; i++) {
@@ -1274,6 +1274,12 @@ function handleImport(file) {
             // Simple List: Name, Category
             importSimpleList(parsed);
         }
+
+        // Clear mode states to prevent stale player references
+        randomizerResult = null;
+        battleState = { active: false, defender: null, challenger: null };
+        swapState = { active: false, first: null, second: null };
+
         render();
         updateUndoButton();
     };
@@ -1306,31 +1312,37 @@ function importFullState(rowsData) {
     rowsInput.value = maxR + 1;
     colsInput.value = maxC + 1;
 
-    // Build blank state with no players
+    // Build blank state - don't pass players parameter to avoid MIN_PLAYERS enforcement
     state = createGameState({
         rows: maxR + 1,
-        cols: maxC + 1,
-        players: []
+        cols: maxC + 1
     });
 
-    // Manually populate
-    let pidCounter = 1;
+    // Track unique players to handle duplicates (same player on multiple tiles)
+    const playerCache = new Map(); // name -> player object
+
     for (const item of items) {
-        const pid = `p${pidCounter++}`;
-        state.players.set(pid, {
-            id: pid,
-            name: item.name,
-            expertCategory: item.category, // initial expert category
-            hasTimeBoost: item.hasTimeBoost,
-            color: null
-        });
-        state.grid[item.r][item.c] = {
-            row: item.r,
-            col: item.c,
-            ownerId: pid,
-            category: item.category
-        };
+        let player;
+
+        // Check if we've already created this player
+        if (playerCache.has(item.name)) {
+            player = playerCache.get(item.name);
+        } else {
+            // Create new player using state.addPlayer()
+            player = state.addPlayer({
+                name: item.name,
+                expertCategory: item.category,
+                hasTimeBoost: item.hasTimeBoost
+            });
+            playerCache.set(item.name, player);
+        }
+
+        // Set tile owner using the proper API
+        state.setTileOwner(item.r, item.c, player.id, item.category);
     }
+
+    // Refresh player areas
+    state.refreshAreas();
 }
 
 function importSimpleList(rowsData) {
@@ -1360,49 +1372,37 @@ function importSimpleList(rowsData) {
     rowsInput.value = r;
     colsInput.value = c;
 
-    // Create config for buildState
-    // We need to override the default playerConfig logic in buildState or just create state manually
-    // Since buildState uses the hardcoded playerConfig, let's just make a fresh state here.
-
+    // Create fresh state - don't pass players parameter to avoid MIN_PLAYERS enforcement
     state = createGameState({
         rows: r,
-        cols: c,
-        players: []
+        cols: c
     });
 
-    // We can use distributeTilesRoundRobin but we need to feed it players
-    // However, distributeTilesRoundRobin assigns in order (0,0), (0,1)...
-    // If we want linear fill of our items list (which might be shuffled), we can just loop.
-
+    // Populate grid with players from the simple list
     let idx = 0;
     for (let row = 0; row < r; row++) {
         for (let col = 0; col < c; col++) {
             if (idx < items.length) {
                 const item = items[idx];
-                const pid = `p${idx + 1}`;
-                state.players.set(pid, {
-                    id: pid,
+
+                // Create player using state.addPlayer()
+                const player = state.addPlayer({
                     name: item.name,
                     expertCategory: item.category,
-                    hasTimeBoost: false,
-                    color: null
+                    hasTimeBoost: false
                 });
-                state.grid[row][col] = {
-                    row, col,
-                    ownerId: pid,
-                    category: item.category
-                };
+
+                // Set tile owner using the proper API
+                state.setTileOwner(row, col, player.id, item.category);
+
                 idx++;
-            } else {
-                // Empty tile if grid bigger than count
-                state.grid[row][col] = {
-                    row, col,
-                    ownerId: null,
-                    category: null
-                };
             }
+            // Empty tiles are already created by createGameState, no need to set them
         }
     }
+
+    // Refresh player areas
+    state.refreshAreas();
 }
 
 

@@ -25,13 +25,10 @@
         <div id="floor-controls-container" class="floor-controls-container">
             <div class="floor-host-controls">
                 <div class="floor-control-row">
-                    <span id="floor-debug-status" style="color: lime; font-family: monospace; font-size: 12px;"></span>
-                </div>
-                <div class="floor-control-row">
                     <label class="floor-label">Grid</label>
-                    <input type="number" id="floor-rows" min="1" max="20" value="10" class="floor-input">
+                    <input type="number" id="floor-rows" min="1" max="20" value="5" class="floor-input">
                     <span class="floor-sep">×</span>
-                    <input type="number" id="floor-cols" min="1" max="20" value="10" class="floor-input">
+                    <input type="number" id="floor-cols" min="1" max="20" value="5" class="floor-input">
 
                     <button type="button" id="floor-apply-grid" class="floor-btn">Apply</button>
                 </div>
@@ -93,7 +90,7 @@
 
                     <span class="floor-sep"></span>
                     <span class="floor-label">Drift</span>
-                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="1"
+                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="2"
                         style="width: 80px; vertical-align: middle;">
                 </div>
             </div>
@@ -178,8 +175,6 @@
     </div>
 
     <script type="module" src="floor-host.js"></script>
-    <div style="position: fixed; bottom: 5px; right: 5px; color: rgba(255,255,255,0.3); font-size: 10px;">v2.1 - Blue
-        Theme Fix</div>
 </body>
 
 </html>
