@@ -1,0 +1,1067 @@
+/**
+ * Floor Host — Grid & tile styling.
+ * Matches thefloor.html: clean borders, high contrast, screen-share readability.
+ */
+
+/* ---------- Header & controls ---------- */
+.floor-host-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--floor-yellow);
+}
+
+.floor-header-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.floor-host-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--floor-yellow);
+    font-weight: bold;
+}
+
+.floor-header-toggle {
+    background: var(--floor-yellow);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.2s ease;
+    padding: 0;
+}
+
+.floor-header-toggle:hover {
+    background: #ffd700;
+    transform: scale(1.1);
+}
+
+.floor-toggle-icon {
+    transition: transform 0.3s ease;
+    color: var(--floor-blue);
+}
+
+.floor-header-toggle[aria-expanded="false"] .floor-toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.floor-controls-container {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+.floor-controls-container.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.floor-host-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 24px;
+    align-items: center;
+}
+
+.floor-control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.floor-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+}
+
+.floor-input {
+    width: 56px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid var(--floor-yellow);
+    border-radius: 8px;
+    background: #111;
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-input:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+
+.floor-sep {
+    color: var(--floor-yellow);
+    font-weight: bold;
+}
+
+.floor-btn {
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: var(--floor-yellow);
+    color: var(--floor-blue);
+    cursor: pointer;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-btn:hover {
+    filter: brightness(1.1);
+}
+
+.floor-btn-pick {
+    background: var(--floor-green);
+    color: #000;
+}
+
+.floor-btn--stop {
+    background: #FF4444;
+    color: white;
+}
+
+.floor-radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.floor-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.floor-radio input {
+    accent-color: var(--floor-yellow);
+}
+
+/* ---------- Grid ---------- */
+.floor-host-main {
+    max-width: 100%;
+    overflow: auto;
+    padding: 0 20px 20px;
+}
+
+.floor-grid {
+    display: grid;
+    /* Remove gap for solid border look */
+    gap: 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: min(calc(100vw - 48px), 1200px);
+    border: 4px solid white;
+    /* Outer border */
+    background: #0044aa;
+    /* Fallback blue */
+    aspect-ratio: 1;
+    /* Default, overridden by JS */
+}
+
+/* ---------- Tile ---------- */
+.floor-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 0;
+    min-width: 0;
+    padding: 2px;
+
+    /* The Floor Aesthetic: Flat Blue, Seamless, Smart Shading */
+    /* Base Color */
+    background-color: #0044aa;
+
+    /* Edge Gradients (set by classes) */
+    --grad-t: linear-gradient(transparent, transparent);
+    --grad-b: linear-gradient(transparent, transparent);
+    --grad-l: linear-gradient(transparent, transparent);
+    --grad-r: linear-gradient(transparent, transparent);
+
+    background-image: var(--grad-t), var(--grad-b), var(--grad-l), var(--grad-r);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    /* Blend them? Normal stacking works for transparency */
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Faint grid lines */
+    box-shadow: none;
+
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* ... inner classes unchanged ... */
+
+/* Merged Borders: Hide borders between same owners */
+.floor-tile--merge-top {
+    border-top-color: transparent !important;
+}
+
+.floor-tile--merge-bottom {
+    border-bottom-color: transparent !important;
+}
+
+.floor-tile--merge-left {
+    border-left-color: transparent !important;
+}
+
+.floor-tile--merge-right {
+    border-right-color: transparent !important;
+}
+
+/* Edge Shading: Add gradients to PERIMETER only */
+.floor-edge-top {
+    --grad-t: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 15px);
+}
+
+.floor-edge-bottom {
+    --grad-b: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 15px);
+}
+
+.floor-edge-left {
+    --grad-l: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, transparent 15px);
+}
+
+.floor-edge-right {
+    --grad-r: linear-gradient(to left, rgba(0, 0, 0, 0.5) 0%, transparent 15px);
+}
+
+/* Remove box-shadow to avoid "internal lines" effect */
+.floor-tile {
+    box-shadow: none !important;
+}
+
+
+/* =========================================
+   Battle Mode Logic
+   ========================================= */
+
+.floor-grid.floor-battle-mode .floor-tile {
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.floor-tile--battle-dimmed {
+    opacity: 0.15;
+    filter: grayscale(0.8);
+    pointer-events: none;
+}
+
+/* Base style for Battle Highlights (Candidates & Defender) */
+.floor-tile--battle-candidate,
+.floor-tile--battle-defender {
+    /* 1. Reset standard borders so we don't get double lines */
+    border-color: transparent !important;
+    background-image: none !important;
+
+    /* 2. Default Border Variables (Hidden by default) */
+    --b-t: 0px;
+    --b-b: 0px;
+    --b-l: 0px;
+    --b-r: 0px;
+    --b-c: transparent;
+    /* Color */
+
+    /* 3. Animation Variables */
+    --width-mod: 1;
+    /* Controls thickness breathing */
+    --glow-opacity: 0;
+    /* Controls outer glow */
+
+    z-index: 10;
+
+    /* Smart Outline Construction: 
+       We use inset box-shadows. The calc() multiplies the base size (6px)
+       by the animation modifier (--width-mod) to make it breathe in and out.
+    */
+    box-shadow:
+        inset 0 calc(var(--b-t) * var(--width-mod)) 0 0 var(--b-c),
+        inset 0 calc(var(--b-b) * -1 * var(--width-mod)) 0 0 var(--b-c),
+        inset calc(var(--b-l) * var(--width-mod)) 0 0 0 var(--b-c),
+        inset calc(var(--b-r) * -1 * var(--width-mod)) 0 0 0 var(--b-c) !important;
+}
+
+/* EDGE DETECTION
+   Only apply thickness variables if the tile is on the physical edge of the group.
+   This prevents the "Red Grid" inside a multi-tile defender.
+*/
+.floor-tile--battle-candidate.floor-edge-top,
+.floor-tile--battle-defender.floor-edge-top {
+    --b-t: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-bottom,
+.floor-tile--battle-defender.floor-edge-bottom {
+    --b-b: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-left,
+.floor-tile--battle-defender.floor-edge-left {
+    --b-l: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-right,
+.floor-tile--battle-defender.floor-edge-right {
+    --b-r: 6px;
+}
+
+
+/* --- Candidate (Yellow) --- */
+.floor-tile--battle-candidate {
+    --b-c: var(--floor-yellow);
+    background-color: rgba(255, 215, 0, 0.15) !important;
+    cursor: pointer;
+    animation: battle-breathe-yellow 2.5s infinite ease-in-out;
+}
+
+@keyframes battle-breathe-yellow {
+
+    0%,
+    100% {
+        --width-mod: 1;
+        /* Standard Border Width */
+        background-color: rgba(255, 215, 0, 0.1);
+        filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+    }
+
+    50% {
+        --width-mod: 1.8;
+        /* Thicker Border (Flows In) */
+        background-color: rgba(255, 215, 0, 0.25);
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+    }
+}
+
+/* --- Defender (Red) --- */
+.floor-tile--battle-defender {
+    --b-c: #FF4444;
+    background-color: rgba(255, 68, 68, 0.15) !important;
+    opacity: 1 !important;
+    animation: battle-breathe-red 2.5s infinite ease-in-out;
+}
+
+@keyframes battle-breathe-red {
+
+    0%,
+    100% {
+        --width-mod: 1;
+        background-color: rgba(255, 68, 68, 0.1);
+        filter: drop-shadow(0 0 2px rgba(255, 68, 68, 0.3));
+    }
+
+    50% {
+        --width-mod: 1.8;
+        background-color: rgba(255, 68, 68, 0.25);
+        filter: drop-shadow(0 0 10px rgba(255, 68, 68, 0.8));
+    }
+}
+
+/* =========================================
+   Selected/Defined states (Cleaned Up)
+   ========================================= */
+
+/* Swap Selection (Yellow High Contrast) */
+.floor-tile.floor-tile--swap-selected {
+    background: #FFD700;
+    color: black;
+    border: 3px solid white !important;
+    /* Keep hard border for swap mode only */
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.floor-tile.floor-tile--swap-selected .floor-tile-category,
+.floor-tile.floor-tile--swap-selected .floor-tile-name {
+    color: black;
+    text-shadow: none;
+    opacity: 1;
+}
+
+/* NOTE: I removed the `.floor-tile.floor-tile--battle-defender` block 
+   that was here previously. It contained "border: 3px solid #FF4444" 
+   which was forcing the internal outlines to appear. 
+*/
+
+.floor-tile.floor-tile--takeover {
+    z-index: 30;
+    animation: takeover-flash 1.2s ease-out forwards;
+}
+
+@keyframes takeover-flash {
+    0% {
+        background: white;
+    }
+
+    50% {
+        background: #FFD700;
+    }
+
+    100% {
+        background: linear-gradient(135deg, #0055d4 0%, #003399 100%);
+    }
+}
+
+/* EDGE DETECTION
+   Only apply thickness variables if the tile is on the physical edge of the group.
+   This prevents the "Red Grid" inside a multi-tile defender.
+*/
+.floor-tile--battle-candidate.floor-edge-top,
+.floor-tile--battle-defender.floor-edge-top {
+    --b-t: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-bottom,
+.floor-tile--battle-defender.floor-edge-bottom {
+    --b-b: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-left,
+.floor-tile--battle-defender.floor-edge-left {
+    --b-l: 6px;
+}
+
+.floor-tile--battle-candidate.floor-edge-right,
+.floor-tile--battle-defender.floor-edge-right {
+    --b-r: 6px;
+}
+
+
+/* --- Candidate (Yellow) --- */
+.floor-tile--battle-candidate {
+    --b-c: var(--floor-yellow);
+    background-color: rgba(255, 215, 0, 0.15) !important;
+    cursor: pointer;
+    animation: battle-breathe-yellow 2.5s infinite ease-in-out;
+}
+
+@keyframes battle-breathe-yellow {
+
+    0%,
+    100% {
+        --width-mod: 1;
+        /* Standard Border Width */
+        background-color: rgba(255, 215, 0, 0.1);
+        filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+    }
+
+    50% {
+        --width-mod: 1.8;
+        /* Thicker Border (Flows In) */
+        background-color: rgba(255, 215, 0, 0.25);
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+    }
+}
+
+/* --- Defender (Red) --- */
+.floor-tile--battle-defender {
+    --b-c: #FF4444;
+    background-color: rgba(255, 68, 68, 0.15) !important;
+    opacity: 1 !important;
+    animation: battle-breathe-red 2.5s infinite ease-in-out;
+}
+
+@keyframes battle-breathe-red {
+
+    0%,
+    100% {
+        --width-mod: 1;
+        background-color: rgba(255, 68, 68, 0.1);
+        filter: drop-shadow(0 0 2px rgba(255, 68, 68, 0.3));
+    }
+
+    50% {
+        --width-mod: 1.8;
+        background-color: rgba(255, 68, 68, 0.25);
+        filter: drop-shadow(0 0 10px rgba(255, 68, 68, 0.8));
+    }
+}
+
+/* PLAYER OVERLAY LABELS */
+/* These are absolute positioned on top of the grid */
+.floor-labels-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Let clicks pass through to tiles */
+    z-index: 50;
+    overflow: hidden;
+}
+
+/* Player overlay labels */
+.floor-player-label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: max-content;
+    /* max-width is set via JS too, but this clamp helps as default */
+    pointer-events: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+
+    /* Allow wrapping and breaking */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.0;
+
+    /* Strict containment */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.floor-player-label .label-cat {
+    /* Allow smaller min font size for dense grids */
+    font-size: clamp(0.25rem, calc(18vw / var(--grid-cols, 10)), 1.4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 1px;
+
+    /* Remove truncation, allow wrapping */
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+}
+
+.floor-player-label .label-name {
+    font-size: clamp(0.2rem, calc(10vw / var(--grid-cols, 10)), 0.8rem);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    text-transform: uppercase;
+
+    /* Remove truncation, allow wrapping */
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    line-height: 1.0;
+}
+
+.floor-player-label .label-badge {
+    background: var(--floor-green);
+    color: black;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+/* Hide original tile content since we use overlays now */
+.floor-tile-inner {
+    opacity: 0;
+}
+
+/* Unless in debug/empty mode? No, empty tiles have no label */
+.floor-tile--empty .floor-tile-inner {
+    opacity: 1;
+    /* Show empty dashes if needed, or hide */
+}
+
+
+/* Display modes overrides */
+.floor-tile--both .floor-tile-category {
+    display: flex;
+}
+
+.floor-tile--both .floor-tile-name {
+    display: flex;
+}
+
+.floor-tile--categories .floor-tile-name {
+    display: none !important;
+}
+
+.floor-tile--names .floor-tile-category {
+    display: none !important;
+}
+
+.floor-tile--names .floor-tile-name {
+    flex: 1;
+    font-size: clamp(0.6rem, 2.0vw, 1.2rem);
+    color: white;
+    opacity: 1;
+    /* Reset opacity for names only mode */
+}
+
+/* Unowned */
+.floor-tile--empty {
+    background: #050510;
+    border-color: #333;
+}
+
+.floor-tile--empty .floor-tile-category {
+    color: #444;
+}
+
+/* Hover */
+.floor-tile:hover {
+    filter: brightness(1.3);
+    z-index: 20;
+    border-color: white !important;
+    /* Force border on hover even if merged */
+}
+
+/* =========================================
+   Selected/Defined states (Cleaned Up)
+   ========================================= */
+
+/* Swap Selection (Yellow High Contrast) */
+.floor-tile.floor-tile--swap-selected {
+    background: #FFD700;
+    color: black;
+    border: 3px solid white !important;
+    /* Keep hard border for swap mode only */
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.floor-tile.floor-tile--swap-selected .floor-tile-category,
+.floor-tile.floor-tile--swap-selected .floor-tile-name {
+    color: black;
+    text-shadow: none;
+    opacity: 1;
+}
+
+/* NOTE: I removed the `.floor-tile.floor-tile--battle-defender` block 
+   that was here previously. It contained "border: 3px solid #FF4444" 
+   which was forcing the internal outlines to appear. 
+*/
+
+.floor-tile.floor-tile--takeover {
+    z-index: 30;
+    animation: takeover-flash 1.2s ease-out forwards;
+}
+
+@keyframes takeover-flash {
+    0% {
+        background: white;
+    }
+
+    50% {
+        background: #FFD700;
+    }
+
+    100% {
+        background: linear-gradient(135deg, #0055d4 0%, #003399 100%);
+    }
+}
+
+/* ---------- Category swap overlay ---------- */
+.floor-swap-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    pointer-events: none;
+}
+
+.floor-swap-overlay[aria-hidden="false"] {
+    display: block;
+}
+
+.floor-swap-fly {
+    position: fixed;
+    padding: 6px 12px;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    font-weight: bold;
+    color: var(--floor-yellow);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--floor-yellow);
+    border-radius: 6px;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floor-swap-arrow {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
+    animation: swap-arrow-spin 0.5s ease-in-out infinite;
+}
+
+.floor-swap-arrow::after {
+    content: '⇄';
+    font-size: 28px;
+    color: var(--floor-yellow);
+    line-height: 1;
+}
+
+@keyframes swap-arrow-spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.floor-tile-category.floor-tile-category--swap-shrink {
+    transform: scale(0.3);
+    opacity: 0.3;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.floor-tile-category.floor-tile-category--swap-reappear {
+    animation: swap-reappear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes swap-reappear {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ---------- Randomizer ---------- */
+.floor-randomizer-result {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--floor-green);
+    border-radius: 8px;
+}
+
+.floor-randomizer-result[aria-hidden="false"] {
+    display: flex;
+}
+
+.floor-randomizer-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--floor-green);
+}
+
+.floor-grid--randomizer-active .floor-tile {
+    opacity: 0.4;
+    transition: opacity 0.15s ease;
+}
+
+/* Keep labels visible during randomizer */
+.floor-grid--randomizer-active .floor-labels-layer {
+    opacity: 1;
+}
+
+.floor-grid--randomizer-active .floor-tile.floor-tile--randomizer-active,
+.floor-grid--randomizer-active .floor-tile.floor-tile--randomizer-selected {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Simple yellow glow during rapid cycling */
+.floor-tile.floor-tile--randomizer-active {
+    border-color: var(--floor-yellow) !important;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+    transform: scale(1.05);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    z-index: 10;
+}
+
+/* Winner selection - intense green glow with pulse */
+.floor-tile.floor-tile--randomizer-selected {
+    border: 4px solid var(--floor-green) !important;
+    transform: scale(1.2);
+    z-index: 100 !important;
+    animation: winner-pulse 0.8s ease-in-out infinite;
+}
+
+/* Ensure content is visible on selected tile */
+.floor-tile.floor-tile--randomizer-selected .floor-tile-inner {
+    opacity: 1 !important;
+}
+
+.floor-tile.floor-tile--randomizer-selected .floor-tile-category,
+.floor-tile.floor-tile--randomizer-selected .floor-tile-name {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    color: white !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Make the overlay label pulse when randomizer selects this player */
+.floor-player-label.floor-label--randomizer-selected {
+    z-index: 150 !important;
+    animation: label-winner-pulse 0.8s ease-in-out infinite;
+    opacity: 1 !important;
+}
+
+@keyframes winner-pulse {
+
+    0%,
+    100% {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px var(--floor-green), 0 0 60px var(--floor-green);
+    }
+
+    50% {
+        transform: scale(1.25);
+        box-shadow: 0 0 50px var(--floor-green), 0 0 100px var(--floor-green);
+    }
+}
+
+@keyframes label-winner-pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.9);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        text-shadow: 0 0 20px rgba(0, 255, 0, 1), 0 2px 8px rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* Swap bar & prompt */
+.floor-swap-bar {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    min-height: 2.5em;
+}
+
+body.floor-swap-mode .floor-swap-bar,
+body.floor-battle-mode .floor-swap-bar {
+    display: flex;
+}
+
+.floor-swap-prompt {
+    font-size: 1rem;
+    color: var(--floor-yellow);
+}
+
+.floor-swap-cancel {
+    display: inline-block;
+}
+
+/* ---------- Context menu ---------- */
+.floor-context-menu {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    min-width: 160px;
+    padding: 4px 0;
+    background: #111;
+    border: 3px solid var(--floor-yellow);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.floor-context-menu[aria-hidden="false"] {
+    display: block;
+}
+
+.floor-context-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-context-item:hover {
+    background: rgba(255, 204, 0, 0.2);
+    color: var(--floor-yellow);
+}
+
+/* ---------- Edit Details modal ---------- */
+.floor-edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.floor-edit-modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.floor-edit-content {
+    background: #111;
+    border: 3px solid var(--floor-yellow);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 320px;
+    max-width: 90vw;
+}
+
+.floor-edit-title {
+    margin: 0 0 20px 0;
+    font-size: 1.4rem;
+    color: var(--floor-yellow);
+}
+
+.floor-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.floor-edit-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.floor-edit-label {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.floor-edit-input {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 2px solid #444;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.floor-edit-input:focus {
+    outline: none;
+    border-color: var(--floor-yellow);
+}
+
+.floor-edit-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.floor-edit-check input {
+    accent-color: var(--floor-yellow);
+}
+
+.floor-edit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.floor-btn-secondary {
+    background: #333;
+    color: white;
+}
+
+.floor-btn-secondary:hover {
+    filter: brightness(1.15);
+}
+
+/* ---------- Duel overlay (full-screen) ---------- */
+.floor-duel-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.92);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.floor-duel-overlay[aria-hidden="false"] {
+    display: flex;
+    pointer-events: auto;
+}
+
+.floor-duel-overlay.floor-duel-overlay--visible {
+    opacity: 1;
+}
+
+.floor-duel-content {
+    text-align: center;
+    padding: 48px;
+    max-width: 90vw;
+}
+
+.floor-duel-vs {
+    margin: 0 0 16px 0;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    font-weight: bold;
+    color: var(--floor-yellow);
+    line-height: 1.2;
+}
+
+.floor-duel-category {
+    margin: 0 0 32px 0;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: rgba(255, 255, 255, 0.95);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.floor-duel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.floor-duel-btn {
+    min-width: 160px;
+    font-size: 1.1rem;
+}
+
+.floor-duel-cancel {
+    display: block;
+    margin: 0 auto;
+}

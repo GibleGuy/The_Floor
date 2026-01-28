@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Floor — Host</title>
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/backgrounds.css" rel="stylesheet">
+    <link href="floor-host.css?v=2.1" rel="stylesheet">
+</head>
+
+<body>
+    <div id="bg-pop-layer" aria-hidden="true"></div>
+    <header class="floor-host-header">
+        <div class="floor-header-title-row">
+            <h1>The Floor — Host</h1>
+            <button type="button" id="floor-header-toggle" class="floor-header-toggle" aria-label="Toggle controls"
+                aria-expanded="true">
+                <svg class="floor-toggle-icon" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M7 10l5 5 5-5z" />
+                </svg>
+            </button>
+        </div>
+        <div id="floor-controls-container" class="floor-controls-container">
+            <div class="floor-host-controls">
+                <div class="floor-control-row">
+                    <span id="floor-debug-status" style="color: lime; font-family: monospace; font-size: 12px;"></span>
+                </div>
+                <div class="floor-control-row">
+                    <label class="floor-label">Grid</label>
+                    <input type="number" id="floor-rows" min="1" max="20" value="10" class="floor-input">
+                    <span class="floor-sep">×</span>
+                    <input type="number" id="floor-cols" min="1" max="20" value="10" class="floor-input">
+
+                    <button type="button" id="floor-apply-grid" class="floor-btn">Apply</button>
+                </div>
+                <div class="floor-control-row">
+                    <span class="floor-label">Data</span>
+                    <input type="file" id="floor-import-file" accept=".csv" style="display: none;">
+                    <button type="button" id="floor-import-btn" class="floor-btn floor-btn-secondary">Import
+                        CSV</button>
+                    <label class="floor-edit-check" style="margin-left: 8px; font-size: 14px;">
+                        <input type="checkbox" id="floor-randomize-check"> Randomize
+                    </label>
+                    <button type="button" id="floor-export-btn" class="floor-btn floor-btn-secondary"
+                        style="margin-left: 8px;">Export CSV</button>
+                </div>
+
+                <div class="floor-control-row">
+                    <span class="floor-label">Display</span>
+                    <div class="floor-radio-group">
+                        <label class="floor-radio">
+                            <input type="radio" name="floor-display" value="both" checked>
+                            Both
+                        </label>
+                        <label class="floor-radio">
+                            <input type="radio" name="floor-display" value="categories">
+                            Categories only
+                        </label>
+                        <label class="floor-radio">
+                            <input type="radio" name="floor-display" value="names">
+                            Names only
+                        </label>
+                    </div>
+                </div>
+                <div class="floor-control-row">
+                    <button type="button" id="floor-pick-btn" class="floor-btn floor-btn-pick">Activate the
+                        Randomizer</button>
+                    <button type="button" id="floor-undo-btn" class="floor-btn floor-btn-secondary">Undo</button>
+                    <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound</button>
+                </div>
+
+                <!-- NEW: Background pattern controls -->
+                <div class="floor-control-row">
+                    <span class="floor-label">Background</span>
+                    <select id="floor-bg-style" class="floor-select">
+                        <option value="pop">Pop</option>
+                        <option value="grid">Grid</option>
+                        <option value="tiles">Tiles</option>
+                        <option value="diagonal">Diagonal</option>
+                        <option value="solid">Solid</option>
+                    </select>
+
+                    <span class="floor-sep"></span>
+                    <span class="floor-label">Blue</span>
+                    <select id="floor-blue-variant" class="floor-select">
+                        <option value="a">A (Darkest)</option>
+                        <option value="b" selected>B (Default)</option>
+                        <option value="c">C (Lighter)</option>
+                        <option value="d">D (Vivid)</option>
+                    </select>
+
+                    <span class="floor-sep"></span>
+                    <span class="floor-label">Drift</span>
+                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="1"
+                        style="width: 80px; vertical-align: middle;">
+                </div>
+            </div>
+            <div id="floor-randomizer-result" class="floor-randomizer-result" role="status" aria-live="polite"
+                aria-hidden="true">
+                <span class="floor-randomizer-label"></span>
+                <button type="button" id="floor-randomizer-dismiss"
+                    class="floor-btn floor-btn-secondary">Dismiss</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="floor-host-main">
+        <div id="floor-swap-overlay" class="floor-swap-overlay" aria-hidden="true"></div>
+        <div class="floor-swap-bar">
+            <span id="floor-swap-prompt" class="floor-swap-prompt" role="status" aria-live="polite"></span>
+            <button type="button" id="floor-swap-cancel"
+                class="floor-btn floor-btn-secondary floor-swap-cancel">Cancel</button>
+        </div>
+        <div id="floor-grid" class="floor-grid" role="grid" aria-label="Floor grid">
+            <p class="floor-grid-loading" id="floor-grid-loading">Loading…</p>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var g = document.getElementById('floor-grid');
+                var loading = document.getElementById('floor-grid-loading');
+                if (g && loading && loading.parentNode && g.children.length === 1 && g.querySelector('.floor-grid-loading')) {
+                    loading.textContent = 'Could not load. Open via a local server (e.g. npx serve) and reload this page.';
+                }
+            }, 2800);
+        });
+    </script>
+
+    <div id="floor-context-menu" class="floor-context-menu" role="menu" aria-hidden="true">
+        <button type="button" class="floor-context-item" data-action="battle">Battle</button>
+        <button type="button" class="floor-context-item" data-action="edit">Edit Details</button>
+        <button type="button" class="floor-context-item" data-action="swap">Swap Category</button>
+        <button type="button" class="floor-context-item" data-action="cancel">Cancel</button>
+    </div>
+
+    <div id="floor-edit-modal" class="floor-edit-modal" role="dialog" aria-labelledby="floor-edit-title"
+        aria-hidden="true">
+        <div class="floor-edit-content">
+            <h2 id="floor-edit-title" class="floor-edit-title">Edit Details</h2>
+            <form id="floor-edit-form" class="floor-edit-form">
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-edit-name">Player name</label>
+                    <input type="text" id="floor-edit-name" class="floor-edit-input" autocomplete="off">
+                </div>
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-edit-category">Category</label>
+                    <input type="text" id="floor-edit-category" class="floor-edit-input" autocomplete="off">
+                </div>
+                <div class="floor-edit-row">
+                    <label class="floor-edit-check">
+                        <input type="checkbox" id="floor-edit-timeboost">
+                        Time boost (+5)
+                    </label>
+                </div>
+                <div class="floor-edit-actions">
+                    <button type="submit" class="floor-btn">Save</button>
+                    <button type="button" id="floor-edit-cancel" class="floor-btn floor-btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="floor-duel-overlay" class="floor-duel-overlay" role="dialog" aria-labelledby="floor-duel-title"
+        aria-hidden="true">
+        <div class="floor-duel-content">
+            <h2 id="floor-duel-title" class="floor-duel-vs"></h2>
+            <p class="floor-duel-category"></p>
+            <div class="floor-duel-actions">
+                <button type="button" id="floor-duel-challenger-wins" class="floor-btn floor-duel-btn"></button>
+                <button type="button" id="floor-duel-defender-wins" class="floor-btn floor-duel-btn"></button>
+            </div>
+            <button type="button" id="floor-duel-cancel"
+                class="floor-btn floor-btn-secondary floor-duel-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <script type="module" src="floor-host.js"></script>
+    <div style="position: fixed; bottom: 5px; right: 5px; color: rgba(255,255,255,0.3); font-size: 10px;">v2.1 - Blue
+        Theme Fix</div>
+</body>
+
+</html>
