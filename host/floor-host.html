@@ -130,6 +130,8 @@
         <button type="button" class="floor-context-item" data-action="battle">Battle</button>
         <button type="button" class="floor-context-item" data-action="edit">Edit Details</button>
         <button type="button" class="floor-context-item" data-action="swap">Category Steal</button>
+        <button type="button" class="floor-context-item floor-context-item--danger" data-action="kill">Kill
+            Player</button>
         <button type="button" class="floor-context-item" data-action="cancel">Cancel</button>
     </div>
 
@@ -171,6 +173,20 @@
             </div>
             <button type="button" id="floor-duel-cancel"
                 class="floor-btn floor-btn-secondary floor-duel-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <div id="floor-kill-modal" class="floor-edit-modal" role="dialog" aria-labelledby="floor-kill-title"
+        aria-hidden="true">
+        <div class="floor-edit-content">
+            <h2 id="floor-kill-title" class="floor-edit-title">⚠️ Kill Player</h2>
+            <p class="floor-kill-warning" id="floor-kill-warning">Are you sure you want to kill this player? All their
+                tiles will become empty.</p>
+            <p class="floor-kill-player-name" id="floor-kill-player-name"></p>
+            <div class="floor-edit-actions">
+                <button type="button" id="floor-kill-confirm" class="floor-btn floor-btn-danger">Confirm Kill</button>
+                <button type="button" id="floor-kill-cancel" class="floor-btn floor-btn-secondary">Cancel</button>
+            </div>
         </div>
     </div>
 

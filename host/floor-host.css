@@ -1141,3 +1141,49 @@ body.floor-battle-mode .floor-swap-bar {
     display: block;
     margin: 0 auto;
 }
+
+/* ---------- Kill Player modal styles ---------- */
+.floor-kill-warning {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.floor-kill-player-name {
+    color: var(--floor-yellow);
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.floor-btn-danger {
+    background: #FF4444;
+    color: white;
+}
+
+.floor-btn-danger:hover {
+    background: #FF2222;
+}
+
+.floor-context-item--danger {
+    color: #FF6666;
+}
+
+.floor-context-item--danger:hover {
+    background: rgba(255, 68, 68, 0.2);
+    color: #FF4444;
+}
+
+/* Empty tiles - visually distinct */
+.floor-tile--empty {
+    background: #1a1a2e !important;
+    border-color: #2a2a3e !important;
+    opacity: 0.7;
+}
+
+.floor-tile--empty:hover {
+    opacity: 0.9;
+    background: #252540 !important;
+}

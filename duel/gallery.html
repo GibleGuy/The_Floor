@@ -240,6 +240,16 @@
         </select>
     </div>
     <main id="gallery-main"></main>
+    <div id="failed-images-section"
+        style="margin-top: 30px; padding: 20px; background: rgba(231, 76, 60, 0.2); border: 2px solid var(--floor-red); border-radius: 10px; display: none;">
+        <h2 style="color: var(--floor-red); margin-top: 0;">Failed Images</h2>
+        <p style="color: #fff; margin-bottom: 10px;">The following images failed to load. Copy this list to share:</p>
+        <textarea id="failed-images-list" readonly
+            style="width: 100%; min-height: 200px; background: #111; color: #fff; border: 1px solid #555; padding: 10px; font-family: monospace; font-size: 0.9rem;"></textarea>
+        <button onclick="copyFailedImages()"
+            style="margin-top: 10px; padding: 10px 20px; background: var(--floor-yellow); color: var(--floor-blue); border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Copy
+            to Clipboard</button>
+    </div>
     <section id="category-sounds" class="category-section">
         <h2>Sound Effects</h2>
         <div id="sound-effects-content"></div>
@@ -249,23 +259,63 @@
     <script src="../categories/pokemon.js?v=2"></script>
     <script src="../categories/hockey.js?v=2"></script>
     <script src="../categories/math.js?v=2"></script>
+    <script src="../categories/dogs.js?v=2"></script>
+    <script src="../categories/survivor.js?v=3"></script>
+    <script src="../categories/advertisement.js?v=1"></script>
     <script>
         const categories = {
             flags: (typeof flagData !== 'undefined') ? flagData : [],
             pokemon: (typeof pokemonData !== 'undefined') ? pokemonData : [],
             hockey: (typeof hockeyData !== 'undefined') ? hockeyData : [],
-            math: (typeof mathData !== 'undefined') ? mathData : []
+            math: (typeof mathData !== 'undefined') ? mathData : [],
+            dogs: (typeof dogData !== 'undefined') ? dogData : [],
+            survivor: (typeof survivorData !== 'undefined') ? survivorData : [],
+            advertisement: (typeof advertisementData !== 'undefined') ? advertisementData : []
         };
-        const categoryLabels = { flags: 'Flags', pokemon: 'Pokemon', hockey: 'Hockey', math: 'Math' };
+        const categoryLabels = { flags: 'Flags', pokemon: 'Pokemon', hockey: 'Hockey', math: 'Math', dogs: 'Dogs', survivor: 'Survivor', advertisement: 'Advertisement' };
+
+        // Track failed images
+        const failedImages = [];
 
         function galleryImageError(el) {
             const wrap = el.closest('.img-wrap');
             const img = wrap.querySelector('img');
             const fallback = wrap.querySelector('.img-fallback');
             if (img && fallback) {
+                // Track the failed image
+                const itemName = el.alt || 'Unknown';
+                const itemUrl = el.src || 'Unknown URL';
+                failedImages.push({ name: itemName, url: itemUrl });
+
                 img.classList.add('hide');
                 fallback.classList.add('show');
+
+                // Update the failed images display
+                updateFailedImagesDisplay();
             }
+        }
+
+        function updateFailedImagesDisplay() {
+            const section = document.getElementById('failed-images-section');
+            const textarea = document.getElementById('failed-images-list');
+
+            if (failedImages.length > 0) {
+                section.style.display = 'block';
+                let text = `Total failed images: ${failedImages.length}\n\n`;
+                failedImages.forEach((item, index) => {
+                    text += `${index + 1}. ${item.name}\n   URL: ${item.url}\n\n`;
+                });
+                textarea.value = text;
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        function copyFailedImages() {
+            const textarea = document.getElementById('failed-images-list');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Failed images list copied to clipboard!');
         }
 
         const main = document.getElementById('gallery-main');

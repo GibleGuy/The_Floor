@@ -1,6 +1,6 @@
 // ========== CATEGORIES & STATE ==========
-const CATEGORY_SCRIPTS = { flags: '../categories/flags.js?v=2', pokemon: '../categories/pokemon.js?v=2', hockey: '../categories/hockey.js?v=2', math: '../categories/math.js?v=2' };
-const CATEGORY_GLOBALS = { flags: 'flagData', pokemon: 'pokemonData', hockey: 'hockeyData', math: 'mathData' };
+const CATEGORY_SCRIPTS = { flags: '../categories/flags.js?v=2', pokemon: '../categories/pokemon.js?v=2', hockey: '../categories/hockey.js?v=2', math: '../categories/math.js?v=2', dogs: '../categories/dogs.js?v=2', survivor: '../categories/survivor.js?v=2', advertisement: '../categories/advertisement.js?v=1' };
+const CATEGORY_GLOBALS = { flags: 'flagData', pokemon: 'pokemonData', hockey: 'hockeyData', math: 'mathData', dogs: 'dogData', survivor: 'survivorData', advertisement: 'advertisementData' };
 const categoryScriptsLoaded = new Set();
 
 function loadCategoryScript(cat) {
@@ -943,7 +943,7 @@ function updateTimer(playerNum, value) {
     }
 }
 
-const CATEGORY_KEYS = { flags: 'flags', pokemon: 'pokemon', hockey: 'hockey', math: 'math' };
+const CATEGORY_KEYS = { flags: 'flags', pokemon: 'pokemon', hockey: 'hockey', math: 'math', dogs: 'dogs', survivor: 'survivor' };
 function resolveCategoryKey(input) {
     const v = String(input || '').toLowerCase().trim();
     if (CATEGORY_KEYS[v]) return v;
