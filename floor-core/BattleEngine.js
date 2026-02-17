@@ -119,8 +119,42 @@ function applyBattleResult(state, cr, cc, dr, dc, winnerIsChallenger) {
     loser.duelCount++;
     winner.duelCount++;
 
+    // 6. Absorb any adjacent grey squares (chain reaction)
+    absorbGreySquares(state, winnerId);
+
     state.refreshAreas();
     return { success: true, loserId, winnerId };
+}
+
+/**
+ * Absorb grey squares (tiles with no owner) adjacent to a player's territory.
+ * Iterates until no more absorptions occur (handles chain reactions).
+ * @param {GameState} state
+ * @param {string} playerId - Player who absorbs the grey squares
+ */
+function absorbGreySquares(state, playerId) {
+    const player = state.getPlayer(playerId);
+    if (!player) return;
+
+    const category = player.expertCategory || '';
+    let absorbed = true;
+
+    while (absorbed) {
+        absorbed = false;
+        const ownedTiles = state.getTilesOwnedBy(playerId);
+
+        for (const tile of ownedTiles) {
+            for (const [dr, dc] of ORTH) {
+                const nr = tile.row + dr;
+                const nc = tile.col + dc;
+                const neighbor = state.getTile(nr, nc);
+                if (neighbor && !neighbor.ownerId) {
+                    state.setTileOwner(nr, nc, playerId, category);
+                    absorbed = true;
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -142,5 +176,6 @@ export {
     validateBattle,
     applyBattleResult,
     getBattleCategory,
+    absorbGreySquares,
     ORTH,
 };

@@ -622,6 +622,28 @@
     color: #444;
 }
 
+/* Grey squares — killed player or unassigned tiles */
+.floor-tile--grey {
+    background: linear-gradient(135deg, #2a2a2a 25%, #333 25%, #333 50%, #2a2a2a 50%, #2a2a2a 75%, #333 75%) !important;
+    background-size: 8px 8px !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    cursor: default;
+    background-image: none;
+    --grad-t: none;
+    --grad-b: none;
+    --grad-l: none;
+    --grad-r: none;
+}
+
+.floor-tile--grey .floor-tile-inner {
+    display: none;
+}
+
+.floor-tile--grey:hover {
+    filter: brightness(1.1);
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
 /* Hover */
 .floor-tile:hover {
     filter: brightness(1.3);

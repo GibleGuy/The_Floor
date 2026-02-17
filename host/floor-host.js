@@ -11,6 +11,7 @@ import {
     validateBattle,
     applyBattleResult,
     getBattleCategory,
+    absorbGreySquares,
     isOrthogonalAdjacent,
     pickOne,
     getOrderedEligible,
@@ -42,6 +43,7 @@ const defenderWinsBtn = document.getElementById('floor-duel-defender-wins');
 const duelCancelBtn = document.getElementById('floor-duel-cancel');
 const rowsInput = document.getElementById('floor-rows');
 const colsInput = document.getElementById('floor-cols');
+const greyCountInput = document.getElementById('floor-grey-count');
 const applyBtn = document.getElementById('floor-apply-grid');
 const displayRadios = document.querySelectorAll('input[name="floor-display"]');
 const importFile = document.getElementById('floor-import-file');
@@ -52,6 +54,14 @@ const muteBtn = document.getElementById('floor-mute-btn');
 const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
+
+/** Kill modal DOM refs */
+const killModalEl = document.getElementById('floor-kill-modal');
+const killPlayerNameEl = document.getElementById('floor-kill-player-name');
+const killConfirmBtn = document.getElementById('floor-kill-confirm');
+const killCancelBtn = document.getElementById('floor-kill-cancel');
+const killContextBtn = document.querySelector('[data-action="kill"]');
+let killTarget = null;
 
 /** Audio mute state */
 let isMuted = false;
@@ -108,13 +118,37 @@ for (let i = 0; i < 400; i++) {
 }
 if (playerConfig.length > 0) playerConfig[0].hasTimeBoost = true;
 
-function buildState(rows, cols) {
+function buildState(rows, cols, greyCount = 0) {
     const s = createGameState({
         rows: Math.max(1, rows),
         cols: Math.max(1, cols),
         players: playerConfig,
     });
     s.distributeTilesRoundRobin();
+
+    // Randomly clear greyCount tiles to create grey squares
+    if (greyCount > 0) {
+        const totalTiles = rows * cols;
+        const count = Math.min(greyCount, totalTiles);
+        // Build list of all tile coordinates and shuffle
+        const allCoords = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                allCoords.push({ r, c });
+            }
+        }
+        // Fisher-Yates shuffle
+        for (let i = allCoords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allCoords[i], allCoords[j]] = [allCoords[j], allCoords[i]];
+        }
+        for (let k = 0; k < count; k++) {
+            const { r, c } = allCoords[k];
+            s.setTileOwner(r, c, '', '');
+        }
+        s.refreshAreas();
+    }
+
     return s;
 }
 
@@ -145,6 +179,11 @@ function showContextMenu(x, y, tile) {
     contextTile = tile;
     contextMenuEl.style.left = x + 'px';
     contextMenuEl.style.top = y + 'px';
+    // Hide kill button for grey (unowned) tiles
+    if (killContextBtn) {
+        const tileData = state ? state.getTile(tile.r, tile.c) : null;
+        killContextBtn.style.display = (tileData && tileData.ownerId) ? '' : 'none';
+    }
     contextMenuEl.setAttribute('aria-hidden', 'false');
 }
 
@@ -570,6 +609,73 @@ function handleContextAction(e) {
         startSwapMode(tile);
         return;
     }
+
+    if (action === 'kill') {
+        showKillModal(tile);
+        return;
+    }
+}
+
+function showKillModal(tile) {
+    if (!tile || !state) return;
+    const tileData = state.getTile(tile.r, tile.c);
+    if (!tileData || !tileData.ownerId) return;
+    const player = state.getPlayer(tileData.ownerId);
+    if (!player) return;
+    killTarget = { ownerId: tileData.ownerId };
+    if (killPlayerNameEl) killPlayerNameEl.textContent = player.name;
+    if (killModalEl) killModalEl.setAttribute('aria-hidden', 'false');
+}
+
+function hideKillModal() {
+    if (killModalEl) killModalEl.setAttribute('aria-hidden', 'true');
+    killTarget = null;
+}
+
+function confirmKill() {
+    if (!killTarget || !state) { hideKillModal(); return; }
+    const { ownerId } = killTarget;
+    undoManager.push(state);
+    state.killPlayer(ownerId);
+
+    // After killing, check if any neighboring players should absorb the new grey squares
+    // Find all players adjacent to the newly created grey squares and absorb for each
+    const greyTiles = [];
+    for (let r = 0; r < state.rows; r++) {
+        for (let c = 0; c < state.cols; c++) {
+            const t = state.getTile(r, c);
+            if (t && !t.ownerId) greyTiles.push({ r, c });
+        }
+    }
+
+    // Find unique adjacent owners
+    const adjacentOwners = new Set();
+    for (const { r, c } of greyTiles) {
+        const neighbors = [
+            state.getTile(r - 1, c),
+            state.getTile(r + 1, c),
+            state.getTile(r, c - 1),
+            state.getTile(r, c + 1)
+        ];
+        for (const n of neighbors) {
+            if (n && n.ownerId) adjacentOwners.add(n.ownerId);
+        }
+    }
+
+    // Shuffle so absorption isn't always top-left first (Fisher-Yates)
+    const ownerArray = [...adjacentOwners];
+    for (let i = ownerArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ownerArray[i], ownerArray[j]] = [ownerArray[j], ownerArray[i]];
+    }
+    for (const pid of ownerArray) {
+        absorbGreySquares(state, pid);
+    }
+
+    state.refreshAreas();
+    hideKillModal();
+    render();
+    updateUndoButton();
 }
 
 function showDuelOverlay() {
@@ -884,7 +990,9 @@ function handleEditSubmit(e) {
 
 function handleKeydown(e) {
     if (e.key === 'Escape') {
-        if (editModalEl.getAttribute('aria-hidden') === 'false') {
+        if (killModalEl && killModalEl.getAttribute('aria-hidden') === 'false') {
+            hideKillModal();
+        } else if (editModalEl.getAttribute('aria-hidden') === 'false') {
             hideEditModal();
             hideContextMenu();
         } else if (duelOverlayEl && duelOverlayEl.getAttribute('aria-hidden') === 'false') {
@@ -976,6 +1084,11 @@ function render() {
                 cell.dataset.row = String(r);
                 cell.dataset.col = String(c);
                 cell.tabIndex = 0;
+
+                // Grey square styling for unowned tiles
+                if (!tile.ownerId) {
+                    cell.classList.add('floor-tile--grey');
+                }
 
                 // Merge Borders & Edge Shading
                 if (tile.ownerId) {
@@ -1199,6 +1312,7 @@ function render() {
 function applyGrid() {
     const rows = Math.max(1, parseInt(rowsInput.value, 10) || DEFAULT_ROWS);
     const cols = Math.max(1, parseInt(colsInput.value, 10) || DEFAULT_COLS);
+    const greyCount = Math.max(0, parseInt(greyCountInput?.value, 10) || 0);
     rowsInput.value = String(rows);
     colsInput.value = String(cols);
     cancelSwapMode();
@@ -1206,7 +1320,7 @@ function applyGrid() {
     cancelRandomizer();
     randomizerResult = null;
     undoManager.clear();
-    state = buildState(rows, cols);
+    state = buildState(rows, cols, greyCount);
     render();
     updateUndoButton();
 }
@@ -1225,6 +1339,9 @@ function handleExport() {
                 const cat = tile.category.includes(',') ? `"${tile.category}"` : tile.category;
                 const boost = player.hasTimeBoost ? 'true' : 'false';
                 rows.push(`${r},${c},${name},${cat},${boost}`);
+            } else {
+                // Grey/empty square — mark with __GREY__ so import preserves it
+                rows.push(`${r},${c},__GREY__,,false`);
             }
         }
     }
@@ -1322,6 +1439,9 @@ function importFullState(rowsData) {
     const playerCache = new Map(); // name -> player object
 
     for (const item of items) {
+        // Skip grey/empty tiles — they remain unassigned
+        if (item.name === '__GREY__' || !item.name || !item.name.trim()) continue;
+
         let player;
 
         // Check if we've already created this player
@@ -1519,6 +1639,10 @@ function init() {
     if (challengerWinsBtn) challengerWinsBtn.addEventListener('click', handleDuelChallengerWins);
     if (defenderWinsBtn) defenderWinsBtn.addEventListener('click', handleDuelDefenderWins);
     if (duelCancelBtn) duelCancelBtn.addEventListener('click', handleDuelCancel);
+
+    // Kill modal listeners
+    if (killConfirmBtn) killConfirmBtn.addEventListener('click', confirmKill);
+    if (killCancelBtn) killCancelBtn.addEventListener('click', hideKillModal);
 
     if (pickBtn) pickBtn.addEventListener('click', handleRandomizerToggle);
     if (randomizerDismissBtn) randomizerDismissBtn.addEventListener('click', dismissRandomizer);
