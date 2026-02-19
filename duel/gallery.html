@@ -240,101 +240,156 @@
         </select>
     </div>
     <main id="gallery-main"></main>
+    <div id="failed-images-section"
+        style="margin-top: 30px; padding: 20px; background: rgba(231, 76, 60, 0.2); border: 2px solid var(--floor-red); border-radius: 10px; display: none;">
+        <h2 style="color: var(--floor-red); margin-top: 0;">Failed Images</h2>
+        <p style="color: #fff; margin-bottom: 10px;">The following images failed to load. Copy this list to share:</p>
+        <textarea id="failed-images-list" readonly
+            style="width: 100%; min-height: 200px; background: #111; color: #fff; border: 1px solid #555; padding: 10px; font-family: monospace; font-size: 0.9rem;"></textarea>
+        <button onclick="copyFailedImages()"
+            style="margin-top: 10px; padding: 10px 20px; background: var(--floor-yellow); color: var(--floor-blue); border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Copy
+            to Clipboard</button>
+    </div>
     <section id="category-sounds" class="category-section">
         <h2>Sound Effects</h2>
         <div id="sound-effects-content"></div>
     </section>
 
-    <script src="../categories/flags.js?v=2"></script>
-    <script src="../categories/pokemon.js?v=2"></script>
-    <script src="../categories/hockey.js?v=2"></script>
-    <script src="../categories/math.js?v=2"></script>
+    <script src="../categories/index.js?v=1"></script>
     <script>
-        const categories = {
-            flags: (typeof flagData !== 'undefined') ? flagData : [],
-            pokemon: (typeof pokemonData !== 'undefined') ? pokemonData : [],
-            hockey: (typeof hockeyData !== 'undefined') ? hockeyData : [],
-            math: (typeof mathData !== 'undefined') ? mathData : []
-        };
-        const categoryLabels = { flags: 'Flags', pokemon: 'Pokemon', hockey: 'Hockey', math: 'Math' };
+        // Dynamically load all category scripts from the registry, then build categories & labels
+        const categories = {};
+        const categoryLabels = {};
+
+        // Check if Gible mode is enabled (from localStorage)
+        const galleryGibleMode = localStorage.getItem('floorGibleMode') === '1';
+
+        (function loadAllCategories() {
+            if (!window.CATEGORY_REGISTRY) return;
+            const filtered = window.CATEGORY_REGISTRY.filter(function (c) {
+                return !c.gibleOnly || galleryGibleMode;
+            });
+            const promises = filtered.map(function (c) {
+                categoryLabels[c.key] = c.label;
+                return new Promise(function (resolve) {
+                    var s = document.createElement('script');
+                    s.src = '../categories/' + c.script + '?v=3';
+                    s.onload = function () {
+                        categories[c.key] = window[c.global] || [];
+                        resolve();
+                    };
+                    s.onerror = function () {
+                        categories[c.key] = [];
+                        resolve(); // don't block on failed loads
+                    };
+                    document.head.appendChild(s);
+                });
+            });
+            Promise.all(promises).then(buildGallery);
+        })();
+
+        // Track failed images (top scope so dynamically created onerror handlers can access)
+        const failedImages = [];
 
         function galleryImageError(el) {
             const wrap = el.closest('.img-wrap');
             const img = wrap.querySelector('img');
             const fallback = wrap.querySelector('.img-fallback');
             if (img && fallback) {
+                const itemName = el.alt || 'Unknown';
+                const itemUrl = el.src || 'Unknown URL';
+                failedImages.push({ name: itemName, url: itemUrl });
                 img.classList.add('hide');
                 fallback.classList.add('show');
+                updateFailedImagesDisplay();
             }
         }
 
-        const main = document.getElementById('gallery-main');
-        const select = document.getElementById('category-select');
-
-        // Populate dropdown
-        for (const [key, label] of Object.entries(categoryLabels)) {
-            const items = categories[key] || [];
-            if (items.length === 0) continue;
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = label;
-            select.appendChild(option);
+        function updateFailedImagesDisplay() {
+            const section = document.getElementById('failed-images-section');
+            const textarea = document.getElementById('failed-images-list');
+            if (failedImages.length > 0) {
+                section.style.display = 'block';
+                let text = `Total failed images: ${failedImages.length}\n\n`;
+                failedImages.forEach((item, index) => {
+                    text += `${index + 1}. ${item.name}\n   URL: ${item.url}\n\n`;
+                });
+                textarea.value = text;
+            } else {
+                section.style.display = 'none';
+            }
         }
-        const soundsOpt = document.createElement('option');
-        soundsOpt.value = 'sounds';
-        soundsOpt.textContent = 'Sound Effects';
-        select.appendChild(soundsOpt);
 
-        // Create sections for each category
-        for (const [key, label] of Object.entries(categoryLabels)) {
-            const items = categories[key] || [];
-            if (items.length === 0) continue;
-            const section = document.createElement('section');
-            section.className = 'category-section';
-            section.id = 'category-' + key;
-            section.innerHTML = '<h2>' + label + '</h2>';
-            const grid = document.createElement('div');
-            grid.className = 'gallery-grid';
-            const isMath = key === 'math';
-            items.forEach(function (item) {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                if (isMath && item.q) {
-                    const mathWrap = document.createElement('div');
-                    mathWrap.className = 'img-wrap math-wrap';
-                    const prob = document.createElement('div');
-                    prob.className = 'math-problem-text';
-                    prob.textContent = item.q;
-                    mathWrap.appendChild(prob);
-                    const nameEl = document.createElement('div');
-                    nameEl.className = 'gallery-name';
-                    nameEl.textContent = '= ' + item.n;
-                    div.appendChild(mathWrap);
-                    div.appendChild(nameEl);
-                } else {
-                    const imgWrap = document.createElement('div');
-                    imgWrap.className = 'img-wrap';
-                    const img = document.createElement('img');
-                    img.src = item.u;
-                    img.alt = item.n;
-                    img.loading = 'lazy';
-                    img.onerror = function () { galleryImageError(this); };
-                    const fallback = document.createElement('div');
-                    fallback.className = 'img-fallback';
-                    fallback.textContent = '?';
-                    imgWrap.appendChild(img);
-                    imgWrap.appendChild(fallback);
-                    const nameEl = document.createElement('div');
-                    nameEl.className = 'gallery-name';
-                    nameEl.textContent = item.n;
-                    div.appendChild(imgWrap);
-                    div.appendChild(nameEl);
-                }
-                grid.appendChild(div);
-            });
-            section.appendChild(grid);
-            main.appendChild(section);
-        }
+        function buildGallery() {
+
+            const main = document.getElementById('gallery-main');
+            const select = document.getElementById('category-select');
+
+            // Populate dropdown
+            for (const [key, label] of Object.entries(categoryLabels)) {
+                const items = categories[key] || [];
+                if (items.length === 0) continue;
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = label;
+                select.appendChild(option);
+            }
+            const soundsOpt = document.createElement('option');
+            soundsOpt.value = 'sounds';
+            soundsOpt.textContent = 'Sound Effects';
+            select.appendChild(soundsOpt);
+
+            // Create sections for each category
+            for (const [key, label] of Object.entries(categoryLabels)) {
+                const items = categories[key] || [];
+                if (items.length === 0) continue;
+                const section = document.createElement('section');
+                section.className = 'category-section';
+                section.id = 'category-' + key;
+                section.innerHTML = '<h2>' + label + '</h2>';
+                const grid = document.createElement('div');
+                grid.className = 'gallery-grid';
+                const isMath = key === 'math';
+                items.forEach(function (item) {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item';
+                    if (isMath && item.q) {
+                        const mathWrap = document.createElement('div');
+                        mathWrap.className = 'img-wrap math-wrap';
+                        const prob = document.createElement('div');
+                        prob.className = 'math-problem-text';
+                        prob.textContent = item.q;
+                        mathWrap.appendChild(prob);
+                        const nameEl = document.createElement('div');
+                        nameEl.className = 'gallery-name';
+                        nameEl.textContent = '= ' + item.n;
+                        div.appendChild(mathWrap);
+                        div.appendChild(nameEl);
+                    } else {
+                        const imgWrap = document.createElement('div');
+                        imgWrap.className = 'img-wrap';
+                        const img = document.createElement('img');
+                        img.src = item.u;
+                        img.alt = item.n;
+                        img.loading = 'lazy';
+                        img.onerror = function () { galleryImageError(this); };
+                        const fallback = document.createElement('div');
+                        fallback.className = 'img-fallback';
+                        fallback.textContent = '?';
+                        imgWrap.appendChild(img);
+                        imgWrap.appendChild(fallback);
+                        const nameEl = document.createElement('div');
+                        nameEl.className = 'gallery-name';
+                        nameEl.textContent = item.n;
+                        div.appendChild(imgWrap);
+                        div.appendChild(nameEl);
+                    }
+                    grid.appendChild(div);
+                });
+                section.appendChild(grid);
+                main.appendChild(section);
+            }
+        } // end buildGallery
 
         function showCategory(key) {
             document.querySelectorAll('.category-section').forEach(function (section) {
@@ -344,6 +399,13 @@
                 const section = document.getElementById('category-' + key);
                 if (section) section.classList.add('show');
             }
+        }
+
+        function copyFailedImages() {
+            const textarea = document.getElementById('failed-images-list');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Failed images list copied to clipboard!');
         }
 
         // Sound effects (categorized): ding1–10, pass1–5

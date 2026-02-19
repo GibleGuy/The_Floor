@@ -513,11 +513,24 @@
             <input type="text" id="category-input" list="admin-category-list" placeholder="Category..."
                 autocomplete="off">
             <datalist id="admin-category-list">
-                <option value="flags">Flags</option>
-                <option value="pokemon">Pokemon</option>
-                <option value="hockey">Hockey</option>
-                <option value="math">Math</option>
             </datalist>
+            <script src="../categories/index.js?v=1"></script>
+            <script>
+                // Dynamically populate admin category list from registry
+                (function () {
+                    var dl = document.getElementById('admin-category-list');
+                    var gible = localStorage.getItem('floorGibleMode') === '1';
+                    if (dl && window.CATEGORY_REGISTRY) {
+                        window.CATEGORY_REGISTRY.forEach(function (c) {
+                            if (c.gibleOnly && !gible) return;
+                            var opt = document.createElement('option');
+                            opt.value = c.key;
+                            opt.textContent = c.label;
+                            dl.appendChild(opt);
+                        });
+                    }
+                })();
+            </script>
             <button type="button" class="play-btn" id="admin-load-btn">LOAD</button>
             <button type="button" class="play-btn" id="admin-start-btn" disabled>START</button>
             <button type="button" class="help-btn" id="admin-help-btn" title="Help">?</button>

@@ -148,12 +148,7 @@
         <div class="category-selector">
             <input type="text" id="category-dropdown" list="category-list" placeholder="Type or select category..."
                 autocomplete="off">
-            <datalist id="category-list">
-                <option value="flags">Flags</option>
-                <option value="pokemon">Pokemon</option>
-                <option value="hockey">Hockey</option>
-                <option value="math">Math</option>
-            </datalist>
+            <datalist id="category-list"></datalist>
             <button class="play-btn" id="play-btn" onclick="startSelectedCategory()">PLAY</button>
         </div>
     </div>
@@ -182,6 +177,13 @@
                 <span class="switch-label">HOST MODE</span>
                 <label class="switch">
                     <input type="checkbox" id="host-mode-toggle" onchange="toggleHostMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="switch-container" id="gible-mode-container" style="display: none;">
+                <span class="switch-label">GIBLE MODE</span>
+                <label class="switch">
+                    <input type="checkbox" id="gible-mode-toggle" onchange="toggleGibleMode()">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -429,7 +431,24 @@
     <!-- CONFETTI CONTAINER -->
     <div class="confetti-container" id="confetti-container"></div>
 
+    <script src="../categories/index.js?v=1"></script>
     <script src="game.js?v=3"></script>
+    <script>
+        // Dynamically populate the category datalist from the registry
+        function refreshCategoryDatalist() {
+            var dl = document.getElementById('category-list');
+            if (!dl || !window.CATEGORY_REGISTRY) return;
+            dl.innerHTML = '';
+            window.CATEGORY_REGISTRY.forEach(function (c) {
+                if (c.gibleOnly && !window.gibleMode) return;
+                var opt = document.createElement('option');
+                opt.value = c.key;
+                opt.textContent = c.label;
+                dl.appendChild(opt);
+            });
+        }
+        refreshCategoryDatalist();
+    </script>
 </body>
 
 </html>

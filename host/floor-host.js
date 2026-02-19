@@ -11,6 +11,7 @@ import {
     validateBattle,
     applyBattleResult,
     getBattleCategory,
+    absorbGreySquares,
     isOrthogonalAdjacent,
     pickOne,
     getOrderedEligible,
@@ -42,6 +43,7 @@ const defenderWinsBtn = document.getElementById('floor-duel-defender-wins');
 const duelCancelBtn = document.getElementById('floor-duel-cancel');
 const rowsInput = document.getElementById('floor-rows');
 const colsInput = document.getElementById('floor-cols');
+const greyCountInput = document.getElementById('floor-grey-count');
 const applyBtn = document.getElementById('floor-apply-grid');
 const displayRadios = document.querySelectorAll('input[name="floor-display"]');
 const importFile = document.getElementById('floor-import-file');
@@ -53,14 +55,22 @@ const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
 
+/** Kill modal DOM refs */
+const killModalEl = document.getElementById('floor-kill-modal');
+const killPlayerNameEl = document.getElementById('floor-kill-player-name');
+const killConfirmBtn = document.getElementById('floor-kill-confirm');
+const killCancelBtn = document.getElementById('floor-kill-cancel');
+const killContextBtn = document.querySelector('[data-action="kill"]');
+let killTarget = null;
+
 /** Audio mute state */
 let isMuted = false;
 let currentAudio = null;
 
 /** Background settings */
-let backgroundStyle = 'pop';
+let backgroundStyle = 'tiles';
 let blueVariant = 'b';
-let driftSpeed = 1;
+let driftSpeed = 2;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
@@ -98,7 +108,7 @@ const animationHooks = {
 
 const playerConfig = [];
 // Generate enough unique players for a standard grid (e.g. 400 for 20x20)
-const NAMES = ['Alice', 'Bob', 'Carol', 'Dave', 'Eve', 'Frank', 'Grace', 'Heidi', 'Ivan', 'Judy', 'Kevin', 'Laura', 'Mike', 'Nina', 'Oscar', 'Patty', 'Quinn', 'Rupert', 'Sybil', 'Ted', 'Ursula', 'Victor', 'Wendy', 'Xavier', 'Yvonne', 'Zelda'];
+const NAMES = ['Boston Rob', 'Parvati', 'Sandra', 'Tony', 'Kim', 'Jeremy', 'Sarah', 'Yul', 'Natalie', 'Tyson', 'Sophie', 'Denise', 'Ethan', 'Amber', 'Todd', 'Earl', 'JT', 'Fabio', 'Cochran', 'Wendell', 'Tommy', 'Ben', 'Adam', 'Nick', 'Chris', 'Michele'];
 const CATEGORIES = ['History', 'Geography', 'Science', 'Math', 'Literature', 'Art', 'Music', 'Movies', 'Sports', 'Food', 'Animals', 'Technology', 'Politics', 'Religion', 'Mythology', 'Language', 'Fashion', 'Architecture', 'Business', 'Economics', 'Psychology', 'Sociology', 'Philosophy', 'Physics', 'Chemistry', 'Biology'];
 
 for (let i = 0; i < 400; i++) {
@@ -108,13 +118,37 @@ for (let i = 0; i < 400; i++) {
 }
 if (playerConfig.length > 0) playerConfig[0].hasTimeBoost = true;
 
-function buildState(rows, cols) {
+function buildState(rows, cols, greyCount = 0) {
     const s = createGameState({
         rows: Math.max(1, rows),
         cols: Math.max(1, cols),
         players: playerConfig,
     });
     s.distributeTilesRoundRobin();
+
+    // Randomly clear greyCount tiles to create grey squares
+    if (greyCount > 0) {
+        const totalTiles = rows * cols;
+        const count = Math.min(greyCount, totalTiles);
+        // Build list of all tile coordinates and shuffle
+        const allCoords = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                allCoords.push({ r, c });
+            }
+        }
+        // Fisher-Yates shuffle
+        for (let i = allCoords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allCoords[i], allCoords[j]] = [allCoords[j], allCoords[i]];
+        }
+        for (let k = 0; k < count; k++) {
+            const { r, c } = allCoords[k];
+            s.setTileOwner(r, c, '', '');
+        }
+        s.refreshAreas();
+    }
+
     return s;
 }
 
@@ -145,6 +179,11 @@ function showContextMenu(x, y, tile) {
     contextTile = tile;
     contextMenuEl.style.left = x + 'px';
     contextMenuEl.style.top = y + 'px';
+    // Hide kill button for grey (unowned) tiles
+    if (killContextBtn) {
+        const tileData = state ? state.getTile(tile.r, tile.c) : null;
+        killContextBtn.style.display = (tileData && tileData.ownerId) ? '' : 'none';
+    }
     contextMenuEl.setAttribute('aria-hidden', 'false');
 }
 
@@ -190,11 +229,20 @@ function saveEditDetails() {
     updateUndoButton();
 }
 
-function startSwapMode() {
-    swapState = { active: true, first: null, second: null };
-    if (swapPromptEl) swapPromptEl.textContent = 'Select first tile';
+function startSwapMode(initialTile) {
+    if (initialTile) {
+        swapState = { active: true, first: { r: initialTile.r, c: initialTile.c }, second: null };
+        // Immediately prompt for the target
+        if (swapPromptEl) swapPromptEl.textContent = 'Select category to steal from';
+    } else {
+        // Fallback or manual start
+        swapState = { active: true, first: null, second: null };
+        if (swapPromptEl) swapPromptEl.textContent = 'Select "thief" tile';
+    }
+
     if (gridEl) gridEl.classList.add('floor-swap-mode');
     document.body.classList.add('floor-swap-mode');
+    render();
 }
 
 function cancelSwapMode() {
@@ -233,97 +281,168 @@ function runSwap(first, second) {
     runSwapAnimation(first, second, t1, t2);
 }
 
+// Helper to get visual center of a tile group
+function getGroupCentroid(tiles) {
+    if (!tiles || tiles.length === 0) return null;
+    let rSum = 0, cSum = 0;
+    for (const t of tiles) {
+        rSum += t.r;
+        cSum += t.c;
+    }
+    const r = rSum / tiles.length;
+    const c = cSum / tiles.length;
+
+    // Convert to pixels relative to viewport
+    // We can use the first tile element to get dimensions
+    const el = getTileEl(tiles[0].r, tiles[0].c);
+    if (!el) return null;
+
+    // Estimate based on tile size + gap
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    // Calculate top-left of the tile at (0,0) conceptually?
+    // Easier: get avg of rect centers
+    // Wait, grid might not be perfectly regular if responsive...
+    // Let's just average the rects of first and last? Or all?
+    // Averaging all rects is safest
+    let xSum = 0, ySum = 0;
+    let count = 0;
+    for (const t of tiles) {
+        const tEl = getTileEl(t.r, t.c);
+        if (tEl) {
+            const r = tEl.getBoundingClientRect();
+            xSum += r.left + r.width / 2;
+            ySum += r.top + r.height / 2;
+            count++;
+        }
+    }
+    return count > 0 ? { x: xSum / count, y: ySum / count } : null;
+}
+
 function runSwapAnimation(first, second, t1, t2) {
     animationHooks.onSwapStart(t1, t2);
-    const el1 = getTileEl(first.r, first.c);
-    const el2 = getTileEl(second.r, second.c);
-    if (!el1 || !el2 || !swapOverlayEl) {
+
+    // Get full groups for proper centering
+    const group1 = state.getContiguousTileGroup(first.r, first.c);
+    const group2 = state.getContiguousTileGroup(second.r, second.c);
+
+    // Calculate centroids for "Epic" text spawn
+    const c1 = getGroupCentroid(group1);
+    const c2 = getGroupCentroid(group2);
+
+    if (!c1 || !c2 || !swapOverlayEl) {
         finishSwap(first, second);
         return;
     }
+
     const cat1 = t1.category || '—';
     const cat2 = t2.category || '—';
-    const catEl1 = el1.querySelector('.floor-tile-category');
-    const catEl2 = el2.querySelector('.floor-tile-category');
-    if (!catEl1 || !catEl2) {
-        finishSwap(first, second);
-        return;
+
+    // 1. Activate Dimming Mode
+    gridEl.classList.add('floor-grid--steal-active');
+
+    // 2. Highlight active tiles (Spotlight)
+    const allActiveTiles = [...group1, ...group2];
+    for (const t of allActiveTiles) {
+        const el = getTileEl(t.r, t.c);
+        if (el) el.classList.add('floor-tile--steal-focus');
     }
 
-    catEl1.classList.add('floor-tile-category--swap-shrink');
-    catEl2.classList.add('floor-tile-category--swap-shrink');
-
-    const r1 = el1.getBoundingClientRect();
-    const r2 = el2.getBoundingClientRect();
-    const x1 = r1.left + r1.width / 2;
-    const y1 = r1.top + r1.height / 2;
-    const x2 = r2.left + r2.width / 2;
-    const y2 = r2.top + r2.height / 2;
-
+    // 3. Create Flying Text
     swapOverlayEl.setAttribute('aria-hidden', 'false');
-    swapOverlayEl.innerHTML = '';
+    swapOverlayEl.innerHTML = ''; // Clear prev
 
     const fly1 = document.createElement('div');
     fly1.className = 'floor-swap-fly';
     fly1.textContent = cat1;
-    fly1.style.left = x1 + 'px';
-    fly1.style.top = y1 + 'px';
+    fly1.style.left = c1.x + 'px';
+    fly1.style.top = c1.y + 'px';
     swapOverlayEl.appendChild(fly1);
 
     const fly2 = document.createElement('div');
     fly2.className = 'floor-swap-fly';
     fly2.textContent = cat2;
-    fly2.style.left = x2 + 'px';
-    fly2.style.top = y2 + 'px';
+    fly2.style.left = c2.x + 'px';
+    fly2.style.top = c2.y + 'px';
     swapOverlayEl.appendChild(fly2);
 
-    const arrow = document.createElement('div');
-    arrow.className = 'floor-swap-arrow';
-    arrow.style.left = (x1 + x2) / 2 + 'px';
-    arrow.style.top = (y1 + y2) / 2 + 'px';
-    swapOverlayEl.appendChild(arrow);
-
+    // Trigger animation via class for easier keyframe management
+    // We use a small timeout to allow browser to paint initial position/scale
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            fly1.style.left = x2 + 'px';
-            fly1.style.top = y2 + 'px';
-            fly2.style.left = x1 + 'px';
-            fly2.style.top = y1 + 'px';
+            fly1.classList.add('floor-swap-fly--animate');
+            fly2.classList.add('floor-swap-fly--animate');
+
+            // Set dynamic targets for the keyframe to use? 
+            // CSS Keyframes are hard to dynamicize without Vars.
+            // Let's use WAAPI or just set vars on the element
+
+            // Actually, for keyframes, we can just move the `left`/`top` to the target
+            // and have the keyframe handle scale/opacity.
+            // But if we move `left`/`top`, the starting position in keyframe 0% needs to be offset?
+            // No, transition! 
+
+            // HYBRID APPROACH:
+            // Use Transition for X/Y translation
+            // Use Animation for Scale/Opacity/Bounce
+
+            // Set transition duration to match animation (2.5s)
+            fly1.style.transition = 'left 2.5s cubic-bezier(0.22, 1, 0.36, 1), top 2.5s cubic-bezier(0.22, 1, 0.36, 1)';
+            fly2.style.transition = 'left 2.5s cubic-bezier(0.22, 1, 0.36, 1), top 2.5s cubic-bezier(0.22, 1, 0.36, 1)';
+
+            fly1.style.left = c2.x + 'px';
+            fly1.style.top = c2.y + 'px';
+
+            fly2.style.left = c1.x + 'px';
+            fly2.style.top = c1.y + 'px';
         });
     });
 
+    // 4. IMPACT (at ~3.6s - mid impact phase)
     setTimeout(() => {
-        catEl1.classList.remove('floor-tile-category--swap-shrink');
-        catEl2.classList.remove('floor-tile-category--swap-shrink');
-        swapOverlayEl.setAttribute('aria-hidden', 'true');
+        // Force flyers to vanish immediately at impact
         swapOverlayEl.innerHTML = '';
-        state.swapTileCategories(first.r, first.c, second.r, second.c);
-        animationHooks.onSwapEnd();
-        swapReappearTiles = [first, second];
-        cancelSwapMode();
-        render();
 
-        // Highlight all tiles in both cell groups for visual feedback
-        const group1 = state.getContiguousTileGroup(first.r, first.c);
-        const group2 = state.getContiguousTileGroup(second.r, second.c);
-        const allAffectedTiles = [...group1, ...group2];
-
-        for (const pos of allAffectedTiles) {
-            const el = getTileEl(pos.r, pos.c);
-            const catEl = el?.querySelector('.floor-tile-category');
-            if (catEl) catEl.classList.add('floor-tile-category--swap-reappear');
+        // SCREEN SHAKE
+        const main = document.querySelector('.floor-host-main');
+        if (main) {
+            main.classList.remove('floor-shake');
+            void main.offsetWidth; // trigger reflow
+            main.classList.add('floor-shake');
         }
 
+        // FLASH
+        swapOverlayEl.classList.add('floor-flash');
         setTimeout(() => {
-            for (const pos of allAffectedTiles) {
-                const el = getTileEl(pos.r, pos.c);
-                const catEl = el?.querySelector('.floor-tile-category');
-                catEl?.classList.remove('floor-tile-category--swap-reappear');
-            }
-            swapReappearTiles = null;
-        }, 400);
+            swapOverlayEl.classList.remove('floor-flash');
+            swapOverlayEl.classList.add('floor-flash-fade');
+        }, 50); // Short white burst
+
+        // EXECUTE SWAP DATA
+        state.swapTileCategories(first.r, first.c, second.r, second.c);
+        animationHooks.onSwapEnd();
+        render(); // Re-renders grid with new categories
+
+        // Cleanup visuals
+        gridEl.classList.remove('floor-grid--steal-active');
+        // Remove individual highlights
+        // (Render likely nuked the DOM elements anyway, but if not...)
+        gridEl.querySelectorAll('.floor-tile--steal-focus').forEach(el => el.classList.remove('floor-tile--steal-focus'));
+
+        cancelSwapMode();
         updateUndoButton();
-    }, 450);
+
+        // 5. Cleanup Overlay (after flash fades)
+        setTimeout(() => {
+            swapOverlayEl.setAttribute('aria-hidden', 'true');
+            swapOverlayEl.innerHTML = '';
+            swapOverlayEl.classList.remove('floor-flash-fade');
+            if (main) main.classList.remove('floor-shake');
+        }, 800);
+
+    }, 2500); // Wait for flight to finish
 }
 
 function finishSwap(first, second) {
@@ -360,7 +479,7 @@ function handleTileClick(tile) {
     if (!swapState.active || !tile) return;
     if (!swapState.first) {
         swapState.first = { r: tile.r, c: tile.c };
-        if (swapPromptEl) swapPromptEl.textContent = 'Select second tile';
+        if (swapPromptEl) swapPromptEl.textContent = 'Select category to steal from';
         render();
         return;
     }
@@ -487,9 +606,76 @@ function handleContextAction(e) {
     }
 
     if (action === 'swap') {
-        startSwapMode();
+        startSwapMode(tile);
         return;
     }
+
+    if (action === 'kill') {
+        showKillModal(tile);
+        return;
+    }
+}
+
+function showKillModal(tile) {
+    if (!tile || !state) return;
+    const tileData = state.getTile(tile.r, tile.c);
+    if (!tileData || !tileData.ownerId) return;
+    const player = state.getPlayer(tileData.ownerId);
+    if (!player) return;
+    killTarget = { ownerId: tileData.ownerId };
+    if (killPlayerNameEl) killPlayerNameEl.textContent = player.name;
+    if (killModalEl) killModalEl.setAttribute('aria-hidden', 'false');
+}
+
+function hideKillModal() {
+    if (killModalEl) killModalEl.setAttribute('aria-hidden', 'true');
+    killTarget = null;
+}
+
+function confirmKill() {
+    if (!killTarget || !state) { hideKillModal(); return; }
+    const { ownerId } = killTarget;
+    undoManager.push(state);
+    state.killPlayer(ownerId);
+
+    // After killing, check if any neighboring players should absorb the new grey squares
+    // Find all players adjacent to the newly created grey squares and absorb for each
+    const greyTiles = [];
+    for (let r = 0; r < state.rows; r++) {
+        for (let c = 0; c < state.cols; c++) {
+            const t = state.getTile(r, c);
+            if (t && !t.ownerId) greyTiles.push({ r, c });
+        }
+    }
+
+    // Find unique adjacent owners
+    const adjacentOwners = new Set();
+    for (const { r, c } of greyTiles) {
+        const neighbors = [
+            state.getTile(r - 1, c),
+            state.getTile(r + 1, c),
+            state.getTile(r, c - 1),
+            state.getTile(r, c + 1)
+        ];
+        for (const n of neighbors) {
+            if (n && n.ownerId) adjacentOwners.add(n.ownerId);
+        }
+    }
+
+    // Shuffle so absorption isn't always top-left first (Fisher-Yates)
+    const ownerArray = [...adjacentOwners];
+    for (let i = ownerArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ownerArray[i], ownerArray[j]] = [ownerArray[j], ownerArray[i]];
+    }
+    for (const pid of ownerArray) {
+        absorbGreySquares(state, pid);
+    }
+
+    state.refreshAreas();
+    hideKillModal();
+    render();
+    updateUndoButton();
 }
 
 function showDuelOverlay() {
@@ -804,7 +990,9 @@ function handleEditSubmit(e) {
 
 function handleKeydown(e) {
     if (e.key === 'Escape') {
-        if (editModalEl.getAttribute('aria-hidden') === 'false') {
+        if (killModalEl && killModalEl.getAttribute('aria-hidden') === 'false') {
+            hideKillModal();
+        } else if (editModalEl.getAttribute('aria-hidden') === 'false') {
             hideEditModal();
             hideContextMenu();
         } else if (duelOverlayEl && duelOverlayEl.getAttribute('aria-hidden') === 'false') {
@@ -896,6 +1084,11 @@ function render() {
                 cell.dataset.row = String(r);
                 cell.dataset.col = String(c);
                 cell.tabIndex = 0;
+
+                // Grey square styling for unowned tiles
+                if (!tile.ownerId) {
+                    cell.classList.add('floor-tile--grey');
+                }
 
                 // Merge Borders & Edge Shading
                 if (tile.ownerId) {
@@ -1119,6 +1312,7 @@ function render() {
 function applyGrid() {
     const rows = Math.max(1, parseInt(rowsInput.value, 10) || DEFAULT_ROWS);
     const cols = Math.max(1, parseInt(colsInput.value, 10) || DEFAULT_COLS);
+    const greyCount = Math.max(0, parseInt(greyCountInput?.value, 10) || 0);
     rowsInput.value = String(rows);
     colsInput.value = String(cols);
     cancelSwapMode();
@@ -1126,7 +1320,7 @@ function applyGrid() {
     cancelRandomizer();
     randomizerResult = null;
     undoManager.clear();
-    state = buildState(rows, cols);
+    state = buildState(rows, cols, greyCount);
     render();
     updateUndoButton();
 }
@@ -1145,6 +1339,9 @@ function handleExport() {
                 const cat = tile.category.includes(',') ? `"${tile.category}"` : tile.category;
                 const boost = player.hasTimeBoost ? 'true' : 'false';
                 rows.push(`${r},${c},${name},${cat},${boost}`);
+            } else {
+                // Grey/empty square — mark with __GREY__ so import preserves it
+                rows.push(`${r},${c},__GREY__,,false`);
             }
         }
     }
@@ -1194,6 +1391,12 @@ function handleImport(file) {
             // Simple List: Name, Category
             importSimpleList(parsed);
         }
+
+        // Clear mode states to prevent stale player references
+        randomizerResult = null;
+        battleState = { active: false, defender: null, challenger: null };
+        swapState = { active: false, first: null, second: null };
+
         render();
         updateUndoButton();
     };
@@ -1226,31 +1429,40 @@ function importFullState(rowsData) {
     rowsInput.value = maxR + 1;
     colsInput.value = maxC + 1;
 
-    // Build blank state with no players
+    // Build blank state - don't pass players parameter to avoid MIN_PLAYERS enforcement
     state = createGameState({
         rows: maxR + 1,
-        cols: maxC + 1,
-        players: []
+        cols: maxC + 1
     });
 
-    // Manually populate
-    let pidCounter = 1;
+    // Track unique players to handle duplicates (same player on multiple tiles)
+    const playerCache = new Map(); // name -> player object
+
     for (const item of items) {
-        const pid = `p${pidCounter++}`;
-        state.players.set(pid, {
-            id: pid,
-            name: item.name,
-            expertCategory: item.category, // initial expert category
-            hasTimeBoost: item.hasTimeBoost,
-            color: null
-        });
-        state.grid[item.r][item.c] = {
-            row: item.r,
-            col: item.c,
-            ownerId: pid,
-            category: item.category
-        };
+        // Skip grey/empty tiles — they remain unassigned
+        if (item.name === '__GREY__' || !item.name || !item.name.trim()) continue;
+
+        let player;
+
+        // Check if we've already created this player
+        if (playerCache.has(item.name)) {
+            player = playerCache.get(item.name);
+        } else {
+            // Create new player using state.addPlayer()
+            player = state.addPlayer({
+                name: item.name,
+                expertCategory: item.category,
+                hasTimeBoost: item.hasTimeBoost
+            });
+            playerCache.set(item.name, player);
+        }
+
+        // Set tile owner using the proper API
+        state.setTileOwner(item.r, item.c, player.id, item.category);
     }
+
+    // Refresh player areas
+    state.refreshAreas();
 }
 
 function importSimpleList(rowsData) {
@@ -1280,49 +1492,37 @@ function importSimpleList(rowsData) {
     rowsInput.value = r;
     colsInput.value = c;
 
-    // Create config for buildState
-    // We need to override the default playerConfig logic in buildState or just create state manually
-    // Since buildState uses the hardcoded playerConfig, let's just make a fresh state here.
-
+    // Create fresh state - don't pass players parameter to avoid MIN_PLAYERS enforcement
     state = createGameState({
         rows: r,
-        cols: c,
-        players: []
+        cols: c
     });
 
-    // We can use distributeTilesRoundRobin but we need to feed it players
-    // However, distributeTilesRoundRobin assigns in order (0,0), (0,1)...
-    // If we want linear fill of our items list (which might be shuffled), we can just loop.
-
+    // Populate grid with players from the simple list
     let idx = 0;
     for (let row = 0; row < r; row++) {
         for (let col = 0; col < c; col++) {
             if (idx < items.length) {
                 const item = items[idx];
-                const pid = `p${idx + 1}`;
-                state.players.set(pid, {
-                    id: pid,
+
+                // Create player using state.addPlayer()
+                const player = state.addPlayer({
                     name: item.name,
                     expertCategory: item.category,
-                    hasTimeBoost: false,
-                    color: null
+                    hasTimeBoost: false
                 });
-                state.grid[row][col] = {
-                    row, col,
-                    ownerId: pid,
-                    category: item.category
-                };
+
+                // Set tile owner using the proper API
+                state.setTileOwner(row, col, player.id, item.category);
+
                 idx++;
-            } else {
-                // Empty tile if grid bigger than count
-                state.grid[row][col] = {
-                    row, col,
-                    ownerId: null,
-                    category: null
-                };
             }
+            // Empty tiles are already created by createGameState, no need to set them
         }
     }
+
+    // Refresh player areas
+    state.refreshAreas();
 }
 
 
@@ -1439,6 +1639,10 @@ function init() {
     if (challengerWinsBtn) challengerWinsBtn.addEventListener('click', handleDuelChallengerWins);
     if (defenderWinsBtn) defenderWinsBtn.addEventListener('click', handleDuelDefenderWins);
     if (duelCancelBtn) duelCancelBtn.addEventListener('click', handleDuelCancel);
+
+    // Kill modal listeners
+    if (killConfirmBtn) killConfirmBtn.addEventListener('click', confirmKill);
+    if (killCancelBtn) killCancelBtn.addEventListener('click', hideKillModal);
 
     if (pickBtn) pickBtn.addEventListener('click', handleRandomizerToggle);
     if (randomizerDismissBtn) randomizerDismissBtn.addEventListener('click', dismissRandomizer);

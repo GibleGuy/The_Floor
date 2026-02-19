@@ -25,13 +25,12 @@
         <div id="floor-controls-container" class="floor-controls-container">
             <div class="floor-host-controls">
                 <div class="floor-control-row">
-                    <span id="floor-debug-status" style="color: lime; font-family: monospace; font-size: 12px;"></span>
-                </div>
-                <div class="floor-control-row">
                     <label class="floor-label">Grid</label>
-                    <input type="number" id="floor-rows" min="1" max="20" value="10" class="floor-input">
+                    <input type="number" id="floor-rows" min="1" max="20" value="5" class="floor-input">
                     <span class="floor-sep">×</span>
-                    <input type="number" id="floor-cols" min="1" max="20" value="10" class="floor-input">
+                    <input type="number" id="floor-cols" min="1" max="20" value="5" class="floor-input">
+                    <label class="floor-label" style="margin-left:12px">Grey</label>
+                    <input type="number" id="floor-grey-count" min="0" max="100" value="0" class="floor-input">
 
                     <button type="button" id="floor-apply-grid" class="floor-btn">Apply</button>
                 </div>
@@ -93,7 +92,7 @@
 
                     <span class="floor-sep"></span>
                     <span class="floor-label">Drift</span>
-                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="1"
+                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="2"
                         style="width: 80px; vertical-align: middle;">
                 </div>
             </div>
@@ -132,7 +131,9 @@
     <div id="floor-context-menu" class="floor-context-menu" role="menu" aria-hidden="true">
         <button type="button" class="floor-context-item" data-action="battle">Battle</button>
         <button type="button" class="floor-context-item" data-action="edit">Edit Details</button>
-        <button type="button" class="floor-context-item" data-action="swap">Swap Category</button>
+        <button type="button" class="floor-context-item" data-action="swap">Category Steal</button>
+        <button type="button" class="floor-context-item floor-context-item--danger" data-action="kill">Kill
+            Player</button>
         <button type="button" class="floor-context-item" data-action="cancel">Cancel</button>
     </div>
 
@@ -177,9 +178,21 @@
         </div>
     </div>
 
+    <div id="floor-kill-modal" class="floor-edit-modal" role="dialog" aria-labelledby="floor-kill-title"
+        aria-hidden="true">
+        <div class="floor-edit-content">
+            <h2 id="floor-kill-title" class="floor-edit-title">⚠️ Kill Player</h2>
+            <p class="floor-kill-warning" id="floor-kill-warning">Are you sure you want to kill this player? All their
+                tiles will become empty.</p>
+            <p class="floor-kill-player-name" id="floor-kill-player-name"></p>
+            <div class="floor-edit-actions">
+                <button type="button" id="floor-kill-confirm" class="floor-btn floor-btn-danger">Confirm Kill</button>
+                <button type="button" id="floor-kill-cancel" class="floor-btn floor-btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="floor-host.js"></script>
-    <div style="position: fixed; bottom: 5px; right: 5px; color: rgba(255,255,255,0.3); font-size: 10px;">v2.1 - Blue
-        Theme Fix</div>
 </body>
 
 </html>

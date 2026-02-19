@@ -1,6 +1,13 @@
 // ========== CATEGORIES & STATE ==========
-const CATEGORY_SCRIPTS = { flags: '../categories/flags.js?v=2', pokemon: '../categories/pokemon.js?v=2', hockey: '../categories/hockey.js?v=2', math: '../categories/math.js?v=2' };
-const CATEGORY_GLOBALS = { flags: 'flagData', pokemon: 'pokemonData', hockey: 'hockeyData', math: 'mathData' };
+// Derived dynamically from CATEGORY_REGISTRY (loaded from categories/index.js)
+const CATEGORY_SCRIPTS = {};
+const CATEGORY_GLOBALS = {};
+if (window.CATEGORY_REGISTRY) {
+    window.CATEGORY_REGISTRY.forEach(function (c) {
+        CATEGORY_SCRIPTS[c.key] = '../categories/' + c.script + '?v=3';
+        CATEGORY_GLOBALS[c.key] = c.global;
+    });
+}
 const categoryScriptsLoaded = new Set();
 
 function loadCategoryScript(cat) {
@@ -33,6 +40,7 @@ let clockInterval = null;
 let isPaused = false;
 let gamemode = 'classic'; // 'singleplayer' or 'classic'
 let hostMode = false; // Separate toggle that works with either gamemode
+let gibleMode = false; // Gible mode: unlocks beta categories
 let isPinned = false;
 let adminWindow = null;
 let adminWindowOpen = false;
@@ -943,7 +951,8 @@ function updateTimer(playerNum, value) {
     }
 }
 
-const CATEGORY_KEYS = { flags: 'flags', pokemon: 'pokemon', hockey: 'hockey', math: 'math' };
+const CATEGORY_KEYS = {};
+if (window.CATEGORY_REGISTRY) { window.CATEGORY_REGISTRY.forEach(function (c) { CATEGORY_KEYS[c.key] = c.key; }); }
 function resolveCategoryKey(input) {
     const v = String(input || '').toLowerCase().trim();
     if (CATEGORY_KEYS[v]) return v;
@@ -956,6 +965,11 @@ async function startSelectedCategory() {
     const raw = dropdown && dropdown.value ? dropdown.value.trim() : '';
     const cat = resolveCategoryKey(raw);
     if (!cat || !CATEGORY_SCRIPTS[cat]) return;
+    // Block beta categories when Gible mode is off
+    if (!gibleMode && window.CATEGORY_REGISTRY) {
+        const entry = window.CATEGORY_REGISTRY.find(function (c) { return c.key === cat; });
+        if (entry && entry.gibleOnly) return;
+    }
     dropdown.value = '';
     try {
         if (hostMode) {
@@ -1337,8 +1351,36 @@ function toggleHostMode() {
     const adminWindowBtn = document.getElementById('admin-window-btn');
     if (adminWindowBtn) adminWindowBtn.style.display = hostMode ? 'block' : 'none';
 
+    // Show/hide Gible mode toggle based on host mode
+    const gibleContainer = document.getElementById('gible-mode-container');
+    if (gibleContainer) {
+        if (hostMode) {
+            gibleContainer.style.display = '';
+        } else {
+            // Turn off Gible mode when host mode is disabled
+            gibleContainer.style.display = 'none';
+            const gibleToggle = document.getElementById('gible-mode-toggle');
+            if (gibleToggle) gibleToggle.checked = false;
+            gibleMode = false;
+            window.gibleMode = false;
+            localStorage.removeItem('floorGibleMode');
+            if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
+        }
+    }
+
     updateKeyboardHintsVisibility();
     updateDisplay();
+}
+
+function toggleGibleMode() {
+    gibleMode = document.getElementById('gible-mode-toggle').checked;
+    window.gibleMode = gibleMode;
+    if (gibleMode) {
+        localStorage.setItem('floorGibleMode', '1');
+    } else {
+        localStorage.removeItem('floorGibleMode');
+    }
+    if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
 }
 
 function togglePin() {

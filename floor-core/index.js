@@ -24,6 +24,7 @@ export {
     validateBattle,
     applyBattleResult,
     getBattleCategory,
+    absorbGreySquares,
     ORTH,
 } from './BattleEngine.js';
 export {

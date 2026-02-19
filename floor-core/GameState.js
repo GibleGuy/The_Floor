@@ -6,8 +6,8 @@
 import { createTile, cloneTile } from './Tile.js';
 import { createPlayer, clonePlayer } from './Player.js';
 
-const DEFAULT_ROWS = 10;
-const DEFAULT_COLS = 10;
+const DEFAULT_ROWS = 5;
+const DEFAULT_COLS = 5;
 const MIN_PLAYERS = 4;
 const MAX_PLAYERS = 400;
 
@@ -174,6 +174,32 @@ function createGameState(opts = {}) {
             const p = playerMap.get(id);
             if (!p) return false;
             p.eliminated = true;
+            return true;
+        },
+
+        /**
+         * Kill a player by removing them from all tiles.
+         * Sets all tiles owned by the player to empty (no owner, no category).
+         * The player remains in the player list but with 0 area.
+         * @param {string} id - Player ID to kill
+         * @returns {boolean} True if player was found and killed
+         */
+        killPlayer(id) {
+            const p = playerMap.get(id);
+            if (!p) return false;
+
+            // Clear all tiles owned by this player
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (grid[r][c].ownerId === id) {
+                        grid[r][c].ownerId = '';
+                        grid[r][c].category = '';
+                    }
+                }
+            }
+
+            // Update player areas
+            this.refreshAreas();
             return true;
         },
 

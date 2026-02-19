@@ -1,0 +1,73 @@
+// Best Picture Winners — images in images/best-picture/
+const bestPictureData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "TITANIC", u: "../images/best-picture/titanic.jpg" },
+    { n: "THE GODFATHER", u: "../images/best-picture/the-godfather.jpg" },
+    { n: "FORREST GUMP", u: "../images/best-picture/forrest-gump.jpg" },
+    { n: "GLADIATOR", u: "../images/best-picture/gladiator.avif" },
+    { n: "THE SOUND OF MUSIC", u: "../images/best-picture/the-sound-of-music.jpg" },
+    { n: "ROCKY", u: "../images/best-picture/Rocky.webp" },
+    { n: "SCHINDLER'S LIST", u: "../images/best-picture/schindlers-list.jpg" },
+    { n: "THE SILENCE OF THE LAMBS", u: "../images/best-picture/silence-of-the-lambs.jpg" },
+    { n: "RAIN MAN", u: "../images/best-picture/rain-man.jpg" },
+    { n: "BRAVEHEART", u: "../images/best-picture/braveheart.jpg" },
+    { n: "GONE WITH THE WIND", u: "../images/best-picture/gone-with-the-wind.jpg" },
+    { n: "ONE FLEW OVER THE CUCKOO'S NEST", u: "../images/best-picture/one-flew-over-the-cuckoos-nest.jpg" },
+    { n: "THE LORD OF THE RINGS: THE RETURN OF THE KING", u: "../images/best-picture/lord-of-the-rings-return-of-the-king.jpg" },
+    { n: "OPPENHEIMER", u: "../images/best-picture/oppenheimer.jpg" },
+    { n: "EVERYTHING EVERYWHERE ALL AT ONCE", u: "../images/best-picture/everything-everywhere-all-at-once.jpeg" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "CASABLANCA", u: "../images/best-picture/casablanca.avif" },
+    { n: "WEST SIDE STORY", u: "../images/best-picture/west-side-story.webp" },
+    { n: "PARASITE", u: "../images/best-picture/parasite.jpg" },
+    { n: "NO COUNTRY FOR OLD MEN", u: "../images/best-picture/no-country-for-old-men.jpg" },
+    { n: "AMADEUS", u: "../images/best-picture/amadeus.jpg" },
+    { n: "PLATOON", u: "../images/best-picture/platoon.webp" },
+    { n: "THE GODFATHER PART II", u: "../images/best-picture/godfather-part-2.webp" },
+    { n: "BEN-HUR", u: "../images/best-picture/ben-hur.webp" },
+    { n: "THE DEPARTED", u: "../images/best-picture/the-departed.webp" },
+    { n: "SLUMDOG MILLIONAIRE", u: "../images/best-picture/slumdog-millionaire.avif" },
+    { n: "CHICAGO", u: "../images/best-picture/chicago.webp" },
+    { n: "GANDHI", u: "../images/best-picture/gandhi.webp" },
+    { n: "DANCES WITH WOLVES", u: "../images/best-picture/dances-with-wolves.jpeg" },
+    { n: "AMERICAN BEAUTY", u: "../images/best-picture/american-beauty.webp" },
+    { n: "UNFORGIVEN", u: "../images/best-picture/unforgiven.jpeg" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "LAWRENCE OF ARABIA", u: "../images/best-picture/lawrence-of-arabia.webp" },
+    { n: "PATTON", u: "../images/best-picture/patton.avif" },
+    { n: "12 YEARS A SLAVE", u: "../images/best-picture/12-years-a-slave.jpeg" },
+    { n: "MILLION DOLLAR BABY", u: "../images/best-picture/million-dollar-baby.webp" },
+    { n: "A BEAUTIFUL MIND", u: "../images/best-picture/a-beautiful-mind.jpg" },
+    { n: "THE DEER HUNTER", u: "../images/best-picture/the-deer-hunter.webp" },
+    { n: "MOONLIGHT", u: "../images/best-picture/moonlight.jpg" },
+    { n: "ARGO", u: "../images/best-picture/argo.jpg" },
+    { n: "THE KING'S SPEECH", u: "../images/best-picture/the-kings-speech.jpg" },
+    { n: "ANNIE HALL", u: "../images/best-picture/annie-hall.png" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "GREEN BOOK", u: "../images/best-picture/green-book.jpg" },
+    { n: "KRAMER VS. KRAMER", u: "../images/best-picture/kramer-vs-kramer.jpg" },
+    { n: "NOMADLAND", u: "../images/best-picture/nomadland.webp" },
+    { n: "THE FRENCH CONNECTION", u: "../images/best-picture/the-french-connection.avif" },
+    { n: "SPOTLIGHT", u: "../images/best-picture/the-spotlight.jpg" },
+    { n: "BIRDMAN", u: "../images/best-picture/birdman.jpg" },
+    { n: "THE SHAPE OF WATER", u: "../images/best-picture/the-shape-of-water.jpg" },
+    { n: "DRIVING MISS DAISY", u: "../images/best-picture/driving-miss-daisy.jpg" },
+    { n: "ANORA", u: "../images/best-picture/anora.jpg" },
+    { n: "CODA", u: "../images/best-picture/coda.webp" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "THE STING", u: "../images/best-picture/the-sting.jpg" },
+    // { n: "ON THE WATERFRONT", u: "../images/best-picture/on-the-waterfront.jpg" },
+    // { n: "MIDNIGHT COWBOY", u: "../images/best-picture/midnight-cowboy.jpg" },
+    // { n: "MY FAIR LADY", u: "../images/best-picture/my-fair-lady.jpg" },
+    // { n: "THE BRIDGE ON THE RIVER KWAI", u: "../images/best-picture/the-bridge-on-the-river-kwai.jpg" },
+    // { n: "ORDINARY PEOPLE", u: "../images/best-picture/ordinary-people.jpg" },
+    // { n: "CHARIOTS OF FIRE", u: "../images/best-picture/chariots-of-fire.jpg" },
+    // { n: "OUT OF AFRICA", u: "../images/best-picture/out-of-africa.jpg" },
+    // { n: "THE ENGLISH PATIENT", u: "../images/best-picture/the-english-patient.jpg" },
+    // { n: "TERMS OF ENDEARMENT", u: "../images/best-picture/terms-of-endearment.jpg" }
+];
+if (typeof window !== 'undefined') window.bestPictureData = bestPictureData;
