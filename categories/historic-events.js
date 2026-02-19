@@ -1,0 +1,61 @@
+// Historic Events — images in images/historic-events/
+const historicEventsData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "MOON LANDING", u: "../images/historic-events/moon-landing.jpg" },
+    { n: "SINKING OF THE TITANIC", u: "../images/historic-events/sinking-of-the-titanic.jpg" },
+    { n: "SIGNING THE DECLARATION OF INDEPENDENCE", u: "../images/historic-events/signing-the-declaration-of-independence.jpg" },
+    { n: "FALL OF THE BERLIN WALL", u: "../images/historic-events/fall-of-the-berlin-wall.jpg" },
+    { n: "D-DAY", u: "../images/historic-events/d-day.jpg" },
+    { n: "WRIGHT BROTHERS FIRST FLIGHT", u: "../images/historic-events/wright-brothers-first-flight.jpg" },
+    { n: "HIROSHIMA", u: "../images/historic-events/hiroshima.jpg" },
+    { n: "MLK I HAVE A DREAM", u: "../images/historic-events/mlk-i-have-a-dream.jpg" },
+    { n: "PEARL HARBOR", u: "../images/historic-events/pearl-harbor.jpg" },
+    { n: "ASSASSINATION OF JFK", u: "../images/historic-events/assassination-of-jfk.jpg" },
+    { n: "BOSTON TEA PARTY", u: "../images/historic-events/boston-tea-party.jpg" },
+    { n: "GREAT WALL OF CHINA", u: "../images/historic-events/great-wall-of-china.jpg" },
+    { n: "COLUMBUS ARRIVING IN AMERICA", u: "../images/historic-events/columbus-arriving-in-america.jpg" },
+    { n: "RAISING THE FLAG ON IWO JIMA", u: "../images/historic-events/raising-the-flag-on-iwo-jima.jpg" },
+    { n: "CONSTRUCTION OF THE PYRAMIDS", u: "../images/historic-events/construction-of-the-pyramids.jpg" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "HINDENBURG DISASTER", u: "../images/historic-events/hindenburg-disaster.jpg" },
+    { n: "FRENCH REVOLUTION", u: "../images/historic-events/french-revolution.jpg" },
+    { n: "BERLIN AIRLIFT", u: "../images/historic-events/berlin-airlift.jpg" },
+    { n: "CHERNOBYL", u: "../images/historic-events/chernobyl.jpg" },
+    { n: "BOSTON MASSACRE", u: "../images/historic-events/boston-massacre.jpg" },
+    { n: "TANK MAN", u: "../images/historic-events/tank-man.jpg" },
+    { n: "SIGNING OF THE MAGNA CARTA", u: "../images/historic-events/signing-of-the-magna-carta.jpg" },
+    { n: "LEWIS AND CLARK EXPEDITION", u: "../images/historic-events/lewis-and-clark-expedition.jpg" },
+    { n: "FIRST THANKSGIVING", u: "../images/historic-events/first-thanksgiving.jpg" },
+    { n: "GREAT FIRE OF LONDON", u: "../images/historic-events/great-fire-of-london.jpg" },
+    { n: "ASSASSINATION OF ABRAHAM LINCOLN", u: "../images/historic-events/assassination-of-abraham-lincoln.jpg" },
+    { n: "CUBAN MISSILE CRISIS", u: "../images/historic-events/cuban-missile-crisis.jpg" },
+    { n: "CROSSING THE DELAWARE", u: "../images/historic-events/crossing-the-delaware.jpg" },
+    { n: "GOLD RUSH", u: "../images/historic-events/gold-rush.jpg" },
+    { n: "APOLLO 13", u: "../images/historic-events/apollo-13.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "STORMING OF THE BASTILLE", u: "../images/historic-events/storming-of-the-bastille.jpg" },
+    { n: "BATTLE OF GETTYSBURG", u: "../images/historic-events/battle-of-gettysburg.jpg" },
+    { n: "ROSETTA STONE DISCOVERY", u: "../images/historic-events/rosetta-stone-discovery.jpg" },
+    { n: "GALILEO'S TRIAL", u: "../images/historic-events/galileos-trial.jpg" },
+    { n: "BURNING OF THE LIBRARY OF ALEXANDRIA", u: "../images/historic-events/burning-of-the-library-of-alexandria.jpg" },
+    { n: "CORONATION OF NAPOLEON", u: "../images/historic-events/coronation-of-napoleon.jpg" },
+    { n: "TREATY OF VERSAILLES", u: "../images/historic-events/treaty-of-versailles.jpg" },
+    { n: "ERUPTION OF VESUVIUS", u: "../images/historic-events/eruption-of-vesuvius.jpg" },
+    { n: "TRANSCONTINENTAL RAILROAD", u: "../images/historic-events/transcontinental-railroad.jpg" },
+    { n: "RUSSIAN REVOLUTION", u: "../images/historic-events/russian-revolution.jpg" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "DEFENESTRATION OF PRAGUE", u: "../images/historic-events/defenestration-of-prague.jpg" },
+    { n: "BATTLE OF THERMOPYLAE", u: "../images/historic-events/battle-of-thermopylae.jpg" },
+    { n: "CONGRESS OF VIENNA", u: "../images/historic-events/congress-of-vienna.jpg" },
+    { n: "BATTLE OF HASTINGS", u: "../images/historic-events/battle-of-hastings.jpg" },
+    { n: "ASSASSINATION OF JULIUS CAESAR", u: "../images/historic-events/assassination-of-julius-caesar.jpg" },
+    { n: "HUNDRED DAYS", u: "../images/historic-events/hundred-days.jpg" },
+    { n: "TENNIS COURT OATH", u: "../images/historic-events/tennis-court-oath.jpg" },
+    { n: "BURNING OF WASHINGTON D.C.", u: "../images/historic-events/burning-of-washington-dc.jpg" },
+    { n: "CHARGE OF THE LIGHT BRIGADE", u: "../images/historic-events/charge-of-the-light-brigade.jpg" },
+    { n: "SIGNING OF THE TREATY OF WESTPHALIA", u: "../images/historic-events/signing-of-the-treaty-of-westphalia.jpg" },
+];
+if (typeof window !== 'undefined') window.historicEventsData = historicEventsData;
