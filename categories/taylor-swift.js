@@ -1,0 +1,73 @@
+// Taylor Swift — images in images/taylor-swift/
+const taylorSwiftData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "TAYLOR SWIFT", u: "../images/taylor-swift/taylor-swift.jpg" },
+    { n: "ERAS TOUR", u: "../images/taylor-swift/eras-tour.png" },
+    { n: "FRIENDSHIP BRACELETS", u: "../images/taylor-swift/friendship-bracelets.jpg" },
+    { n: "GUITAR", u: "../images/taylor-swift/guitar.jpg" },
+    { n: "1989 (ALBUM COVER)", u: "../images/taylor-swift/1989.png" },
+    { n: "FEARLESS (ALBUM COVER)", u: "../images/taylor-swift/fearless-album-cover.png" },
+    { n: "RED (ALBUM COVER)", u: "../images/taylor-swift/red-album-cover.png" },
+    { n: "LOVER (ALBUM COVER)", u: "../images/taylor-swift/lover-album-cover.jpg" },
+    { n: "REPUTATION (ALBUM COVER)", u: "../images/taylor-swift/reputation.png" },
+    { n: "MIDNIGHTS (ALBUM COVER)", u: "../images/taylor-swift/midnights.png" },
+    { n: "TAYLOR SWIFT (DEBUT ALBUM COVER)", u: "../images/taylor-swift/taylor-swift-debut-album-cover.jpg" },
+    { n: "SPEAK NOW (ALBUM COVER)", u: "../images/taylor-swift/speak-now-album-cover.png" },
+    { n: "FOLKLORE (ALBUM COVER)", u: "../images/taylor-swift/folklore-album-cover.png" },
+    { n: "EVERMORE (ALBUM COVER)", u: "../images/taylor-swift/evermore-album-cover.png" },
+    { n: "TRAVIS KELCE", u: "../images/taylor-swift/travis-kelce.jpg" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "THE TORTURED POETS DEPARTMENT (ALBUM COVER)", u: "../images/taylor-swift/the-tortured-poets-department-album-cover.webp" },
+    { n: "TEARDROPS ON MY GUITAR MUSIC VIDEO", u: "../images/taylor-swift/teardrops-on-my-guitar-music-video.jpg" },
+    { n: "GRAMMY AWARDS", u: "../images/taylor-swift/grammy.png" },
+    { n: "LOVE STORY MUSIC VIDEO", u: "../images/taylor-swift/love-story-music-video.jpg" },
+    { n: "REPUTATION TOUR SNAKE STAGE", u: "../images/taylor-swift/reputation-tour-snake-stage.jpg" },
+    { n: "CAT (BENJAMIN BUTTON)", u: "../images/taylor-swift/cat-benjamin-button.jpg" },
+    { n: "CAT (MEREDITH GREY)", u: "../images/taylor-swift/cat-meredith-grey.webp" },
+    { n: "STYLE MUSIC VIDEO", u: "../images/taylor-swift/style-music-video.jpg" },
+    { n: "MEAN MUSIC VIDEO", u: "../images/taylor-swift/mean-music-video.jpg" },
+    { n: "CARDIGAN MUSIC VIDEO", u: "../images/taylor-swift/cardigan-music-video.jpg" },
+    { n: "WE ARE NEVER GETTING BACK TOGETHER MUSIC VIDEO", u: "../images/taylor-swift/we-are-never-getting-back-together-music-video.jpg" },
+    { n: "CMA AWARDS PERFORMANCE", u: "../images/taylor-swift/cma-awards-performance.jpg" },
+    { n: "SCOOTER BRAUN", u: "../images/taylor-swift/scooter-braun.jpg" },
+    { n: "ERAS TOUR WRISTBAND GLOW", u: "../images/taylor-swift/eras-tour-wristband-glow.jpg" },
+    { n: "ANTI-HERO MUSIC VIDEO", u: "../images/taylor-swift/anti-hero-music-video.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "ME! MUSIC VIDEO", u: "../images/taylor-swift/me-music-video.jpg" },
+    { n: "DELICATE MUSIC VIDEO", u: "../images/taylor-swift/delicate-music-video.jpg" },
+    { n: "YOU BELONG WITH ME MUSIC VIDEO", u: "../images/taylor-swift/you-belong-with-me-music-video.jpg" },
+    { n: "SHAKE IT OFF MUSIC VIDEO", u: "../images/taylor-swift/shake-it-off-music-video.jpg" },
+    { n: "BLANK SPACE MUSIC VIDEO", u: "../images/taylor-swift/blank-space-music-video.jpg" },
+    { n: "ED SHEERAN", u: "../images/taylor-swift/ed-sheeran.jpg" },
+    { n: "22 MUSIC VIDEO", u: "../images/taylor-swift/22-music-video.jpg" },
+    { n: "VAULT DOOR", u: "../images/taylor-swift/vault-door.png" },
+    { n: "JACK ANTONOFF", u: "../images/taylor-swift/jack-antonoff.jpg" },
+    { n: "LOOK WHAT YOU MADE ME DO MUSIC VIDEO", u: "../images/taylor-swift/look-what-you-made-me-do-music-video.png" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "CAT (OLIVIA BENSON)", u: "../images/taylor-swift/cat-olivia-benson.jpg" },
+    { n: "EXILE MUSIC VIDEO", u: "../images/taylor-swift/exile-music-video.jpg" },
+    { n: "FORTNIGHT MUSIC VIDEO", u: "../images/taylor-swift/fortnight-music-video.jpg" },
+    { n: "THE MAN MUSIC VIDEO", u: "../images/taylor-swift/the-man-music-video.jpg" },
+    { n: "LOVER MUSIC VIDEO", u: "../images/taylor-swift/lover-music-video.jpg" },
+    { n: "WILLOW MUSIC VIDEO", u: "../images/taylor-swift/willow-music-video.jpg" },
+    { n: "BEJEWELED MUSIC VIDEO", u: "../images/taylor-swift/bejeweled-music-video.jpg" },
+    { n: "AARON DESSNER", u: "../images/taylor-swift/aaron-dessner.jpg" },
+    { n: "BAD BLOOD MUSIC VIDEO", u: "../images/taylor-swift/bad-blood-music-video.jpg" },
+    { n: "I KNEW YOU WERE TROUBLE MUSIC VIDEO", u: "../images/taylor-swift/i-knew-you-were-trouble-music-video.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "SUPER BOWL (WITH KELCE)", u: "../images/taylor-swift/super-bowl-with-kelce.jpg" },
+    // { n: "ME! MUSIC VIDEO", u: "../images/taylor-swift/me-music-video.jpg" },
+    // { n: "FORTNIGHT MUSIC VIDEO", u: "../images/taylor-swift/fortnight-music-video.jpg" },
+    // { n: "MIRRORBALL", u: "../images/taylor-swift/mirrorball.jpg" },
+    // { n: "SURPRISE SONGS PIANO", u: "../images/taylor-swift/surprise-songs-piano.jpg" },
+    // { n: "JOE ALWYN", u: "../images/taylor-swift/joe-alwyn.jpg" },
+    // { n: "DELICATE MUSIC VIDEO", u: "../images/taylor-swift/delicate-music-video.jpg" },
+    // { n: "STYLE MUSIC VIDEO", u: "../images/taylor-swift/style-music-video.jpg" },
+    // { n: "ENCHANTED (SPEAK NOW TOUR)", u: "../images/taylor-swift/enchanted-speak-now-tour.jpg" },
+    // { n: "TEARDROPS ON MY GUITAR", u: "../images/taylor-swift/teardrops-on-my-guitar.jpg" },
+];
+if (typeof window !== 'undefined') window.taylorSwiftData = taylorSwiftData;

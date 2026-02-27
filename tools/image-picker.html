@@ -380,6 +380,7 @@
         <select id="categorySelect">
             <option value="">— Select Category —</option>
         </select>
+        <input type="text" id="searchSuffix" placeholder="Search suffix (e.g. GAMESHOW)" style="min-width:200px">
         <div class="stats" id="stats"></div>
     </div>
 
@@ -432,20 +433,87 @@
             }
             checkServer();
 
-            // ── Populate category dropdown ──────────────────
+            // ── Populate category dropdown (grouped by status) ─
             const select = document.getElementById('categorySelect');
-            if (window.CATEGORY_REGISTRY) {
-                window.CATEGORY_REGISTRY.forEach(cat => {
-                    // Skip math (no images)
-                    if (cat.key === 'math') return;
-                    const opt = document.createElement('option');
-                    opt.value = cat.key;
-                    opt.textContent = cat.label;
-                    opt.dataset.script = cat.script;
-                    opt.dataset.global = cat.global;
-                    select.appendChild(opt);
-                });
+            async function populateDropdown() {
+                if (!window.CATEGORY_REGISTRY) return;
+
+                const cats = window.CATEGORY_REGISTRY.filter(c => c.key !== 'math');
+                const needsImages = [];
+                const complete = [];
+
+                // Check each category's image status via the server
+                for (const cat of cats) {
+                    let totalItems = 0;
+                    let foundItems = 0;
+
+                    // Load category script to count items
+                    if (!window[cat.global]) {
+                        await new Promise((resolve, reject) => {
+                            const s = document.createElement('script');
+                            s.src = `../categories/${cat.script}`;
+                            s.onload = resolve;
+                            s.onerror = reject;
+                            document.head.appendChild(s);
+                        });
+                    }
+                    const data = window[cat.global];
+                    if (!data) continue;
+                    totalItems = data.length;
+
+                    if (serverAvailable) {
+                        try {
+                            const res = await fetch(`${API}/api/list-images`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ category: cat.key })
+                            });
+                            const images = await res.json();
+                            // Count how many items have a matching image
+                            data.forEach(item => {
+                                const stem = extractStem(item.u);
+                                if (stem in images) foundItems++;
+                            });
+                        } catch { /* ignore */ }
+                    }
+
+                    const entry = { cat, totalItems, foundItems };
+                    if (foundItems < totalItems) {
+                        needsImages.push(entry);
+                    } else {
+                        complete.push(entry);
+                    }
+                }
+
+                // Build optgroups
+                if (needsImages.length) {
+                    const group = document.createElement('optgroup');
+                    group.label = `⬜ Needs Images (${needsImages.length})`;
+                    needsImages.forEach(({ cat, totalItems, foundItems }) => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.key;
+                        opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
+                        opt.dataset.script = cat.script;
+                        opt.dataset.global = cat.global;
+                        group.appendChild(opt);
+                    });
+                    select.appendChild(group);
+                }
+                if (complete.length) {
+                    const group = document.createElement('optgroup');
+                    group.label = `✅ Complete (${complete.length})`;
+                    complete.forEach(({ cat, totalItems, foundItems }) => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.key;
+                        opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
+                        opt.dataset.script = cat.script;
+                        opt.dataset.global = cat.global;
+                        group.appendChild(opt);
+                    });
+                    select.appendChild(group);
+                }
             }
+            populateDropdown();
 
             select.addEventListener('change', () => {
                 const opt = select.selectedOptions[0];
@@ -593,7 +661,9 @@
 
             // ── Search Google Images ───────────────────────
             window.searchGoogle = function (name) {
-                const q = encodeURIComponent(name);
+                const suffix = document.getElementById('searchSuffix').value.trim();
+                const query = suffix ? `${name} ${suffix}` : name;
+                const q = encodeURIComponent(query);
                 window.open(`https://www.google.com/search?tbm=isch&q=${q}`, '_blank');
             };
 

@@ -20,5 +20,6 @@ const CATEGORY_REGISTRY = [
     { key: 'historic-events', label: 'Historic Events', script: 'historic-events.js', global: 'historicEventsData', gibleOnly: true },
     { key: 'instruments', label: 'Instruments', script: 'instruments.js', global: 'instrumentsData' },
     { key: 'gameshows', label: 'Gameshows', script: 'gameshows.js', global: 'gameshowsData', gibleOnly: true },
+    { key: 'taylor-swift', label: 'Taylor Swift', script: 'taylor-swift.js', global: 'taylorSwiftData', gibleOnly: true },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;
