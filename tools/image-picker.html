@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Picker — The Floor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f13;
+            --surface: #1a1a24;
+            --surface-hover: #22222f;
+            --border: #2a2a3a;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, .3);
+            --green: #00b894;
+            --green-dim: rgba(0, 184, 148, .15);
+            --red: #e17055;
+            --red-dim: rgba(225, 112, 85, .15);
+            --yellow: #fdcb6e;
+            --text: #e0e0e8;
+            --text-dim: #8888a0;
+            --radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ─────────────────────────── */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 15, 19, .85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .header select,
+        .header input {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: .85rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .header select:focus,
+        .header input:focus {
+            border-color: var(--accent);
+        }
+
+        .header select {
+            min-width: 180px;
+            cursor: pointer;
+        }
+
+        .stats {
+            margin-left: auto;
+            font-size: .8rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 16px;
+        }
+
+        .stats .found {
+            color: var(--green);
+        }
+
+        .stats .missing {
+            color: var(--red);
+        }
+
+        /* ── Filter Tabs ────────────────────── */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: .75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* ── Grid ────────────────────────────── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+            padding: 20px 24px 40px;
+        }
+
+        /* ── Card ────────────────────────────── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .card-status.has-image {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        .card-status.no-image {
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red);
+        }
+
+        .card-name {
+            font-size: .82rem;
+            font-weight: 600;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-filename {
+            font-size: .65rem;
+            color: var(--text-dim);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            white-space: nowrap;
+        }
+
+        /* Preview area */
+        .card-preview {
+            height: 140px;
+            background: #12121a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .card-preview .no-img {
+            color: var(--text-dim);
+            font-size: .75rem;
+            opacity: .5;
+        }
+
+        /* Actions */
+        .card-actions {
+            padding: 10px 14px;
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+        }
+
+        .url-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .url-row input {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: .75rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .url-row input:focus {
+            border-color: var(--accent);
+        }
+
+        .url-row input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .btn {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: .72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+
+        .btn-search {
+            background: rgba(108, 92, 231, .15);
+            color: var(--accent);
+            border: 1px solid rgba(108, 92, 231, .3);
+        }
+
+        .btn-search:hover {
+            background: rgba(108, 92, 231, .3);
+        }
+
+        .btn-download {
+            background: rgba(0, 184, 148, .15);
+            color: var(--green);
+            border: 1px solid rgba(0, 184, 148, .3);
+        }
+
+        .btn-download:hover {
+            background: rgba(0, 184, 148, .3);
+        }
+
+        .btn-download:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* Status toast */
+        .card-toast {
+            font-size: .7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .card-toast.success {
+            display: block;
+            background: var(--green-dim);
+            color: var(--green);
+        }
+
+        .card-toast.error {
+            display: block;
+            background: var(--red-dim);
+            color: var(--red);
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+            display: none;
+        }
+
+        .spinner.active {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Empty state ────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+            color: var(--text-dim);
+        }
+
+        .empty-state h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .empty-state p {
+            font-size: .85rem;
+        }
+
+        /* ── Server warning ─────────────────── */
+        .server-warning {
+            background: var(--red-dim);
+            border: 1px solid rgba(225, 112, 85, .3);
+            border-radius: var(--radius);
+            padding: 12px 20px;
+            margin: 16px 24px 0;
+            font-size: .8rem;
+            color: var(--red);
+            display: none;
+        }
+
+        .server-warning a {
+            color: var(--yellow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Header ─────────────────────────── -->
+    <div class="header">
+        <h1>🖼️ Image Picker</h1>
+        <select id="categorySelect">
+            <option value="">— Select Category —</option>
+        </select>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- ── Filter Bar ─────────────────────── -->
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="missing">Missing</button>
+        <button class="filter-btn" data-filter="found">Has Image</button>
+    </div>
+
+    <!-- ── Server Warning ─────────────────── -->
+    <div class="server-warning" id="serverWarning">
+        ⚠️ <strong>Server not detected.</strong> Run
+        <code>python3 tools/image-server.py</code> from the project root for auto-download.
+        Without it, you can still search and manually save images.
+    </div>
+
+    <!-- ── Grid ────────────────────────────── -->
+    <div class="grid" id="grid">
+        <div class="empty-state">
+            <h2>Select a category above</h2>
+            <p>Items from the category will appear here with search & download tools.</p>
+        </div>
+    </div>
+
+    <!-- ── Category scripts are loaded dynamically ── -->
+    <script src="../categories/index.js"></script>
+    <script>
+        (function () {
+            const API = `${location.protocol}//${location.hostname}:8642`;
+            let serverAvailable = false;
+            let currentFilter = 'all';
+            let currentImages = {};  // stem -> filename on disk
+
+            // ── Check if backend server is running ──────────
+            async function checkServer() {
+                try {
+                    const res = await fetch(`${API}/api/list-images`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ category: '_test' }),
+                        signal: AbortSignal.timeout(2000)
+                    });
+                    serverAvailable = res.ok;
+                } catch {
+                    serverAvailable = false;
+                }
+                document.getElementById('serverWarning').style.display =
+                    serverAvailable ? 'none' : 'block';
+            }
+            checkServer();
+
+            // ── Populate category dropdown ──────────────────
+            const select = document.getElementById('categorySelect');
+            if (window.CATEGORY_REGISTRY) {
+                window.CATEGORY_REGISTRY.forEach(cat => {
+                    // Skip math (no images)
+                    if (cat.key === 'math') return;
+                    const opt = document.createElement('option');
+                    opt.value = cat.key;
+                    opt.textContent = cat.label;
+                    opt.dataset.script = cat.script;
+                    opt.dataset.global = cat.global;
+                    select.appendChild(opt);
+                });
+            }
+
+            select.addEventListener('change', () => {
+                const opt = select.selectedOptions[0];
+                if (!opt.value) return;
+                loadCategory(opt.value, opt.dataset.script, opt.dataset.global);
+            });
+
+            // ── Filter buttons ─────────────────────────────
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    applyFilter();
+                });
+            });
+
+            function applyFilter() {
+                document.querySelectorAll('.card').forEach(card => {
+                    const hasImage = card.dataset.hasImage === 'true';
+                    let show = true;
+                    if (currentFilter === 'missing') show = !hasImage;
+                    if (currentFilter === 'found') show = hasImage;
+                    card.style.display = show ? '' : 'none';
+                });
+            }
+
+            // ── Load a category ────────────────────────────
+            async function loadCategory(key, scriptFile, globalName) {
+                // Load the category script if not already loaded
+                if (!window[globalName]) {
+                    await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = `../categories/${scriptFile}`;
+                        s.onload = resolve;
+                        s.onerror = reject;
+                        document.head.appendChild(s);
+                    });
+                }
+
+                const data = window[globalName];
+                if (!data) {
+                    alert(`Could not load category data for "${key}"`);
+                    return;
+                }
+
+                // Get existing images from server (or empty)
+                currentImages = {};
+                if (serverAvailable) {
+                    try {
+                        const res = await fetch(`${API}/api/list-images`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ category: key })
+                        });
+                        currentImages = await res.json();
+                    } catch { /* ignore */ }
+                }
+
+                renderGrid(data, key);
+            }
+
+            // ── Extract expected filename from URL path ────
+            function extractStem(urlPath) {
+                // "../images/gameshows/wheel-of-fortune.webp" -> "wheel-of-fortune"
+                const parts = urlPath.split('/');
+                const file = parts[parts.length - 1];
+                const dot = file.lastIndexOf('.');
+                return dot > 0 ? file.substring(0, dot) : file;
+            }
+
+            function extractCategory(urlPath) {
+                // "../images/gameshows/wheel-of-fortune.webp" -> "gameshows"
+                const parts = urlPath.split('/');
+                return parts[parts.length - 2];
+            }
+
+            // ── Render the grid ────────────────────────────
+            function renderGrid(data, categoryKey) {
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+
+                let foundCount = 0;
+                let missingCount = 0;
+
+                data.forEach((item, idx) => {
+                    const stem = extractStem(item.u);
+                    const category = extractCategory(item.u);
+                    const hasImage = stem in currentImages;
+
+                    if (hasImage) foundCount++; else missingCount++;
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.dataset.hasImage = hasImage;
+                    card.dataset.stem = stem;
+                    card.dataset.category = category;
+                    card.dataset.index = idx;
+
+                    const existingFile = currentImages[stem] || '';
+                    const imgSrc = hasImage ? `../images/${category}/${existingFile}` : '';
+
+                    card.innerHTML = `
+        <div class="card-header">
+          <div class="card-status ${hasImage ? 'has-image' : 'no-image'}"></div>
+          <div class="card-name" title="${item.n}">${item.n}</div>
+          <div class="card-filename">${stem}</div>
+        </div>
+        <div class="card-preview">
+          ${hasImage
+                            ? `<img src="${imgSrc}" alt="${item.n}" loading="lazy">`
+                            : `<span class="no-img">No image yet</span>`}
+        </div>
+        <div class="card-actions">
+          <div class="btn-row">
+            <button class="btn btn-search" onclick="searchGoogle('${item.n.replace(/'/g, "\\'")}')">
+              🔍 Search Google
+            </button>
+          </div>
+          <div class="url-row">
+            <input type="text" placeholder="Paste image URL here…"
+                   id="url-${idx}" onkeydown="if(event.key==='Enter')downloadImage(${idx})">
+            <button class="btn btn-download" onclick="downloadImage(${idx})"
+                    ${!serverAvailable ? 'title="Start the server first"' : ''}>
+              ⬇ Save
+            </button>
+            <div class="spinner" id="spinner-${idx}"></div>
+          </div>
+          <div class="card-toast" id="toast-${idx}"></div>
+        </div>
+      `;
+
+                    grid.appendChild(card);
+                });
+
+                // Update stats
+                document.getElementById('stats').innerHTML = `
+      <span class="found">✓ ${foundCount} found</span>
+      <span class="missing">✗ ${missingCount} missing</span>
+      <span>${data.length} total</span>
+    `;
+
+                applyFilter();
+            }
+
+            // ── Search Google Images ───────────────────────
+            window.searchGoogle = function (name) {
+                const q = encodeURIComponent(name);
+                window.open(`https://www.google.com/search?tbm=isch&q=${q}`, '_blank');
+            };
+
+            // ── Download image via backend ─────────────────
+            window.downloadImage = async function (idx) {
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                const urlInput = document.getElementById(`url-${idx}`);
+                const spinner = document.getElementById(`spinner-${idx}`);
+                const toast = document.getElementById(`toast-${idx}`);
+
+                const url = urlInput.value.trim();
+                if (!url) {
+                    showToast(toast, 'error', 'Paste an image URL first');
+                    return;
+                }
+
+                if (!serverAvailable) {
+                    showToast(toast, 'error', 'Server not running — start image-server.py');
+                    return;
+                }
+
+                spinner.classList.add('active');
+                toast.style.display = 'none';
+                toast.className = 'card-toast';
+
+                try {
+                    const res = await fetch(`${API}/api/download`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            url: url,
+                            category: card.dataset.category,
+                            filename: card.dataset.stem,
+                            format: 'webp'
+                        })
+                    });
+                    const result = await res.json();
+
+                    if (result.success) {
+                        showToast(toast, 'success', `✓ Saved as ${result.savedAs} (${formatBytes(result.size)})`);
+
+                        // Update the card visually
+                        const preview = card.querySelector('.card-preview');
+                        const timestamp = Date.now();
+                        preview.innerHTML = `<img src="../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
+
+                        const status = card.querySelector('.card-status');
+                        status.className = 'card-status has-image';
+                        card.dataset.hasImage = 'true';
+
+                        // Update current images map
+                        currentImages[card.dataset.stem] = result.savedAs;
+
+                        // Clear input
+                        urlInput.value = '';
+
+                        // Update stats
+                        updateStats();
+                    } else {
+                        showToast(toast, 'error', result.error || 'Download failed');
+                    }
+                } catch (e) {
+                    showToast(toast, 'error', `Error: ${e.message}`);
+                } finally {
+                    spinner.classList.remove('active');
+                }
+            };
+
+            function showToast(el, type, msg) {
+                el.className = `card-toast ${type}`;
+                el.textContent = msg;
+                el.style.display = 'block';
+                if (type === 'success') {
+                    setTimeout(() => { el.style.display = 'none'; }, 4000);
+                }
+            }
+
+            function formatBytes(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+
+            function updateStats() {
+                const cards = document.querySelectorAll('.card');
+                let found = 0, missing = 0;
+                cards.forEach(c => {
+                    if (c.dataset.hasImage === 'true') found++; else missing++;
+                });
+                document.getElementById('stats').innerHTML = `
+      <span class="found">✓ ${found} found</span>
+      <span class="missing">✗ ${missing} missing</span>
+      <span>${cards.length} total</span>
+    `;
+            }
+        })();
+    </script>
+</body>
+
+</html>

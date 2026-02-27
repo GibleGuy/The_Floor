@@ -27,3 +27,13 @@ Then open:
 1.  Install "Live Server" extension.
 2.  Right-click `host/floor-host.html` or `duel/game.html`.
 3.  Select "Open with Live Server".
+
+## Image Picker Tool (for sourcing category images)
+When creating or updating categories, use the Image Picker to quickly search, download, and auto-rename images.
+
+```bash
+python3 tools/image-server.py
+```
+Then open: `http://localhost:8642/tools/image-picker.html`
+
+Select a category → click **🔍 Search Google** → find an image → copy image address → paste → click **⬇ Save**. The image is automatically saved with the correct filename to `images/<category>/`.

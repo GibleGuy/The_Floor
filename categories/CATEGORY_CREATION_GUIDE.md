@@ -96,7 +96,24 @@ Items **must be ordered from easiest to hardest** (index 0 = easiest, index 49 =
 > [!IMPORTANT]
 > The **user** is responsible for sourcing and providing all images. The AI should **not** generate images or look for image URLs unless the user explicitly asks.
 
-### 5.1 Image Quality Standards (for the user's reference)
+### 5.1 Image Picker Tool (Recommended Workflow)
+
+Use the built-in **Image Picker** to streamline finding and saving images:
+
+```bash
+# Start the server from the project root
+python3 tools/image-server.py
+# Open http://localhost:8642/tools/image-picker.html
+```
+
+1. Select the category from the dropdown
+2. Use the **"Missing"** filter to see items that still need images
+3. Click **🔍 Search Google** — opens Google Images in a new tab
+4. Find an image you like → right-click → **Copy Image Address**
+5. Paste the URL into the input field → click **⬇ Save**
+6. The image is automatically downloaded with the correct filename to `images/<category>/`
+
+### 5.2 Image Quality Standards (for the user's reference)
 
 - Image should **clearly depict the item** — not a collage, not a diagram, not a screenshot of a search result
 - **Clean background preferred** (solid color or simple) — especially for objects and logos

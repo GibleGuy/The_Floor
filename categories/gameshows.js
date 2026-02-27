@@ -1,17 +1,17 @@
 // Gameshows — images in images/gameshows/
 const gameshowsData = [
     // Tier 1 — Obvious (1–15)
-    { n: "WHEEL OF FORTUNE", u: "../images/gameshows/wheel-of-fortune.jpg" },
-    { n: "JEOPARDY!", u: "../images/gameshows/jeopardy.jpg" },
+    { n: "WHEEL OF FORTUNE", u: "../images/gameshows/wheel-of-fortune.webp" },
+    { n: "JEOPARDY!", u: "../images/gameshows/jeopardy.png" },
     { n: "THE PRICE IS RIGHT", u: "../images/gameshows/the-price-is-right.webp" },
     { n: "DEAL OR NO DEAL", u: "../images/gameshows/deal-or-no-deal.jpg" },
-    { n: "WHO WANTS TO BE A MILLIONAIRE", u: "../images/gameshows/who-wants-to-be-a-millionaire.jpg" },
+    { n: "WHO WANTS TO BE A MILLIONAIRE", u: "../images/gameshows/who-wants-to-be-a-millionaire.png" },
     { n: "SURVIVOR", u: "../images/gameshows/survivor.webp" },
     { n: "THE AMAZING RACE", u: "../images/gameshows/the-amazing-race.webp" },
     { n: "AMERICAN IDOL", u: "../images/gameshows/american-idol.jpg" },
-    { n: "FAMILY FEUD", u: "../images/gameshows/family-feud.jpg" },
+    { n: "FAMILY FEUD", u: "../images/gameshows/family-feud.png" },
     { n: "ARE YOU SMARTER THAN A 5TH GRADER", u: "../images/gameshows/are-you-smarter-than-a-5th-grader.jpg" },
-    { n: "THE BACHELOR", u: "../images/gameshows/the-bachelor.jpeg" },
+    { n: "THE BACHELOR", u: "../images/gameshows/the-bachelor.webp" },
     { n: "AMERICAS GOT TALENT", u: "../images/gameshows/americas-got-talent.jpeg" },
     { n: "THE VOICE", u: "../images/gameshows/the-voice.jpg" },
     { n: "BIG BROTHER", u: "../images/gameshows/big-brother.jpg" },
@@ -41,10 +41,10 @@ const gameshowsData = [
     { n: "THE CIRCLE", u: "../images/gameshows/the-circle.jpg" },
     { n: "ALONE", u: "../images/gameshows/alone.jpg" },
     { n: "NAKED AND AFRAID", u: "../images/gameshows/naked-and-afraid.webp" },
-    { n: "THE TRAITORS", u: "../images/gameshows/the-traitors.jpeg" },
+    { n: "THE TRAITORS", u: "../images/gameshows/the-traitors.webp" },
     { n: "LEGENDS OF THE HIDDEN TEMPLE", u: "../images/gameshows/legends-of-the-hidden-temple.webp" },
     { n: "DOUBLE DARE", u: "../images/gameshows/double-dare.jpg" },
-    { n: "NAME THAT TUNE", u: "../images/gameshows/name-that-tune.jpg" },
+    { n: "NAME THAT TUNE", u: "../images/gameshows/name-that-tune.png" },
 
     // Tier 4 — Expert (41–50)
     { n: "THE $100,000 PYRAMID", u: "../images/gameshows/the-100000-pyramid.jpg" },
