@@ -19,5 +19,6 @@ const CATEGORY_REGISTRY = [
     { key: 'girl-groups', label: 'Girl Groups', script: 'girl-groups.js', global: 'girlGroupsData', gibleOnly: true },
     { key: 'historic-events', label: 'Historic Events', script: 'historic-events.js', global: 'historicEventsData', gibleOnly: true },
     { key: 'gameshows', label: 'Gameshows', script: 'gameshows.js', global: 'gameshowsData', gibleOnly: true },
+    { key: 'taylor-swift', label: 'Taylor Swift', script: 'taylor-swift.js', global: 'taylorSwiftData', gibleOnly: true },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;
