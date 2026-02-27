@@ -1,0 +1,73 @@
+// Instruments — images in images/instruments/
+const instrumentsData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "PIANO", u: "../images/instruments/piano.webp" },
+    { n: "ACOUSTIC GUITAR", u: "../images/instruments/acoustic-guitar.webp" },
+    { n: "VIOLIN", u: "../images/instruments/violin.webp" },
+    { n: "TRUMPET", u: "../images/instruments/trumpet.webp" },
+    { n: "DRUM SET", u: "../images/instruments/drum-set.webp" },
+    { n: "FLUTE", u: "../images/instruments/flute.webp" },
+    { n: "SAXOPHONE", u: "../images/instruments/saxophone.webp" },
+    { n: "HARP", u: "../images/instruments/harp.webp" },
+    { n: "HARMONICA", u: "../images/instruments/harmonica.webp" },
+    { n: "CYMBALS", u: "../images/instruments/cymbals.webp" },
+    { n: "XYLOPHONE", u: "../images/instruments/xylophone.webp" },
+    { n: "CELLO", u: "../images/instruments/cello.webp" },
+    { n: "TROMBONE", u: "../images/instruments/trombone.webp" },
+    { n: "CLARINET", u: "../images/instruments/clarinet.webp" },
+    { n: "TUBA", u: "../images/instruments/tuba.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "ELECTRIC GUITAR", u: "../images/instruments/electric-guitar.webp" },
+    { n: "FRENCH HORN", u: "../images/instruments/french-horn.webp" },
+    { n: "BANJO", u: "../images/instruments/banjo.webp" },
+    { n: "ACCORDION", u: "../images/instruments/accordion.webp" },
+    { n: "UKULELE", u: "../images/instruments/ukulele.webp" },
+    { n: "TAMBOURINE", u: "../images/instruments/tambourine.webp" },
+    { n: "MANDOLIN", u: "../images/instruments/mandolin.webp" },
+    { n: "GONG", u: "../images/instruments/gong.webp" },
+    { n: "OBOE", u: "../images/instruments/oboe.webp" },
+    { n: "VIBRAPHONE", u: "../images/instruments/vibraphone.webp" },
+    { n: "BASS GUITAR", u: "../images/instruments/bass-guitar.webp" },
+    { n: "MARACAS", u: "../images/instruments/maracas.webp" },
+    { n: "TIMPANI", u: "../images/instruments/timpani.webp" },
+    { n: "ORGAN", u: "../images/instruments/organ.webp" },
+    { n: "PICCOLO", u: "../images/instruments/piccolo.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "SYNTHESIZER", u: "../images/instruments/synthesizer.webp" },
+    { n: "SITAR", u: "../images/instruments/sitar.webp" },
+    { n: "ENGLISH HORN", u: "../images/instruments/english-horn.webp" },
+    { n: "LUTE", u: "../images/instruments/lute.webp" },
+    { n: "DULCIMER", u: "../images/instruments/dulcimer.webp" },
+    { n: "STEEL DRUM", u: "../images/instruments/steel-drum.webp" },
+    { n: "KALIMBA", u: "../images/instruments/kalimba.webp" },
+    { n: "BAGPIPE", u: "../images/instruments/bagpipe.webp" },
+    { n: "LYRE", u: "../images/instruments/lyre.webp" },
+    { n: "BUGLE", u: "../images/instruments/bugle.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "THEREMIN", u: "../images/instruments/theremin.webp" },
+    { n: "BOUZOUKI", u: "../images/instruments/bouzouki.webp" },
+    { n: "BALALAIKA", u: "../images/instruments/balalaika.webp" },
+    { n: "HURDY-GURDY", u: "../images/instruments/hurdy-gurdy.webp" },
+    { n: "REBEC", u: "../images/instruments/rebec.webp" },
+    { n: "KOTO", u: "../images/instruments/koto.webp" },
+    { n: "SHAMISEN", u: "../images/instruments/shamisen.webp" },
+    { n: "GUZHENG", u: "../images/instruments/guzheng.webp" },
+    { n: "PAN FLUTE", u: "../images/instruments/pan-flute.webp" },
+    { n: "OUD", u: "../images/instruments/oud.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "CORNET", u: "../images/instruments/cornet.webp" },
+    { n: "FINGER CYMBALS", u: "../images/instruments/finger-cymbals.webp" },
+    { n: "DJEMBE", u: "../images/instruments/djembe.webp" },
+    { n: "LIRA", u: "../images/instruments/lira.webp" },
+    { n: "VIOL", u: "../images/instruments/viol.webp" },
+    { n: "PENNYWHISTLE", u: "../images/instruments/pennywhistle.webp" },
+    { n: "GUSLI", u: "../images/instruments/gusli.webp" },
+    { n: "CRWTH", u: "../images/instruments/crwth.webp" },
+    { n: "VIOLS", u: "../images/instruments/viols.webp" },
+    { n: "HANDPAN", u: "../images/instruments/handpan.webp" },
+];
+if (typeof window !== 'undefined') window.instrumentsData = instrumentsData;
