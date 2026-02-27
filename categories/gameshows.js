@@ -1,0 +1,73 @@
+// Gameshows — images in images/gameshows/
+const gameshowsData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "WHEEL OF FORTUNE", u: "../images/gameshows/wheel-of-fortune.jpg" },
+    { n: "JEOPARDY!", u: "../images/gameshows/jeopardy.jpg" },
+    { n: "THE PRICE IS RIGHT", u: "../images/gameshows/the-price-is-right.webp" },
+    { n: "DEAL OR NO DEAL", u: "../images/gameshows/deal-or-no-deal.jpg" },
+    { n: "WHO WANTS TO BE A MILLIONAIRE", u: "../images/gameshows/who-wants-to-be-a-millionaire.jpg" },
+    { n: "SURVIVOR", u: "../images/gameshows/survivor.webp" },
+    { n: "THE AMAZING RACE", u: "../images/gameshows/the-amazing-race.webp" },
+    { n: "AMERICAN IDOL", u: "../images/gameshows/american-idol.jpg" },
+    { n: "FAMILY FEUD", u: "../images/gameshows/family-feud.jpg" },
+    { n: "ARE YOU SMARTER THAN A 5TH GRADER", u: "../images/gameshows/are-you-smarter-than-a-5th-grader.jpg" },
+    { n: "THE BACHELOR", u: "../images/gameshows/the-bachelor.jpeg" },
+    { n: "AMERICAS GOT TALENT", u: "../images/gameshows/americas-got-talent.jpeg" },
+    { n: "THE VOICE", u: "../images/gameshows/the-voice.jpg" },
+    { n: "BIG BROTHER", u: "../images/gameshows/big-brother.jpg" },
+    { n: "DANCING WITH THE STARS", u: "../images/gameshows/dancing-with-the-stars.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "FEAR FACTOR", u: "../images/gameshows/fear-factor.jpg" },
+    { n: "WIPEOUT", u: "../images/gameshows/wipeout.webp" },
+    { n: "THE FLOOR", u: "../images/gameshows/the-floor.jpg" },
+    { n: "HELL'S KITCHEN", u: "../images/gameshows/hells-kitchen.webp" },
+    { n: "THE MASKED SINGER", u: "../images/gameshows/the-masked-singer.webp" },
+    { n: "RUPAUL'S DRAG RACE", u: "../images/gameshows/rupauls-drag-race.jpg" },
+    { n: "CHOPPED", u: "../images/gameshows/chopped.jpeg" },
+    { n: "THE WEAKEST LINK", u: "../images/gameshows/the-weakest-link.webp" },
+    { n: "MASTERCHEF", u: "../images/gameshows/masterchef.avif" },
+    { n: "SHARK TANK", u: "../images/gameshows/shark-tank.webp" },
+    { n: "LOVE ISLAND", u: "../images/gameshows/love-island.jpeg" },
+    { n: "THE MOLE", u: "../images/gameshows/the-mole.jpg" },
+    { n: "MINUTE TO WIN IT", u: "../images/gameshows/minute-to-win-it.webp" },
+    { n: "TOTAL DRAMA", u: "../images/gameshows/total-drama.webp" },
+    { n: "CASH CAB", u: "../images/gameshows/cash-cab.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "PRESS YOUR LUCK", u: "../images/gameshows/press-your-luck.jpg" },
+    { n: "THE CHASE", u: "../images/gameshows/the-chase.webp" },
+    { n: "LET'S MAKE A DEAL", u: "../images/gameshows/lets-make-a-deal.png" },
+    { n: "THE CIRCLE", u: "../images/gameshows/the-circle.jpg" },
+    { n: "ALONE", u: "../images/gameshows/alone.jpg" },
+    { n: "NAKED AND AFRAID", u: "../images/gameshows/naked-and-afraid.webp" },
+    { n: "THE TRAITORS", u: "../images/gameshows/the-traitors.jpeg" },
+    { n: "LEGENDS OF THE HIDDEN TEMPLE", u: "../images/gameshows/legends-of-the-hidden-temple.webp" },
+    { n: "DOUBLE DARE", u: "../images/gameshows/double-dare.jpg" },
+    { n: "NAME THAT TUNE", u: "../images/gameshows/name-that-tune.jpg" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "THE $100,000 PYRAMID", u: "../images/gameshows/the-100000-pyramid.jpg" },
+    { n: "SUPERMARKET SWEEP", u: "../images/gameshows/supermarket-sweep.jpg" },
+    { n: "INK MASTER", u: "../images/gameshows/ink-master.jpeg" },
+    { n: "MATCH GAME", u: "../images/gameshows/match-game.jpg" },
+    { n: "FIGURE IT OUT", u: "../images/gameshows/figure-it-out.webp" },
+    { n: "GUTS", u: "../images/gameshows/guts.webp" },
+    { n: "TO TELL THE TRUTH", u: "../images/gameshows/to-tell-the-truth.avif" },
+    { n: "SHOP TIL YOU DROP", u: "../images/gameshows/shop-til-you-drop.webp" },
+    { n: "THE JOKER'S WILD", u: "../images/gameshows/the-jokers-wild.jpg" },
+    { n: "AMERICAN NINJA WARRIOR", u: "../images/gameshows/american-ninja-warrior.jpeg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "IMPRACTICAL JOKERS", u: "../images/gameshows/impractical-jokers.jpg" },
+    // { n: "THE BACHELORETTE", u: "../images/gameshows/the-bachelorette.jpg" },
+    // { n: "THE WALL", u: "../images/gameshows/the-wall.jpg" },
+    // { n: "1 VS 100", u: "../images/gameshows/1-vs-100.jpg" },
+    // { n: "HOLLYWOOD GAME NIGHT", u: "../images/gameshows/hollywood-game-night.jpg" },
+    // { n: "BEAT SHAZAM", u: "../images/gameshows/beat-shazam.jpg" },
+    // { n: "REMOTE CONTROL", u: "../images/gameshows/remote-control.jpg" },
+    // { n: "SPLIT SECOND", u: "../images/gameshows/split-second.jpg" },
+    // { n: "LINGO", u: "../images/gameshows/lingo.jpg" },
+    // { n: "PASSWORD", u: "../images/gameshows/password.jpg" },
+];
+if (typeof window !== 'undefined') window.gameshowsData = gameshowsData;

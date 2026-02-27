@@ -8,14 +8,14 @@ const historicEventsData = [
     { n: "D-DAY", u: "../images/historic-events/d-day.jpg" },
     { n: "WRIGHT BROTHERS FIRST FLIGHT", u: "../images/historic-events/wright-brothers-first-flight.jpg" },
     { n: "HIROSHIMA", u: "../images/historic-events/hiroshima.jpg" },
-    { n: "MLK I HAVE A DREAM", u: "../images/historic-events/mlk-i-have-a-dream.jpg" },
+    { n: "EMANCIPATION PROCLAMATION", u: "../images/historic-events/emancipation-proclamation.jpg" },
     { n: "PEARL HARBOR", u: "../images/historic-events/pearl-harbor.jpg" },
     { n: "ASSASSINATION OF JFK", u: "../images/historic-events/assassination-of-jfk.jpg" },
     { n: "BOSTON TEA PARTY", u: "../images/historic-events/boston-tea-party.jpg" },
-    { n: "GREAT WALL OF CHINA", u: "../images/historic-events/great-wall-of-china.jpg" },
+    { n: "CHALLENGER DISASTER", u: "../images/historic-events/challenger-disaster.jpg" },
     { n: "COLUMBUS ARRIVING IN AMERICA", u: "../images/historic-events/columbus-arriving-in-america.jpg" },
     { n: "RAISING THE FLAG ON IWO JIMA", u: "../images/historic-events/raising-the-flag-on-iwo-jima.jpg" },
-    { n: "CONSTRUCTION OF THE PYRAMIDS", u: "../images/historic-events/construction-of-the-pyramids.jpg" },
+    { n: "BATTLE OF WATERLOO", u: "../images/historic-events/battle-of-waterloo.jpg" },
 
     // Tier 2 — Familiar (16–30)
     { n: "HINDENBURG DISASTER", u: "../images/historic-events/hindenburg-disaster.jpg" },

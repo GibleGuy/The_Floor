@@ -18,5 +18,6 @@ const CATEGORY_REGISTRY = [
     { key: 'golf', label: 'Golf', script: 'golf.js', global: 'golfData', gibleOnly: true },
     { key: 'girl-groups', label: 'Girl Groups', script: 'girl-groups.js', global: 'girlGroupsData', gibleOnly: true },
     { key: 'historic-events', label: 'Historic Events', script: 'historic-events.js', global: 'historicEventsData', gibleOnly: true },
+    { key: 'gameshows', label: 'Gameshows', script: 'gameshows.js', global: 'gameshowsData', gibleOnly: true },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;
