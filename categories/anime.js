@@ -1,0 +1,73 @@
+// Anime — images in images/anime/
+const animeData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "DRAGON BALL Z", u: "../images/anime/dragon-ball-z.webp" },
+    { n: "NARUTO", u: "../images/anime/naruto.webp" },
+    { n: "ONE PIECE", u: "../images/anime/one-piece.webp" },
+    { n: "ATTACK ON TITAN", u: "../images/anime/attack-on-titan.webp" },
+    { n: "SAILOR MOON", u: "../images/anime/sailor-moon.webp" },
+    { n: "DEMON SLAYER", u: "../images/anime/demon-slayer.webp" },
+    { n: "DEATH NOTE", u: "../images/anime/death-note.webp" },
+    { n: "MY HERO ACADEMIA", u: "../images/anime/my-hero-academia.webp" },
+    { n: "SPIRITED AWAY", u: "../images/anime/spirited-away.webp" },
+    { n: "ONE PUNCH MAN", u: "../images/anime/one-punch-man.webp" },
+    { n: "JUJUTSU KAISEN", u: "../images/anime/jujutsu-kaisen.webp" },
+    { n: "FULLMETAL ALCHEMIST", u: "../images/anime/fullmetal-alchemist.webp" },
+    { n: "SWORD ART ONLINE", u: "../images/anime/sword-art-online.webp" },
+    { n: "SPY X FAMILY", u: "../images/anime/spy-x-family.webp" },
+    { n: "TOKYO GHOUL", u: "../images/anime/tokyo-ghoul.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "HUNTER X HUNTER", u: "../images/anime/hunter-x-hunter.webp" },
+    { n: "BLEACH", u: "../images/anime/bleach.webp" },
+    { n: "COWBOY BEBOP", u: "../images/anime/cowboy-bebop.webp" },
+    { n: "NEON GENESIS EVANGELION", u: "../images/anime/neon-genesis-evangelion.webp" },
+    { n: "MY NEIGHBOR TOTORO", u: "../images/anime/my-neighbor-totoro.webp" },
+    { n: "CHAINSAW MAN", u: "../images/anime/chainsaw-man.webp" },
+    { n: "FAIRY TAIL", u: "../images/anime/fairy-tail.webp" },
+    { n: "BLACK CLOVER", u: "../images/anime/black-clover.webp" },
+    { n: "INUYASHA", u: "../images/anime/inuyasha.webp" },
+    { n: "AKIRA", u: "../images/anime/akira.webp" },
+    { n: "PRINCESS MONONOKE", u: "../images/anime/princess-mononoke.webp" },
+    { n: "MOB PSYCHO 100", u: "../images/anime/mob-psycho-100.webp" },
+    { n: "HAIKYUU", u: "../images/anime/haikyuu.webp" },
+    { n: "BLUE LOCK", u: "../images/anime/blue-lock.webp" },
+    { n: "SOLO LEVELING", u: "../images/anime/solo-leveling.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "VINLAND SAGA", u: "../images/anime/vinland-saga.webp" },
+    { n: "STEINS;GATE", u: "../images/anime/steins-gate.webp" },
+    { n: "FIRE FORCE", u: "../images/anime/fire-force.webp" },
+    { n: "CODE GEASS", u: "../images/anime/code-geass.webp" },
+    { n: "RE:ZERO", u: "../images/anime/re-zero.webp" },
+    { n: "DR. STONE", u: "../images/anime/dr-stone.webp" },
+    { n: "SOUL EATER", u: "../images/anime/soul-eater.webp" },
+    { n: "TRIGUN", u: "../images/anime/trigun.webp" },
+    { n: "FRUITS BASKET", u: "../images/anime/fruits-basket.webp" },
+    { n: "BERSERK", u: "../images/anime/berserk.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "GHOST IN THE SHELL", u: "../images/anime/ghost-in-the-shell.webp" },
+    { n: "ERASED", u: "../images/anime/erased.webp" },
+    { n: "PARASYTE", u: "../images/anime/parasyte.webp" },
+    { n: "MADE IN ABYSS", u: "../images/anime/made-in-abyss.webp" },
+    { n: "PSYCHO-PASS", u: "../images/anime/psycho-pass.webp" },
+    { n: "SAMURAI CHAMPLOO", u: "../images/anime/samurai-champloo.webp" },
+    { n: "MONSTER", u: "../images/anime/monster.webp" },
+    { n: "SERIAL EXPERIMENTS LAIN", u: "../images/anime/serial-experiments-lain.webp" },
+    { n: "PAPRIKA", u: "../images/anime/paprika.webp" },
+    { n: "PERFECT BLUE", u: "../images/anime/perfect-blue.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "GURREN LAGANN", u: "../images/anime/gurren-lagann.webp" },
+    { n: "FLCL", u: "../images/anime/flcl.webp" },
+    { n: "CLAYMORE", u: "../images/anime/claymore.webp" },
+    { n: "DURARARA", u: "../images/anime/durarara.webp" },
+    { n: "MUSHISHI", u: "../images/anime/mushishi.webp" },
+    { n: "DARKER THAN BLACK", u: "../images/anime/darker-than-black.webp" },
+    { n: "ELFEN LIED", u: "../images/anime/elfen-lied.webp" },
+    { n: "LEGEND OF THE GALACTIC HEROES", u: "../images/anime/legend-of-the-galactic-heroes.webp" },
+    { n: "TEXHNOLYZE", u: "../images/anime/texhnolyze.webp" },
+    { n: "GOLDEN KAMUY", u: "../images/anime/golden-kamuy.webp" },
+];
+if (typeof window !== 'undefined') window.animeData = animeData;

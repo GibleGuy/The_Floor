@@ -21,5 +21,14 @@ const CATEGORY_REGISTRY = [
     { key: 'instruments', label: 'Instruments', script: 'instruments.js', global: 'instrumentsData' },
     { key: 'gameshows', label: 'Gameshows', script: 'gameshows.js', global: 'gameshowsData', gibleOnly: true },
     { key: 'taylor-swift', label: 'Taylor Swift', script: 'taylor-swift.js', global: 'taylorSwiftData', gibleOnly: true },
+    { key: 'logos', label: 'Logos', script: 'logos.js', global: 'logosData', gibleOnly: true },
+    { key: 'food', label: 'Food', script: 'food.js', global: 'foodData', gibleOnly: true },
+    { key: 'anime', label: 'Anime', script: 'anime.js', global: 'animeData', gibleOnly: true },
+    { key: 'minecraft', label: 'Minecraft', script: 'minecraft.js', global: 'minecraftData', gibleOnly: true },
+    { key: 'dolls', label: 'Dolls', script: 'dolls.js', global: 'dollsData', gibleOnly: true },
+    { key: 'nintendo', label: 'Nintendo', script: 'nintendo.js', global: 'nintendoData', gibleOnly: true },
+    { key: 'retro-video-games', label: 'Retro Video Games', script: 'retro-video-games.js', global: 'retroVideoGamesData', gibleOnly: true },
+    { key: 'college-logos', label: 'College Logos', script: 'college-logos.js', global: 'collegeLogosData', gibleOnly: true },
+    { key: 'sports-logos', label: 'Sports Logos', script: 'sports-logos.js', global: 'sportsLogosData', gibleOnly: true },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;

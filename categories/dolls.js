@@ -1,0 +1,73 @@
+// Dolls — images in images/dolls/
+const dollsData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "BARBIE", u: "../images/dolls/barbie.webp" },
+    { n: "CABBAGE PATCH KIDS", u: "../images/dolls/cabbage-patch-kids.webp" },
+    { n: "RAGGEDY ANN", u: "../images/dolls/raggedy-ann.webp" },
+    { n: "MATRYOSHKA", u: "../images/dolls/matryoshka.webp" },
+    { n: "KEN", u: "../images/dolls/ken.webp" },
+    { n: "TROLL DOLL", u: "../images/dolls/troll-doll.webp" },
+    { n: "AMERICAN GIRL", u: "../images/dolls/american-girl.webp" },
+    { n: "BRATZ", u: "../images/dolls/bratz.webp" },
+    { n: "G.I. JOE", u: "../images/dolls/gi-joe.webp" },
+    { n: "MR. POTATO HEAD", u: "../images/dolls/mr-potato-head.webp" },
+    { n: "NUTCRACKER", u: "../images/dolls/nutcracker.webp" },
+    { n: "LOL SURPRISE", u: "../images/dolls/lol-surprise.webp" },
+    { n: "POLLY POCKET", u: "../images/dolls/polly-pocket.webp" },
+    { n: "STRAWBERRY SHORTCAKE", u: "../images/dolls/strawberry-shortcake.webp" },
+    { n: "BABY ALIVE", u: "../images/dolls/baby-alive.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "MONSTER HIGH", u: "../images/dolls/monster-high.webp" },
+    { n: "RAGGEDY ANDY", u: "../images/dolls/raggedy-andy.webp" },
+    { n: "FURBY", u: "../images/dolls/furby.webp" },
+    { n: "STRETCH ARMSTRONG", u: "../images/dolls/stretch-armstrong.webp" },
+    { n: "TICKLE ME ELMO", u: "../images/dolls/tickle-me-elmo.webp" },
+    { n: "TEDDY RUXPIN", u: "../images/dolls/teddy-ruxpin.webp" },
+    { n: "BOBBLEHEAD", u: "../images/dolls/bobblehead.webp" },
+    { n: "KEWPIE", u: "../images/dolls/kewpie.webp" },
+    { n: "CHATTY CATHY", u: "../images/dolls/chatty-cathy.webp" },
+    { n: "KOKESHI", u: "../images/dolls/kokeshi.webp" },
+    { n: "MARIONETTE", u: "../images/dolls/marionette.webp" },
+    { n: "MY BUDDY", u: "../images/dolls/my-buddy.webp" },
+    { n: "CHUCKY", u: "../images/dolls/chucky.webp" },
+    { n: "LALALOOPSY", u: "../images/dolls/lalaloopsy.webp" },
+    { n: "RAINBOW HIGH", u: "../images/dolls/rainbow-high.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "BLYTHE", u: "../images/dolls/blythe.webp" },
+    { n: "ANNABELLE", u: "../images/dolls/annabelle.webp" },
+    { n: "MADAME ALEXANDER", u: "../images/dolls/madame-alexander.webp" },
+    { n: "HINA DOLL", u: "../images/dolls/hina-doll.webp" },
+    { n: "EVER AFTER HIGH", u: "../images/dolls/ever-after-high.webp" },
+    { n: "VENTRILOQUIST DUMMY", u: "../images/dolls/ventriloquist-dummy.webp" },
+    { n: "CORN HUSK DOLL", u: "../images/dolls/corn-husk-doll.webp" },
+    { n: "BETSY WETSY", u: "../images/dolls/betsy-wetsy.webp" },
+    { n: "DARUMA", u: "../images/dolls/daruma.webp" },
+    { n: "PRECIOUS MOMENTS", u: "../images/dolls/precious-moments.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "PULLIP", u: "../images/dolls/pullip.webp" },
+    { n: "KACHINA DOLL", u: "../images/dolls/kachina-doll.webp" },
+    { n: "WORRY DOLL", u: "../images/dolls/worry-doll.webp" },
+    { n: "BALL-JOINTED DOLL", u: "../images/dolls/ball-jointed-doll.webp" },
+    { n: "GINNY DOLL", u: "../images/dolls/ginny-doll.webp" },
+    { n: "FASHION ROYALTY", u: "../images/dolls/fashion-royalty.webp" },
+    { n: "PAPER DOLL", u: "../images/dolls/paper-doll.webp" },
+    { n: "WAYANG", u: "../images/dolls/wayang.webp" },
+    { n: "LIDDLE KIDDLES", u: "../images/dolls/liddle-kiddles.webp" },
+    { n: "BUNRAKU", u: "../images/dolls/bunraku.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "SKIPPER", u: "../images/dolls/skipper.webp" },
+    { n: "DAWN DOLL", u: "../images/dolls/dawn-doll.webp" },
+    { n: "FLATSY", u: "../images/dolls/flatsy.webp" },
+    { n: "FINGER PUPPET", u: "../images/dolls/finger-puppet.webp" },
+    { n: "NANCY DOLL", u: "../images/dolls/nancy-doll.webp" },
+    { n: "TAMMY DOLL", u: "../images/dolls/tammy-doll.webp" },
+    { n: "GOTZ DOLL", u: "../images/dolls/gotz-doll.webp" },
+    { n: "PARIAN DOLL", u: "../images/dolls/parian-doll.webp" },
+    { n: "KATHE KRUSE", u: "../images/dolls/kathe-kruse.webp" },
+    { n: "SHADOW PUPPET", u: "../images/dolls/shadow-puppet.webp" },
+];
+if (typeof window !== 'undefined') window.dollsData = dollsData;

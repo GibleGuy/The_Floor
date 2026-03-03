@@ -1,0 +1,73 @@
+// Retro Video Games — images in images/retro-video-games/
+const retroVideoGamesData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "PAC-MAN", u: "../images/retro-video-games/pac-man.webp" },
+    { n: "TETRIS", u: "../images/retro-video-games/tetris.webp" },
+    { n: "SUPER MARIO BROS", u: "../images/retro-video-games/super-mario-bros.webp" },
+    { n: "SPACE INVADERS", u: "../images/retro-video-games/space-invaders.webp" },
+    { n: "DONKEY KONG", u: "../images/retro-video-games/donkey-kong.webp" },
+    { n: "SONIC THE HEDGEHOG", u: "../images/retro-video-games/sonic-the-hedgehog.webp" },
+    { n: "PONG", u: "../images/retro-video-games/pong.webp" },
+    { n: "STREET FIGHTER II", u: "../images/retro-video-games/street-fighter-ii.webp" },
+    { n: "THE LEGEND OF ZELDA", u: "../images/retro-video-games/the-legend-of-zelda.webp" },
+    { n: "MORTAL KOMBAT", u: "../images/retro-video-games/mortal-kombat.webp" },
+    { n: "MEGA MAN", u: "../images/retro-video-games/mega-man.webp" },
+    { n: "GALAGA", u: "../images/retro-video-games/galaga.webp" },
+    { n: "FROGGER", u: "../images/retro-video-games/frogger.webp" },
+    { n: "ASTEROIDS", u: "../images/retro-video-games/asteroids.webp" },
+    { n: "MS. PAC-MAN", u: "../images/retro-video-games/ms-pac-man.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "CONTRA", u: "../images/retro-video-games/contra.webp" },
+    { n: "DUCK HUNT", u: "../images/retro-video-games/duck-hunt.webp" },
+    { n: "CENTIPEDE", u: "../images/retro-video-games/centipede.webp" },
+    { n: "EXCITEBIKE", u: "../images/retro-video-games/excitebike.webp" },
+    { n: "BOMBERMAN", u: "../images/retro-video-games/bomberman.webp" },
+    { n: "DOUBLE DRAGON", u: "../images/retro-video-games/double-dragon.webp" },
+    { n: "METAL SLUG", u: "../images/retro-video-games/metal-slug.webp" },
+    { n: "CASTLEVANIA", u: "../images/retro-video-games/castlevania.webp" },
+    { n: "METROID", u: "../images/retro-video-games/metroid.webp" },
+    { n: "DIG DUG", u: "../images/retro-video-games/dig-dug.webp" },
+    { n: "PAPERBOY", u: "../images/retro-video-games/paperboy.webp" },
+    { n: "PUNCH-OUT!!", u: "../images/retro-video-games/punch-out.webp" },
+    { n: "FINAL FANTASY", u: "../images/retro-video-games/final-fantasy.webp" },
+    { n: "BURGERTIME", u: "../images/retro-video-games/burgertime.webp" },
+    { n: "Q*BERT", u: "../images/retro-video-games/qbert.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "GHOSTS 'N GOBLINS", u: "../images/retro-video-games/ghosts-n-goblins.webp" },
+    { n: "R-TYPE", u: "../images/retro-video-games/r-type.webp" },
+    { n: "DEFENDER", u: "../images/retro-video-games/defender.webp" },
+    { n: "BATTLETOADS", u: "../images/retro-video-games/battletoads.webp" },
+    { n: "EARTHBOUND", u: "../images/retro-video-games/earthbound.webp" },
+    { n: "CHRONO TRIGGER", u: "../images/retro-video-games/chrono-trigger.webp" },
+    { n: "GRADIUS", u: "../images/retro-video-games/gradius.webp" },
+    { n: "GOLDEN AXE", u: "../images/retro-video-games/golden-axe.webp" },
+    { n: "BUBBLE BOBBLE", u: "../images/retro-video-games/bubble-bobble.webp" },
+    { n: "SPY HUNTER", u: "../images/retro-video-games/spy-hunter.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "PITFALL", u: "../images/retro-video-games/pitfall.webp" },
+    { n: "TEMPEST", u: "../images/retro-video-games/tempest.webp" },
+    { n: "JOUST", u: "../images/retro-video-games/joust.webp" },
+    { n: "MOON PATROL", u: "../images/retro-video-games/moon-patrol.webp" },
+    { n: "ROBOTRON 2084", u: "../images/retro-video-games/robotron-2084.webp" },
+    { n: "ZAXXON", u: "../images/retro-video-games/zaxxon.webp" },
+    { n: "MISSILE COMMAND", u: "../images/retro-video-games/missile-command.webp" },
+    { n: "RIVER RAID", u: "../images/retro-video-games/river-raid.webp" },
+    { n: "BERZERK", u: "../images/retro-video-games/berzerk.webp" },
+    { n: "ADVENTURE", u: "../images/retro-video-games/adventure.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "GAUNTLET", u: "../images/retro-video-games/gauntlet.webp" },
+    { n: "RAMPAGE", u: "../images/retro-video-games/rampage.webp" },
+    { n: "ELEVATOR ACTION", u: "../images/retro-video-games/elevator-action.webp" },
+    { n: "KUNG-FU MASTER", u: "../images/retro-video-games/kung-fu-master.webp" },
+    { n: "ALTERED BEAST", u: "../images/retro-video-games/altered-beast.webp" },
+    { n: "SHINOBI", u: "../images/retro-video-games/shinobi.webp" },
+    { n: "SOLOMON'S KEY", u: "../images/retro-video-games/solomons-key.webp" },
+    { n: "ICE CLIMBER", u: "../images/retro-video-games/ice-climber.webp" },
+    { n: "BALLOON FIGHT", u: "../images/retro-video-games/balloon-fight.webp" },
+    { n: "MAPPY", u: "../images/retro-video-games/mappy.webp" },
+];
+if (typeof window !== 'undefined') window.retroVideoGamesData = retroVideoGamesData;

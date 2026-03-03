@@ -1,0 +1,73 @@
+// Sports Logos — images in images/sports-logos/
+const sportsLogosData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "OLYMPICS", u: "../images/sports-logos/olympics.webp" },
+    { n: "DALLAS COWBOYS", u: "../images/sports-logos/dallas-cowboys.webp" },
+    { n: "NEW YORK YANKEES", u: "../images/sports-logos/new-york-yankees.webp" },
+    { n: "CHICAGO BULLS", u: "../images/sports-logos/chicago-bulls.webp" },
+    { n: "LA LAKERS", u: "../images/sports-logos/la-lakers.webp" },
+    { n: "GREEN BAY PACKERS", u: "../images/sports-logos/green-bay-packers.webp" },
+    { n: "PITTSBURGH STEELERS", u: "../images/sports-logos/pittsburgh-steelers.webp" },
+    { n: "NEW ENGLAND PATRIOTS", u: "../images/sports-logos/new-england-patriots.webp" },
+    { n: "BOSTON CELTICS", u: "../images/sports-logos/boston-celtics.webp" },
+    { n: "PHILADELPHIA EAGLES", u: "../images/sports-logos/philadelphia-eagles.webp" },
+    { n: "GOLDEN STATE WARRIORS", u: "../images/sports-logos/golden-state-warriors.webp" },
+    { n: "MANCHESTER UNITED", u: "../images/sports-logos/manchester-united.webp" },
+    { n: "REAL MADRID", u: "../images/sports-logos/real-madrid.webp" },
+    { n: "TORONTO RAPTORS", u: "../images/sports-logos/toronto-raptors.webp" },
+    { n: "MIAMI HEAT", u: "../images/sports-logos/miami-heat.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "SAN FRANCISCO 49ERS", u: "../images/sports-logos/san-francisco-49ers.webp" },
+    { n: "INDIANAPOLIS COLTS", u: "../images/sports-logos/indianapolis-colts.webp" },
+    { n: "DETROIT RED WINGS", u: "../images/sports-logos/detroit-red-wings.webp" },
+    { n: "CHICAGO BLACKHAWKS", u: "../images/sports-logos/chicago-blackhawks.webp" },
+    { n: "ST. LOUIS CARDINALS", u: "../images/sports-logos/st-louis-cardinals.webp" },
+    { n: "MINNESOTA VIKINGS", u: "../images/sports-logos/minnesota-vikings.webp" },
+    { n: "NEW ORLEANS SAINTS", u: "../images/sports-logos/new-orleans-saints.webp" },
+    { n: "FC BARCELONA", u: "../images/sports-logos/fc-barcelona.webp" },
+    { n: "MONTREAL CANADIENS", u: "../images/sports-logos/montreal-canadiens.webp" },
+    { n: "BOSTON RED SOX", u: "../images/sports-logos/boston-red-sox.webp" },
+    { n: "SEATTLE SEAHAWKS", u: "../images/sports-logos/seattle-seahawks.webp" },
+    { n: "BALTIMORE RAVENS", u: "../images/sports-logos/baltimore-ravens.webp" },
+    { n: "PITTSBURGH PENGUINS", u: "../images/sports-logos/pittsburgh-penguins.webp" },
+    { n: "TAMPA BAY BUCCANEERS", u: "../images/sports-logos/tampa-bay-buccaneers.webp" },
+    { n: "BAYERN MUNICH", u: "../images/sports-logos/bayern-munich.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "MILWAUKEE BUCKS", u: "../images/sports-logos/milwaukee-bucks.webp" },
+    { n: "PORTLAND TRAIL BLAZERS", u: "../images/sports-logos/portland-trail-blazers.webp" },
+    { n: "DETROIT LIONS", u: "../images/sports-logos/detroit-lions.webp" },
+    { n: "JUVENTUS", u: "../images/sports-logos/juventus.webp" },
+    { n: "TOTTENHAM HOTSPUR", u: "../images/sports-logos/tottenham-hotspur.webp" },
+    { n: "CHARLOTTE HORNETS", u: "../images/sports-logos/charlotte-hornets.webp" },
+    { n: "ATLANTA FALCONS", u: "../images/sports-logos/atlanta-falcons.webp" },
+    { n: "ARIZONA CARDINALS", u: "../images/sports-logos/arizona-cardinals.webp" },
+    { n: "CELTIC FC", u: "../images/sports-logos/celtic-fc.webp" },
+    { n: "INTER MILAN", u: "../images/sports-logos/inter-milan.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "BORUSSIA DORTMUND", u: "../images/sports-logos/borussia-dortmund.webp" },
+    { n: "ATLETICO MADRID", u: "../images/sports-logos/atletico-madrid.webp" },
+    { n: "AJAX", u: "../images/sports-logos/ajax.webp" },
+    { n: "AC MILAN", u: "../images/sports-logos/ac-milan.webp" },
+    { n: "PSG", u: "../images/sports-logos/psg.webp" },
+    { n: "NAPOLI", u: "../images/sports-logos/napoli.webp" },
+    { n: "COLUMBUS BLUE JACKETS", u: "../images/sports-logos/columbus-blue-jackets.webp" },
+    { n: "GALATASARAY", u: "../images/sports-logos/galatasaray.webp" },
+    { n: "BENFICA", u: "../images/sports-logos/benfica.webp" },
+    { n: "SPORTING LISBON", u: "../images/sports-logos/sporting-lisbon.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "OLYMPIQUE MARSEILLE", u: "../images/sports-logos/olympique-marseille.webp" },
+    { n: "PORTO", u: "../images/sports-logos/porto.webp" },
+    { n: "RANGERS FC", u: "../images/sports-logos/rangers-fc.webp" },
+    { n: "FEYENOORD", u: "../images/sports-logos/feyenoord.webp" },
+    { n: "MINNESOTA TIMBERWOLVES", u: "../images/sports-logos/minnesota-timberwolves.webp" },
+    { n: "SAN ANTONIO SPURS", u: "../images/sports-logos/san-antonio-spurs.webp" },
+    { n: "JACKSONVILLE JAGUARS", u: "../images/sports-logos/jacksonville-jaguars.webp" },
+    { n: "CAROLINA PANTHERS", u: "../images/sports-logos/carolina-panthers.webp" },
+    { n: "TENNESSEE TITANS", u: "../images/sports-logos/tennessee-titans.webp" },
+    { n: "SACRAMENTO KINGS", u: "../images/sports-logos/sacramento-kings.webp" },
+];
+if (typeof window !== 'undefined') window.sportsLogosData = sportsLogosData;

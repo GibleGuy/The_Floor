@@ -1,0 +1,73 @@
+// Nintendo — images in images/nintendo/
+const nintendoData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "MARIO", u: "../images/nintendo/mario.webp" },
+    { n: "SUPER MUSHROOM", u: "../images/nintendo/super-mushroom.webp" },
+    { n: "GAME BOY", u: "../images/nintendo/game-boy.webp" },
+    { n: "MASTER SWORD", u: "../images/nintendo/master-sword.webp" },
+    { n: "FIRE FLOWER", u: "../images/nintendo/fire-flower.webp" },
+    { n: "LINK", u: "../images/nintendo/link.webp" },
+    { n: "NINTENDO SWITCH", u: "../images/nintendo/nintendo-switch.webp" },
+    { n: "QUESTION BLOCK", u: "../images/nintendo/question-block.webp" },
+    { n: "TRIFORCE", u: "../images/nintendo/triforce.webp" },
+    { n: "KIRBY", u: "../images/nintendo/kirby.webp" },
+    { n: "SUPER STAR", u: "../images/nintendo/super-star.webp" },
+    { n: "NES CONTROLLER", u: "../images/nintendo/nes-controller.webp" },
+    { n: "WII REMOTE", u: "../images/nintendo/wii-remote.webp" },
+    { n: "GREEN SHELL", u: "../images/nintendo/green-shell.webp" },
+    { n: "WARP PIPE", u: "../images/nintendo/warp-pipe.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "NINTENDO 64", u: "../images/nintendo/nintendo-64.webp" },
+    { n: "HYLIAN SHIELD", u: "../images/nintendo/hylian-shield.webp" },
+    { n: "N64 CONTROLLER", u: "../images/nintendo/n64-controller.webp" },
+    { n: "GAMECUBE", u: "../images/nintendo/gamecube.webp" },
+    { n: "BLUE SHELL", u: "../images/nintendo/blue-shell.webp" },
+    { n: "SUPER NINTENDO", u: "../images/nintendo/super-nintendo.webp" },
+    { n: "AMIIBO", u: "../images/nintendo/amiibo.webp" },
+    { n: "JOY-CON", u: "../images/nintendo/joy-con.webp" },
+    { n: "BANANA PEEL", u: "../images/nintendo/banana-peel.webp" },
+    { n: "GAME BOY ADVANCE", u: "../images/nintendo/game-boy-advance.webp" },
+    { n: "SMASH BALL", u: "../images/nintendo/smash-ball.webp" },
+    { n: "NINTENDO DS", u: "../images/nintendo/nintendo-ds.webp" },
+    { n: "1-UP MUSHROOM", u: "../images/nintendo/1-up-mushroom.webp" },
+    { n: "GAMECUBE CONTROLLER", u: "../images/nintendo/gamecube-controller.webp" },
+    { n: "COIN", u: "../images/nintendo/coin.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "R.O.B.", u: "../images/nintendo/rob.webp" },
+    { n: "OCARINA", u: "../images/nintendo/ocarina.webp" },
+    { n: "POWER GLOVE", u: "../images/nintendo/power-glove.webp" },
+    { n: "NES ZAPPER", u: "../images/nintendo/nes-zapper.webp" },
+    { n: "GAME & WATCH", u: "../images/nintendo/game-and-watch.webp" },
+    { n: "POW BLOCK", u: "../images/nintendo/pow-block.webp" },
+    { n: "SUPER SCOPE", u: "../images/nintendo/super-scope.webp" },
+    { n: "WII U", u: "../images/nintendo/wii-u.webp" },
+    { n: "STAR ROD", u: "../images/nintendo/star-rod.webp" },
+    { n: "NINTENDO 3DS", u: "../images/nintendo/nintendo-3ds.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "VIRTUAL BOY", u: "../images/nintendo/virtual-boy.webp" },
+    { n: "FAMICOM", u: "../images/nintendo/famicom.webp" },
+    { n: "GAME BOY CAMERA", u: "../images/nintendo/game-boy-camera.webp" },
+    { n: "GAME BOY PRINTER", u: "../images/nintendo/game-boy-printer.webp" },
+    { n: "NINTENDO LABO", u: "../images/nintendo/nintendo-labo.webp" },
+    { n: "HOOKSHOT", u: "../images/nintendo/hookshot.webp" },
+    { n: "E-READER", u: "../images/nintendo/e-reader.webp" },
+    { n: "GAME BOY MICRO", u: "../images/nintendo/game-boy-micro.webp" },
+    { n: "WARP STAR", u: "../images/nintendo/warp-star.webp" },
+    { n: "SUPER FAMICOM", u: "../images/nintendo/super-famicom.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "NUNCHUK", u: "../images/nintendo/nunchuk.webp" },
+    { n: "WII BALANCE BOARD", u: "../images/nintendo/wii-balance-board.webp" },
+    { n: "NINTENDO DSi", u: "../images/nintendo/nintendo-dsi.webp" },
+    { n: "GAME BOY COLOR", u: "../images/nintendo/game-boy-color.webp" },
+    { n: "SNES CONTROLLER", u: "../images/nintendo/snes-controller.webp" },
+    { n: "NINTENDO 2DS", u: "../images/nintendo/nintendo-2ds.webp" },
+    { n: "CLASSIC CONTROLLER", u: "../images/nintendo/classic-controller.webp" },
+    { n: "LINK CABLE", u: "../images/nintendo/link-cable.webp" },
+    { n: "PRO CONTROLLER", u: "../images/nintendo/pro-controller.webp" },
+    { n: "GAME BOY PLAYER", u: "../images/nintendo/game-boy-player.webp" },
+];
+if (typeof window !== 'undefined') window.nintendoData = nintendoData;

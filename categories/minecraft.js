@@ -1,0 +1,73 @@
+// Minecraft — images in images/minecraft/
+const minecraftData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "CREEPER", u: "../images/minecraft/creeper.webp" },
+    { n: "DIAMOND SWORD", u: "../images/minecraft/diamond-sword.webp" },
+    { n: "STEVE", u: "../images/minecraft/steve.webp" },
+    { n: "ZOMBIE", u: "../images/minecraft/zombie.webp" },
+    { n: "TNT", u: "../images/minecraft/tnt.webp" },
+    { n: "ENDER DRAGON", u: "../images/minecraft/ender-dragon.webp" },
+    { n: "CRAFTING TABLE", u: "../images/minecraft/crafting-table.webp" },
+    { n: "SKELETON", u: "../images/minecraft/skeleton.webp" },
+    { n: "DIAMOND ORE", u: "../images/minecraft/diamond-ore.webp" },
+    { n: "ENDERMAN", u: "../images/minecraft/enderman.webp" },
+    { n: "COW", u: "../images/minecraft/cow.webp" },
+    { n: "NETHER PORTAL", u: "../images/minecraft/nether-portal.webp" },
+    { n: "PIG", u: "../images/minecraft/pig.webp" },
+    { n: "SPIDER", u: "../images/minecraft/spider.webp" },
+    { n: "CHEST", u: "../images/minecraft/chest.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "IRON GOLEM", u: "../images/minecraft/iron-golem.webp" },
+    { n: "FURNACE", u: "../images/minecraft/furnace.webp" },
+    { n: "VILLAGER", u: "../images/minecraft/villager.webp" },
+    { n: "ENCHANTMENT TABLE", u: "../images/minecraft/enchantment-table.webp" },
+    { n: "WOLF", u: "../images/minecraft/wolf.webp" },
+    { n: "GHAST", u: "../images/minecraft/ghast.webp" },
+    { n: "OBSIDIAN", u: "../images/minecraft/obsidian.webp" },
+    { n: "SLIME", u: "../images/minecraft/slime.webp" },
+    { n: "BLAZE", u: "../images/minecraft/blaze.webp" },
+    { n: "BEACON", u: "../images/minecraft/beacon.webp" },
+    { n: "WITHER", u: "../images/minecraft/wither.webp" },
+    { n: "BEE", u: "../images/minecraft/bee.webp" },
+    { n: "SHEEP", u: "../images/minecraft/sheep.webp" },
+    { n: "CHICKEN", u: "../images/minecraft/chicken.webp" },
+    { n: "CAT", u: "../images/minecraft/cat.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "WARDEN", u: "../images/minecraft/warden.webp" },
+    { n: "OCEAN MONUMENT", u: "../images/minecraft/ocean-monument.webp" },
+    { n: "GUARDIAN", u: "../images/minecraft/guardian.webp" },
+    { n: "AXOLOTL", u: "../images/minecraft/axolotl.webp" },
+    { n: "ELYTRA", u: "../images/minecraft/elytra.webp" },
+    { n: "PIGLIN", u: "../images/minecraft/piglin.webp" },
+    { n: "SHULKER", u: "../images/minecraft/shulker.webp" },
+    { n: "PHANTOM", u: "../images/minecraft/phantom.webp" },
+    { n: "EVOKER", u: "../images/minecraft/evoker.webp" },
+    { n: "WITCH", u: "../images/minecraft/witch.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "ALLAY", u: "../images/minecraft/allay.webp" },
+    { n: "SCULK SENSOR", u: "../images/minecraft/sculk-sensor.webp" },
+    { n: "VEX", u: "../images/minecraft/vex.webp" },
+    { n: "STRIDER", u: "../images/minecraft/strider.webp" },
+    { n: "SNIFFER", u: "../images/minecraft/sniffer.webp" },
+    { n: "WOODLAND MANSION", u: "../images/minecraft/woodland-mansion.webp" },
+    { n: "BREEZE", u: "../images/minecraft/breeze.webp" },
+    { n: "ELDER GUARDIAN", u: "../images/minecraft/elder-guardian.webp" },
+    { n: "END CRYSTAL", u: "../images/minecraft/end-crystal.webp" },
+    { n: "WITHER SKELETON", u: "../images/minecraft/wither-skeleton.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "RAVAGER", u: "../images/minecraft/ravager.webp" },
+    { n: "HOGLIN", u: "../images/minecraft/hoglin.webp" },
+    { n: "DROWNED", u: "../images/minecraft/drowned.webp" },
+    { n: "MAGMA CUBE", u: "../images/minecraft/magma-cube.webp" },
+    { n: "SILVERFISH", u: "../images/minecraft/silverfish.webp" },
+    { n: "CONDUIT", u: "../images/minecraft/conduit.webp" },
+    { n: "RESPAWN ANCHOR", u: "../images/minecraft/respawn-anchor.webp" },
+    { n: "LODESTONE", u: "../images/minecraft/lodestone.webp" },
+    { n: "ARMADILLO", u: "../images/minecraft/armadillo.webp" },
+    { n: "CAMEL", u: "../images/minecraft/camel.webp" },
+];
+if (typeof window !== 'undefined') window.minecraftData = minecraftData;
