@@ -37,7 +37,6 @@ const CATEGORY_REGISTRY = [
     { key: 'football', label: 'Football', script: 'football.js', global: 'footballData', gibleOnly: true },
     { key: 'disney-movies', label: 'Disney Movies', script: 'disney-movies.js', global: 'disneyMoviesData', gibleOnly: true },
     { key: '2000s-artists', label: '2000s Artists', script: '2000s-artists.js', global: 'artists2000sData', gibleOnly: true },
-    { key: 'puppets', label: 'Puppets', script: 'puppets.js', global: 'puppetsData', gibleOnly: true },
     { key: 'world-leaders', label: 'World Leaders', script: 'world-leaders.js', global: 'worldLeadersData', gibleOnly: true },
     { key: 'queer-movies-tv', label: 'Queer Movies & TV', script: 'queer-movies-tv.js', global: 'queerMoviesTvData', gibleOnly: true },
     { key: 'card-games', label: 'Card Games', script: 'card-games.js', global: 'cardGamesData', gibleOnly: true },

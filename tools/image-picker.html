@@ -444,44 +444,48 @@
 
                 // Check each category's image status via the server
                 for (const cat of cats) {
-                    let totalItems = 0;
-                    let foundItems = 0;
+                    try {
+                        let totalItems = 0;
+                        let foundItems = 0;
 
-                    // Load category script to count items
-                    if (!window[cat.global]) {
-                        await new Promise((resolve, reject) => {
-                            const s = document.createElement('script');
-                            s.src = `../categories/${cat.script}`;
-                            s.onload = resolve;
-                            s.onerror = reject;
-                            document.head.appendChild(s);
-                        });
-                    }
-                    const data = window[cat.global];
-                    if (!data) continue;
-                    totalItems = data.length;
-
-                    if (serverAvailable) {
-                        try {
-                            const res = await fetch(`${API}/api/list-images`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ category: cat.key })
+                        // Load category script to count items
+                        if (!window[cat.global]) {
+                            await new Promise((resolve, reject) => {
+                                const s = document.createElement('script');
+                                s.src = `../categories/${cat.script}`;
+                                s.onload = resolve;
+                                s.onerror = reject;
+                                document.head.appendChild(s);
                             });
-                            const images = await res.json();
-                            // Count how many items have a matching image
-                            data.forEach(item => {
-                                const stem = extractStem(item.u);
-                                if (stem in images) foundItems++;
-                            });
-                        } catch { /* ignore */ }
-                    }
+                        }
+                        const data = window[cat.global];
+                        if (!data) continue;
+                        totalItems = data.length;
 
-                    const entry = { cat, totalItems, foundItems };
-                    if (foundItems < totalItems) {
-                        needsImages.push(entry);
-                    } else {
-                        complete.push(entry);
+                        if (serverAvailable) {
+                            try {
+                                const res = await fetch(`${API}/api/list-images`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ category: cat.key })
+                                });
+                                const images = await res.json();
+                                // Count how many items have a matching image
+                                data.forEach(item => {
+                                    const stem = extractStem(item.u);
+                                    if (stem in images) foundItems++;
+                                });
+                            } catch { /* ignore */ }
+                        }
+
+                        const entry = { cat, totalItems, foundItems };
+                        if (foundItems < totalItems) {
+                            needsImages.push(entry);
+                        } else {
+                            complete.push(entry);
+                        }
+                    } catch (e) {
+                        console.warn(`Skipping category "${cat.label}" — script failed to load:`, e);
                     }
                 }
 
