@@ -1,0 +1,73 @@
+// Puppets — images in images/puppets/
+const puppetsData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "KERMIT THE FROG", u: "../images/puppets/kermit-the-frog.webp" },
+    { n: "MISS PIGGY", u: "../images/puppets/miss-piggy.webp" },
+    { n: "ELMO", u: "../images/puppets/elmo.webp" },
+    { n: "COOKIE MONSTER", u: "../images/puppets/cookie-monster.webp" },
+    { n: "BIG BIRD", u: "../images/puppets/big-bird.webp" },
+    { n: "OSCAR THE GROUCH", u: "../images/puppets/oscar-the-grouch.webp" },
+    { n: "FOZZIE BEAR", u: "../images/puppets/fozzie-bear.webp" },
+    { n: "ANIMAL", u: "../images/puppets/animal.webp" },
+    { n: "BERT AND ERNIE", u: "../images/puppets/bert-and-ernie.webp" },
+    { n: "THE COUNT", u: "../images/puppets/the-count.webp" },
+    { n: "GONZO", u: "../images/puppets/gonzo.webp" },
+    { n: "GROVER", u: "../images/puppets/grover.webp" },
+    { n: "SNUFFLEUPAGUS", u: "../images/puppets/snuffleupagus.webp" },
+    { n: "SWEDISH CHEF", u: "../images/puppets/swedish-chef.webp" },
+    { n: "LAMB CHOP", u: "../images/puppets/lamb-chop.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "STATLER AND WALDORF", u: "../images/puppets/statler-and-waldorf.webp" },
+    { n: "HOWDY DOODY", u: "../images/puppets/howdy-doody.webp" },
+    { n: "YODA", u: "../images/puppets/yoda.webp" },
+    { n: "ACHMED THE DEAD TERRORIST", u: "../images/puppets/achmed.webp" },
+    { n: "ROWLF THE DOG", u: "../images/puppets/rowlf-the-dog.webp" },
+    { n: "SAM THE EAGLE", u: "../images/puppets/sam-the-eagle.webp" },
+    { n: "TRIUMPH THE INSULT COMIC DOG", u: "../images/puppets/triumph.webp" },
+    { n: "SCOOTER", u: "../images/puppets/scooter.webp" },
+    { n: "DR. TEETH", u: "../images/puppets/dr-teeth.webp" },
+    { n: "RIZZO THE RAT", u: "../images/puppets/rizzo-the-rat.webp" },
+    { n: "BEAKER", u: "../images/puppets/beaker.webp" },
+    { n: "SWEETUMS", u: "../images/puppets/sweetums.webp" },
+    { n: "PEPE THE KING PRAWN", u: "../images/puppets/pepe-the-king-prawn.webp" },
+    { n: "ROBIN THE FROG", u: "../images/puppets/robin-the-frog.webp" },
+    { n: "WALTER", u: "../images/puppets/walter.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "DANIEL TIGER", u: "../images/puppets/daniel-tiger.webp" },
+    { n: "SOOTY", u: "../images/puppets/sooty.webp" },
+    { n: "BASIL BRUSH", u: "../images/puppets/basil-brush.webp" },
+    { n: "ALF", u: "../images/puppets/alf.webp" },
+    { n: "TOPO GIGIO", u: "../images/puppets/topo-gigio.webp" },
+    { n: "PUNCH AND JUDY", u: "../images/puppets/punch-and-judy.webp" },
+    { n: "PEANUT", u: "../images/puppets/peanut.webp" },
+    { n: "FLAT ERIC", u: "../images/puppets/flat-eric.webp" },
+    { n: "MADAME", u: "../images/puppets/madame.webp" },
+    { n: "BABY SINCLAIR", u: "../images/puppets/baby-sinclair.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "THUNDERBIRDS", u: "../images/puppets/thunderbirds.webp" },
+    { n: "CAPTAIN SCARLET", u: "../images/puppets/captain-scarlet.webp" },
+    { n: "TEAM AMERICA", u: "../images/puppets/team-america.webp" },
+    { n: "CRANK YANKERS", u: "../images/puppets/crank-yankers.webp" },
+    { n: "OOBI", u: "../images/puppets/oobi.webp" },
+    { n: "SIFL AND OLLY", u: "../images/puppets/sifl-and-olly.webp" },
+    { n: "KUKLA", u: "../images/puppets/kukla.webp" },
+    { n: "MR. SQUIGGLE", u: "../images/puppets/mr-squiggle.webp" },
+    { n: "WALDO", u: "../images/puppets/waldo.webp" },
+    { n: "GOBO FRAGGLE", u: "../images/puppets/gobo-fraggle.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "RED FRAGGLE", u: "../images/puppets/red-fraggle.webp" },
+    { n: "WEMBLEY FRAGGLE", u: "../images/puppets/wembley-fraggle.webp" },
+    { n: "MOKEY FRAGGLE", u: "../images/puppets/mokey-fraggle.webp" },
+    { n: "BOOBER FRAGGLE", u: "../images/puppets/boober-fraggle.webp" },
+    { n: "SPROCKET", u: "../images/puppets/sprocket.webp" },
+    { n: "BUNSEN HONEYDEW", u: "../images/puppets/bunsen-honeydew.webp" },
+    { n: "LUDO", u: "../images/puppets/ludo.webp" },
+    { n: "HOGGLE", u: "../images/puppets/hoggle.webp" },
+    { n: "SIR DIDYMUS", u: "../images/puppets/sir-didymus.webp" },
+    { n: "DIGIT", u: "../images/puppets/digit.webp" },
+];
+if (typeof window !== 'undefined') window.puppetsData = puppetsData;
