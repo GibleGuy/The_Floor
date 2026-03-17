@@ -377,8 +377,8 @@
     <!-- ── Header ─────────────────────────── -->
     <div class="header">
         <h1>🖼️ Image Picker</h1>
-        <select id="categorySelect">
-            <option value="">— Select Category —</option>
+        <select id="categorySelect" disabled>
+            <option value="">— Loading Categories... —</option>
         </select>
         <input type="text" id="searchSuffix" placeholder="Search suffix (e.g. GAMESHOW)" style="min-width:200px">
         <div class="stats" id="stats"></div>
@@ -456,17 +456,34 @@
                 const cats = window.CATEGORY_REGISTRY.filter(c => c.key !== 'math');
                 const needsImages = [];
                 const complete = [];
+                const doNotTouch = [];
+                const doNotTouchKeys = ['logos', 'flags', 'pokemon'];
 
+                // Update UI to show loading
+                select.options[0].textContent = '— Loading Categories (0%)... —';
+
+                let loadedCount = 0;
+                
                 // 1. Load ALL category scripts in parallel to avoid infinite hanging in incognito
                 await Promise.all(
                     cats.map(cat => {
-                        if (window[cat.global]) return Promise.resolve();
+                        if (window[cat.global]) {
+                            loadedCount++;
+                            select.options[0].textContent = `— Loading Categories (${Math.round(loadedCount / cats.length * 100)}%)... —`;
+                            return Promise.resolve();
+                        }
                         return new Promise((resolve) => {
                             const s = document.createElement('script');
                             s.src = `../categories/${cat.script}?v=${Date.now()}`;
-                            s.onload = resolve;
+                            s.onload = () => {
+                                loadedCount++;
+                                select.options[0].textContent = `— Loading Categories (${Math.round(loadedCount / cats.length * 100)}%)... —`;
+                                resolve();
+                            };
                             s.onerror = () => {
                                 console.warn(`Failed to load ${cat.script}`);
+                                loadedCount++;
+                                select.options[0].textContent = `— Loading Categories (${Math.round(loadedCount / cats.length * 100)}%)... —`;
                                 resolve(); // resolve anyway so Promise.all doesn't fail immediately
                             };
                             document.head.appendChild(s);
@@ -501,7 +518,10 @@
                         }
 
                         const entry = { cat, totalItems, foundItems };
-                        if (foundItems < totalItems) {
+                        
+                        if (doNotTouchKeys.includes(cat.key)) {
+                            doNotTouch.push(entry);
+                        } else if (foundItems < totalItems) {
                             needsImages.push(entry);
                         } else {
                             complete.push(entry);
@@ -510,6 +530,10 @@
                         console.warn(`Skipping category "${cat.label}" — failed processing:`, e);
                     }
                 }
+
+                // Remove loading text
+                select.innerHTML = '<option value="">— Select Category —</option>';
+                select.disabled = false;
 
                 // Build optgroups
                 if (needsImages.length) {
@@ -529,6 +553,19 @@
                     const group = document.createElement('optgroup');
                     group.label = `✅ Complete (${complete.length})`;
                     complete.forEach(({ cat, totalItems, foundItems }) => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.key;
+                        opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
+                        opt.dataset.script = cat.script;
+                        opt.dataset.global = cat.global;
+                        group.appendChild(opt);
+                    });
+                    select.appendChild(group);
+                }
+                if (doNotTouch.length) {
+                    const group = document.createElement('optgroup');
+                    group.label = `⛔ DO NOT TOUCH (${doNotTouch.length})`;
+                    doNotTouch.forEach(({ cat, totalItems, foundItems }) => {
                         const opt = document.createElement('option');
                         opt.value = cat.key;
                         opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
