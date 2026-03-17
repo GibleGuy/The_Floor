@@ -407,7 +407,6 @@
     </div>
 
     <!-- ── Category scripts are loaded dynamically ── -->
-    <script src="../categories/index.js"></script>
     <script>
         (function () {
             const API = `${location.protocol}//${location.hostname}:8642`;
@@ -436,28 +435,51 @@
             // ── Populate category dropdown (grouped by status) ─
             const select = document.getElementById('categorySelect');
             async function populateDropdown() {
+                // Ensure the category registry is loaded, avoiding cache
+                if (!window.CATEGORY_REGISTRY) {
+                    try {
+                        await new Promise((resolve, reject) => {
+                            const s = document.createElement('script');
+                            s.src = `../categories/index.js?v=${Date.now()}`;
+                            s.onload = resolve;
+                            s.onerror = reject;
+                            document.head.appendChild(s);
+                        });
+                    } catch (e) {
+                        console.error("Failed to load category registry:", e);
+                        return;
+                    }
+                }
+
                 if (!window.CATEGORY_REGISTRY) return;
 
                 const cats = window.CATEGORY_REGISTRY.filter(c => c.key !== 'math');
                 const needsImages = [];
                 const complete = [];
 
-                // Check each category's image status via the server
+                // 1. Load ALL category scripts in parallel to avoid infinite hanging in incognito
+                await Promise.all(
+                    cats.map(cat => {
+                        if (window[cat.global]) return Promise.resolve();
+                        return new Promise((resolve) => {
+                            const s = document.createElement('script');
+                            s.src = `../categories/${cat.script}?v=${Date.now()}`;
+                            s.onload = resolve;
+                            s.onerror = () => {
+                                console.warn(`Failed to load ${cat.script}`);
+                                resolve(); // resolve anyway so Promise.all doesn't fail immediately
+                            };
+                            document.head.appendChild(s);
+                        });
+                    })
+                );
+
+                // 2. Check each category's image status via the server
                 for (const cat of cats) {
                     try {
                         let totalItems = 0;
                         let foundItems = 0;
 
-                        // Load category script to count items
-                        if (!window[cat.global]) {
-                            await new Promise((resolve, reject) => {
-                                const s = document.createElement('script');
-                                s.src = `../categories/${cat.script}`;
-                                s.onload = resolve;
-                                s.onerror = reject;
-                                document.head.appendChild(s);
-                            });
-                        }
                         const data = window[cat.global];
                         if (!data) continue;
                         totalItems = data.length;
@@ -485,7 +507,7 @@
                             complete.push(entry);
                         }
                     } catch (e) {
-                        console.warn(`Skipping category "${cat.label}" — script failed to load:`, e);
+                        console.warn(`Skipping category "${cat.label}" — failed processing:`, e);
                     }
                 }
 
@@ -547,11 +569,11 @@
 
             // ── Load a category ────────────────────────────
             async function loadCategory(key, scriptFile, globalName) {
-                // Load the category script if not already loaded
+                // Load the category script if not already loaded (with cache bust)
                 if (!window[globalName]) {
                     await new Promise((resolve, reject) => {
                         const s = document.createElement('script');
-                        s.src = `../categories/${scriptFile}`;
+                        s.src = `../categories/${scriptFile}?v=${Date.now()}`;
                         s.onload = resolve;
                         s.onerror = reject;
                         document.head.appendChild(s);
