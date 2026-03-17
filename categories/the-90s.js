@@ -1,8 +1,8 @@
 // The 90s — images in images/the-90s/
 const the90sData = [
     // Tier 1 — Obvious (1–15)
-    { n: "GAME BOY", u: "../images/the-90s/game-boy.webp" },
-    { n: "FURBY", u: "../images/the-90s/furby.webp" },
+    { n: "GAME BOY", u: "../images/the-90s/game-boy.jpg" },
+    { n: "FURBY", u: "../images/the-90s/furby.jpg" },
     { n: "TAMAGOTCHI", u: "../images/the-90s/tamagotchi.webp" },
     { n: "VHS TAPE", u: "../images/the-90s/vhs-tape.webp" },
     { n: "SUPER NINTENDO", u: "../images/the-90s/super-nintendo.webp" },

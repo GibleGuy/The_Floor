@@ -255,7 +255,7 @@
         <div id="sound-effects-content"></div>
     </section>
 
-    <script src="../categories/index.js?v=1"></script>
+    <script src="../categories/index.js?v=2"></script>
     <script>
         // Dynamically load all category scripts from the registry, then build categories & labels
         const categories = {};
@@ -273,7 +273,7 @@
                 categoryLabels[c.key] = c.label;
                 return new Promise(function (resolve) {
                     var s = document.createElement('script');
-                    s.src = '../categories/' + c.script + '?v=3';
+                    s.src = '../categories/' + c.script + '?v=4';
                     s.onload = function () {
                         categories[c.key] = window[c.global] || [];
                         resolve();

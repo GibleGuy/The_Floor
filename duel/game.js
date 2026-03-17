@@ -4,7 +4,7 @@ const CATEGORY_SCRIPTS = {};
 const CATEGORY_GLOBALS = {};
 if (window.CATEGORY_REGISTRY) {
     window.CATEGORY_REGISTRY.forEach(function (c) {
-        CATEGORY_SCRIPTS[c.key] = '../categories/' + c.script + '?v=3';
+        CATEGORY_SCRIPTS[c.key] = '../categories/' + c.script + '?v=4';
         CATEGORY_GLOBALS[c.key] = c.global;
     });
 }
