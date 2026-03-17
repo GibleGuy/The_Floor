@@ -292,6 +292,27 @@
         const failedImages = [];
 
         function galleryImageError(el) {
+            // Try alternative file extensions before giving up
+            const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+            if (!el.dataset.extAttempts) {
+                el.dataset.extAttempts = '0';
+            }
+            const attemptIndex = parseInt(el.dataset.extAttempts);
+
+            const currentSrc = el.src;
+            const dotIndex = currentSrc.lastIndexOf('.');
+            const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
+            const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).split('?')[0].toLowerCase() : '';
+
+            const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
+
+            if (attemptIndex < toTry.length) {
+                el.dataset.extAttempts = String(attemptIndex + 1);
+                el.src = basePath + '.' + toTry[attemptIndex];
+                return;
+            }
+
+            // All alternatives exhausted — show fallback
             const wrap = el.closest('.img-wrap');
             const img = wrap.querySelector('img');
             const fallback = wrap.querySelector('.img-fallback');

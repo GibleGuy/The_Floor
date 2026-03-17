@@ -816,8 +816,9 @@ function loadImage() {
     const item = currentPool[currentIndex];
     const isMath = item && typeof item.q === 'string';
 
-    // Reset error handler flag
+    // Reset error handler flag and extension retry counter
     img.dataset.errorHandled = 'false';
+    img.dataset.extAttempts = '0';
 
     // Remove fallback if it exists
     if (fallback) {
@@ -1775,7 +1776,6 @@ document.getElementById('first-right').addEventListener('change', function () {
 function handleImageError(img) {
     // Prevent multiple error handlers from firing
     if (img.dataset.errorHandled === 'true') return;
-    img.dataset.errorHandled = 'true';
 
     const item = currentPool[currentIndex];
     const itemName = item.n;
@@ -1783,9 +1783,39 @@ function handleImageError(img) {
 
     // Skip fallback for math category - it uses its own display element
     if (isMath) {
+        img.dataset.errorHandled = 'true';
         img.style.display = 'none';
         return;
     }
+
+    // Try alternative file extensions before giving up
+    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+    if (!img.dataset.extAttempts) {
+        img.dataset.extAttempts = '0';
+    }
+    const attemptIndex = parseInt(img.dataset.extAttempts);
+
+    // Get the base path (without extension) from the current src
+    const currentSrc = img.src;
+    const dotIndex = currentSrc.lastIndexOf('.');
+    const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
+
+    // Find the current extension to skip it
+    const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).toLowerCase() : '';
+
+    // Build list of extensions to try (excluding the one that just failed)
+    const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
+
+    if (attemptIndex < toTry.length) {
+        // Try the next alternative extension
+        img.dataset.extAttempts = String(attemptIndex + 1);
+        img.src = basePath + '.' + toTry[attemptIndex];
+        return; // Don't mark as handled yet — let it try
+    }
+
+    // All alternatives exhausted — show text fallback
+    img.dataset.errorHandled = 'true';
+    img.dataset.extAttempts = '0';
 
     const container = document.getElementById('img-frame');
 
