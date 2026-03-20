@@ -53,7 +53,6 @@ const the90sData = [
     { n: "MIGHTY MAX", u: "../images/the-90s/mighty-max.webp" },
     { n: "DEAR DIARY", u: "../images/the-90s/dear-diary.webp" },
     { n: "BIONICLES", u: "../images/the-90s/bionicles.webp" },
-    { n: "TAMAGOTCHI CONNECTION", u: "../images/the-90s/tamagotchi-connection.webp" },
     { n: "PUPPY SURPRISE", u: "../images/the-90s/puppy-surprise.webp" },
     { n: "POUND PUPPIES", u: "../images/the-90s/pound-puppies.webp" },
     { n: "SEA MONKEYS", u: "../images/the-90s/sea-monkeys.webp" },
@@ -65,7 +64,6 @@ const the90sData = [
     { n: "DOODLE BEAR", u: "../images/the-90s/doodle-bear.webp" },
     { n: "SOCK'EM BOPPERS", u: "../images/the-90s/sockem-boppers.webp" },
     { n: "WATER RING TOSS", u: "../images/the-90s/water-ring-toss.webp" },
-    { n: "SKIP IT COUNTER", u: "../images/the-90s/skip-it-counter.webp" },
     { n: "BEYBLADES", u: "../images/the-90s/beyblades.webp" },
     { n: "CUPCAKE DOLLS", u: "../images/the-90s/cupcake-dolls.webp" },
     { n: "CROCODILE DENTIST", u: "../images/the-90s/crocodile-dentist.webp" }
