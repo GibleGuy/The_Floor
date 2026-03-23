@@ -43,12 +43,10 @@ const queerMoviesTvData = [
     { n: "HEDWIG AND THE ANGRY INCH", u: "../images/queer-movies-tv/hedwig-and-the-angry-inch.webp" },
     { n: "BUT I'M A CHEERLEADER", u: "../images/queer-movies-tv/but-im-a-cheerleader.webp" },
     { n: "MY OWN PRIVATE IDAHO", u: "../images/queer-movies-tv/my-own-private-idaho.webp" },
-    { n: "WEEKEND", u: "../images/queer-movies-tv/weekend.webp" },
     { n: "GOD'S OWN COUNTRY", u: "../images/queer-movies-tv/gods-own-country.webp" },
 
     // Tier 4 — Expert (41–50)
     { n: "FELLOW TRAVELERS", u: "../images/queer-movies-tv/fellow-travelers.webp" },
-    { n: "SMILEY", u: "../images/queer-movies-tv/smiley.webp" },
     { n: "YOUNG ROYALS", u: "../images/queer-movies-tv/young-royals.webp" },
     { n: "FIRE ISLAND", u: "../images/queer-movies-tv/fire-island.webp" },
     { n: "BROS", u: "../images/queer-movies-tv/bros.webp" },
@@ -56,7 +54,6 @@ const queerMoviesTvData = [
     { n: "THE HALF OF IT", u: "../images/queer-movies-tv/the-half-of-it.webp" },
     { n: "BOOKSMART", u: "../images/queer-movies-tv/booksmart.webp" },
     { n: "ALL OF US STRANGERS", u: "../images/queer-movies-tv/all-of-us-strangers.webp" },
-    { n: "ORLANDO", u: "../images/queer-movies-tv/orlando.webp" },
 
     // ── BACKUPS (51–60) ────────────────
     { n: "DESERT HEARTS", u: "../images/queer-movies-tv/desert-hearts.webp" },
@@ -67,7 +64,6 @@ const queerMoviesTvData = [
     { n: "MATTHIAS & MAXIME", u: "../images/queer-movies-tv/matthias-and-maxime.webp" },
     { n: "BOY ERASED", u: "../images/queer-movies-tv/boy-erased.webp" },
     { n: "THE PROM", u: "../images/queer-movies-tv/the-prom.webp" },
-    { n: "TRICK", u: "../images/queer-movies-tv/trick.webp" },
     { n: "SHELTER", u: "../images/queer-movies-tv/shelter.webp" }
 ];
 if (typeof window !== 'undefined') window.queerMoviesTvData = queerMoviesTvData;

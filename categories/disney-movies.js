@@ -26,7 +26,6 @@ const disneyMoviesData = [
     { n: "TARZAN", u: "../images/disney-movies/tarzan.webp" },
     { n: "POCAHONTAS", u: "../images/disney-movies/pocahontas.webp" },
     { n: "SLEEPING BEAUTY", u: "../images/disney-movies/sleeping-beauty.webp" },
-    { n: "HERCULES", u: "../images/disney-movies/hercules.webp" },
     { n: "THE JUNGLE BOOK", u: "../images/disney-movies/the-jungle-book.webp" },
     { n: "ALICE IN WONDERLAND", u: "../images/disney-movies/alice-in-wonderland.webp" },
     { n: "101 DALMATIANS", u: "../images/disney-movies/101-dalmatians.webp" },

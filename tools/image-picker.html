@@ -575,13 +575,13 @@
                 const needsImages = [];
                 const complete = [];
                 const doNotTouch = [];
-                const doNotTouchKeys = ['logos', 'flags', 'pokemon', 'dogs'];
+                const doNotTouchKeys = ['logos', 'flags', 'pokemon', 'dogs', 'memes'];
 
                 // Update UI to show loading
                 select.options[0].textContent = '— Loading Categories (0%)... —';
 
                 let loadedCount = 0;
-                
+
                 // 1. Load ALL category scripts in parallel to avoid infinite hanging in incognito
                 await Promise.all(
                     cats.map(cat => {
@@ -636,7 +636,7 @@
                         }
 
                         const entry = { cat, totalItems, foundItems };
-                        
+
                         if (doNotTouchKeys.includes(cat.key)) {
                             doNotTouch.push(entry);
                         } else if (foundItems < totalItems) {

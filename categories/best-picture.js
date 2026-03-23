@@ -6,7 +6,7 @@ const bestPictureData = [
     { n: "FORREST GUMP", u: "../images/best-picture/forrest-gump.jpg" },
     { n: "GLADIATOR", u: "../images/best-picture/gladiator.avif" },
     { n: "THE SOUND OF MUSIC", u: "../images/best-picture/the-sound-of-music.jpg" },
-    { n: "ROCKY", u: "../images/best-picture/Rocky.webp" },
+    { n: "ROCKY", u: "../images/best-picture/rocky.jpg" },
     { n: "SCHINDLER'S LIST", u: "../images/best-picture/schindlers-list.jpg" },
     { n: "THE SILENCE OF THE LAMBS", u: "../images/best-picture/silence-of-the-lambs.jpg" },
     { n: "RAIN MAN", u: "../images/best-picture/rain-man.jpg" },
