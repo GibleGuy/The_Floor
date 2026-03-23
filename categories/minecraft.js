@@ -5,7 +5,6 @@ const minecraftData = [
     { n: "DIAMOND SWORD", u: "../images/minecraft/diamond-sword.webp" },
     { n: "STEVE", u: "../images/minecraft/steve.png" },
     { n: "ZOMBIE", u: "../images/minecraft/zombie.jpg" },
-    { n: "TNT", u: "../images/minecraft/tnt.png" },
     { n: "ENDER DRAGON", u: "../images/minecraft/ender-dragon.webp" },
     { n: "CRAFTING TABLE", u: "../images/minecraft/crafting-table.jpg" },
     { n: "SKELETON", u: "../images/minecraft/skeleton.webp" },

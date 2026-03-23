@@ -836,20 +836,22 @@ function loadImage() {
         }
         // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
         const src = item.u;
+        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
         if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src;
+            img.src = src + cb;
         } else {
-            img.src = '../' + src;
+            img.src = '../' + src + cb;
         }
     } else {
         img.style.display = 'block';
         if (mp) mp.classList.remove('show');
         // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
         const src = item.u;
+        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
         if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src;
+            img.src = src + cb;
         } else {
-            img.src = '../' + src;
+            img.src = '../' + src + cb;
         }
     }
 }
@@ -1801,7 +1803,7 @@ function handleImageError(img) {
     const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
 
     // Find the current extension to skip it
-    const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).toLowerCase() : '';
+    const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).split('?')[0].toLowerCase() : '';
 
     // Build list of extensions to try (excluding the one that just failed)
     const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
@@ -1809,7 +1811,7 @@ function handleImageError(img) {
     if (attemptIndex < toTry.length) {
         // Try the next alternative extension
         img.dataset.extAttempts = String(attemptIndex + 1);
-        img.src = basePath + '.' + toTry[attemptIndex];
+        img.src = basePath + '.' + toTry[attemptIndex] + '?v=' + Date.now();
         return; // Don't mark as handled yet — let it try
     }
 

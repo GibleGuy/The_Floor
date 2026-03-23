@@ -804,7 +804,7 @@
                     card.dataset.index = idx;
 
                     const existingFile = currentImages[stem] || '';
-                    const imgSrc = hasImage ? `../images/${category}/${existingFile}` : '';
+                    const imgSrc = hasImage ? `../images/${category}/${existingFile}?v=${Date.now()}` : '';
                     const escapedName = item.n.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     card.innerHTML = `

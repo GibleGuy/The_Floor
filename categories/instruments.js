@@ -62,12 +62,9 @@ const instrumentsData = [
     { n: "CORNET", u: "../images/instruments/cornet.jpg" },
     { n: "FINGER CYMBALS", u: "../images/instruments/finger-cymbals.jpg" },
     { n: "DJEMBE", u: "../images/instruments/djembe.jpg" },
-    { n: "LIRA", u: "../images/instruments/lira.webp" },
     { n: "VIOL", u: "../images/instruments/viol.jpg" },
     { n: "PENNYWHISTLE", u: "../images/instruments/pennywhistle.jpg" },
     { n: "GUSLI", u: "../images/instruments/gusli.jpg" },
     { n: "CRWTH", u: "../images/instruments/crwth.jpg" },
-    { n: "VIOLS", u: "../images/instruments/viols.webp" },
-    { n: "HANDPAN", u: "../images/instruments/handpan.webp" },
 ];
 if (typeof window !== 'undefined') window.instrumentsData = instrumentsData;

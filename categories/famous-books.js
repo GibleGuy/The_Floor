@@ -12,7 +12,6 @@ const famousBooksData = [
     { n: "CURIOUS GEORGE", u: "../images/famous-books/curious-george.webp" },
     { n: "CLIFFORD THE BIG RED DOG", u: "../images/famous-books/clifford-the-big-red-dog.webp" },
     { n: "THE LITTLE PRINCE", u: "../images/famous-books/the-little-prince.webp" },
-    { n: "MAGIC TREE HOUSE", u: "../images/famous-books/magic-tree-house.webp" },
     { n: "WHERE'S WALDO?", u: "../images/famous-books/wheres-waldo.webp" },
     { n: "PETER PAN", u: "../images/famous-books/peter-pan.webp" },
     { n: "THE SNOWY DAY", u: "../images/famous-books/the-snowy-day.webp" },
