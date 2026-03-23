@@ -369,6 +369,124 @@
         .server-warning a {
             color: var(--yellow);
         }
+
+        /* ── Delete button ──────────────────── */
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: .85rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: all .15s;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .btn-delete:hover {
+            color: var(--red);
+            background: var(--red-dim);
+        }
+
+        /* ── Editable name input ────────────── */
+        .card-name {
+            cursor: pointer;
+        }
+
+        .card-name:hover {
+            color: var(--accent);
+        }
+
+        .card-name-input {
+            font-size: .82rem;
+            font-weight: 600;
+            flex: 1;
+            min-width: 0;
+            background: var(--bg);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* ── Confirmation Modal ─────────────── */
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .confirm-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 32px;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+        }
+
+        .confirm-box h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--red);
+        }
+
+        .confirm-box p {
+            font-size: .8rem;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .confirm-box .confirm-name {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .confirm-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-btns button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: .8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .confirm-cancel {
+            background: var(--surface-hover);
+            color: var(--text);
+            border: 1px solid var(--border) !important;
+        }
+
+        .confirm-cancel:hover {
+            background: var(--border);
+        }
+
+        .confirm-delete {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .confirm-delete:hover {
+            filter: brightness(1.15);
+        }
     </style>
 </head>
 
@@ -604,8 +722,17 @@
                 });
             }
 
+            // ── Track current category info for delete/rename ──
+            let currentCategoryKey = '';
+            let currentCategoryScript = '';
+            let currentCategoryGlobal = '';
+
             // ── Load a category ────────────────────────────
             async function loadCategory(key, scriptFile, globalName) {
+                currentCategoryKey = key;
+                currentCategoryScript = scriptFile;
+                currentCategoryGlobal = globalName;
+
                 // Load the category script if not already loaded (with cache bust)
                 if (!window[globalName]) {
                     await new Promise((resolve, reject) => {
@@ -678,12 +805,14 @@
 
                     const existingFile = currentImages[stem] || '';
                     const imgSrc = hasImage ? `../images/${category}/${existingFile}` : '';
+                    const escapedName = item.n.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     card.innerHTML = `
         <div class="card-header">
           <div class="card-status ${hasImage ? 'has-image' : 'no-image'}"></div>
-          <div class="card-name" title="${item.n}">${item.n}</div>
+          <div class="card-name" title="${item.n}" onclick="startRename(${idx})">${item.n}</div>
           <div class="card-filename">${stem}</div>
+          <button class="btn-delete" title="Delete clue" onclick="deleteItem(${idx}, event)">🗑️</button>
         </div>
         <div class="card-preview">
           ${hasImage
@@ -692,7 +821,7 @@
         </div>
         <div class="card-actions">
           <div class="btn-row">
-            <button class="btn btn-search" onclick="searchGoogle('${item.n.replace(/'/g, "\\'")}')">
+            <button class="btn btn-search" onclick="searchGoogle('${escapedName}')">
               🔍 Search Google
             </button>
           </div>
@@ -822,6 +951,157 @@
       <span>${cards.length} total</span>
     `;
             }
+
+            // ── Delete item ───────────────────────────────
+            window.deleteItem = async function (idx, event) {
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                if (!card) return;
+                const data = window[currentCategoryGlobal];
+                const item = data[idx];
+                const itemName = item.n;
+
+                if (!serverAvailable) {
+                    alert('Server not running — start image-server.py');
+                    return;
+                }
+
+                // Shift+click bypasses confirmation
+                if (!event.shiftKey) {
+                    const confirmed = await showDeleteConfirm(itemName);
+                    if (!confirmed) return;
+                }
+
+                try {
+                    const res = await fetch(`${API}/api/delete-item`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            script: currentCategoryScript,
+                            itemName: itemName,
+                            category: card.dataset.category
+                        })
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        // Remove from in-memory data array
+                        data.splice(idx, 1);
+                        // Re-render the grid
+                        loadCategory(currentCategoryKey, currentCategoryScript, currentCategoryGlobal);
+                    } else {
+                        alert(result.error || 'Delete failed');
+                    }
+                } catch (e) {
+                    alert(`Error: ${e.message}`);
+                }
+            };
+
+            function showDeleteConfirm(itemName) {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'confirm-overlay';
+                    overlay.innerHTML = `
+                        <div class="confirm-box">
+                            <h3>🗑️ Delete Clue</h3>
+                            <p>This will permanently remove <span class="confirm-name">${itemName}</span> and its image from the category file.<br><br>This is <strong>lowkey kinda permanent</strong> — you'd have to manually re-add it.</p>
+                            <div class="confirm-btns">
+                                <button class="confirm-cancel">Cancel</button>
+                                <button class="confirm-delete">Delete</button>
+                            </div>
+                            <p style="margin-top:14px; font-size:.65rem; opacity:.5">Tip: Hold Shift when clicking 🗑️ to skip this dialog</p>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay);
+
+                    overlay.querySelector('.confirm-cancel').onclick = () => {
+                        overlay.remove();
+                        resolve(false);
+                    };
+                    overlay.querySelector('.confirm-delete').onclick = () => {
+                        overlay.remove();
+                        resolve(true);
+                    };
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) {
+                            overlay.remove();
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+
+            // ── Rename item ───────────────────────────────
+            window.startRename = function (idx) {
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                if (!card) return;
+                const nameEl = card.querySelector('.card-name');
+                if (!nameEl || nameEl.dataset.editing === 'true') return;
+
+                const data = window[currentCategoryGlobal];
+                const currentName = data[idx].n;
+
+                nameEl.dataset.editing = 'true';
+                const input = document.createElement('input');
+                input.className = 'card-name-input';
+                input.value = currentName;
+                input.type = 'text';
+                nameEl.textContent = '';
+                nameEl.appendChild(input);
+                input.focus();
+                input.select();
+
+                const finish = async (save) => {
+                    if (input._finished) return;
+                    input._finished = true;
+                    const newName = input.value.trim().toUpperCase();
+                    nameEl.dataset.editing = 'false';
+
+                    if (!save || !newName || newName === currentName) {
+                        nameEl.textContent = currentName;
+                        return;
+                    }
+
+                    if (!serverAvailable) {
+                        nameEl.textContent = currentName;
+                        alert('Server not running — start image-server.py');
+                        return;
+                    }
+
+                    nameEl.textContent = '⏳ Renaming...';
+
+                    try {
+                        const res = await fetch(`${API}/api/rename-item`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                script: currentCategoryScript,
+                                oldName: currentName,
+                                newName: newName,
+                                category: card.dataset.category
+                            })
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            // Update in-memory data
+                            data[idx].n = newName;
+                            data[idx].u = `../images/${card.dataset.category}/${result.newStem}${result.newExt}`;
+                            // Re-render
+                            loadCategory(currentCategoryKey, currentCategoryScript, currentCategoryGlobal);
+                        } else {
+                            nameEl.textContent = currentName;
+                            alert(result.error || 'Rename failed');
+                        }
+                    } catch (e) {
+                        nameEl.textContent = currentName;
+                        alert(`Error: ${e.message}`);
+                    }
+                };
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+                    if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+                });
+                input.addEventListener('blur', () => finish(true));
+            };
         })();
     </script>
 </body>

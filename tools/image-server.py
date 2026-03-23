@@ -31,6 +31,10 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
             self._handle_download()
         elif self.path == '/api/list-images':
             self._handle_list_images()
+        elif self.path == '/api/delete-item':
+            self._handle_delete_item()
+        elif self.path == '/api/rename-item':
+            self._handle_rename_item()
         else:
             self.send_error(404, "Not found")
 
@@ -123,6 +127,138 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             self.wfile.write(json.dumps(files).encode())
+
+        except Exception as e:
+            self._send_error(500, f"Server error: {e}")
+
+    def _handle_delete_item(self):
+        """Delete a clue from a category JS file and remove its image."""
+        try:
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length))
+
+            script = body['script']        # e.g. "minecraft.js"
+            item_name = body['itemName']   # e.g. "TNT"
+            category = body['category']    # e.g. "minecraft"
+
+            js_path = PROJECT_ROOT / 'categories' / script
+            if not js_path.exists():
+                self._send_error(404, f"Script file not found: {script}")
+                return
+
+            # Read the JS file and remove the matching line
+            lines = js_path.read_text().splitlines(keepends=True)
+            new_lines = []
+            deleted = False
+            deleted_stem = None
+            for line in lines:
+                # Match lines like:   { n: "TNT", u: "../images/minecraft/tnt.webp" },
+                import re
+                m = re.search(r'\{\s*n:\s*"' + re.escape(item_name) + r'"\s*,\s*u:\s*"([^"]+)"', line)
+                if m and not deleted:
+                    deleted = True
+                    url_path = m.group(1)
+                    # Extract stem and extension
+                    parts = url_path.split('/')
+                    filename = parts[-1]
+                    deleted_stem = filename
+                    continue  # Skip this line (delete it)
+                new_lines.append(line)
+
+            if not deleted:
+                self._send_error(404, f"Item '{item_name}' not found in {script}")
+                return
+
+            # Write updated JS file
+            js_path.write_text(''.join(new_lines))
+
+            # Delete the image file if it exists
+            if deleted_stem:
+                img_path = PROJECT_ROOT / 'images' / category / deleted_stem
+                if img_path.exists():
+                    img_path.unlink()
+
+            result = {'success': True, 'deleted': deleted_stem or ''}
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
+
+        except Exception as e:
+            self._send_error(500, f"Server error: {e}")
+
+    def _handle_rename_item(self):
+        """Rename a clue in a category JS file and rename its image file."""
+        try:
+            import re
+
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length))
+
+            script = body['script']        # e.g. "minecraft.js"
+            old_name = body['oldName']     # e.g. "TNT"
+            new_name = body['newName']     # e.g. "DYNAMITE"
+            category = body['category']    # e.g. "minecraft"
+
+            js_path = PROJECT_ROOT / 'categories' / script
+            if not js_path.exists():
+                self._send_error(404, f"Script file not found: {script}")
+                return
+
+            # Derive new stem from new name: "DYNAMITE" -> "dynamite"
+            # "IRON GOLEM" -> "iron-golem", "GHOSTS 'N GOBLINS" -> "ghosts-n-goblins"
+            new_stem = re.sub(r"[^\w\s-]", '', new_name.lower()).strip()
+            new_stem = re.sub(r'\s+', '-', new_stem)
+
+            content = js_path.read_text()
+            old_stem = None
+            old_ext = None
+            new_content = None
+
+            # Find the line with the old name and update it
+            pattern = re.compile(
+                r'(\{\s*n:\s*")' + re.escape(old_name) +
+                r'("\s*,\s*u:\s*"\.\./images/)[^/]+/([^"]+?)(\.[a-zA-Z]+)(")'
+            )
+            def replace_match(m):
+                nonlocal old_stem, old_ext
+                old_filename = m.group(3)
+                old_stem = old_filename
+                old_ext = m.group(4)
+                return (m.group(1) + new_name + m.group(2) +
+                        category + '/' + new_stem + old_ext + m.group(5))
+
+            new_content = pattern.sub(replace_match, content, count=1)
+
+            if old_stem is None:
+                self._send_error(404, f"Item '{old_name}' not found in {script}")
+                return
+
+            # Write updated JS file
+            js_path.write_text(new_content)
+
+            # Rename the image file if it exists
+            renamed_image = False
+            if old_stem and old_ext:
+                old_img = PROJECT_ROOT / 'images' / category / f"{old_stem}{old_ext}"
+                new_img = PROJECT_ROOT / 'images' / category / f"{new_stem}{old_ext}"
+                if old_img.exists() and old_img != new_img:
+                    old_img.rename(new_img)
+                    renamed_image = True
+
+            result = {
+                'success': True,
+                'oldStem': old_stem,
+                'newStem': new_stem,
+                'newExt': old_ext,
+                'renamedImage': renamed_image,
+            }
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
 
         except Exception as e:
             self._send_error(500, f"Server error: {e}")
