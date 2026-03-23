@@ -45,5 +45,10 @@ const CATEGORY_REGISTRY = [
     { key: 'orange-things', label: 'Orange Things', script: 'orange-things.js', global: 'orangeThingsData', gibleOnly: true },
     { key: 'baby-animals', label: 'Baby Animals', script: 'baby-animals.js', global: 'babyAnimalsData', gibleOnly: true },
     { key: 'furniture', label: 'Furniture', script: 'furniture.js', global: 'furnitureData', gibleOnly: true },
+    { key: 'f1', label: 'F1', script: 'f1.js', global: 'f1Data' },
+    { key: 'visual-novels', label: 'Visual Novels', script: 'visual-novels.js', global: 'visualNovelsData' },
+    { key: 'track-and-field', label: 'Track & Field', script: 'track-and-field.js', global: 'trackAndFieldData' },
+    { key: 'state-flags', label: 'State Flags', script: 'state-flags.js', global: 'stateFlagsData' },
+    { key: 'birds', label: 'Birds', script: 'birds.js', global: 'birdsData' }
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;
