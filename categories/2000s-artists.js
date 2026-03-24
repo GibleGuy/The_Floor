@@ -26,7 +26,6 @@ const artists2000sData = [
     { n: "KELLY CLARKSON", u: "../images/2000s-artists/kelly-clarkson.webp" },
     { n: "CHRISTINA AGUILERA", u: "../images/2000s-artists/christina-aguilera.webp" },
     { n: "SNOOP DOGG", u: "../images/2000s-artists/snoop-dogg.webp" },
-    { n: "OUTKAST", u: "../images/2000s-artists/outkast.webp" },
     { n: "GWEN STEFANI", u: "../images/2000s-artists/gwen-stefani.webp" },
     { n: "MARIAH CAREY", u: "../images/2000s-artists/mariah-carey.webp" },
     { n: "NICKELBACK", u: "../images/2000s-artists/nickelback.webp" },
@@ -70,6 +69,5 @@ const artists2000sData = [
     { n: "CHRIS BROWN", u: "../images/2000s-artists/chris-brown.webp" }
 ];
 // Replace the duplicate Outkast in backups with 50 Cent (as backup) or another artist
-artists2000sData[52] = { n: "50 CENT", u: "../images/2000s-artists/50-cent-backup.webp" };
 
 if (typeof window !== 'undefined') window.artists2000sData = artists2000sData;

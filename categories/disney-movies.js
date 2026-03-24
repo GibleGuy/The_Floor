@@ -48,7 +48,6 @@ const disneyMoviesData = [
     // Tier 4 — Expert (41–50)
     { n: "ATLANTIS: THE LOST EMPIRE", u: "../images/disney-movies/atlantis-the-lost-empire.webp" },
     { n: "TREASURE PLANET", u: "../images/disney-movies/treasure-planet.webp" },
-    { n: "HERCULES", u: "../images/disney-movies/hercules-2.webp" },
     { n: "THE ARISTOCATS", u: "../images/disney-movies/the-aristocats.webp" },
     { n: "LADY AND THE TRAMP", u: "../images/disney-movies/lady-and-the-tramp.webp" },
     { n: "THE HUNCHBACK OF NOTRE DAME", u: "../images/disney-movies/the-hunchback-of-notre-dame.webp" },

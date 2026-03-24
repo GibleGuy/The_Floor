@@ -53,13 +53,7 @@ const stateFlagsData = [
     // ── BACKUPS (items 51–60) ────────────────
     { n: "WASHINGTON D.C.", u: "../images/state-flags/washington-dc.webp" },
     { n: "PUERTO RICO", u: "../images/state-flags/puerto-rico.webp" },
-    { n: "CHICAGO", u: "../images/state-flags/chicago.webp" },
     { n: "GUAM", u: "../images/state-flags/guam.webp" },
     { n: "US VIRGIN ISLANDS", u: "../images/state-flags/us-virgin-islands.webp" },
-    { n: "AMERICAN SAMOA", u: "../images/state-flags/american-samoa.webp" },
-    { n: "NORTHERN MARIANA ISLANDS", u: "../images/state-flags/northern-mariana-islands.webp" },
-    { n: "NEW YORK CITY", u: "../images/state-flags/new-york-city.webp" },
-    { n: "LOS ANGELES", u: "../images/state-flags/los-angeles.webp" },
-    { n: "NAVAJO NATION", u: "../images/state-flags/navajo-nation.webp" }
 ];
 if (typeof window !== 'undefined') window.stateFlagsData = stateFlagsData;

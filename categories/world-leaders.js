@@ -19,7 +19,6 @@ const worldLeadersData = [
 
     // Tier 2 — Familiar (16–30)
     { n: "JOE BIDEN", u: "../images/world-leaders/joe-biden.webp" },
-    { n: "DONALD TRUMP", u: "../images/world-leaders/donald-trump.webp" },
     { n: "BILL CLINTON", u: "../images/world-leaders/bill-clinton.webp" },
     { n: "GEORGE W. BUSH", u: "../images/world-leaders/george-w-bush.webp" },
     { n: "RONALD REAGAN", u: "../images/world-leaders/ronald-reagan.webp" },

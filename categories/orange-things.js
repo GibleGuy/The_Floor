@@ -60,8 +60,6 @@ const orangeThingsData = [
     { n: "SEA ANEMONE", u: "../images/orange-things/sea-anemone.webp" },
     { n: "SAFETY WHISTLE", u: "../images/orange-things/safety-whistle.webp" },
     { n: "CONSTRUCTION HELMET", u: "../images/orange-things/construction-helmet.webp" },
-    { n: "WARNING SIGN", u: "../images/orange-things/warning-sign.webp" },
-    { n: "FOXHOUND", u: "../images/orange-things/foxhound.webp" },
     { n: "SUNSET", u: "../images/orange-things/sunset.webp" }
 ];
 if (typeof window !== 'undefined') window.orangeThingsData = orangeThingsData;
