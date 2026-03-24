@@ -279,8 +279,8 @@ async function setupGame(cat, opts) {
     currentStreak = 0;
     answerStartTime = Date.now();
 
-    // Store category name
-    currentCategory = cat.toUpperCase();
+    // Store category name (replace hyphens with spaces for display)
+    currentCategory = cat.replace(/-/g, ' ').toUpperCase();
     document.getElementById('category-display').innerText = currentCategory;
     document.getElementById('category-display').style.display = 'block';
 
@@ -839,9 +839,8 @@ function loadImage() {
     const item = currentPool[currentIndex];
     const isMath = item && typeof item.q === 'string';
 
-    // Reset error handler flag and extension retry counter
+    // Reset error handler flag for new image load
     img.dataset.errorHandled = 'false';
-    img.dataset.extAttempts = '0';
 
     // Remove fallback if it exists
     if (fallback) {
@@ -855,7 +854,8 @@ function loadImage() {
     // Resolve image src: absolute URLs stay as-is, relative paths that already
     // start with ../ are used directly, otherwise prepend ../ for duel/ context.
     function resolveImageSrc(rawSrc) {
-        const cb = rawSrc.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
+        const isFileProtocol = typeof window !== 'undefined' && window.location.protocol === 'file:';
+        const cb = isFileProtocol ? '' : (rawSrc.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now());
         if (rawSrc.match(/^https?:\/\//) || rawSrc.startsWith('//')) {
             return rawSrc + cb;
         } else if (rawSrc.startsWith('../')) {
@@ -986,17 +986,58 @@ function resolveCategoryKey(input) {
     return k || null;
 }
 
-async function startSelectedCategory() {
-    const dropdown = document.getElementById('category-dropdown');
-    const raw = dropdown && dropdown.value ? dropdown.value.trim() : '';
-    const cat = resolveCategoryKey(raw);
+// ========== CATEGORY SELECT GRID ==========
+function populateCategoryGrid() {
+    const grid = document.getElementById('category-grid');
+    if (!grid || !window.CATEGORY_REGISTRY) return;
+    grid.innerHTML = '';
+    
+    const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+    window.CATEGORY_REGISTRY.forEach(function (c) {
+        const t = c.tier || 'REAL DEAL';
+        if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gibleMode) return;
+        if (tiers[t]) tiers[t].push(c);
+        else tiers['REAL DEAL'].push(c);
+    });
+
+    Object.keys(tiers).forEach(function(tier) {
+        const cats = tiers[tier];
+        if (cats.length === 0) return;
+        
+        const header = document.createElement('h3');
+        header.className = 'tier-header';
+        header.style.gridColumn = '1 / -1';
+        header.style.color = 'var(--floor-yellow)';
+        header.style.margin = '15px 0 5px';
+        header.style.textAlign = 'center';
+        header.style.textTransform = 'uppercase';
+        header.style.fontSize = '1.2rem';
+        header.textContent = tier;
+        grid.appendChild(header);
+        
+        cats.forEach(function(c) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cat-btn';
+            btn.innerHTML = '<span class="cat-emoji">' + (c.emoji || '') + '</span><span class="cat-label">' + c.label + '</span>';
+            btn.addEventListener('click', function () { selectCategory(c.key); });
+            grid.appendChild(btn);
+        });
+    });
+}
+
+function openCategoryMenu() {
+    populateCategoryGrid();
+    document.getElementById('category-menu').classList.add('show');
+}
+
+function closeCategoryMenu() {
+    document.getElementById('category-menu').classList.remove('show');
+}
+
+async function selectCategory(cat) {
+    closeCategoryMenu();
     if (!cat || !CATEGORY_SCRIPTS[cat]) return;
-    // Block beta categories when Gible mode is off
-    if (!gibleMode && window.CATEGORY_REGISTRY) {
-        const entry = window.CATEGORY_REGISTRY.find(function (c) { return c.key === cat; });
-        if (entry && entry.gibleOnly) return;
-    }
-    dropdown.value = '';
     try {
         if (hostMode) {
             await setupGame(cat, { fromAdminWindow: false });
@@ -1006,14 +1047,6 @@ async function startSelectedCategory() {
         }
     } catch (e) { console.error('Category load failed:', e); }
 }
-
-// Allow Enter key to start game from dropdown
-document.getElementById('category-dropdown').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        startSelectedCategory();
-    }
-});
 
 function endGame() {
     gameActive = false;
@@ -1409,7 +1442,7 @@ function toggleHostMode() {
             gibleMode = false;
             window.gibleMode = false;
             localStorage.removeItem('floorGibleMode');
-            if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
+            if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
         }
     }
 
@@ -1425,7 +1458,7 @@ function toggleGibleMode() {
     } else {
         localStorage.removeItem('floorGibleMode');
     }
-    if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
+    if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
 }
 
 function togglePin() {
@@ -1836,9 +1869,29 @@ document.getElementById('first-right').addEventListener('change', function () {
 });
 
 // UPDATED FAIL-SAFE (Better for Logos)
+function showTextFallback(itemName) {
+    const container = document.getElementById('img-frame');
+    const img = document.getElementById('prompt-image');
+    if (img) img.style.display = 'none';
+
+    let fallback = document.getElementById('text-fallback');
+    if (!fallback) {
+        fallback = document.createElement('div');
+        fallback.id = 'text-fallback';
+        fallback.style.cssText = 'font-size:3rem; color:var(--floor-yellow); text-align:center;';
+        fallback.textContent = itemName;
+        container.appendChild(fallback);
+    } else {
+        fallback.textContent = itemName;
+    }
+}
+
 function handleImageError(img) {
-    // Prevent multiple error handlers from firing
+    // Prevent multiple error handlers from firing for the same load attempt
     if (img.dataset.errorHandled === 'true') return;
+
+    // Mark handled immediately so the inline onerror doesn't re-enter
+    img.dataset.errorHandled = 'true';
 
     const item = currentPool[currentIndex];
     const itemName = item.n;
@@ -1846,58 +1899,54 @@ function handleImageError(img) {
 
     // Skip fallback for math category - it uses its own display element
     if (isMath) {
-        img.dataset.errorHandled = 'true';
         img.style.display = 'none';
         return;
     }
 
-    // Try alternative file extensions before giving up
-    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
-    if (!img.dataset.extAttempts) {
-        img.dataset.extAttempts = '0';
-    }
-    const attemptIndex = parseInt(img.dataset.extAttempts);
-
-    // Get the base path (without extension) from the current src
+    // --- Derive the base path (without extension) from the resolved src ---
     const currentSrc = img.src;
-    const dotIndex = currentSrc.lastIndexOf('.');
-    const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
+    const urlWithoutQuery = currentSrc.split('?')[0];
+    const dotIndex = urlWithoutQuery.lastIndexOf('.');
+    const basePath = dotIndex > 0 ? urlWithoutQuery.substring(0, dotIndex) : urlWithoutQuery;
 
-    // Find the current extension to skip it
-    const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).split('?')[0].toLowerCase() : '';
+    // Find the original extension from the category data to skip it
+    const originalSrc = item.u || '';
+    const originalUrlNoQ = originalSrc.split('?')[0];
+    const originalDotIdx = originalUrlNoQ.lastIndexOf('.');
+    const originalExt = originalDotIdx > 0
+        ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
 
-    // Build list of extensions to try (excluding the one that just failed)
-    const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
+    // Extensions to probe (excluding the one that already failed)
+    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+    const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
+    const isFileProtocol = window.location.protocol === 'file:';
+    const cb = isFileProtocol ? '' : '?v=' + Date.now();
 
-    if (attemptIndex < toTry.length) {
-        // Try the next alternative extension
-        img.dataset.extAttempts = String(attemptIndex + 1);
-        img.src = basePath + '.' + toTry[attemptIndex] + '?v=' + Date.now();
-        return; // Don't mark as handled yet — let it try
+    // Use independent Image() probes so we don't rely on onerror re-firing
+    // on the same DOM <img> element (which is unreliable under file://).
+    let probeIndex = 0;
+
+    function tryNextExtension() {
+        if (probeIndex >= toTry.length) {
+            // All alternatives exhausted — show text fallback
+            showTextFallback(itemName);
+            return;
+        }
+        const probe = new Image();
+        const testSrc = basePath + '.' + toTry[probeIndex] + cb;
+        probeIndex++;
+        probe.onload = function () {
+            // Found a working extension — apply it to the DOM image
+            img.src = testSrc;
+            img.style.display = 'block';
+        };
+        probe.onerror = function () {
+            tryNextExtension();
+        };
+        probe.src = testSrc;
     }
 
-    // All alternatives exhausted — show text fallback
-    img.dataset.errorHandled = 'true';
-    img.dataset.extAttempts = '0';
-
-    const container = document.getElementById('img-frame');
-
-    // Hide the image
-    img.style.display = 'none';
-
-    // Check if fallback already exists to prevent duplicates
-    let fallback = document.getElementById('text-fallback');
-    if (!fallback) {
-        // Create fallback text element
-        fallback = document.createElement('div');
-        fallback.id = 'text-fallback';
-        fallback.style.cssText = 'font-size:3rem; color:var(--floor-yellow); text-align:center;';
-        fallback.textContent = itemName;
-        container.appendChild(fallback);
-    } else {
-        // Update existing fallback
-        fallback.textContent = itemName;
-    }
+    tryNextExtension();
 }
 
 // NEW FEATURE FUNCTIONS

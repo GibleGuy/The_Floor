@@ -497,6 +497,103 @@
         .custom-tab-panel.active {
             display: block;
         }
+        /* Category Menu Overlay (Admin) */
+        .admin-cat-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-cat-menu-overlay.show {
+            display: flex;
+        }
+        .admin-cat-menu-panel {
+            background: rgba(0, 15, 40, 0.97);
+            border: 3px solid var(--floor-yellow);
+            border-radius: 16px;
+            padding: 24px 20px 16px;
+            max-width: 600px;
+            width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .admin-cat-menu-panel h2 {
+            color: var(--floor-yellow);
+            font-size: 1.3rem;
+            margin: 0 0 14px;
+            text-align: center;
+        }
+        .admin-cat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .admin-cat-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 10px 6px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 0.75rem;
+            text-align: center;
+            min-height: 55px;
+        }
+        .admin-cat-btn:hover {
+            border-color: var(--floor-yellow);
+            background: rgba(255, 204, 0, 0.1);
+        }
+        .admin-cat-btn .cat-emoji {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+        .admin-cat-btn .cat-label {
+            font-size: 0.65rem;
+            color: #ccc;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .admin-cat-btn:hover .cat-label {
+            color: var(--floor-yellow);
+        }
+        .admin-cat-menu-close {
+            display: block;
+            margin: 12px auto 0;
+            padding: 8px 22px;
+            font-size: 0.9rem;
+            background: var(--floor-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .admin-cat-menu-close:hover {
+            background: #c0392b;
+        }
+        .admin-cat-select-btn {
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background: var(--floor-green);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            color: white;
+        }
+        .admin-cat-select-btn:hover {
+            filter: brightness(1.1);
+        }
     </style>
 </head>
 
@@ -510,30 +607,18 @@
         <h1>ADMIN WINDOW</h1>
         <span id="conn-badge" class="conn-badge disconnected">—</span>
         <div class="category-row">
-            <input type="text" id="category-input" list="admin-category-list" placeholder="Category..."
-                autocomplete="off">
-            <datalist id="admin-category-list">
-            </datalist>
-            <script src="../categories/index.js?v=2"></script>
-            <script>
-                // Dynamically populate admin category list from registry
-                (function () {
-                    var dl = document.getElementById('admin-category-list');
-                    var gible = localStorage.getItem('floorGibleMode') === '1';
-                    if (dl && window.CATEGORY_REGISTRY) {
-                        window.CATEGORY_REGISTRY.forEach(function (c) {
-                            if (c.gibleOnly && !gible) return;
-                            var opt = document.createElement('option');
-                            opt.value = c.key;
-                            opt.textContent = c.label;
-                            dl.appendChild(opt);
-                        });
-                    }
-                })();
-            </script>
-            <button type="button" class="play-btn" id="admin-load-btn">LOAD</button>
+            <button type="button" class="admin-cat-select-btn" id="admin-cat-select-btn">SELECT CATEGORY</button>
             <button type="button" class="play-btn" id="admin-start-btn" disabled>START</button>
             <button type="button" class="help-btn" id="admin-help-btn" title="Help">?</button>
+        </div>
+    </div>
+
+    <!-- Admin Category Menu Overlay -->
+    <div class="admin-cat-menu-overlay" id="admin-cat-menu" onclick="closeAdminCatMenu()">
+        <div class="admin-cat-menu-panel" onclick="event.stopPropagation()">
+            <h2>SELECT A CATEGORY</h2>
+            <div class="admin-cat-grid" id="admin-cat-grid"></div>
+            <button type="button" class="admin-cat-menu-close" onclick="closeAdminCatMenu()">CLOSE</button>
         </div>
     </div>
 
@@ -733,6 +818,7 @@
         </div>
     </div>
 
+    <script src="../categories/index.js?v=3"></script>
     <script>
         let lastStateTime = 0;
         let connCheckInterval = null;
@@ -758,7 +844,7 @@
         }
 
         function setControlsEnabled(enabled) {
-            const ids = ['category-input', 'admin-load-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
+            const ids = ['admin-cat-select-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
                 'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
                 'admin-vol-music', 'admin-vol-sfx',
@@ -800,21 +886,66 @@
             send({ action: 'help', open });
         });
 
-        document.getElementById('admin-load-btn').addEventListener('click', function () {
-            const v = document.getElementById('category-input').value.trim();
-            if (v && hasOpener()) {
-                send({ action: 'loadCategory', category: v });
-                document.getElementById('category-input').value = '';
-            }
-        });
+        function populateAdminCatGrid() {
+            var grid = document.getElementById('admin-cat-grid');
+            if (!grid || !window.CATEGORY_REGISTRY) return;
+            var gible = localStorage.getItem('floorGibleMode') === '1';
+            grid.innerHTML = '';
+            
+            var tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+            window.CATEGORY_REGISTRY.forEach(function (c) {
+                var t = c.tier || 'REAL DEAL';
+                if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gible) return;
+                if (tiers[t]) tiers[t].push(c);
+                else tiers['REAL DEAL'].push(c);
+            });
 
+            Object.keys(tiers).forEach(function(tier) {
+                var cats = tiers[tier];
+                if (cats.length === 0) return;
+                
+                var header = document.createElement('h3');
+                header.className = 'admin-tier-header';
+                header.style.gridColumn = '1 / -1';
+                header.style.color = 'var(--floor-yellow)';
+                header.style.margin = '12px 0 4px';
+                header.style.textAlign = 'center';
+                header.style.fontSize = '1rem';
+                header.textContent = tier;
+                grid.appendChild(header);
+
+                cats.forEach(function(c) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'admin-cat-btn';
+                    btn.innerHTML = '<span class="cat-emoji">' + (c.emoji || '') + '</span><span class="cat-label">' + c.label + '</span>';
+                    btn.addEventListener('click', function () { adminSelectCategory(c.key); });
+                    grid.appendChild(btn);
+                });
+            });
+        }
+
+        function openAdminCatMenu() {
+            populateAdminCatGrid();
+            document.getElementById('admin-cat-menu').classList.add('show');
+        }
+
+        function closeAdminCatMenu() {
+            document.getElementById('admin-cat-menu').classList.remove('show');
+        }
+
+        function adminSelectCategory(cat) {
+            closeAdminCatMenu();
+            if (cat && hasOpener()) {
+                send({ action: 'loadCategory', category: cat });
+            }
+        }
+
+        document.getElementById('admin-cat-select-btn').addEventListener('click', openAdminCatMenu);
         document.getElementById('admin-start-btn').addEventListener('click', function () {
             if (hasOpener()) send({ action: 'startGame' });
         });
-
-        document.getElementById('category-input').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('admin-load-btn').click(); }
-        });
+        populateAdminCatGrid();
 
         function doAdminReset() {
             if (!confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) return;

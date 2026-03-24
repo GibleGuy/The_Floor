@@ -267,7 +267,8 @@
         (function loadAllCategories() {
             if (!window.CATEGORY_REGISTRY) return;
             const filtered = window.CATEGORY_REGISTRY.filter(function (c) {
-                return !c.gibleOnly || galleryGibleMode;
+                const isGibleRestricted = (c.tier === 'REAL DEAL' || c.tier === 'TIEBREAK');
+                return !isGibleRestricted || galleryGibleMode;
             });
             const promises = filtered.map(function (c) {
                 categoryLabels[c.key] = c.label;
@@ -346,15 +347,31 @@
             const main = document.getElementById('gallery-main');
             const select = document.getElementById('category-select');
 
-            // Populate dropdown
+            // Populate dropdown (grouped by tier)
+            const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
             for (const [key, label] of Object.entries(categoryLabels)) {
                 const items = categories[key] || [];
                 if (items.length === 0) continue;
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = label;
-                select.appendChild(option);
+                const registryItem = window.CATEGORY_REGISTRY.find(c => c.key === key);
+                const tier = (registryItem && registryItem.tier) ? registryItem.tier : 'REAL DEAL';
+                if (!tiers[tier]) tiers[tier] = [];
+                tiers[tier].push({ key, label });
             }
+
+            Object.keys(tiers).forEach(function (tier) {
+                const cats = tiers[tier];
+                if (cats.length === 0) return;
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = tier;
+                cats.forEach(function (c) {
+                    const option = document.createElement('option');
+                    option.value = c.key;
+                    option.textContent = c.label;
+                    optgroup.appendChild(option);
+                });
+                select.appendChild(optgroup);
+            });
+            
             const soundsOpt = document.createElement('option');
             soundsOpt.value = 'sounds';
             soundsOpt.textContent = 'Sound Effects';
@@ -390,7 +407,8 @@
                         const imgWrap = document.createElement('div');
                         imgWrap.className = 'img-wrap';
                         const img = document.createElement('img');
-                        const cb = item.u.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
+                        const isFileProtocol = typeof window !== 'undefined' && window.location.protocol === 'file:';
+                        const cb = isFileProtocol ? '' : (item.u.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now());
                         img.src = item.u + cb;
                         img.alt = item.n;
                         img.loading = 'lazy';
