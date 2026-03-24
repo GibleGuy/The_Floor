@@ -26,7 +26,6 @@ const strangeAnimalsData = [
     { n: "AYE-AYE", u: "../images/strange-animals/aye-aye.webp" },
     { n: "OKAPI", u: "../images/strange-animals/okapi.webp" },
     { n: "ECHIDNA", u: "../images/strange-animals/echidna.webp" },
-    { n: "CASSOWARY", u: "../images/strange-animals/cassowary.webp" },
     { n: "TAPIR", u: "../images/strange-animals/tapir.webp" },
     { n: "MANTIS SHRIMP", u: "../images/strange-animals/mantis-shrimp.webp" },
     { n: "GOBLIN SHARK", u: "../images/strange-animals/goblin-shark.webp" },
