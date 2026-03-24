@@ -9,9 +9,7 @@ const mobileAppsData = [
   { n: "NETFLIX", u: "../images/mobile-apps/netflix.jpg" },
   { n: "SPOTIFY", u: "../images/mobile-apps/spotify.jpg" },
   { n: "GOOGLE MAPS", u: "../images/mobile-apps/google-maps.jpg" },
-  { n: "UBER", u: "../images/mobile-apps/uber.jpg" },
   { n: "TINDER", u: "../images/mobile-apps/tinder.jpg" },
-  { n: "X", u: "../images/mobile-apps/x.jpg" },
   { n: "GMAIL", u: "../images/mobile-apps/gmail.jpg" },
   { n: "AMAZON", u: "../images/mobile-apps/amazon.jpg" },
   { n: "PINTEREST", u: "../images/mobile-apps/pinterest.jpg" },
@@ -47,22 +45,18 @@ const mobileAppsData = [
 
   // Tier 4 — Expert (items 41–50)
   { n: "CAPCUT", u: "../images/mobile-apps/capcut.jpg" },
-  { n: "BEREAL", u: "../images/mobile-apps/bereal.jpg" },
   { n: "VSCO", u: "../images/mobile-apps/vsco.jpg" },
   { n: "LETTERBOXD", u: "../images/mobile-apps/letterboxd.jpg" },
   { n: "FLIGHTRADAR24", u: "../images/mobile-apps/flightradar24.jpg" },
   { n: "DRAFTKINGS", u: "../images/mobile-apps/draftkings.jpg" },
   { n: "ALLTRAILS", u: "../images/mobile-apps/alltrails.jpg" },
   { n: "LIBBY", u: "../images/mobile-apps/libby.jpg" },
-  { n: "WEBTOON", u: "../images/mobile-apps/webtoon.jpg" },
   { n: "SIGNAL", u: "../images/mobile-apps/signal.jpg" },
 
   // ── BACKUPS (items 51–60) ────────────────
   { n: "SKYPE", u: "../images/mobile-apps/skype.jpg" },
   { n: "DROPBOX", u: "../images/mobile-apps/dropbox.jpg" },
-  { n: "LYFT", u: "../images/mobile-apps/lyft.jpg" },
   { n: "SOUNDCLOUD", u: "../images/mobile-apps/soundcloud.jpg" },
-  { n: "TEMU", u: "../images/mobile-apps/temu.jpg" },
   { n: "SHEIN", u: "../images/mobile-apps/shein.jpg" },
   { n: "EXPEDIA", u: "../images/mobile-apps/expedia.jpg" },
   { n: "GROUPME", u: "../images/mobile-apps/groupme.jpg" },

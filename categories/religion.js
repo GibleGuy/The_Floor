@@ -7,7 +7,6 @@ const religionData = [
     { n: "STAR OF DAVID", u: "../images/religion/star-of-david.webp" },
     { n: "QURAN", u: "../images/religion/quran.webp" },
     { n: "BUDDHA STATUE", u: "../images/religion/buddha-statue.webp" },
-    { n: "CRESCENT MOON AND STAR", u: "../images/religion/crescent-moon-and-star.webp" },
     { n: "ANGEL", u: "../images/religion/angel.webp" },
     { n: "CHURCH", u: "../images/religion/church.webp" },
     { n: "MOSQUE", u: "../images/religion/mosque.webp" },
