@@ -57,6 +57,8 @@ let categoryComplete = false;
 
 // NEW FEATURES
 let isMuted = false;
+let musicVolume = 0.2;
+let sfxVolume = 0.65;
 let currentTheme = 'dark';
 let confettiEnabled = false;
 let disableExtras = false;
@@ -110,6 +112,8 @@ function loadPreferences() {
         const p = JSON.parse(raw);
         if (p.theme && ['dark', 'light', 'gible'].includes(p.theme)) currentTheme = p.theme;
         if (typeof p.mute === 'boolean') isMuted = p.mute;
+        if (typeof p.musicVolume === 'number') musicVolume = p.musicVolume;
+        if (typeof p.sfxVolume === 'number') sfxVolume = p.sfxVolume;
         if (typeof p.showTimerDecimal === 'boolean') showTimerDecimal = p.showTimerDecimal;
         if (typeof p.disableExtras === 'boolean') disableExtras = p.disableExtras;
         if (typeof p.confettiEnabled === 'boolean') confettiEnabled = p.confettiEnabled;
@@ -188,6 +192,8 @@ function savePreferences() {
         const p = {
             theme: currentTheme,
             mute: isMuted,
+            musicVolume,
+            sfxVolume,
             showTimerDecimal,
             disableExtras,
             confettiEnabled,
@@ -204,33 +210,34 @@ function savePreferences() {
 }
 
 // ========== SOUNDS ==========
-// ding1–ding10 (correct), pass1–pass5 (pass). Play in order, loop after last.
-const DING_COUNT = 10;
+// Passes play in order, loop after last.
 const PASS_COUNT = 5;
 let sounds = {
     countdown: new Audio('../sounds/countdown.mp3'),
-    dings: Array.from({ length: DING_COUNT }, (_, i) => new Audio(`../sounds/ding${i + 1}.mp3`)),
-    passes: Array.from({ length: PASS_COUNT }, (_, i) => new Audio(`../sounds/pass${i + 1}.mp3`))
+    right: new Audio('../sounds/RIGHT.wav'),
+    passes: Array.from({ length: PASS_COUNT }, (_, i) => new Audio(`../sounds/pass${i + 1}.mp3`)),
+    duelMusic: new Audio('../sounds/DUEL MUSIC.wav'),
+    duelOver: new Audio('../sounds/DUEL OVER.wav')
 };
-sounds.countdown.volume = 0.5;
-sounds.dings.forEach(s => { s.volume = 0.5; });
-sounds.passes.forEach(s => { s.volume = 0.5; });
+sounds.countdown.volume = sfxVolume;
+sounds.passes.forEach(s => { s.volume = sfxVolume; });
+sounds.duelMusic.loop = true;
+sounds.duelMusic.volume = musicVolume;
+sounds.duelOver.volume = musicVolume;
 
-let dingIndex = 0;
 let passIndex = 0;
 
 function playDingSound() {
     if (isMuted) return;
-    const s = new Audio('../sounds/ding' + (dingIndex + 1) + '.mp3');
-    s.volume = 0.5;
+    const s = sounds.right.cloneNode();
+    s.volume = sfxVolume;
     s.play().catch(() => { });
-    dingIndex = (dingIndex + 1) % DING_COUNT;
 }
 
 function playPassSound() {
     if (isMuted) return;
     const s = new Audio('../sounds/pass' + (passIndex + 1) + '.mp3');
-    s.volume = 0.5;
+    s.volume = sfxVolume;
     s.play().catch(() => { });
     passIndex = (passIndex + 1) % PASS_COUNT;
 }
@@ -294,7 +301,6 @@ async function setupGame(cat, opts) {
     isPaused = false;
     itemsCompleted = 0;
     categoryComplete = false;
-    dingIndex = 0;
     passIndex = 0;
 
     // Reset boost buttons if game is starting fresh
@@ -380,6 +386,11 @@ async function setupGame(cat, opts) {
         }
         overlay.style.display = 'none';
 
+        if (!isMuted) {
+            sounds.duelMusic.currentTime = 0;
+            sounds.duelMusic.play().catch(() => { });
+        }
+
         gameActive = true;
         inputLocked = false;
         loadImage();
@@ -437,6 +448,11 @@ async function startGameFromHost() {
     }
     overlay.style.display = 'none';
     overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
+
+    if (!isMuted) {
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelMusic.play().catch(() => { });
+    }
 
     gameActive = true;
     inputLocked = false;
@@ -715,6 +731,13 @@ function handleCategoryComplete() {
     isPaused = false;
     clearInterval(clockInterval);
 
+    if (!isMuted) {
+        sounds.duelMusic.pause();
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelOver.currentTime = 0;
+        sounds.duelOver.play().catch(() => {});
+    }
+
     // Stop timers
     inputLocked = true;
 
@@ -828,31 +851,31 @@ function loadImage() {
     container.style.display = 'block';
 
     const mp = document.getElementById('math-problem');
+
+    // Resolve image src: absolute URLs stay as-is, relative paths that already
+    // start with ../ are used directly, otherwise prepend ../ for duel/ context.
+    function resolveImageSrc(rawSrc) {
+        const cb = rawSrc.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
+        if (rawSrc.match(/^https?:\/\//) || rawSrc.startsWith('//')) {
+            return rawSrc + cb;
+        } else if (rawSrc.startsWith('../')) {
+            return rawSrc + cb;
+        } else {
+            return '../' + rawSrc + cb;
+        }
+    }
+
     if (isMath) {
         img.style.display = 'none';
         if (mp) {
             mp.textContent = item.q;
             mp.classList.add('show');
         }
-        // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
-        const src = item.u;
-        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
-        if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src + cb;
-        } else {
-            img.src = '../' + src + cb;
-        }
+        img.src = resolveImageSrc(item.u);
     } else {
         img.style.display = 'block';
         if (mp) mp.classList.remove('show');
-        // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
-        const src = item.u;
-        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
-        if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src + cb;
-        } else {
-            img.src = '../' + src + cb;
-        }
+        img.src = resolveImageSrc(item.u);
     }
 }
 
@@ -997,6 +1020,13 @@ function endGame() {
     isPaused = false;
     clearInterval(clockInterval);
 
+    if (!isMuted) {
+        sounds.duelMusic.pause();
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelOver.currentTime = 0;
+        sounds.duelOver.play().catch(() => {});
+    }
+
     // Determine winner (only in classic/host mode)
     // When endGame() is called, activePlayer's timer expired, so the opponent wins
     if (gamemode !== 'singleplayer') {
@@ -1056,7 +1086,7 @@ async function runUnpauseCountdown() {
     overlay.style.background = 'rgba(0,0,0,1)';
     if (!isMuted) {
         const c = sounds.countdown.cloneNode();
-        c.volume = 0.5;
+        c.volume = sfxVolume;
         c.currentTime = 0;
         c.play().catch(() => { });
     }
@@ -1069,6 +1099,9 @@ async function runUnpauseCountdown() {
     overlay.style.zIndex = '20';
     isPaused = false;
     unpauseCountdownActive = false;
+    if (!isMuted && gameActive && !categoryComplete) {
+        sounds.duelMusic.play().catch(() => {});
+    }
     updatePauseButton();
     updateDisplay();
     updatePauseOverlay();
@@ -1086,6 +1119,9 @@ function togglePause() {
         return;
     }
     isPaused = !isPaused;
+    if (isPaused) {
+        sounds.duelMusic.pause();
+    }
     updatePauseButton();
     updateDisplay(); // Update to show/hide editable timers
     updatePauseOverlay();
@@ -1179,6 +1215,12 @@ function resetGame(skipConfirm) {
     if (!skipConfirm && !confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) {
         return;
     }
+
+    // Stop audio immediately
+    sounds.duelMusic.pause();
+    sounds.duelMusic.currentTime = 0;
+    sounds.duelOver.pause();
+    sounds.duelOver.currentTime = 0;
 
     // Reset background
     document.body.classList.remove('game-ended');
@@ -1486,6 +1528,8 @@ function postStateToAdmin() {
             firstPlayerIsLeft,
             timeBoostsUsed: timeBoostsUsed.slice(),
             isMuted,
+            musicVolume,
+            sfxVolume,
             gameActive,
             isPaused,
             activePlayer,
@@ -1558,6 +1602,23 @@ window.addEventListener('message', function (e) {
         isMuted = !!d.value;
         const mt = document.getElementById('mute-toggle');
         if (mt && mt.checked !== isMuted) mt.checked = isMuted;
+        if (isMuted) {
+            sounds.duelMusic.pause();
+        } else if (gameActive && !isPaused && !categoryComplete) {
+            sounds.duelMusic.play().catch(() => {});
+        }
+    }
+    else if (d.action === 'volume' && d.type === 'music' && d.value != null) {
+        musicVolume = d.value;
+        sounds.duelMusic.volume = musicVolume;
+        sounds.duelOver.volume = musicVolume;
+        savePreferences();
+    }
+    else if (d.action === 'volume' && d.type === 'sfx' && d.value != null) {
+        sfxVolume = d.value;
+        sounds.countdown.volume = sfxVolume;
+        sounds.passes.forEach(s => { s.volume = sfxVolume; });
+        savePreferences();
     }
     else if (d.action === 'changeActivePlayer' && (d.playerNum === 1 || d.playerNum === 2)) {
         changeActivePlayer(d.playerNum);
@@ -1842,6 +1903,11 @@ function handleImageError(img) {
 // NEW FEATURE FUNCTIONS
 function toggleMute() {
     isMuted = document.getElementById('mute-toggle').checked;
+    if (isMuted) {
+        sounds.duelMusic.pause();
+    } else if (gameActive && !isPaused && !categoryComplete) {
+        sounds.duelMusic.play().catch(() => {});
+    }
     savePreferences();
 }
 
