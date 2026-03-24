@@ -177,6 +177,13 @@
                     <option value="classic" selected>Classic</option>
                 </select>
             </div>
+            <div class="custom-row">
+                <label class="custom-label">Jump to Clue:</label>
+                <select id="clue-jump-select" class="custom-input" onchange="jumpToClue(this.value)"
+                    style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                    <option value="">-- Start Game First --</option>
+                </select>
+            </div>
             <div class="switch-container">
                 <span class="switch-label">HOST MODE</span>
                 <label class="switch">

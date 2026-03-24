@@ -681,6 +681,10 @@
                 <option value="singleplayer">Singleplayer</option>
                 <option value="classic" selected>Classic</option>
             </select>
+            <label class="admin-ctrl-label" style="margin-left: 12px;">Jump to Clue:</label>
+            <select id="admin-clue-jump" class="admin-ctrl-select">
+                <option value="">-- Start Game First --</option>
+            </select>
         </div>
     </div>
 
@@ -824,6 +828,42 @@
         let connCheckInterval = null;
         let categoryLoaded = false;
 
+        function adminHandleImageError(img) {
+            if (img.dataset.errorHandled === 'true') return;
+            img.dataset.errorHandled = 'true';
+            
+            const currentSrc = img.src;
+            const urlWithoutQuery = currentSrc.split('?')[0];
+            const dotIndex = urlWithoutQuery.lastIndexOf('.');
+            const basePath = dotIndex > 0 ? urlWithoutQuery.substring(0, dotIndex) : urlWithoutQuery;
+            
+            const originalUrlNoQ = (img.getAttribute('data-original-src') || '').split('?')[0];
+            const originalDotIdx = originalUrlNoQ.lastIndexOf('.');
+            const originalExt = originalDotIdx > 0 ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
+            
+            const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+            const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
+            const isFileProtocol = window.location.protocol === 'file:';
+            const cb = isFileProtocol ? '' : '?v=' + Date.now();
+            
+            let probeIndex = 0;
+            function tryNext() {
+                if (probeIndex >= toTry.length) {
+                    img.style.display = 'none';
+                    return;
+                }
+                const ext = toTry[probeIndex++];
+                const probe = new Image();
+                const testSrc = basePath + '.' + ext + cb;
+                probe.onload = function() {
+                    img.src = testSrc;
+                };
+                probe.onerror = tryNext;
+                probe.src = testSrc;
+            }
+            tryNext();
+        }
+
         function hasOpener() { return !!(window.opener && !window.opener.closed); }
 
         function updateStartButton() {
@@ -845,7 +885,7 @@
 
         function setControlsEnabled(enabled) {
             const ids = ['admin-cat-select-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
-                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
+                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
                 'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
@@ -959,6 +999,9 @@
         document.getElementById('admin-gamemode').addEventListener('change', function () {
             send({ action: 'gamemode', value: this.value });
         });
+        document.getElementById('admin-clue-jump').addEventListener('change', function () {
+            send({ action: 'jumpToClue', index: this.value });
+        });
 
         document.getElementById('admin-p1-name').addEventListener('change', function () {
             send({ action: 'setPlayerNames', p1: this.value || 'Challenger', p2: document.getElementById('admin-p2-name').value || 'Expert' });
@@ -1056,6 +1099,25 @@
                     const sel = document.getElementById('admin-gamemode');
                     if (sel && sel.value !== d.gamemode) sel.value = d.gamemode;
                 }
+                
+                if (d.poolNames) {
+                    const jumpSel = document.getElementById('admin-clue-jump');
+                    if (jumpSel) {
+                        if (jumpSel.options.length - 1 !== d.poolNames.length) {
+                            jumpSel.innerHTML = '<option value="">-- Jump to Clue --</option>';
+                            d.poolNames.forEach((name, i) => {
+                                const opt = document.createElement('option');
+                                opt.value = i;
+                                opt.textContent = `${i + 1}. ${name}`;
+                                jumpSel.appendChild(opt);
+                            });
+                        }
+                        if (d.currentIndex != null && jumpSel.value !== String(d.currentIndex)) {
+                            jumpSel.value = d.currentIndex;
+                        }
+                    }
+                }
+
                 const p1Label = document.getElementById('admin-p1-label');
                 const p2Label = document.getElementById('admin-p2-label');
                 if (d.playerNames && d.playerNames[0]) p1Label.textContent = d.playerNames[0];
@@ -1190,26 +1252,46 @@
                 const curBox = document.getElementById('admin-current-img');
                 const curAns = document.getElementById('admin-current-answer');
                 if (d.current) {
-                    curAns.textContent = d.current.answer;
-                    curBox.innerHTML = '';
-                    if (d.current.isMath) {
-                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
-                    } else if (d.current.imageUrl) {
-                        const img = document.createElement('img'); img.src = d.current.imageUrl; img.alt = d.current.answer; curBox.appendChild(img);
-                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; curBox.appendChild(s); }
-                } else { curAns.textContent = '—'; curBox.innerHTML = '<span class="placeholder">—</span>'; }
+                    const currentId = d.current.answer + '|' + (d.current.imageUrl || d.current.question);
+                    if (curBox.dataset.renderedId !== currentId) {
+                        curBox.dataset.renderedId = currentId;
+                        curAns.textContent = d.current.answer;
+                        curBox.innerHTML = '';
+                        if (d.current.isMath) {
+                            const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
+                        } else if (d.current.imageUrl) {
+                            const img = document.createElement('img'); img.setAttribute('data-original-src', d.current.imageUrl); img.src = d.current.imageUrl; img.alt = d.current.answer; img.onerror = function() { adminHandleImageError(this); }; curBox.appendChild(img);
+                        } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; curBox.appendChild(s); }
+                    }
+                } else { 
+                    if (curBox.dataset.renderedId !== 'empty') {
+                        curBox.dataset.renderedId = 'empty';
+                        curAns.textContent = '—'; 
+                        curBox.innerHTML = '<span class="placeholder">—</span>'; 
+                    }
+                }
 
                 const nextBox = document.getElementById('admin-next-img');
                 const nextAns = document.getElementById('admin-next-answer');
                 if (d.next) {
-                    nextAns.textContent = d.next.answer;
-                    nextBox.innerHTML = '';
-                    if (d.next.isMath) {
-                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);
-                    } else if (d.next.imageUrl) {
-                        const img = document.createElement('img'); img.src = d.next.imageUrl; img.alt = d.next.answer; nextBox.appendChild(img);
-                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; nextBox.appendChild(s); }
-                } else { nextAns.textContent = '—'; nextBox.innerHTML = '<span class="placeholder">—</span>'; }
+                    const nextId = d.next.answer + '|' + (d.next.imageUrl || d.next.question);
+                    if (nextBox.dataset.renderedId !== nextId) {
+                        nextBox.dataset.renderedId = nextId;
+                        nextAns.textContent = d.next.answer;
+                        nextBox.innerHTML = '';
+                        if (d.next.isMath) {
+                            const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);
+                        } else if (d.next.imageUrl) {
+                            const img = document.createElement('img'); img.setAttribute('data-original-src', d.next.imageUrl); img.src = d.next.imageUrl; img.alt = d.next.answer; img.onerror = function() { adminHandleImageError(this); }; nextBox.appendChild(img);
+                        } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; nextBox.appendChild(s); }
+                    }
+                } else { 
+                    if (nextBox.dataset.renderedId !== 'empty') {
+                        nextBox.dataset.renderedId = 'empty';
+                        nextAns.textContent = '—'; 
+                        nextBox.innerHTML = '<span class="placeholder">—</span>'; 
+                    }
+                }
             }
         });
 

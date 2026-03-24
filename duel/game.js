@@ -318,6 +318,8 @@ async function setupGame(cat, opts) {
         currentPool = [...data].sort(function () { return Math.random() - 0.5; });
     }
 
+    updateClueDropdown();
+
     // In single player, always use player 1
     if (gamemode === 'singleplayer') {
         activePlayer = 1;
@@ -723,6 +725,62 @@ function nextSlide() {
     loadImage();
     inputLocked = false;
     answerStartTime = Date.now();
+    updateClueDropdown();
+}
+
+function updateClueDropdown() {
+    const select = document.getElementById('clue-jump-select');
+    if (!select) return;
+    
+    if (!currentPool || currentPool.length === 0) {
+        select.innerHTML = '<option value="">-- Start Game First --</option>';
+        return;
+    }
+    
+    if (select.options.length - 1 !== currentPool.length) {
+        select.innerHTML = '<option value="">-- Jump to Clue --</option>';
+        currentPool.forEach((item, i) => {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `${i + 1}. ${item.n}`;
+            select.appendChild(opt);
+        });
+    }
+    
+    if (select.value !== String(currentIndex)) {
+        select.value = currentIndex;
+    }
+}
+
+function jumpToClue(index) {
+    if (gameActive && !isPaused) return; // Only allow jump when paused or not started yet
+    if (!currentPool || currentPool.length === 0) return;
+    
+    const newIndex = parseInt(index);
+    if (isNaN(newIndex) || newIndex < 0 || newIndex >= currentPool.length) return;
+    
+    currentIndex = newIndex;
+    itemsCompleted = currentIndex; // Adjust items completed so completion logic works
+    categoryComplete = false; // Reset if we jump back from end
+    
+    if (gameActive) {
+        const answerInput = document.getElementById('answer-input');
+        if (answerInput) answerInput.value = "";
+        document.getElementById('reveal-text').innerText = "";
+        
+        const imgFrame = document.getElementById('img-frame');
+        imgFrame.className = "image-container";
+        
+        loadImage();
+        
+        if (isPaused) {
+            answerStartTime = Date.now();
+            updatePauseOverlay(); // Re-hide the image behind the pause overlay
+        }
+    }
+    
+    updateClueDropdown();
+    postStateToAdmin();
 }
 
 function handleCategoryComplete() {
@@ -899,8 +957,8 @@ function updateDisplay() {
         if (p2Container) p2Container.style.display = 'block';
     }
 
-    // Check if we should make timers editable (host mode + paused)
-    const shouldBeEditable = hostMode && isPaused && gameActive;
+    // Check if we should make timers editable (host mode + paused OR before game starts)
+    const shouldBeEditable = hostMode && ((isPaused && gameActive) || (!gameActive && !categoryComplete));
 
     if (shouldBeEditable) {
         // Make timers editable
@@ -1277,6 +1335,7 @@ function resetGame(skipConfirm) {
     itemsCompleted = 0;
     categoryComplete = false;
     inPassPhase = false;
+    updateClueDropdown();
     // Reset time boosts on reset
     timeBoostsUsed = [false, false];
 
@@ -1556,6 +1615,8 @@ function postStateToAdmin() {
             t1, t2,
             playerNames: playerNames.slice(),
             gamemode,
+            poolNames: currentPool.map(c => c.n),
+            currentIndex: currentIndex,
             current,
             next,
             firstPlayerIsLeft,
@@ -1608,6 +1669,7 @@ window.addEventListener('message', function (e) {
     else if (d.action === 'pause' && gameActive) togglePause();
     else if (d.action === 'pass' && gameActive && !inputLocked) handlePass();
     else if (d.action === 'reset') resetGame(true);
+    else if (d.action === 'jumpToClue' && d.index != null) jumpToClue(d.index);
     else if (d.action === 'gamemode' && d.value) {
         const sel = document.getElementById('gamemode-select');
         if (sel && (sel.value !== d.value)) { sel.value = d.value; changeGamemode(); }
