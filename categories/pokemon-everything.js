@@ -61,13 +61,11 @@ const pokemonEverythingData = [
     // ── BACKUPS (51–60) ────────────────
     { n: "PREMIER BALL", u: "../images/pokemon/premier-ball.webp" },
     { n: "DESTINY KNOT", u: "../images/pokemon/destiny-knot.webp" },
-    { n: "OLD ROD", u: "../images/pokemon/old-rod.webp" },
     { n: "POKÉBLOCK", u: "../images/pokemon/pokeblock.webp" },
     { n: "EVERSTONE", u: "../images/pokemon/everstone.webp" },
     { n: "SILPH SCOPE", u: "../images/pokemon/silph-scope.webp" },
     { n: "CHOICE BAND", u: "../images/pokemon/choice-band.webp" },
     { n: "DYNAMAX BAND", u: "../images/pokemon/dynamax-band.webp" },
-    { n: "GOOD ROD", u: "../images/pokemon/good-rod.webp" },
     { n: "SITRUS BERRY", u: "../images/pokemon/sitrus-berry.webp" }
 ];
 // Note: "pokemon" is already registered in index.js, but I'm updating the data content below to `pokemonEverythingData` just in case.
