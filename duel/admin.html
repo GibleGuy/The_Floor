@@ -632,6 +632,16 @@
                 <label class="custom-label">Mute:</label>
                 <input type="checkbox" id="admin-mute" style="width: auto;">
             </div>
+            <div class="custom-row">
+                <label class="custom-label">Music Volume:</label>
+                <input type="range" id="admin-vol-music" min="0" max="1" step="0.05" value="0.2" style="width: 120px; vertical-align: middle;">
+                <span id="admin-vol-music-label" style="margin-left: 6px; min-width: 3em;">20%</span>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">SFX Volume:</label>
+                <input type="range" id="admin-vol-sfx" min="0" max="1" step="0.05" value="0.65" style="width: 120px; vertical-align: middle;">
+                <span id="admin-vol-sfx-label" style="margin-left: 6px; min-width: 3em;">65%</span>
+            </div>
         </div>
         <div id="admin-tab-graphics" class="custom-tab-panel">
             <div class="custom-row">
@@ -751,6 +761,7 @@
             const ids = ['category-input', 'admin-load-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
                 'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
+                'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
@@ -838,6 +849,20 @@
         });
         document.getElementById('admin-mute').addEventListener('change', function () {
             send({ action: 'mute', value: this.checked });
+        });
+        document.getElementById('admin-vol-music').addEventListener('input', function () {
+            var v = parseFloat(this.value);
+            if (!isNaN(v)) { 
+                send({ action: 'volume', type: 'music', value: v }); 
+                document.getElementById('admin-vol-music-label').textContent = Math.round(v * 100) + '%'; 
+            }
+        });
+        document.getElementById('admin-vol-sfx').addEventListener('input', function () {
+            var v = parseFloat(this.value);
+            if (!isNaN(v)) { 
+                send({ action: 'volume', type: 'sfx', value: v }); 
+                document.getElementById('admin-vol-sfx-label').textContent = Math.round(v * 100) + '%'; 
+            }
         });
         document.getElementById('admin-theme-dark').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'dark' });
@@ -934,6 +959,18 @@
                 if (d.isMuted != null) {
                     const m = document.getElementById('admin-mute');
                     if (m && m.checked !== d.isMuted) m.checked = !!d.isMuted;
+                }
+                if (typeof d.musicVolume === 'number') {
+                    const mv = document.getElementById('admin-vol-music');
+                    const mvl = document.getElementById('admin-vol-music-label');
+                    if (mv && mv.value !== String(d.musicVolume)) mv.value = d.musicVolume;
+                    if (mvl) mvl.textContent = Math.round(d.musicVolume * 100) + '%';
+                }
+                if (typeof d.sfxVolume === 'number') {
+                    const sv = document.getElementById('admin-vol-sfx');
+                    const svl = document.getElementById('admin-vol-sfx-label');
+                    if (sv && sv.value !== String(d.sfxVolume)) sv.value = d.sfxVolume;
+                    if (svl) svl.textContent = Math.round(d.sfxVolume * 100) + '%';
                 }
                 categoryLoaded = !!d.categoryLoaded;
                 updateStartButton();

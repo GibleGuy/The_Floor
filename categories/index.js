@@ -36,6 +36,7 @@ const CATEGORY_REGISTRY = [
     { key: 'hockey', label: 'Hockey', script: 'hockey.js', global: 'hockeyData' },
     { key: 'instruments', label: 'Instruments', script: 'instruments.js', global: 'instrumentsData' },
     { key: 'logos', label: 'Logos', script: 'logos.js', global: 'logosData', gibleOnly: true },
+    { key: 'marching-band', label: 'Marching Band', script: 'marching-band.js', global: 'marchingBandData' },
     { key: 'math', label: 'Math', script: 'math.js', global: 'mathData' },
     { key: 'mega', label: 'Mega Category', script: 'mega.js', global: 'megaData', gibleOnly: true },
     { key: 'memes', label: 'Memes', script: 'memes.js', global: 'memesData', gibleOnly: true },
