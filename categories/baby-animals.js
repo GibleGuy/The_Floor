@@ -31,7 +31,6 @@ const babyAnimalsData = [
     { n: "ECHIDNA PUGGLE", u: "../images/baby-animals/echidna-puggle.webp" },
     { n: "KOALA JOEY", u: "../images/baby-animals/koala-joey.webp" },
     { n: "TURTLE HATCHLING", u: "../images/baby-animals/turtle-hatchling.webp" },
-    { n: "FISH FRY", u: "../images/baby-animals/fish-fry.webp" },
     { n: "INSECT NYMPH", u: "../images/baby-animals/insect-nymph.webp" },
 
     // Tier 3 — Knowledgeable (31–40)
@@ -39,7 +38,7 @@ const babyAnimalsData = [
     { n: "CATERPILLAR", u: "../images/baby-animals/caterpillar.webp" },
     { n: "PIGEON SQUAB", u: "../images/baby-animals/pigeon-squab.webp" },
     { n: "HAWK EYAS", u: "../images/baby-animals/hawk-eyas.webp" },
-    { n: "WHELP", u: "../images/baby-animals/whelp.webp" },
+    { n: "OTTER WHELP", u: "../images/baby-animals/otter-whelp.webp" },
     { n: "NEWT EFT", u: "../images/baby-animals/newt-eft.webp" },
     { n: "SALMON SMOLT", u: "../images/baby-animals/salmon-smolt.webp" },
     { n: "EEL ELVER", u: "../images/baby-animals/eel-elver.webp" },
@@ -48,26 +47,17 @@ const babyAnimalsData = [
 
     // Tier 4 — Expert (41–50)
     { n: "POLLIWOG", u: "../images/baby-animals/polliwog.webp" },
-    { n: "MAGGOT", u: "../images/baby-animals/maggot.webp" },
     { n: "GRUB", u: "../images/baby-animals/grub.webp" },
-    { n: "INSTAR", u: "../images/baby-animals/instar.webp" },
-    { n: "LEPTOCEPHALUS", u: "../images/baby-animals/leptocephalus.webp" },
+    { n: "EEL LEPTOCEPHALUS", u: "../images/baby-animals/eel-leptocephalus.webp" },
     { n: "GUINEA FOWL KEAT", u: "../images/baby-animals/guinea-fowl-keat.webp" },
     { n: "LLAMA CRIA", u: "../images/baby-animals/llama-cria.webp" },
     { n: "OYSTER SPAT", u: "../images/baby-animals/oyster-spat.webp" },
     { n: "JELLYFISH PLANULA", u: "../images/baby-animals/jellyfish-planula.webp" },
-    { n: "URCHIN PLUTEUS", u: "../images/baby-animals/urchin-pluteus.webp" },
 
     // ── BACKUPS (51–60) ────────────────
     { n: "PLATYPUS PUGGLE", u: "../images/baby-animals/platypus-puggle.webp" },
-    { n: "BULLCALF", u: "../images/baby-animals/bullcalf.webp" },
-    { n: "HEIFER", u: "../images/baby-animals/heifer.webp" },
-    { n: "COLT", u: "../images/baby-animals/colt.webp" },
-    { n: "FILLY", u: "../images/baby-animals/filly.webp" },
-    { n: "YEARLING", u: "../images/baby-animals/yearling.webp" },
     { n: "FLEDGLING", u: "../images/baby-animals/fledgling.webp" },
     { n: "NESTLING", u: "../images/baby-animals/nestling.webp" },
-    { n: "WEANLING", u: "../images/baby-animals/weanling.webp" },
     { n: "PARR", u: "../images/baby-animals/parr.webp" }
 ];
 if (typeof window !== 'undefined') window.babyAnimalsData = babyAnimalsData;

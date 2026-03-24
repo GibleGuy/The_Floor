@@ -15,7 +15,6 @@ const orangeThingsData = [
     { n: "MONARCH BUTTERFLY", u: "../images/orange-things/monarch-butterfly.webp" },
     { n: "CHEESE", u: "../images/orange-things/cheese.webp" },
     { n: "ORANGUTAN", u: "../images/orange-things/orangutan.webp" },
-    { n: "FANTA", u: "../images/orange-things/fanta.webp" },
 
     // Tier 2 — Familiar (16–30)
     { n: "APRICOT", u: "../images/orange-things/apricot.webp" },
@@ -23,10 +22,7 @@ const orangeThingsData = [
     { n: "SWEET POTATO", u: "../images/orange-things/sweet-potato.webp" },
     { n: "MACARONI AND CHEESE", u: "../images/orange-things/macaroni-and-cheese.webp" },
     { n: "PEACH", u: "../images/orange-things/peach.webp" },
-    { n: "TANGERINE", u: "../images/orange-things/tangerine.webp" },
     { n: "GOLDFISH CRACKERS", u: "../images/orange-things/goldfish-crackers.webp" },
-    { n: "LIFE JACKET", u: "../images/orange-things/life-jacket.webp" },
-    { n: "FIRE TRUCK", u: "../images/orange-things/fire-truck.webp" },
     { n: "AUTUMN LEAVES", u: "../images/orange-things/autumn-leaves.webp" },
     { n: "MANGO", u: "../images/orange-things/mango.webp" },
     { n: "MARIGOLD", u: "../images/orange-things/marigold.webp" },
@@ -39,11 +35,9 @@ const orangeThingsData = [
     { n: "TURMERIC", u: "../images/orange-things/turmeric.webp" },
     { n: "HALLOWEEN CANDY", u: "../images/orange-things/halloween-candy.webp" },
     { n: "TIC TACS", u: "../images/orange-things/tic-tacs.webp" },
-    { n: "JULIUS PRINGLES", u: "../images/orange-things/julius-pringles.webp" },
     { n: "SAFETY GOGGLES", u: "../images/orange-things/safety-goggles.webp" },
     { n: "PERSIMMON", u: "../images/orange-things/persimmon.webp" },
     { n: "SAFFRON", u: "../images/orange-things/saffron.webp" },
-    { n: "MANDARIN", u: "../images/orange-things/mandarin.webp" },
     { n: "HABANERO PEPPER", u: "../images/orange-things/habanero-pepper.webp" },
 
     // Tier 4 — Expert (41–50)

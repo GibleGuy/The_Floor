@@ -18,21 +18,15 @@ const boardGamesData = [
     { n: "TICKET TO RIDE", u: "../images/board-games/ticket-to-ride.webp" },
 
     // Tier 2 — Familiar (16–30)
-    { n: "YAHTZEE", u: "../images/board-games/yahtzee.webp" },
-    { n: "TRIVIAL PURSUIT", u: "../images/board-games/trivial-pursuit.webp" },
     { n: "HUNGRY HUNGRY HIPPOS", u: "../images/board-games/hungry-hungry-hippos.webp" },
-    { n: "PICTIONARY", u: "../images/board-games/pictionary.webp" },
     { n: "MOUSE TRAP", u: "../images/board-games/mouse-trap.webp" },
     { n: "BACKGAMMON", u: "../images/board-games/backgammon.webp" },
     { n: "TWISTER", u: "../images/board-games/twister.webp" },
     { n: "OTHELLO", u: "../images/board-games/othello.webp" },
     { n: "BOGGLE", u: "../images/board-games/boggle.webp" },
-    { n: "CRANIUM", u: "../images/board-games/cranium.webp" },
     { n: "CHUTES AND LADDERS", u: "../images/board-games/chutes-and-ladders.webp" },
-    { n: "TROUBLE", u: "../images/board-games/trouble.webp" },
     { n: "SEQUENCE", u: "../images/board-games/sequence.webp" },
     { n: "CARCASSONNE", u: "../images/board-games/carcassonne.webp" },
-    { n: "PANDEMIC", u: "../images/board-games/pandemic.webp" },
 
     // Tier 3 — Knowledgeable (31–40)
     { n: "BETRAYAL AT HOUSE", u: "../images/board-games/betrayal-at-house.webp" },
@@ -41,7 +35,6 @@ const boardGamesData = [
     { n: "WINGSPAN", u: "../images/board-games/wingspan.webp" },
     { n: "AZUL", u: "../images/board-games/azul.webp" },
     { n: "7 WONDERS", u: "../images/board-games/7-wonders.webp" },
-    { n: "STRATEGO", u: "../images/board-games/stratego.webp" },
     { n: "MASTERMIND", u: "../images/board-games/mastermind.webp" },
     { n: "BLOKUS", u: "../images/board-games/blokus.webp" },
     { n: "PATCHWORK", u: "../images/board-games/patchwork.webp" },
@@ -64,7 +57,6 @@ const boardGamesData = [
     { n: "DOMINION", u: "../images/board-games/dominion.webp" },
     { n: "MANSIONS OF MADNESS", u: "../images/board-games/mansions-of-madness.webp" },
     { n: "SMALL WORLD", u: "../images/board-games/small-world.webp" },
-    { n: "KING OF TOKYO", u: "../images/board-games/king-of-tokyo.webp" },
     { n: "MYSTERIUM", u: "../images/board-games/mysterium.webp" },
     { n: "COSMIC ENCOUNTER", u: "../images/board-games/cosmic-encounter.webp" },
     { n: "SECRET HITLER", u: "../images/board-games/secret-hitler.webp" },

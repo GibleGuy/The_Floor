@@ -5,7 +5,6 @@ const birdsData = [
     { n: "PEACOCK", u: "../images/birds/peacock.webp" },
     { n: "FLAMINGO", u: "../images/birds/flamingo.webp" },
     { n: "OWL", u: "../images/birds/owl.webp" },
-    { n: "PARROT", u: "../images/birds/parrot.webp" },
     { n: "PIGEON", u: "../images/birds/pigeon.webp" },
     { n: "SEAGULL", u: "../images/birds/seagull.webp" },
     { n: "PELICAN", u: "../images/birds/pelican.webp" },

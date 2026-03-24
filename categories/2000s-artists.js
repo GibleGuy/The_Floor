@@ -18,7 +18,6 @@ const artists2000sData = [
     { n: "AVRIL LAVIGNE", u: "../images/2000s-artists/avril-lavigne.webp" },
 
     // Tier 2 — Familiar (16–30)
-    { n: "50 CENT", u: "../images/2000s-artists/50-cent.webp" },
     { n: "BLACK EYED PEAS", u: "../images/2000s-artists/black-eyed-peas.webp" },
     { n: "SHAKIRA", u: "../images/2000s-artists/shakira.webp" },
     { n: "GREEN DAY", u: "../images/2000s-artists/green-day.webp" },

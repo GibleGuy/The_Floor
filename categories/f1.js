@@ -14,7 +14,6 @@ const f1Data = [
     { n: "HELMET", u: "../images/f1/helmet.webp" },
     { n: "TIRES", u: "../images/f1/tires.webp" },
     { n: "PODIUM", u: "../images/f1/podium.webp" },
-    { n: "CHAMPAGNE", u: "../images/f1/champagne.webp" },
     { n: "STARTING GRID", u: "../images/f1/starting-grid.webp" },
 
     // Tier 2 — Familiar (16–30)
@@ -23,12 +22,9 @@ const f1Data = [
     { n: "CHARLES LECLERC", u: "../images/f1/charles-leclerc.webp" },
     { n: "LANDO NORRIS", u: "../images/f1/lando-norris.webp" },
     { n: "GEORGE RUSSELL", u: "../images/f1/george-russell.webp" },
-    { n: "MCLAREN", u: "../images/f1/mclaren.webp" },
-    { n: "ASTON MARTIN", u: "../images/f1/aston-martin.webp" },
     { n: "WILLIAMS", u: "../images/f1/williams.webp" },
     { n: "DRS (DRAG REDUCTION SYSTEM)", u: "../images/f1/drs.webp" },
     { n: "HALO", u: "../images/f1/halo.webp" },
-    { n: "PADDOCK", u: "../images/f1/paddock.webp" },
     { n: "SAFETY CAR", u: "../images/f1/safety-car.webp" },
     { n: "POLE POSITION", u: "../images/f1/pole-position.webp" },
     { n: "MONACO GRAND PRIX", u: "../images/f1/monaco-grand-prix.webp" },
@@ -52,9 +48,7 @@ const f1Data = [
     { n: "JUAN MANUEL FANGIO", u: "../images/f1/juan-manuel-fangio.webp" },
     { n: "MIKA HAKKINEN", u: "../images/f1/mika-hakkinen.webp" },
     { n: "NELSON PIQUET", u: "../images/f1/nelson-piquet.webp" },
-    { n: "BENETTON", u: "../images/f1/benetton.webp" },
     { n: "BRABHAM", u: "../images/f1/brabham.webp" },
-    { n: "LOTUS", u: "../images/f1/lotus.webp" },
     { n: "OVERSTEER", u: "../images/f1/oversteer.webp" },
     { n: "UNDERSTEER", u: "../images/f1/understeer.webp" },
 
@@ -64,7 +58,6 @@ const f1Data = [
     { n: "JENSON BUTTON", u: "../images/f1/jenson-button.webp" },
     { n: "NICO ROSBERG", u: "../images/f1/nico-rosberg.webp" },
     { n: "EMERSON FITTIPALDI", u: "../images/f1/emerson-fittipaldi.webp" },
-    { n: "DOWNFORCE", u: "../images/f1/downforce.webp" },
     { n: "TELEMETRY", u: "../images/f1/telemetry.webp" },
     { n: "PARC FERMÉ", u: "../images/f1/parc-ferme.webp" },
     { n: "FORMATION LAP", u: "../images/f1/formation-lap.webp" },
