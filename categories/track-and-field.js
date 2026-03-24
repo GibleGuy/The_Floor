@@ -50,7 +50,6 @@ const trackAndFieldData = [
     { n: "MO FARAH", u: "../images/track-and-field/mo-farah.webp" },
     { n: "HYDRATION STATION", u: "../images/track-and-field/hydration-station.webp" },
     { n: "STADIUM", u: "../images/track-and-field/stadium.webp" },
-    { n: "LANE LINES", u: "../images/track-and-field/lane-lines.webp" },
     { n: "FINISH TAPE", u: "../images/track-and-field/finish-tape.webp" },
 ];
 if (typeof window !== 'undefined') window.trackAndFieldData = trackAndFieldData;

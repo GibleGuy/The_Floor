@@ -1,5 +1,5 @@
 // Pokémon — images in images/pokemon/
-const pokemonData = [
+const pokemonEverythingData = [
     // Tier 1 — Obvious (1–15)
     { n: "PIKACHU", u: "../images/pokemon/pikachu.webp" },
     { n: "POKÉ BALL", u: "../images/pokemon/poke-ball.webp" },
@@ -70,5 +70,5 @@ const pokemonData = [
     { n: "GOOD ROD", u: "../images/pokemon/good-rod.webp" },
     { n: "SITRUS BERRY", u: "../images/pokemon/sitrus-berry.webp" }
 ];
-// Note: "pokemon" is already registered in index.js, but I'm updating the data content below to `pokemonEverythingData` just in case, but using the global `pokemonData`.
-if (typeof window !== 'undefined') window.pokemonEverythingData = pokemonData;
+// Note: "pokemon" is already registered in index.js, but I'm updating the data content below to `pokemonEverythingData` just in case.
+if (typeof window !== 'undefined') window.pokemonEverythingData = pokemonEverythingData;
