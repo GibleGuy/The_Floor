@@ -46,6 +46,8 @@ const CATEGORY_REGISTRY = [
     { key: 'track-and-field', label: 'Track & Field', emoji: '🏃', script: 'track-and-field.js', global: 'trackAndFieldData', tier: 'REAL DEAL' },
     { key: 'visual-novels', label: 'Visual Novels', emoji: '📖', script: 'visual-novels.js', global: 'visualNovelsData', tier: 'REAL DEAL' },
     { key: 'world-leaders', label: 'World Leaders', emoji: '🌍', script: 'world-leaders.js', global: 'worldLeadersData', tier: 'REAL DEAL' },
+    { key: 'horror-movies', label: 'Horror Movies', emoji: '🔪', script: 'horror-movies.js', global: 'horrorMoviesData', tier: 'REAL DEAL' },
+    { key: 'indiana-university', label: 'Indiana University', emoji: '🔱', script: 'indiana-university.js', global: 'indianaUniversityData', tier: 'REAL DEAL' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'EXAMPLES' },
