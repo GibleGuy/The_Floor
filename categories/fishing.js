@@ -8,12 +8,9 @@ const fishingData = [
     { n: "NET", u: "../images/fishing/net.webp" },
     { n: "TACKLE BOX", u: "../images/fishing/tackle-box.webp" },
     { n: "BOAT", u: "../images/fishing/boat.webp" },
-    { n: "FISHERMAN", u: "../images/fishing/fisherman.webp" },
     { n: "BASS", u: "../images/fishing/bass.webp" },
     { n: "SALMON", u: "../images/fishing/salmon.webp" },
     { n: "TROUT", u: "../images/fishing/trout.webp" },
-    { n: "LURE", u: "../images/fishing/lure.webp" },
-    { n: "REEL", u: "../images/fishing/reel.webp" },
     { n: "ANCHOR", u: "../images/fishing/anchor.webp" },
     { n: "DOCK", u: "../images/fishing/dock.webp" },
 
@@ -30,7 +27,6 @@ const fishingData = [
     { n: "SNAPPER", u: "../images/fishing/snapper.webp" },
     { n: "FLY FISHING", u: "../images/fishing/fly-fishing.webp" },
     { n: "SINKER", u: "../images/fishing/sinker.webp" },
-    { n: "FISHING LINE", u: "../images/fishing/fishing-line.webp" },
     { n: "PLIERS", u: "../images/fishing/pliers.webp" },
     { n: "STRINGER", u: "../images/fishing/stringer.webp" },
 
@@ -59,15 +55,13 @@ const fishingData = [
     { n: "SPINCAST REEL", u: "../images/fishing/spincast-reel.webp" },
 
     // ── BACKUPS (51–60) ────────────────
-    { n: "TROTLINE", u: "../images/fishing/trotline.webp" },
     { n: "ICE AUGER", u: "../images/fishing/ice-auger.webp" },
     { n: "TIP-UP", u: "../images/fishing/tip-up.webp" },
     { n: "CREEL", u: "../images/fishing/creel.webp" },
     { n: "SEINE NET", u: "../images/fishing/seine-net.webp" },
     { n: "TRAWL NET", u: "../images/fishing/trawl-net.webp" },
-    { n: "FISH SCALES", u: "../images/fishing/fish-scales.webp" },
+    { n: "FISH SCALER", u: "../images/fishing/fish-scaler.webp" },
     { n: "FILLET KNIFE", u: "../images/fishing/fillet-knife.webp" },
-    { n: "BARBLESS HOOK", u: "../images/fishing/barbless-hook.webp" },
     { n: "ROD HOLDER", u: "../images/fishing/rod-holder.webp" }
 ];
 if (typeof window !== 'undefined') window.fishingData = fishingData;

@@ -13,7 +13,6 @@ const furnitureData = [
     { n: "CABINET", u: "../images/furniture/cabinet.webp" },
     { n: "BUNK BED", u: "../images/furniture/bunk-bed.webp" },
     { n: "ROCKING CHAIR", u: "../images/furniture/rocking-chair.webp" },
-    { n: "DINING TABLE", u: "../images/furniture/dining-table.webp" },
     { n: "COFFEE TABLE", u: "../images/furniture/coffee-table.webp" },
     { n: "WARDROBE", u: "../images/furniture/wardrobe.webp" },
 
@@ -32,7 +31,6 @@ const furnitureData = [
     { n: "END TABLE", u: "../images/furniture/end-table.webp" },
     { n: "FOLDING CHAIR", u: "../images/furniture/folding-chair.webp" },
     { n: "BAR STOOL", u: "../images/furniture/bar-stool.webp" },
-    { n: "CHANGING TABLE", u: "../images/furniture/changing-table.webp" },
 
     // Tier 3 — Knowledgeable (31–40)
     { n: "CHANDELIER", u: "../images/furniture/chandelier.webp" },
@@ -41,7 +39,6 @@ const furnitureData = [
     { n: "HEADBOARD", u: "../images/furniture/headboard.webp" },
     { n: "VANITY", u: "../images/furniture/vanity.webp" },
     { n: "LOVESEAT", u: "../images/furniture/loveseat.webp" },
-    { n: "SIDEBOARD", u: "../images/furniture/sideboard.webp" },
     { n: "CANOPY BED", u: "../images/furniture/canopy-bed.webp" },
     { n: "DRAFTING TABLE", u: "../images/furniture/drafting-table.webp" },
     { n: "COAT RACK", u: "../images/furniture/coat-rack.webp" },
@@ -50,16 +47,13 @@ const furnitureData = [
     { n: "MURPHY BED", u: "../images/furniture/murphy-bed.webp" },
     { n: "SECTIONAL", u: "../images/furniture/sectional.webp" },
     { n: "FOUR-POSTER BED", u: "../images/furniture/four-poster-bed.webp" },
-    { n: "BUFFET", u: "../images/furniture/buffet.webp" },
     { n: "HOPE CHEST", u: "../images/furniture/hope-chest.webp" },
     { n: "TRUNDLE BED", u: "../images/furniture/trundle-bed.webp" },
     { n: "ARMOIRE", u: "../images/furniture/armoire.webp" },
     { n: "EAMES CHAIR", u: "../images/furniture/eames-chair.webp" },
     { n: "DAVENPORT", u: "../images/furniture/davenport.webp" },
-    { n: "SETTEE", u: "../images/furniture/settee.webp" },
 
     // ── BACKUPS (51–60) ────────────────
-    { n: "HUTCH", u: "../images/furniture/hutch.webp" },
     { n: "CONSOLE TABLE", u: "../images/furniture/console-table.webp" },
     { n: "DAYBED", u: "../images/furniture/daybed.webp" },
     { n: "TV STAND", u: "../images/furniture/tv-stand.webp" },
@@ -68,6 +62,5 @@ const furnitureData = [
     { n: "GLIDER", u: "../images/furniture/glider.webp" },
     { n: "LAWN CHAIR", u: "../images/furniture/lawn-chair.webp" },
     { n: "FILING CABINET", u: "../images/furniture/filing-cabinet.webp" },
-    { n: "CHEST OF DRAWERS", u: "../images/furniture/chest-of-drawers.webp" }
 ];
 if (typeof window !== 'undefined') window.furnitureData = furnitureData;
