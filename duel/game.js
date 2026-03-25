@@ -54,6 +54,7 @@ let timeBoostsUsed = [false, false];
 let currentCategory = "";
 let itemsCompleted = 0; // Track how many items have been completed
 let categoryComplete = false;
+let moreSpecificActive = false;
 
 // NEW FEATURES
 let isMuted = false;
@@ -555,12 +556,29 @@ document.addEventListener('keydown', (e) => {
         } else if (e.key === 'r' || e.key === 'R') {
             e.preventDefault();
             resetGame();
+        } else if (e.key === 'h' || e.key === 'H') {
+            e.preventDefault();
+            if (gameActive && !isPaused) toggleMoreSpecific();
         }
     }
 });
 
+function toggleMoreSpecific(forceState) {
+    if (typeof forceState !== 'undefined') {
+        moreSpecificActive = forceState;
+    } else {
+        moreSpecificActive = !moreSpecificActive;
+    }
+    const alertBox = document.getElementById('more-specific-alert');
+    if (alertBox) {
+        if (moreSpecificActive) alertBox.classList.add('show');
+        else alertBox.classList.remove('show');
+    }
+}
+
 async function handleCorrect() {
     inputLocked = true;
+    toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('correct-border');
     if (hostMode) {
         document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
@@ -633,7 +651,8 @@ async function handleCorrect() {
 
 async function handlePass() {
     inputLocked = true;
-    inPassPhase = true;
+    inPassPhase = true; // Mark as pass phase so timer continues
+    toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('pass-border');
     document.getElementById('reveal-text').innerText = `PASSED: ${currentPool[currentIndex].n}`;
 
@@ -787,6 +806,7 @@ function handleCategoryComplete() {
     categoryComplete = true;
     gameActive = false;
     isPaused = false;
+    toggleMoreSpecific(false);
     clearInterval(clockInterval);
 
     if (!isMuted) {
@@ -1109,6 +1129,7 @@ async function selectCategory(cat) {
 function endGame() {
     gameActive = false;
     isPaused = false;
+    toggleMoreSpecific(false);
     clearInterval(clockInterval);
 
     if (!isMuted) {
@@ -1303,9 +1324,10 @@ function updatePauseButton() {
 }
 
 function resetGame(skipConfirm) {
-    if (!skipConfirm && !confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) {
-        return;
-    }
+    if (!skipConfirm && !confirm('Are you sure you want to reset the game? This will clear all progress and stats.')) return;
+
+    toggleMoreSpecific(false);
+    if (clockInterval) clearInterval(clockInterval);
 
     // Stop audio immediately
     sounds.duelMusic.pause();
@@ -1615,6 +1637,7 @@ function postStateToAdmin() {
             t1, t2,
             playerNames: playerNames.slice(),
             gamemode,
+            moreSpecificActive: moreSpecificActive,
             poolNames: currentPool.map(c => c.n),
             currentIndex: currentIndex,
             current,
@@ -1670,6 +1693,7 @@ window.addEventListener('message', function (e) {
     else if (d.action === 'pass' && gameActive && !inputLocked) handlePass();
     else if (d.action === 'reset') resetGame(true);
     else if (d.action === 'jumpToClue' && d.index != null) jumpToClue(d.index);
+    else if (d.action === 'moreSpecific') toggleMoreSpecific();
     else if (d.action === 'gamemode' && d.value) {
         const sel = document.getElementById('gamemode-select');
         if (sel && (sel.value !== d.value)) { sel.value = d.value; changeGamemode(); }

@@ -106,6 +106,8 @@ python3 tools/image-server.py
 # Open http://localhost:8642/tools/image-picker.html
 ```
 
+# gible note - to kill servers type pkill -f python3
+
 1. Select the category from the dropdown
 2. Use the **"Missing"** filter to see items that still need images
 3. Click **🔍 Search Google** — opens Google Images in a new tab

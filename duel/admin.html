@@ -676,6 +676,7 @@
         <div class="admin-controls-row">
             <button type="button" class="admin-ctrl-btn" id="admin-btn-pause">PAUSE</button>
             <button type="button" class="admin-ctrl-btn danger" id="admin-btn-reset">RESET</button>
+            <button type="button" class="admin-ctrl-btn" id="admin-btn-more-specific" style="background:#555; color:white;">MORE SPECIFIC (H)</button>
             <label class="admin-ctrl-label">Gamemode:</label>
             <select id="admin-gamemode" class="admin-ctrl-select">
                 <option value="singleplayer">Singleplayer</option>
@@ -885,7 +886,7 @@
 
         function setControlsEnabled(enabled) {
             const ids = ['admin-cat-select-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
-                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
+                'admin-btn-pause', 'admin-btn-reset', 'admin-btn-more-specific', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
                 'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
@@ -995,6 +996,9 @@
         document.getElementById('admin-btn-k').addEventListener('click', function () { send({ action: 'pause' }); });
         document.getElementById('admin-btn-l').addEventListener('click', function () { send({ action: 'pass' }); });
         document.getElementById('admin-btn-pause').addEventListener('click', function () { send({ action: 'pause' }); });
+        document.getElementById('admin-btn-more-specific').addEventListener('click', function () {
+            send({ action: 'moreSpecific' });
+        });
         document.getElementById('admin-btn-reset').addEventListener('click', doAdminReset);
         document.getElementById('admin-gamemode').addEventListener('change', function () {
             send({ action: 'gamemode', value: this.value });
@@ -1085,6 +1089,7 @@
             else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); send({ action: 'pause' }); }
             else if (e.key === 'l' || e.key === 'L') { e.preventDefault(); send({ action: 'pass' }); }
             else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); doAdminReset(); }
+            else if (e.key === 'h' || e.key === 'H') { e.preventDefault(); send({ action: 'moreSpecific' }); }
         });
 
         window.addEventListener('message', function (e) {
@@ -1115,6 +1120,19 @@
                         if (d.currentIndex != null && jumpSel.value !== String(d.currentIndex)) {
                             jumpSel.value = d.currentIndex;
                         }
+                    }
+                }
+
+                const msBtn = document.getElementById('admin-btn-more-specific');
+                if (msBtn) {
+                    if (d.moreSpecificActive) {
+                        msBtn.style.background = '#ff4500';
+                        msBtn.style.color = '#fff';
+                        msBtn.style.boxShadow = '0 0 10px #ff4500';
+                    } else {
+                        msBtn.style.background = '#555';
+                        msBtn.style.color = 'white';
+                        msBtn.style.boxShadow = 'none';
                     }
                 }
 
