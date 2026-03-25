@@ -363,7 +363,7 @@
             const select = document.getElementById('category-select');
 
             // Populate dropdown (grouped by tier)
-            const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+            const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
             for (const [key, label] of Object.entries(categoryLabels)) {
                 const items = categories[key] || [];
                 if (items.length === 0) continue;

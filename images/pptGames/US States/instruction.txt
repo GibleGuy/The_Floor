@@ -1,0 +1,1 @@
+Identify the US state from the given map.

@@ -1,0 +1,1 @@
+Identify the soda brand from the images as they appear.

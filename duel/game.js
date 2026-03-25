@@ -26,7 +26,15 @@ function loadCategoryScript(cat) {
 async function getCategoryData(cat) {
     await loadCategoryScript(cat);
     const g = typeof window !== 'undefined' ? window[CATEGORY_GLOBALS[cat]] : undefined;
-    return Array.isArray(g) ? g : [];
+    let data = Array.isArray(g) ? [...g] : [];
+    const reg = window.CATEGORY_REGISTRY && window.CATEGORY_REGISTRY.find(function(c) { return c.key === cat; });
+    if (reg && reg.shuffle) {
+        for (let i = data.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = data[i]; data[i] = data[j]; data[j] = tmp;
+        }
+    }
+    return data;
 }
 
 // --- GAME LOGIC ---
@@ -1070,7 +1078,7 @@ function populateCategoryGrid() {
     if (!grid || !window.CATEGORY_REGISTRY) return;
     grid.innerHTML = '';
     
-    const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+    const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
     window.CATEGORY_REGISTRY.forEach(function (c) {
         const t = c.tier || 'REAL DEAL';
         if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gibleMode) return;

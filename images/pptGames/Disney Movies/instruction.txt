@@ -1,0 +1,1 @@
+Identify the name of the movie from the images as they appear.

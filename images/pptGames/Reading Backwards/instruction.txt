@@ -1,0 +1,1 @@
+Reverse the sequence of the letters to reveal and speak the intended word correctly.
