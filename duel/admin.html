@@ -497,6 +497,103 @@
         .custom-tab-panel.active {
             display: block;
         }
+        /* Category Menu Overlay (Admin) */
+        .admin-cat-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-cat-menu-overlay.show {
+            display: flex;
+        }
+        .admin-cat-menu-panel {
+            background: rgba(0, 15, 40, 0.97);
+            border: 3px solid var(--floor-yellow);
+            border-radius: 16px;
+            padding: 24px 20px 16px;
+            max-width: 600px;
+            width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .admin-cat-menu-panel h2 {
+            color: var(--floor-yellow);
+            font-size: 1.3rem;
+            margin: 0 0 14px;
+            text-align: center;
+        }
+        .admin-cat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .admin-cat-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 10px 6px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 0.75rem;
+            text-align: center;
+            min-height: 55px;
+        }
+        .admin-cat-btn:hover {
+            border-color: var(--floor-yellow);
+            background: rgba(255, 204, 0, 0.1);
+        }
+        .admin-cat-btn .cat-emoji {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+        .admin-cat-btn .cat-label {
+            font-size: 0.65rem;
+            color: #ccc;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .admin-cat-btn:hover .cat-label {
+            color: var(--floor-yellow);
+        }
+        .admin-cat-menu-close {
+            display: block;
+            margin: 12px auto 0;
+            padding: 8px 22px;
+            font-size: 0.9rem;
+            background: var(--floor-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .admin-cat-menu-close:hover {
+            background: #c0392b;
+        }
+        .admin-cat-select-btn {
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background: var(--floor-green);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            color: white;
+        }
+        .admin-cat-select-btn:hover {
+            filter: brightness(1.1);
+        }
     </style>
 </head>
 
@@ -510,30 +607,18 @@
         <h1>ADMIN WINDOW</h1>
         <span id="conn-badge" class="conn-badge disconnected">—</span>
         <div class="category-row">
-            <input type="text" id="category-input" list="admin-category-list" placeholder="Category..."
-                autocomplete="off">
-            <datalist id="admin-category-list">
-            </datalist>
-            <script src="../categories/index.js?v=2"></script>
-            <script>
-                // Dynamically populate admin category list from registry
-                (function () {
-                    var dl = document.getElementById('admin-category-list');
-                    var gible = localStorage.getItem('floorGibleMode') === '1';
-                    if (dl && window.CATEGORY_REGISTRY) {
-                        window.CATEGORY_REGISTRY.forEach(function (c) {
-                            if (c.gibleOnly && !gible) return;
-                            var opt = document.createElement('option');
-                            opt.value = c.key;
-                            opt.textContent = c.label;
-                            dl.appendChild(opt);
-                        });
-                    }
-                })();
-            </script>
-            <button type="button" class="play-btn" id="admin-load-btn">LOAD</button>
+            <button type="button" class="admin-cat-select-btn" id="admin-cat-select-btn">SELECT CATEGORY</button>
             <button type="button" class="play-btn" id="admin-start-btn" disabled>START</button>
             <button type="button" class="help-btn" id="admin-help-btn" title="Help">?</button>
+        </div>
+    </div>
+
+    <!-- Admin Category Menu Overlay -->
+    <div class="admin-cat-menu-overlay" id="admin-cat-menu" onclick="closeAdminCatMenu()">
+        <div class="admin-cat-menu-panel" onclick="event.stopPropagation()">
+            <h2>SELECT A CATEGORY</h2>
+            <div class="admin-cat-grid" id="admin-cat-grid"></div>
+            <button type="button" class="admin-cat-menu-close" onclick="closeAdminCatMenu()">CLOSE</button>
         </div>
     </div>
 
@@ -596,6 +681,10 @@
                 <option value="singleplayer">Singleplayer</option>
                 <option value="classic" selected>Classic</option>
             </select>
+            <label class="admin-ctrl-label" style="margin-left: 12px;">Jump to Clue:</label>
+            <select id="admin-clue-jump" class="admin-ctrl-select">
+                <option value="">-- Start Game First --</option>
+            </select>
         </div>
     </div>
 
@@ -631,6 +720,16 @@
             <div class="custom-row">
                 <label class="custom-label">Mute:</label>
                 <input type="checkbox" id="admin-mute" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Music Volume:</label>
+                <input type="range" id="admin-vol-music" min="0" max="1" step="0.05" value="0.2" style="width: 120px; vertical-align: middle;">
+                <span id="admin-vol-music-label" style="margin-left: 6px; min-width: 3em;">20%</span>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">SFX Volume:</label>
+                <input type="range" id="admin-vol-sfx" min="0" max="1" step="0.05" value="0.65" style="width: 120px; vertical-align: middle;">
+                <span id="admin-vol-sfx-label" style="margin-left: 6px; min-width: 3em;">65%</span>
             </div>
         </div>
         <div id="admin-tab-graphics" class="custom-tab-panel">
@@ -723,10 +822,47 @@
         </div>
     </div>
 
+    <script src="../categories/index.js?v=3"></script>
     <script>
         let lastStateTime = 0;
         let connCheckInterval = null;
         let categoryLoaded = false;
+
+        function adminHandleImageError(img) {
+            if (img.dataset.errorHandled === 'true') return;
+            img.dataset.errorHandled = 'true';
+            
+            const currentSrc = img.src;
+            const urlWithoutQuery = currentSrc.split('?')[0];
+            const dotIndex = urlWithoutQuery.lastIndexOf('.');
+            const basePath = dotIndex > 0 ? urlWithoutQuery.substring(0, dotIndex) : urlWithoutQuery;
+            
+            const originalUrlNoQ = (img.getAttribute('data-original-src') || '').split('?')[0];
+            const originalDotIdx = originalUrlNoQ.lastIndexOf('.');
+            const originalExt = originalDotIdx > 0 ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
+            
+            const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+            const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
+            const isFileProtocol = window.location.protocol === 'file:';
+            const cb = isFileProtocol ? '' : '?v=' + Date.now();
+            
+            let probeIndex = 0;
+            function tryNext() {
+                if (probeIndex >= toTry.length) {
+                    img.style.display = 'none';
+                    return;
+                }
+                const ext = toTry[probeIndex++];
+                const probe = new Image();
+                const testSrc = basePath + '.' + ext + cb;
+                probe.onload = function() {
+                    img.src = testSrc;
+                };
+                probe.onerror = tryNext;
+                probe.src = testSrc;
+            }
+            tryNext();
+        }
 
         function hasOpener() { return !!(window.opener && !window.opener.closed); }
 
@@ -748,9 +884,10 @@
         }
 
         function setControlsEnabled(enabled) {
-            const ids = ['category-input', 'admin-load-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
-                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-p1-name', 'admin-p2-name',
+            const ids = ['admin-cat-select-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
+                'admin-btn-pause', 'admin-btn-reset', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
+                'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
@@ -789,21 +926,66 @@
             send({ action: 'help', open });
         });
 
-        document.getElementById('admin-load-btn').addEventListener('click', function () {
-            const v = document.getElementById('category-input').value.trim();
-            if (v && hasOpener()) {
-                send({ action: 'loadCategory', category: v });
-                document.getElementById('category-input').value = '';
-            }
-        });
+        function populateAdminCatGrid() {
+            var grid = document.getElementById('admin-cat-grid');
+            if (!grid || !window.CATEGORY_REGISTRY) return;
+            var gible = localStorage.getItem('floorGibleMode') === '1';
+            grid.innerHTML = '';
+            
+            var tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+            window.CATEGORY_REGISTRY.forEach(function (c) {
+                var t = c.tier || 'REAL DEAL';
+                if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gible) return;
+                if (tiers[t]) tiers[t].push(c);
+                else tiers['REAL DEAL'].push(c);
+            });
 
+            Object.keys(tiers).forEach(function(tier) {
+                var cats = tiers[tier];
+                if (cats.length === 0) return;
+                
+                var header = document.createElement('h3');
+                header.className = 'admin-tier-header';
+                header.style.gridColumn = '1 / -1';
+                header.style.color = 'var(--floor-yellow)';
+                header.style.margin = '12px 0 4px';
+                header.style.textAlign = 'center';
+                header.style.fontSize = '1rem';
+                header.textContent = tier;
+                grid.appendChild(header);
+
+                cats.forEach(function(c) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'admin-cat-btn';
+                    btn.innerHTML = '<span class="cat-emoji">' + (c.emoji || '') + '</span><span class="cat-label">' + c.label + '</span>';
+                    btn.addEventListener('click', function () { adminSelectCategory(c.key); });
+                    grid.appendChild(btn);
+                });
+            });
+        }
+
+        function openAdminCatMenu() {
+            populateAdminCatGrid();
+            document.getElementById('admin-cat-menu').classList.add('show');
+        }
+
+        function closeAdminCatMenu() {
+            document.getElementById('admin-cat-menu').classList.remove('show');
+        }
+
+        function adminSelectCategory(cat) {
+            closeAdminCatMenu();
+            if (cat && hasOpener()) {
+                send({ action: 'loadCategory', category: cat });
+            }
+        }
+
+        document.getElementById('admin-cat-select-btn').addEventListener('click', openAdminCatMenu);
         document.getElementById('admin-start-btn').addEventListener('click', function () {
             if (hasOpener()) send({ action: 'startGame' });
         });
-
-        document.getElementById('category-input').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('admin-load-btn').click(); }
-        });
+        populateAdminCatGrid();
 
         function doAdminReset() {
             if (!confirm('Are you sure you want to reset the game? This will stop the current game and reset all timers.')) return;
@@ -816,6 +998,9 @@
         document.getElementById('admin-btn-reset').addEventListener('click', doAdminReset);
         document.getElementById('admin-gamemode').addEventListener('change', function () {
             send({ action: 'gamemode', value: this.value });
+        });
+        document.getElementById('admin-clue-jump').addEventListener('change', function () {
+            send({ action: 'jumpToClue', index: this.value });
         });
 
         document.getElementById('admin-p1-name').addEventListener('change', function () {
@@ -838,6 +1023,20 @@
         });
         document.getElementById('admin-mute').addEventListener('change', function () {
             send({ action: 'mute', value: this.checked });
+        });
+        document.getElementById('admin-vol-music').addEventListener('input', function () {
+            var v = parseFloat(this.value);
+            if (!isNaN(v)) { 
+                send({ action: 'volume', type: 'music', value: v }); 
+                document.getElementById('admin-vol-music-label').textContent = Math.round(v * 100) + '%'; 
+            }
+        });
+        document.getElementById('admin-vol-sfx').addEventListener('input', function () {
+            var v = parseFloat(this.value);
+            if (!isNaN(v)) { 
+                send({ action: 'volume', type: 'sfx', value: v }); 
+                document.getElementById('admin-vol-sfx-label').textContent = Math.round(v * 100) + '%'; 
+            }
         });
         document.getElementById('admin-theme-dark').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'dark' });
@@ -900,6 +1099,25 @@
                     const sel = document.getElementById('admin-gamemode');
                     if (sel && sel.value !== d.gamemode) sel.value = d.gamemode;
                 }
+                
+                if (d.poolNames) {
+                    const jumpSel = document.getElementById('admin-clue-jump');
+                    if (jumpSel) {
+                        if (jumpSel.options.length - 1 !== d.poolNames.length) {
+                            jumpSel.innerHTML = '<option value="">-- Jump to Clue --</option>';
+                            d.poolNames.forEach((name, i) => {
+                                const opt = document.createElement('option');
+                                opt.value = i;
+                                opt.textContent = `${i + 1}. ${name}`;
+                                jumpSel.appendChild(opt);
+                            });
+                        }
+                        if (d.currentIndex != null && jumpSel.value !== String(d.currentIndex)) {
+                            jumpSel.value = d.currentIndex;
+                        }
+                    }
+                }
+
                 const p1Label = document.getElementById('admin-p1-label');
                 const p2Label = document.getElementById('admin-p2-label');
                 if (d.playerNames && d.playerNames[0]) p1Label.textContent = d.playerNames[0];
@@ -934,6 +1152,18 @@
                 if (d.isMuted != null) {
                     const m = document.getElementById('admin-mute');
                     if (m && m.checked !== d.isMuted) m.checked = !!d.isMuted;
+                }
+                if (typeof d.musicVolume === 'number') {
+                    const mv = document.getElementById('admin-vol-music');
+                    const mvl = document.getElementById('admin-vol-music-label');
+                    if (mv && mv.value !== String(d.musicVolume)) mv.value = d.musicVolume;
+                    if (mvl) mvl.textContent = Math.round(d.musicVolume * 100) + '%';
+                }
+                if (typeof d.sfxVolume === 'number') {
+                    const sv = document.getElementById('admin-vol-sfx');
+                    const svl = document.getElementById('admin-vol-sfx-label');
+                    if (sv && sv.value !== String(d.sfxVolume)) sv.value = d.sfxVolume;
+                    if (svl) svl.textContent = Math.round(d.sfxVolume * 100) + '%';
                 }
                 categoryLoaded = !!d.categoryLoaded;
                 updateStartButton();
@@ -1022,26 +1252,46 @@
                 const curBox = document.getElementById('admin-current-img');
                 const curAns = document.getElementById('admin-current-answer');
                 if (d.current) {
-                    curAns.textContent = d.current.answer;
-                    curBox.innerHTML = '';
-                    if (d.current.isMath) {
-                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
-                    } else if (d.current.imageUrl) {
-                        const img = document.createElement('img'); img.src = d.current.imageUrl; img.alt = d.current.answer; curBox.appendChild(img);
-                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; curBox.appendChild(s); }
-                } else { curAns.textContent = '—'; curBox.innerHTML = '<span class="placeholder">—</span>'; }
+                    const currentId = d.current.answer + '|' + (d.current.imageUrl || d.current.question);
+                    if (curBox.dataset.renderedId !== currentId) {
+                        curBox.dataset.renderedId = currentId;
+                        curAns.textContent = d.current.answer;
+                        curBox.innerHTML = '';
+                        if (d.current.isMath) {
+                            const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
+                        } else if (d.current.imageUrl) {
+                            const img = document.createElement('img'); img.setAttribute('data-original-src', d.current.imageUrl); img.src = d.current.imageUrl; img.alt = d.current.answer; img.onerror = function() { adminHandleImageError(this); }; curBox.appendChild(img);
+                        } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; curBox.appendChild(s); }
+                    }
+                } else { 
+                    if (curBox.dataset.renderedId !== 'empty') {
+                        curBox.dataset.renderedId = 'empty';
+                        curAns.textContent = '—'; 
+                        curBox.innerHTML = '<span class="placeholder">—</span>'; 
+                    }
+                }
 
                 const nextBox = document.getElementById('admin-next-img');
                 const nextAns = document.getElementById('admin-next-answer');
                 if (d.next) {
-                    nextAns.textContent = d.next.answer;
-                    nextBox.innerHTML = '';
-                    if (d.next.isMath) {
-                        const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);
-                    } else if (d.next.imageUrl) {
-                        const img = document.createElement('img'); img.src = d.next.imageUrl; img.alt = d.next.answer; nextBox.appendChild(img);
-                    } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; nextBox.appendChild(s); }
-                } else { nextAns.textContent = '—'; nextBox.innerHTML = '<span class="placeholder">—</span>'; }
+                    const nextId = d.next.answer + '|' + (d.next.imageUrl || d.next.question);
+                    if (nextBox.dataset.renderedId !== nextId) {
+                        nextBox.dataset.renderedId = nextId;
+                        nextAns.textContent = d.next.answer;
+                        nextBox.innerHTML = '';
+                        if (d.next.isMath) {
+                            const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);
+                        } else if (d.next.imageUrl) {
+                            const img = document.createElement('img'); img.setAttribute('data-original-src', d.next.imageUrl); img.src = d.next.imageUrl; img.alt = d.next.answer; img.onerror = function() { adminHandleImageError(this); }; nextBox.appendChild(img);
+                        } else { const s = document.createElement('span'); s.className = 'placeholder'; s.textContent = '—'; nextBox.appendChild(s); }
+                    }
+                } else { 
+                    if (nextBox.dataset.renderedId !== 'empty') {
+                        nextBox.dataset.renderedId = 'empty';
+                        nextAns.textContent = '—'; 
+                        nextBox.innerHTML = '<span class="placeholder">—</span>'; 
+                    }
+                }
             }
         });
 

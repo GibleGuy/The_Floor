@@ -57,6 +57,8 @@ let categoryComplete = false;
 
 // NEW FEATURES
 let isMuted = false;
+let musicVolume = 0.2;
+let sfxVolume = 0.65;
 let currentTheme = 'dark';
 let confettiEnabled = false;
 let disableExtras = false;
@@ -110,6 +112,8 @@ function loadPreferences() {
         const p = JSON.parse(raw);
         if (p.theme && ['dark', 'light', 'gible'].includes(p.theme)) currentTheme = p.theme;
         if (typeof p.mute === 'boolean') isMuted = p.mute;
+        if (typeof p.musicVolume === 'number') musicVolume = p.musicVolume;
+        if (typeof p.sfxVolume === 'number') sfxVolume = p.sfxVolume;
         if (typeof p.showTimerDecimal === 'boolean') showTimerDecimal = p.showTimerDecimal;
         if (typeof p.disableExtras === 'boolean') disableExtras = p.disableExtras;
         if (typeof p.confettiEnabled === 'boolean') confettiEnabled = p.confettiEnabled;
@@ -188,6 +192,8 @@ function savePreferences() {
         const p = {
             theme: currentTheme,
             mute: isMuted,
+            musicVolume,
+            sfxVolume,
             showTimerDecimal,
             disableExtras,
             confettiEnabled,
@@ -204,33 +210,34 @@ function savePreferences() {
 }
 
 // ========== SOUNDS ==========
-// ding1–ding10 (correct), pass1–pass5 (pass). Play in order, loop after last.
-const DING_COUNT = 10;
+// Passes play in order, loop after last.
 const PASS_COUNT = 5;
 let sounds = {
     countdown: new Audio('../sounds/countdown.mp3'),
-    dings: Array.from({ length: DING_COUNT }, (_, i) => new Audio(`../sounds/ding${i + 1}.mp3`)),
-    passes: Array.from({ length: PASS_COUNT }, (_, i) => new Audio(`../sounds/pass${i + 1}.mp3`))
+    right: new Audio('../sounds/RIGHT.wav'),
+    passes: Array.from({ length: PASS_COUNT }, (_, i) => new Audio(`../sounds/pass${i + 1}.mp3`)),
+    duelMusic: new Audio('../sounds/DUEL MUSIC.wav'),
+    duelOver: new Audio('../sounds/DUEL OVER.wav')
 };
-sounds.countdown.volume = 0.5;
-sounds.dings.forEach(s => { s.volume = 0.5; });
-sounds.passes.forEach(s => { s.volume = 0.5; });
+sounds.countdown.volume = sfxVolume;
+sounds.passes.forEach(s => { s.volume = sfxVolume; });
+sounds.duelMusic.loop = true;
+sounds.duelMusic.volume = musicVolume;
+sounds.duelOver.volume = musicVolume;
 
-let dingIndex = 0;
 let passIndex = 0;
 
 function playDingSound() {
     if (isMuted) return;
-    const s = new Audio('../sounds/ding' + (dingIndex + 1) + '.mp3');
-    s.volume = 0.5;
+    const s = sounds.right.cloneNode();
+    s.volume = sfxVolume;
     s.play().catch(() => { });
-    dingIndex = (dingIndex + 1) % DING_COUNT;
 }
 
 function playPassSound() {
     if (isMuted) return;
     const s = new Audio('../sounds/pass' + (passIndex + 1) + '.mp3');
-    s.volume = 0.5;
+    s.volume = sfxVolume;
     s.play().catch(() => { });
     passIndex = (passIndex + 1) % PASS_COUNT;
 }
@@ -272,8 +279,8 @@ async function setupGame(cat, opts) {
     currentStreak = 0;
     answerStartTime = Date.now();
 
-    // Store category name
-    currentCategory = cat.toUpperCase();
+    // Store category name (replace hyphens with spaces for display)
+    currentCategory = cat.replace(/-/g, ' ').toUpperCase();
     document.getElementById('category-display').innerText = currentCategory;
     document.getElementById('category-display').style.display = 'block';
 
@@ -294,7 +301,6 @@ async function setupGame(cat, opts) {
     isPaused = false;
     itemsCompleted = 0;
     categoryComplete = false;
-    dingIndex = 0;
     passIndex = 0;
 
     // Reset boost buttons if game is starting fresh
@@ -311,6 +317,8 @@ async function setupGame(cat, opts) {
     } else {
         currentPool = [...data].sort(function () { return Math.random() - 0.5; });
     }
+
+    updateClueDropdown();
 
     // In single player, always use player 1
     if (gamemode === 'singleplayer') {
@@ -380,6 +388,11 @@ async function setupGame(cat, opts) {
         }
         overlay.style.display = 'none';
 
+        if (!isMuted) {
+            sounds.duelMusic.currentTime = 0;
+            sounds.duelMusic.play().catch(() => { });
+        }
+
         gameActive = true;
         inputLocked = false;
         loadImage();
@@ -437,6 +450,11 @@ async function startGameFromHost() {
     }
     overlay.style.display = 'none';
     overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
+
+    if (!isMuted) {
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelMusic.play().catch(() => { });
+    }
 
     gameActive = true;
     inputLocked = false;
@@ -707,6 +725,62 @@ function nextSlide() {
     loadImage();
     inputLocked = false;
     answerStartTime = Date.now();
+    updateClueDropdown();
+}
+
+function updateClueDropdown() {
+    const select = document.getElementById('clue-jump-select');
+    if (!select) return;
+    
+    if (!currentPool || currentPool.length === 0) {
+        select.innerHTML = '<option value="">-- Start Game First --</option>';
+        return;
+    }
+    
+    if (select.options.length - 1 !== currentPool.length) {
+        select.innerHTML = '<option value="">-- Jump to Clue --</option>';
+        currentPool.forEach((item, i) => {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `${i + 1}. ${item.n}`;
+            select.appendChild(opt);
+        });
+    }
+    
+    if (select.value !== String(currentIndex)) {
+        select.value = currentIndex;
+    }
+}
+
+function jumpToClue(index) {
+    if (gameActive && !isPaused) return; // Only allow jump when paused or not started yet
+    if (!currentPool || currentPool.length === 0) return;
+    
+    const newIndex = parseInt(index);
+    if (isNaN(newIndex) || newIndex < 0 || newIndex >= currentPool.length) return;
+    
+    currentIndex = newIndex;
+    itemsCompleted = currentIndex; // Adjust items completed so completion logic works
+    categoryComplete = false; // Reset if we jump back from end
+    
+    if (gameActive) {
+        const answerInput = document.getElementById('answer-input');
+        if (answerInput) answerInput.value = "";
+        document.getElementById('reveal-text').innerText = "";
+        
+        const imgFrame = document.getElementById('img-frame');
+        imgFrame.className = "image-container";
+        
+        loadImage();
+        
+        if (isPaused) {
+            answerStartTime = Date.now();
+            updatePauseOverlay(); // Re-hide the image behind the pause overlay
+        }
+    }
+    
+    updateClueDropdown();
+    postStateToAdmin();
 }
 
 function handleCategoryComplete() {
@@ -714,6 +788,13 @@ function handleCategoryComplete() {
     gameActive = false;
     isPaused = false;
     clearInterval(clockInterval);
+
+    if (!isMuted) {
+        sounds.duelMusic.pause();
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelOver.currentTime = 0;
+        sounds.duelOver.play().catch(() => {});
+    }
 
     // Stop timers
     inputLocked = true;
@@ -816,9 +897,8 @@ function loadImage() {
     const item = currentPool[currentIndex];
     const isMath = item && typeof item.q === 'string';
 
-    // Reset error handler flag and extension retry counter
+    // Reset error handler flag for new image load
     img.dataset.errorHandled = 'false';
-    img.dataset.extAttempts = '0';
 
     // Remove fallback if it exists
     if (fallback) {
@@ -828,31 +908,32 @@ function loadImage() {
     container.style.display = 'block';
 
     const mp = document.getElementById('math-problem');
+
+    // Resolve image src: absolute URLs stay as-is, relative paths that already
+    // start with ../ are used directly, otherwise prepend ../ for duel/ context.
+    function resolveImageSrc(rawSrc) {
+        const isFileProtocol = typeof window !== 'undefined' && window.location.protocol === 'file:';
+        const cb = isFileProtocol ? '' : (rawSrc.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now());
+        if (rawSrc.match(/^https?:\/\//) || rawSrc.startsWith('//')) {
+            return rawSrc + cb;
+        } else if (rawSrc.startsWith('../')) {
+            return rawSrc + cb;
+        } else {
+            return '../' + rawSrc + cb;
+        }
+    }
+
     if (isMath) {
         img.style.display = 'none';
         if (mp) {
             mp.textContent = item.q;
             mp.classList.add('show');
         }
-        // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
-        const src = item.u;
-        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
-        if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src + cb;
-        } else {
-            img.src = '../' + src + cb;
-        }
+        img.src = resolveImageSrc(item.u);
     } else {
         img.style.display = 'block';
         if (mp) mp.classList.remove('show');
-        // If it's a URL, use it as is; if local, prepend ../ since we are in duel/ folder
-        const src = item.u;
-        const cb = src.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now();
-        if (src.match(/^https?:\/\//) || src.startsWith('//')) {
-            img.src = src + cb;
-        } else {
-            img.src = '../' + src + cb;
-        }
+        img.src = resolveImageSrc(item.u);
     }
 }
 
@@ -876,8 +957,8 @@ function updateDisplay() {
         if (p2Container) p2Container.style.display = 'block';
     }
 
-    // Check if we should make timers editable (host mode + paused)
-    const shouldBeEditable = hostMode && isPaused && gameActive;
+    // Check if we should make timers editable (host mode + paused OR before game starts)
+    const shouldBeEditable = hostMode && ((isPaused && gameActive) || (!gameActive && !categoryComplete));
 
     if (shouldBeEditable) {
         // Make timers editable
@@ -963,17 +1044,58 @@ function resolveCategoryKey(input) {
     return k || null;
 }
 
-async function startSelectedCategory() {
-    const dropdown = document.getElementById('category-dropdown');
-    const raw = dropdown && dropdown.value ? dropdown.value.trim() : '';
-    const cat = resolveCategoryKey(raw);
+// ========== CATEGORY SELECT GRID ==========
+function populateCategoryGrid() {
+    const grid = document.getElementById('category-grid');
+    if (!grid || !window.CATEGORY_REGISTRY) return;
+    grid.innerHTML = '';
+    
+    const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+    window.CATEGORY_REGISTRY.forEach(function (c) {
+        const t = c.tier || 'REAL DEAL';
+        if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gibleMode) return;
+        if (tiers[t]) tiers[t].push(c);
+        else tiers['REAL DEAL'].push(c);
+    });
+
+    Object.keys(tiers).forEach(function(tier) {
+        const cats = tiers[tier];
+        if (cats.length === 0) return;
+        
+        const header = document.createElement('h3');
+        header.className = 'tier-header';
+        header.style.gridColumn = '1 / -1';
+        header.style.color = 'var(--floor-yellow)';
+        header.style.margin = '15px 0 5px';
+        header.style.textAlign = 'center';
+        header.style.textTransform = 'uppercase';
+        header.style.fontSize = '1.2rem';
+        header.textContent = tier;
+        grid.appendChild(header);
+        
+        cats.forEach(function(c) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cat-btn';
+            btn.innerHTML = '<span class="cat-emoji">' + (c.emoji || '') + '</span><span class="cat-label">' + c.label + '</span>';
+            btn.addEventListener('click', function () { selectCategory(c.key); });
+            grid.appendChild(btn);
+        });
+    });
+}
+
+function openCategoryMenu() {
+    populateCategoryGrid();
+    document.getElementById('category-menu').classList.add('show');
+}
+
+function closeCategoryMenu() {
+    document.getElementById('category-menu').classList.remove('show');
+}
+
+async function selectCategory(cat) {
+    closeCategoryMenu();
     if (!cat || !CATEGORY_SCRIPTS[cat]) return;
-    // Block beta categories when Gible mode is off
-    if (!gibleMode && window.CATEGORY_REGISTRY) {
-        const entry = window.CATEGORY_REGISTRY.find(function (c) { return c.key === cat; });
-        if (entry && entry.gibleOnly) return;
-    }
-    dropdown.value = '';
     try {
         if (hostMode) {
             await setupGame(cat, { fromAdminWindow: false });
@@ -984,18 +1106,17 @@ async function startSelectedCategory() {
     } catch (e) { console.error('Category load failed:', e); }
 }
 
-// Allow Enter key to start game from dropdown
-document.getElementById('category-dropdown').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        startSelectedCategory();
-    }
-});
-
 function endGame() {
     gameActive = false;
     isPaused = false;
     clearInterval(clockInterval);
+
+    if (!isMuted) {
+        sounds.duelMusic.pause();
+        sounds.duelMusic.currentTime = 0;
+        sounds.duelOver.currentTime = 0;
+        sounds.duelOver.play().catch(() => {});
+    }
 
     // Determine winner (only in classic/host mode)
     // When endGame() is called, activePlayer's timer expired, so the opponent wins
@@ -1056,7 +1177,7 @@ async function runUnpauseCountdown() {
     overlay.style.background = 'rgba(0,0,0,1)';
     if (!isMuted) {
         const c = sounds.countdown.cloneNode();
-        c.volume = 0.5;
+        c.volume = sfxVolume;
         c.currentTime = 0;
         c.play().catch(() => { });
     }
@@ -1069,6 +1190,9 @@ async function runUnpauseCountdown() {
     overlay.style.zIndex = '20';
     isPaused = false;
     unpauseCountdownActive = false;
+    if (!isMuted && gameActive && !categoryComplete) {
+        sounds.duelMusic.play().catch(() => {});
+    }
     updatePauseButton();
     updateDisplay();
     updatePauseOverlay();
@@ -1086,6 +1210,9 @@ function togglePause() {
         return;
     }
     isPaused = !isPaused;
+    if (isPaused) {
+        sounds.duelMusic.pause();
+    }
     updatePauseButton();
     updateDisplay(); // Update to show/hide editable timers
     updatePauseOverlay();
@@ -1180,6 +1307,12 @@ function resetGame(skipConfirm) {
         return;
     }
 
+    // Stop audio immediately
+    sounds.duelMusic.pause();
+    sounds.duelMusic.currentTime = 0;
+    sounds.duelOver.pause();
+    sounds.duelOver.currentTime = 0;
+
     // Reset background
     document.body.classList.remove('game-ended');
 
@@ -1202,6 +1335,7 @@ function resetGame(skipConfirm) {
     itemsCompleted = 0;
     categoryComplete = false;
     inPassPhase = false;
+    updateClueDropdown();
     // Reset time boosts on reset
     timeBoostsUsed = [false, false];
 
@@ -1367,7 +1501,7 @@ function toggleHostMode() {
             gibleMode = false;
             window.gibleMode = false;
             localStorage.removeItem('floorGibleMode');
-            if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
+            if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
         }
     }
 
@@ -1383,7 +1517,7 @@ function toggleGibleMode() {
     } else {
         localStorage.removeItem('floorGibleMode');
     }
-    if (typeof refreshCategoryDatalist === 'function') refreshCategoryDatalist();
+    if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
 }
 
 function togglePin() {
@@ -1481,11 +1615,15 @@ function postStateToAdmin() {
             t1, t2,
             playerNames: playerNames.slice(),
             gamemode,
+            poolNames: currentPool.map(c => c.n),
+            currentIndex: currentIndex,
             current,
             next,
             firstPlayerIsLeft,
             timeBoostsUsed: timeBoostsUsed.slice(),
             isMuted,
+            musicVolume,
+            sfxVolume,
             gameActive,
             isPaused,
             activePlayer,
@@ -1531,6 +1669,7 @@ window.addEventListener('message', function (e) {
     else if (d.action === 'pause' && gameActive) togglePause();
     else if (d.action === 'pass' && gameActive && !inputLocked) handlePass();
     else if (d.action === 'reset') resetGame(true);
+    else if (d.action === 'jumpToClue' && d.index != null) jumpToClue(d.index);
     else if (d.action === 'gamemode' && d.value) {
         const sel = document.getElementById('gamemode-select');
         if (sel && (sel.value !== d.value)) { sel.value = d.value; changeGamemode(); }
@@ -1558,6 +1697,23 @@ window.addEventListener('message', function (e) {
         isMuted = !!d.value;
         const mt = document.getElementById('mute-toggle');
         if (mt && mt.checked !== isMuted) mt.checked = isMuted;
+        if (isMuted) {
+            sounds.duelMusic.pause();
+        } else if (gameActive && !isPaused && !categoryComplete) {
+            sounds.duelMusic.play().catch(() => {});
+        }
+    }
+    else if (d.action === 'volume' && d.type === 'music' && d.value != null) {
+        musicVolume = d.value;
+        sounds.duelMusic.volume = musicVolume;
+        sounds.duelOver.volume = musicVolume;
+        savePreferences();
+    }
+    else if (d.action === 'volume' && d.type === 'sfx' && d.value != null) {
+        sfxVolume = d.value;
+        sounds.countdown.volume = sfxVolume;
+        sounds.passes.forEach(s => { s.volume = sfxVolume; });
+        savePreferences();
     }
     else if (d.action === 'changeActivePlayer' && (d.playerNum === 1 || d.playerNum === 2)) {
         changeActivePlayer(d.playerNum);
@@ -1775,9 +1931,29 @@ document.getElementById('first-right').addEventListener('change', function () {
 });
 
 // UPDATED FAIL-SAFE (Better for Logos)
+function showTextFallback(itemName) {
+    const container = document.getElementById('img-frame');
+    const img = document.getElementById('prompt-image');
+    if (img) img.style.display = 'none';
+
+    let fallback = document.getElementById('text-fallback');
+    if (!fallback) {
+        fallback = document.createElement('div');
+        fallback.id = 'text-fallback';
+        fallback.style.cssText = 'font-size:3rem; color:var(--floor-yellow); text-align:center;';
+        fallback.textContent = itemName;
+        container.appendChild(fallback);
+    } else {
+        fallback.textContent = itemName;
+    }
+}
+
 function handleImageError(img) {
-    // Prevent multiple error handlers from firing
+    // Prevent multiple error handlers from firing for the same load attempt
     if (img.dataset.errorHandled === 'true') return;
+
+    // Mark handled immediately so the inline onerror doesn't re-enter
+    img.dataset.errorHandled = 'true';
 
     const item = currentPool[currentIndex];
     const itemName = item.n;
@@ -1785,63 +1961,64 @@ function handleImageError(img) {
 
     // Skip fallback for math category - it uses its own display element
     if (isMath) {
-        img.dataset.errorHandled = 'true';
         img.style.display = 'none';
         return;
     }
 
-    // Try alternative file extensions before giving up
-    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
-    if (!img.dataset.extAttempts) {
-        img.dataset.extAttempts = '0';
-    }
-    const attemptIndex = parseInt(img.dataset.extAttempts);
-
-    // Get the base path (without extension) from the current src
+    // --- Derive the base path (without extension) from the resolved src ---
     const currentSrc = img.src;
-    const dotIndex = currentSrc.lastIndexOf('.');
-    const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
+    const urlWithoutQuery = currentSrc.split('?')[0];
+    const dotIndex = urlWithoutQuery.lastIndexOf('.');
+    const basePath = dotIndex > 0 ? urlWithoutQuery.substring(0, dotIndex) : urlWithoutQuery;
 
-    // Find the current extension to skip it
-    const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).split('?')[0].toLowerCase() : '';
+    // Find the original extension from the category data to skip it
+    const originalSrc = item.u || '';
+    const originalUrlNoQ = originalSrc.split('?')[0];
+    const originalDotIdx = originalUrlNoQ.lastIndexOf('.');
+    const originalExt = originalDotIdx > 0
+        ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
 
-    // Build list of extensions to try (excluding the one that just failed)
-    const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
+    // Extensions to probe (excluding the one that already failed)
+    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+    const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
+    const isFileProtocol = window.location.protocol === 'file:';
+    const cb = isFileProtocol ? '' : '?v=' + Date.now();
 
-    if (attemptIndex < toTry.length) {
-        // Try the next alternative extension
-        img.dataset.extAttempts = String(attemptIndex + 1);
-        img.src = basePath + '.' + toTry[attemptIndex] + '?v=' + Date.now();
-        return; // Don't mark as handled yet — let it try
+    // Use independent Image() probes so we don't rely on onerror re-firing
+    // on the same DOM <img> element (which is unreliable under file://).
+    let probeIndex = 0;
+
+    function tryNextExtension() {
+        if (probeIndex >= toTry.length) {
+            // All alternatives exhausted — show text fallback
+            showTextFallback(itemName);
+            return;
+        }
+        const probe = new Image();
+        const testSrc = basePath + '.' + toTry[probeIndex] + cb;
+        probeIndex++;
+        probe.onload = function () {
+            // Found a working extension — apply it to the DOM image
+            img.src = testSrc;
+            img.style.display = 'block';
+        };
+        probe.onerror = function () {
+            tryNextExtension();
+        };
+        probe.src = testSrc;
     }
 
-    // All alternatives exhausted — show text fallback
-    img.dataset.errorHandled = 'true';
-    img.dataset.extAttempts = '0';
-
-    const container = document.getElementById('img-frame');
-
-    // Hide the image
-    img.style.display = 'none';
-
-    // Check if fallback already exists to prevent duplicates
-    let fallback = document.getElementById('text-fallback');
-    if (!fallback) {
-        // Create fallback text element
-        fallback = document.createElement('div');
-        fallback.id = 'text-fallback';
-        fallback.style.cssText = 'font-size:3rem; color:var(--floor-yellow); text-align:center;';
-        fallback.textContent = itemName;
-        container.appendChild(fallback);
-    } else {
-        // Update existing fallback
-        fallback.textContent = itemName;
-    }
+    tryNextExtension();
 }
 
 // NEW FEATURE FUNCTIONS
 function toggleMute() {
     isMuted = document.getElementById('mute-toggle').checked;
+    if (isMuted) {
+        sounds.duelMusic.pause();
+    } else if (gameActive && !isPaused && !categoryComplete) {
+        sounds.duelMusic.play().catch(() => {});
+    }
     savePreferences();
 }
 

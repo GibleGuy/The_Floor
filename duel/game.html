@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Floor Simulator</title>
     <link href="../css/base.css" rel="stylesheet">
-    <link href="../css/game.css" rel="stylesheet">
+    <link href="../css/game.css?v=2" rel="stylesheet">
     <link href="../css/customization.css" rel="stylesheet">
     <link href="../css/backgrounds.css" rel="stylesheet">
 </head>
@@ -145,11 +145,15 @@
     <input type="text" id="answer-input" placeholder="SELECT A CATEGORY" disabled autocomplete="off">
 
     <div class="menu">
-        <div class="category-selector">
-            <input type="text" id="category-dropdown" list="category-list" placeholder="Type or select category..."
-                autocomplete="off">
-            <datalist id="category-list"></datalist>
-            <button class="play-btn" id="play-btn" onclick="startSelectedCategory()">PLAY</button>
+        <button type="button" class="category-select-btn" id="category-select-btn" onclick="openCategoryMenu()">CATEGORY SELECT</button>
+    </div>
+
+    <!-- CATEGORY MENU OVERLAY -->
+    <div class="category-menu-overlay" id="category-menu" onclick="closeCategoryMenu()">
+        <div class="category-menu-panel" onclick="event.stopPropagation()">
+            <h2>SELECT A CATEGORY</h2>
+            <div class="category-grid" id="category-grid"></div>
+            <button type="button" class="category-menu-close" onclick="closeCategoryMenu()">CLOSE</button>
         </div>
     </div>
 
@@ -171,6 +175,13 @@
                     style="width: 100%; padding: 8px; font-size: 0.9rem;">
                     <option value="singleplayer">Singleplayer</option>
                     <option value="classic" selected>Classic</option>
+                </select>
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Jump to Clue:</label>
+                <select id="clue-jump-select" class="custom-input" onchange="jumpToClue(this.value)"
+                    style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                    <option value="">-- Start Game First --</option>
                 </select>
             </div>
             <div class="switch-container">
@@ -431,23 +442,10 @@
     <!-- CONFETTI CONTAINER -->
     <div class="confetti-container" id="confetti-container"></div>
 
-    <script src="../categories/index.js?v=2"></script>
-    <script src="game.js?v=4"></script>
+    <script src="../categories/index.js?v=3"></script>
+    <script src="game.js?v=7"></script>
     <script>
-        // Dynamically populate the category datalist from the registry
-        function refreshCategoryDatalist() {
-            var dl = document.getElementById('category-list');
-            if (!dl || !window.CATEGORY_REGISTRY) return;
-            dl.innerHTML = '';
-            window.CATEGORY_REGISTRY.forEach(function (c) {
-                if (c.gibleOnly && !window.gibleMode) return;
-                var opt = document.createElement('option');
-                opt.value = c.key;
-                opt.textContent = c.label;
-                dl.appendChild(opt);
-            });
-        }
-        refreshCategoryDatalist();
+        populateCategoryGrid();
     </script>
 </body>
 

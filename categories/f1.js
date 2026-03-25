@@ -50,7 +50,6 @@ const f1Data = [
     { n: "NELSON PIQUET", u: "../images/f1/nelson-piquet.webp" },
     { n: "BRABHAM", u: "../images/f1/brabham.webp" },
     { n: "OVERSTEER", u: "../images/f1/oversteer.webp" },
-    { n: "UNDERSTEER", u: "../images/f1/understeer.webp" },
 
     // ── BACKUPS (51–60) ────────────────
     { n: "NIGEL MANSELL", u: "../images/f1/nigel-mansell.webp" },
@@ -59,8 +58,6 @@ const f1Data = [
     { n: "NICO ROSBERG", u: "../images/f1/nico-rosberg.webp" },
     { n: "EMERSON FITTIPALDI", u: "../images/f1/emerson-fittipaldi.webp" },
     { n: "TELEMETRY", u: "../images/f1/telemetry.webp" },
-    { n: "PARC FERMÉ", u: "../images/f1/parc-ferme.webp" },
-    { n: "FORMATION LAP", u: "../images/f1/formation-lap.webp" },
     { n: "GRAVEL TRAP", u: "../images/f1/gravel-trap.webp" }
 ];
 if (typeof window !== 'undefined') window.f1Data = f1Data;
