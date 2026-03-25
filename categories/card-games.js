@@ -1,19 +1,15 @@
 // Card Games — images in images/card-games/
 const cardGamesData = [
-    // Tier 1 — Obvious (1–15)
+
+    // Tier 2 — Very Easy (Original Tier 1)
     { n: "UNO", u: "../images/card-games/uno.webp" },
     { n: "POKER", u: "../images/card-games/poker.webp" },
     { n: "SOLITAIRE", u: "../images/card-games/solitaire.webp" },
-    { n: "GO FISH", u: "../images/card-games/go-fish.webp" },
-    { n: "CRAZY EIGHTS", u: "../images/card-games/crazy-eights.webp" },
     { n: "CARDS AGAINST HUMANITY", u: "../images/card-games/cards-against-humanity.webp" },
     { n: "BLACKJACK", u: "../images/card-games/blackjack.webp" },
-    { n: "TEXAS HOLD'EM", u: "../images/card-games/texas-holdem.webp" },
     { n: "SPADES", u: "../images/card-games/spades.webp" },
     { n: "HEARTS", u: "../images/card-games/hearts.webp" },
     { n: "OLD MAID", u: "../images/card-games/old-maid.webp" },
-    { n: "WAR", u: "../images/card-games/war.webp" },
-    { n: "GIN RUMMY", u: "../images/card-games/gin-rummy.webp" },
     { n: "MAGIC: THE GATHERING", u: "../images/card-games/magic-the-gathering.webp" },
     { n: "POKÉMON TCG", u: "../images/card-games/pokemon-tcg.webp" },
 
@@ -24,15 +20,10 @@ const cardGamesData = [
     { n: "APPLES TO APPLES", u: "../images/card-games/apples-to-apples.webp" },
     { n: "EXPLODING KITTENS", u: "../images/card-games/exploding-kittens.webp" },
     { n: "DO YOU MEME?", u: "../images/card-games/do-you-meme.webp" },
-    { n: "TABOO", u: "../images/card-games/taboo.webp" },
     { n: "BRIDGE", u: "../images/card-games/bridge.webp" },
-    { n: "CANASTA", u: "../images/card-games/canasta.webp" },
     { n: "CRIBBAGE", u: "../images/card-games/cribbage.webp" },
-    { n: "PINOCHLE", u: "../images/card-games/pinochle.webp" },
     { n: "BACCARAT", u: "../images/card-games/baccarat.webp" },
     { n: "EGYPTIAN RAT SCREW", u: "../images/card-games/egyptian-rat-screw.webp" },
-    { n: "SPEED", u: "../images/card-games/speed.webp" },
-    { n: "SLAPJACK", u: "../images/card-games/slapjack.webp" },
 
     // Tier 3 — Knowledgeable (31–40)
     { n: "HEARTHSTONE", u: "../images/card-games/hearthstone.webp" },
@@ -44,23 +35,13 @@ const cardGamesData = [
     { n: "LOVE LETTER", u: "../images/card-games/love-letter.webp" },
     { n: "MONOPOLY DEAL", u: "../images/card-games/monopoly-deal.webp" },
     { n: "SPOONS", u: "../images/card-games/spoons.webp" },
-    { n: "ROOK", u: "../images/card-games/rook.webp" },
 
     // Tier 4 — Expert (41–50)
     { n: "TARNEEB", u: "../images/card-games/tarneeb.webp" },
     { n: "DURAK", u: "../images/card-games/durak.webp" },
     { n: "BRISCOLA", u: "../images/card-games/briscola.webp" },
-    { n: "PIQUET", u: "../images/card-games/piquet.webp" },
-    { n: "EUCHRE", u: "../images/card-games/euchre.webp" },
-    { n: "OH HELL", u: "../images/card-games/oh-hell.webp" },
-    { n: "PITCH", u: "../images/card-games/pitch.webp" },
-    { n: "HAND AND FOOT", u: "../images/card-games/hand-and-foot.webp" },
-    { n: "KEMPS", u: "../images/card-games/kemps.webp" },
-    { n: "NERTZ", u: "../images/card-games/nertz.webp" },
 
     // ── BACKUPS (51–60) ────────────────
-    { n: "PRESIDENT", u: "../images/card-games/president.webp" },
-    { n: "WE'RE NOT REALLY STRANGERS", u: "../images/card-games/were-not-really-strangers.webp" },
     { n: "FLUXX", u: "../images/card-games/fluxx.webp" },
     { n: "MUNCHKIN", u: "../images/card-games/munchkin.webp" },
     { n: "BOSS MONSTER", u: "../images/card-games/boss-monster.webp" },
@@ -68,6 +49,20 @@ const cardGamesData = [
     { n: "KEYFORGE", u: "../images/card-games/keyforge.webp" },
     { n: "MARVEL CHAMPIONS", u: "../images/card-games/marvel-champions.webp" },
     { n: "ARKHAM HORROR LCG", u: "../images/card-games/arkham-horror-lcg.webp" },
-    { n: "NETRUNNER", u: "../images/card-games/netrunner.webp" }
+    { n: "NETRUNNER", u: "../images/card-games/netrunner.webp" },
+
+    // Super backups
+    { n: "WAR", u: "../images/card-games/war.webp" },
+    { n: "SLAPJACK", u: "../images/card-games/slapjack.webp" },
+    { n: "HANAFUDA", u: "../images/card-games/hanafuda.webp" },
+    { n: "GARBAGE", u: "../images/card-games/garbage.webp" },
+    { n: "SPIT", u: "../images/card-games/spit.webp" },
+    { n: "UNSTABLE UNICORNS", u: "../images/card-games/unstable-unicorns.webp" },
+    { n: "HERE TO SLAY", u: "../images/card-games/here-to-slay.webp" },
+    { n: "MANTIS", u: "../images/card-games/mantis.webp" },
+    { n: "POETRY FOR NEANDERTHALS", u: "../images/card-games/poetry-for-neanderthals.webp" },
+    { n: "6 NIMMT!", u: "../images/card-games/6-nimmt.webp" },
+    { n: "THE MIND", u: "../images/card-games/the-mind.webp" }
+
 ];
 if (typeof window !== 'undefined') window.cardGamesData = cardGamesData;

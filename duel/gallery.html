@@ -294,22 +294,37 @@
 
         function galleryImageError(el) {
             // Try alternative file extensions before giving up
-            const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
-            if (!el.dataset.extAttempts) {
-                el.dataset.extAttempts = '0';
+            const ALT_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg', 'svg', 'gif'];
+            
+            if (!el.dataset.originalSrc) {
+                el.dataset.originalSrc = el.src;
+                // Find the extension used in the original URL (before any query params)
+                const urlNoQ = el.src.split('?')[0];
+                const dotIdx = urlNoQ.lastIndexOf('.');
+                el.dataset.originalExt = dotIdx > 0 ? urlNoQ.substring(dotIdx + 1).toLowerCase() : '';
+                el.dataset.attemptIndex = '0';
             }
-            const attemptIndex = parseInt(el.dataset.extAttempts);
 
-            const currentSrc = el.src;
-            const dotIndex = currentSrc.lastIndexOf('.');
-            const basePath = dotIndex > 0 ? currentSrc.substring(0, dotIndex) : currentSrc;
-            const currentExt = dotIndex > 0 ? currentSrc.substring(dotIndex + 1).split('?')[0].toLowerCase() : '';
-
-            const toTry = ALT_EXTENSIONS.filter(ext => ext !== currentExt);
+            const attemptIndex = parseInt(el.dataset.attemptIndex);
+            const originalExt = el.dataset.originalExt;
+            
+            // Create a stable list of extensions to try (excluding the original one)
+            const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
 
             if (attemptIndex < toTry.length) {
-                el.dataset.extAttempts = String(attemptIndex + 1);
-                el.src = basePath + '.' + toTry[attemptIndex];
+                const nextExt = toTry[attemptIndex];
+                el.dataset.attemptIndex = String(attemptIndex + 1);
+                
+                // Construct the new URL from the original base
+                const urlNoQ = el.dataset.originalSrc.split('?')[0];
+                const dotIdx = urlNoQ.lastIndexOf('.');
+                const basePath = dotIdx > 0 ? urlNoQ.substring(0, dotIdx) : urlNoQ;
+                
+                // Preserve cache-buster if it was there
+                const hasQuery = el.dataset.originalSrc.includes('?');
+                const cb = hasQuery ? ('?v=' + Date.now()) : '';
+                
+                el.src = basePath + '.' + nextExt + cb;
                 return;
             }
 
@@ -319,7 +334,7 @@
             const fallback = wrap.querySelector('.img-fallback');
             if (img && fallback) {
                 const itemName = el.alt || 'Unknown';
-                const itemUrl = el.src || 'Unknown URL';
+                const itemUrl = el.dataset.originalSrc || el.src || 'Unknown URL';
                 failedImages.push({ name: itemName, url: itemUrl });
                 img.classList.add('hide');
                 fallback.classList.add('show');

@@ -21,9 +21,7 @@ const visualNovelsData = [
     { n: "UMINEKO WHEN THEY CRY", u: "../images/visual-novels/umineko-when-they-cry.webp" },
     { n: "MUV-LUV ALTERNATIVE", u: "../images/visual-novels/muv-luv-alternative.webp" },
     { n: "AI: THE SOMNIUM FILES", u: "../images/visual-novels/ai-the-somnium-files.webp" },
-    { n: "DANGANRONPA 2: GOODBYE DESPAIR", u: "../images/visual-novels/danganronpa-2.webp" },
     { n: "ZERO ESCAPE: VIRTUE'S LAST REWARD", u: "../images/visual-novels/zero-escape-vlr.webp" },
-    { n: "CLANNAD AFTER STORY", u: "../images/visual-novels/clannad-after-story.webp" },
     { n: "EVER17: THE OUT OF INFINITY", u: "../images/visual-novels/ever17.webp" },
     { n: "SCIENCE ADVENTURE SERIES", u: "../images/visual-novels/science-adventure-series.webp" },
     { n: "MAJIKOI!", u: "../images/visual-novels/majikoi.webp" },
@@ -55,7 +53,6 @@ const visualNovelsData = [
     { n: "SCHOOL DAYS", u: "../images/visual-novels/school-days.webp" },
     { n: "SAYA NO UTA", u: "../images/visual-novels/saya-no-uta.webp" },
     { n: "KARA NO SHOUJO", u: "../images/visual-novels/kara-no-shoujo.webp" },
-    { n: "STEINS;GATE 0", u: "../images/visual-novels/steins-gate-zero.webp" },
     { n: "CHAOS;HEAD", u: "../images/visual-novels/chaos-head.webp" },
 
     // ── BACKUPS (51–60) ────────────────

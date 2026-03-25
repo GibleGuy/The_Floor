@@ -13,10 +13,14 @@ import json
 import os
 import urllib.request
 import urllib.error
+import ssl
 import mimetypes
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
+
+# Create an unverified SSL context for macOS and other systems with missing certificates
+ssl_context = ssl._create_unverified_context()
 
 PORT = 8642
 # Serve from project root (one level up from tools/)
@@ -63,7 +67,7 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
                               'AppleWebKit/537.36 (KHTML, like Gecko) '
                               'Chrome/120.0.0.0 Safari/537.36'
             })
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with urllib.request.urlopen(req, timeout=15, context=ssl_context) as resp:
                 data = resp.read()
                 content_type = resp.headers.get('Content-Type', '')
 
