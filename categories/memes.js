@@ -1,3 +1,4 @@
+
 // Memes — images in images/memes/
 const memesData = [
     // Tier 1 — Obvious (1–15)

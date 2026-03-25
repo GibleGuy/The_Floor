@@ -38,7 +38,6 @@ const CATEGORY_REGISTRY = [
     { key: 'nintendo', label: 'Nintendo', emoji: '🎮', script: 'nintendo.js', global: 'nintendoData', tier: 'REAL DEAL' },
     { key: 'pokemon-everything', label: 'Pokemon Everything', emoji: '🔴', script: 'pokemon-everything.js', global: 'pokemonEverythingData', tier: 'REAL DEAL' },
     { key: 'queer-movies-tv', label: 'Queer Movies & TV', emoji: '🏳️‍🌈', script: 'queer-movies-tv.js', global: 'queerMoviesTvData', tier: 'REAL DEAL' },
-    { key: 'religion', label: 'Religion', emoji: '⛪', script: 'religion.js', global: 'religionData', tier: 'REAL DEAL' },
     { key: 'retro-video-games', label: 'Retro Video Games', emoji: '👾', script: 'retro-video-games.js', global: 'retroVideoGamesData', tier: 'REAL DEAL' },
     { key: 'sports-logos', label: 'Sports Logos', emoji: '🏅', script: 'sports-logos.js', global: 'sportsLogosData', tier: 'REAL DEAL' },
     { key: 'state-flags', label: 'State Flags', emoji: '🇺🇸', script: 'state-flags.js', global: 'stateFlagsData', tier: 'REAL DEAL' },
@@ -65,6 +64,7 @@ const CATEGORY_REGISTRY = [
     // EXTRAS
     { key: 'logos', label: 'Logos', emoji: '🏷️', script: 'logos.js', global: 'logosData', tier: 'EXTRAS' },
     { key: 'memes', label: 'Memes', emoji: '😂', script: 'memes.js', global: 'memesData', tier: 'EXTRAS' },
-    { key: 'mega', label: 'Mega Category', emoji: '🌟', script: 'mega.js', global: 'megaData', tier: 'EXTRAS' }
+    { key: 'mega', label: 'Mega Category', emoji: '🌟', script: 'mega.js', global: 'megaData', tier: 'EXTRAS' },
+    { key: 'religion', label: 'Religion', emoji: '⛪', script: 'religion.js', global: 'religionData', tier: 'EXTRAS' },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;
