@@ -15,6 +15,12 @@ A local server is required for the Host App and recommended for general use.
 cd /path/to/the_floor
 python3 -m http.server 8765
 ```
+
+# to kill, do
+
+```
+kill -9 $(lsof -t -i:8765)
+```
 Then open:
 - Host: `http://localhost:8765/host/floor-host.html`
 - Duel: `http://localhost:8765/duel/game.html`
