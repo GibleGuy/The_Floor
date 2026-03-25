@@ -10,7 +10,6 @@
 const CATEGORY_REGISTRY = [
     // REAL DEAL
     { key: '2000s-artists', label: '2000s Artists', emoji: '🎤', script: '2000s-artists.js', global: 'artists2000sData', tier: 'REAL DEAL' },
-    { key: 'advertisement', label: 'Advertisement', emoji: '📺', script: 'advertisement.js', global: 'advertisementData', tier: 'REAL DEAL' },
     { key: 'anime', label: 'Anime', emoji: '⛩️', script: 'anime.js', global: 'animeData', tier: 'REAL DEAL' },
     { key: 'best-picture', label: 'Best Picture', emoji: '🏆', script: 'best-picture.js', global: 'bestPictureData', tier: 'REAL DEAL' },
     { key: 'birds', label: 'Birds', emoji: '🐦', script: 'birds.js', global: 'birdsData', tier: 'REAL DEAL' },
@@ -62,6 +61,7 @@ const CATEGORY_REGISTRY = [
     { key: 'furniture', label: 'Furniture', emoji: '🪑', script: 'furniture.js', global: 'furnitureData', tier: 'TIEBREAK' },
 
     // EXTRAS
+    { key: 'advertisement', label: 'Advertisement', emoji: '📺', script: 'advertisement.js', global: 'advertisementData', tier: 'EXTRAS' },
     { key: 'logos', label: 'Logos', emoji: '🏷️', script: 'logos.js', global: 'logosData', tier: 'EXTRAS' },
     { key: 'memes', label: 'Memes', emoji: '😂', script: 'memes.js', global: 'memesData', tier: 'EXTRAS' },
     { key: 'mega', label: 'Mega Category', emoji: '🌟', script: 'mega.js', global: 'megaData', tier: 'EXTRAS' },

@@ -22,7 +22,6 @@ const marchingBandData = [
   { n: "RIFLE", u: "../images/marching-band/rifle.webp" },
   { n: "EQUIPMENT TRUCK", u: "../images/marching-band/equipment-truck.webp" },
   { n: "WATER JUG", u: "../images/marching-band/water-jug.webp" },
-  { n: "SECTION SHIRT", u: "../images/marching-band/section-shirt.webp" },
   { n: "METRONOME", u: "../images/marching-band/metronome.webp" },
   { n: "SABRE", u: "../images/marching-band/sabre.webp" },
   { n: "BINDER", u: "../images/marching-band/binder.webp" },
@@ -51,22 +50,13 @@ const marchingBandData = [
   { n: "BALDRIC", u: "../images/marching-band/baldric.webp" },
   { n: "ELECTRICAL TAPE", u: "../images/marching-band/electrical-tape.webp" },
   { n: "UNIFORM RACK", u: "../images/marching-band/uniform-rack.webp" },
-  { n: "HASH MARK", u: "../images/marching-band/hash-mark.webp" },
-  { n: "GUARD GLOVES", u: "../images/marching-band/guard-gloves.webp" },
-  { n: "LONG RANGER", u: "../images/marching-band/long-ranger.webp" },
-  { n: "FLAG SILK", u: "../images/marching-band/flag-silk.webp" },
-  { n: "YARD LINE", u: "../images/marching-band/yard-line.webp" },
 
   // ── BACKUPS (items 51–60) ────────────────
   { n: "WATER MISTER", u: "../images/marching-band/water-mister.webp" },
   { n: "CHALK", u: "../images/marching-band/chalk.webp" },
-  { n: "CHAPERONE", u: "../images/marching-band/chaperone.webp" },
   { n: "HAND WARMERS", u: "../images/marching-band/hand-warmers.webp" },
-  { n: "SEAT CUSHION", u: "../images/marching-band/seat-cushion.webp" },
   { n: "GOLF CART", u: "../images/marching-band/golf-cart.webp" },
   { n: "FIRST AID KIT", u: "../images/marching-band/first-aid-kit.webp" },
-  { n: "BUS LUGGAGE COMPARTMENT", u: "../images/marching-band/bus-luggage-compartment.webp" },
-  { n: "MAJORETTE", u: "../images/marching-band/majorette.webp" },
   { n: "TROPHY", u: "../images/marching-band/trophy.webp" }
 ];
 

@@ -1,5 +1,6 @@
 // Mega Category — All REAL DEAL Clues Combined
 const megaData = [
+// Tier 1 — Obvious (1–15)
     { n: "BEYONCÉ", u: "../images/2000s-artists/beyonce.webp" },
     { n: "EMINEM", u: "../images/2000s-artists/eminem.webp" },
     { n: "BRITNEY SPEARS", u: "../images/2000s-artists/britney-spears.webp" },
@@ -15,6 +16,8 @@ const megaData = [
     { n: "PINK", u: "../images/2000s-artists/pink.webp" },
     { n: "ALICIA KEYS", u: "../images/2000s-artists/alicia-keys.webp" },
     { n: "AVRIL LAVIGNE", u: "../images/2000s-artists/avril-lavigne.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "BLACK EYED PEAS", u: "../images/2000s-artists/black-eyed-peas.webp" },
     { n: "SHAKIRA", u: "../images/2000s-artists/shakira.webp" },
     { n: "GREEN DAY", u: "../images/2000s-artists/green-day.webp" },
@@ -28,6 +31,8 @@ const megaData = [
     { n: "NICKELBACK", u: "../images/2000s-artists/nickelback.webp" },
     { n: "FOO FIGHTERS", u: "../images/2000s-artists/foo-fighters.webp" },
     { n: "MAROON 5", u: "../images/2000s-artists/maroon-5.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "JOHN MAYER", u: "../images/2000s-artists/john-mayer.webp" },
     { n: "NELLY", u: "../images/2000s-artists/nelly.webp" },
     { n: "LIL WAYNE", u: "../images/2000s-artists/lil-wayne.webp" },
@@ -38,6 +43,8 @@ const megaData = [
     { n: "MY CHEMICAL ROMANCE", u: "../images/2000s-artists/my-chemical-romance.webp" },
     { n: "PARAMORE", u: "../images/2000s-artists/paramore.webp" },
     { n: "DESTINY'S CHILD", u: "../images/2000s-artists/destinys-child.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "NSYNC", u: "../images/2000s-artists/nsync.webp" },
     { n: "BACKSTREET BOYS", u: "../images/2000s-artists/backstreet-boys.webp" },
     { n: "BLINK-182", u: "../images/2000s-artists/blink-182.webp" },
@@ -48,9 +55,11 @@ const megaData = [
     { n: "GORILLAZ", u: "../images/2000s-artists/gorillaz.webp" },
     { n: "SEAN PAUL", u: "../images/2000s-artists/sean-paul.webp" },
     { n: "SHAGGY", u: "../images/2000s-artists/shaggy.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "THE STROKES", u: "../images/2000s-artists/the-strokes.webp" },
     { n: "ARCTIC MONKEYS", u: "../images/2000s-artists/arctic-monkeys.webp" },
-    { n: "OUTKAST", u: "../images/2000s-artists/outkast-backup.webp" },
+    { n: "OUTKAST", u: "../images/2000s-artists/outkast-backup.webp" }, // Note: Outkast is in tier 2
     { n: "DEATH CAB FOR CUTIE", u: "../images/2000s-artists/death-cab-for-cutie.webp" },
     { n: "SNOW PATROL", u: "../images/2000s-artists/snow-patrol.webp" },
     { n: "KINGS OF LEON", u: "../images/2000s-artists/kings-of-leon.webp" },
@@ -58,12 +67,7 @@ const megaData = [
     { n: "KELLY ROWLAND", u: "../images/2000s-artists/kelly-rowland.webp" },
     { n: "CIARA", u: "../images/2000s-artists/ciara.webp" },
     { n: "CHRIS BROWN", u: "../images/2000s-artists/chris-brown.webp" },
-    { n: "TACO BELL", u: "../images/advertisement/Taco_Bell.png" },
-    { n: "MCDONALDS", u: "../images/advertisement/Mcdonalds.png" },
-    { n: "BURGER KING", u: "../images/advertisement/Burger_King.png" },
-    { n: "APPLE PIE", u: "../images/advertisement/Apple_Pie.jpg" },
-    { n: "CHOCOLATE CHIP COOKIES", u: "../images/advertisement/Chocolate_Chip.jpeg" },
-    { n: "BROWNIES", u: "../images/advertisement/Brownies.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "DRAGON BALL Z", u: "../images/anime/dragon-ball-z.jpg" },
     { n: "NARUTO", u: "../images/anime/naruto.jpg" },
     { n: "ONE PIECE", u: "../images/anime/one-piece.jpg" },
@@ -79,6 +83,8 @@ const megaData = [
     { n: "SWORD ART ONLINE", u: "../images/anime/sword-art-online.jpg" },
     { n: "SPY X FAMILY", u: "../images/anime/spy-x-family.png" },
     { n: "TOKYO GHOUL", u: "../images/anime/tokyo-ghoul.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "HUNTER X HUNTER", u: "../images/anime/hunter-x-hunter.jpg" },
     { n: "BLEACH", u: "../images/anime/bleach.jpg" },
     { n: "COWBOY BEBOP", u: "../images/anime/cowboy-bebop.jpg" },
@@ -94,6 +100,8 @@ const megaData = [
     { n: "HAIKYUU", u: "../images/anime/haikyuu.jpg" },
     { n: "BLUE LOCK", u: "../images/anime/blue-lock.jpg" },
     { n: "SOLO LEVELING", u: "../images/anime/solo-leveling.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "VINLAND SAGA", u: "../images/anime/vinland-saga.png" },
     { n: "STEINS;GATE", u: "../images/anime/steins-gate.png" },
     { n: "FIRE FORCE", u: "../images/anime/fire-force.webp" },
@@ -104,6 +112,8 @@ const megaData = [
     { n: "TRIGUN", u: "../images/anime/trigun.jpg" },
     { n: "FRUITS BASKET", u: "../images/anime/fruits-basket.webp" },
     { n: "BERSERK", u: "../images/anime/berserk.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "GHOST IN THE SHELL", u: "../images/anime/ghost-in-the-shell.jpg" },
     { n: "ERASED", u: "../images/anime/erased.webp" },
     { n: "PARASYTE", u: "../images/anime/parasyte.jpg" },
@@ -114,6 +124,8 @@ const megaData = [
     { n: "SERIAL EXPERIMENTS LAIN", u: "../images/anime/serial-experiments-lain.jpg" },
     { n: "PAPRIKA", u: "../images/anime/paprika.jpg" },
     { n: "PERFECT BLUE", u: "../images/anime/perfect-blue.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "GURREN LAGANN", u: "../images/anime/gurren-lagann.jpg" },
     { n: "FLCL", u: "../images/anime/flcl.jpg" },
     { n: "CLAYMORE", u: "../images/anime/claymore.jpg" },
@@ -124,6 +136,7 @@ const megaData = [
     { n: "LEGEND OF THE GALACTIC HEROES", u: "../images/anime/legend-of-the-galactic-heroes.webp" },
     { n: "TEXHNOLYZE", u: "../images/anime/texhnolyze.jpg" },
     { n: "GOLDEN KAMUY", u: "../images/anime/golden-kamuy.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "TITANIC", u: "../images/best-picture/titanic.jpg" },
     { n: "THE GODFATHER", u: "../images/best-picture/the-godfather.jpg" },
     { n: "FORREST GUMP", u: "../images/best-picture/forrest-gump.jpg" },
@@ -139,6 +152,8 @@ const megaData = [
     { n: "THE LORD OF THE RINGS: THE RETURN OF THE KING", u: "../images/best-picture/lord-of-the-rings-return-of-the-king.jpg" },
     { n: "OPPENHEIMER", u: "../images/best-picture/oppenheimer.jpg" },
     { n: "EVERYTHING EVERYWHERE ALL AT ONCE", u: "../images/best-picture/everything-everywhere-all-at-once.jpeg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "CASABLANCA", u: "../images/best-picture/casablanca.avif" },
     { n: "WEST SIDE STORY", u: "../images/best-picture/west-side-story.webp" },
     { n: "PARASITE", u: "../images/best-picture/parasite.jpg" },
@@ -154,6 +169,8 @@ const megaData = [
     { n: "DANCES WITH WOLVES", u: "../images/best-picture/dances-with-wolves.jpeg" },
     { n: "AMERICAN BEAUTY", u: "../images/best-picture/american-beauty.webp" },
     { n: "UNFORGIVEN", u: "../images/best-picture/unforgiven.jpeg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "LAWRENCE OF ARABIA", u: "../images/best-picture/lawrence-of-arabia.webp" },
     { n: "PATTON", u: "../images/best-picture/patton.avif" },
     { n: "12 YEARS A SLAVE", u: "../images/best-picture/12-years-a-slave.jpeg" },
@@ -164,6 +181,8 @@ const megaData = [
     { n: "ARGO", u: "../images/best-picture/argo.jpg" },
     { n: "THE KING'S SPEECH", u: "../images/best-picture/the-kings-speech.jpg" },
     { n: "ANNIE HALL", u: "../images/best-picture/annie-hall.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "GREEN BOOK", u: "../images/best-picture/green-book.jpg" },
     { n: "KRAMER VS. KRAMER", u: "../images/best-picture/kramer-vs-kramer.jpg" },
     { n: "NOMADLAND", u: "../images/best-picture/nomadland.webp" },
@@ -174,17 +193,19 @@ const megaData = [
     { n: "DRIVING MISS DAISY", u: "../images/best-picture/driving-miss-daisy.jpg" },
     { n: "ANORA", u: "../images/best-picture/anora.jpg" },
     { n: "CODA", u: "../images/best-picture/coda.webp" },
-    { n: "THE STING", u: "../images/best-picture/the-sting.jpg" },
-    { n: "ON THE WATERFRONT", u: "../images/best-picture/on-the-waterfront.jpg" },
-    { n: "MIDNIGHT COWBOY", u: "../images/best-picture/midnight-cowboy.jpg" },
-    { n: "MY FAIR LADY", u: "../images/best-picture/my-fair-lady.jpg" },
-    { n: "THE BRIDGE ON THE RIVER KWAI", u: "../images/best-picture/the-bridge-on-the-river-kwai.jpg" },
-    { n: "ORDINARY PEOPLE", u: "../images/best-picture/ordinary-people.jpg" },
-    { n: "CHARIOTS OF FIRE", u: "../images/best-picture/chariots-of-fire.jpg" },
-    { n: "OUT OF AFRICA", u: "../images/best-picture/out-of-africa.jpg" },
-    { n: "THE ENGLISH PATIENT", u: "../images/best-picture/the-english-patient.jpg" },
-    { n: "TERMS OF ENDEARMENT", u: "../images/best-picture/terms-of-endearment.jpg" },
-    { n: "BALD EAGLE", u: "../images/birds/bald-eagle.webp" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "THE STING", u: "../images/best-picture/the-sting.jpg" },
+    // { n: "ON THE WATERFRONT", u: "../images/best-picture/on-the-waterfront.jpg" },
+    // { n: "MIDNIGHT COWBOY", u: "../images/best-picture/midnight-cowboy.jpg" },
+    // { n: "MY FAIR LADY", u: "../images/best-picture/my-fair-lady.jpg" },
+    // { n: "THE BRIDGE ON THE RIVER KWAI", u: "../images/best-picture/the-bridge-on-the-river-kwai.jpg" },
+    // { n: "ORDINARY PEOPLE", u: "../images/best-picture/ordinary-people.jpg" },
+    // { n: "CHARIOTS OF FIRE", u: "../images/best-picture/chariots-of-fire.jpg" },
+    // { n: "OUT OF AFRICA", u: "../images/best-picture/out-of-africa.jpg" },
+    // { n: "THE ENGLISH PATIENT", u: "../images/best-picture/the-english-patient.jpg" },
+    // { n: "TERMS OF ENDEARMENT", u: "../images/best-picture/terms-of-endearment.jpg" },
+{ n: "BALD EAGLE", u: "../images/birds/bald-eagle.webp" },
     { n: "PENGUIN", u: "../images/birds/penguin.webp" },
     { n: "OSTRICH", u: "../images/birds/ostrich.webp" },
     { n: "PEACOCK", u: "../images/birds/peacock.webp" },
@@ -233,6 +254,8 @@ const megaData = [
     { n: "MAGPIE", u: "../images/birds/magpie.webp" },
     { n: "CONDOR", u: "../images/birds/condor.webp" },
     { n: "CASSOWARY", u: "../images/birds/cassowary.webp" },
+    
+    // ── BACKUPS (items 51–60) ────────────────
     { n: "IBIS", u: "../images/birds/ibis.webp" },
     { n: "EGRET", u: "../images/birds/egret.webp" },
     { n: "HORNBILL", u: "../images/birds/hornbill.webp" },
@@ -243,6 +266,7 @@ const megaData = [
     { n: "LOON", u: "../images/birds/loon.webp" },
     { n: "HOOPOE", u: "../images/birds/hoopoe.webp" },
     { n: "SWALLOW", u: "../images/birds/swallow.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "MONOPOLY", u: "../images/board-games/monopoly.webp" },
     { n: "SCRABBLE", u: "../images/board-games/scrabble.webp" },
     { n: "CHESS", u: "../images/board-games/chess.webp" },
@@ -258,6 +282,8 @@ const megaData = [
     { n: "CONNECT 4", u: "../images/board-games/connect-4.webp" },
     { n: "GUESS WHO?", u: "../images/board-games/guess-who.webp" },
     { n: "TICKET TO RIDE", u: "../images/board-games/ticket-to-ride.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "HUNGRY HUNGRY HIPPOS", u: "../images/board-games/hungry-hungry-hippos.webp" },
     { n: "MOUSE TRAP", u: "../images/board-games/mouse-trap.webp" },
     { n: "BACKGAMMON", u: "../images/board-games/backgammon.webp" },
@@ -267,6 +293,8 @@ const megaData = [
     { n: "CHUTES AND LADDERS", u: "../images/board-games/chutes-and-ladders.webp" },
     { n: "SEQUENCE", u: "../images/board-games/sequence.webp" },
     { n: "CARCASSONNE", u: "../images/board-games/carcassonne.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "BETRAYAL AT HOUSE", u: "../images/board-games/betrayal-at-house.webp" },
     { n: "SPLENDOR", u: "../images/board-games/splendor.webp" },
     { n: "CODENAMES", u: "../images/board-games/codenames.webp" },
@@ -276,6 +304,8 @@ const megaData = [
     { n: "MASTERMIND", u: "../images/board-games/mastermind.webp" },
     { n: "BLOKUS", u: "../images/board-games/blokus.webp" },
     { n: "PATCHWORK", u: "../images/board-games/patchwork.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "GLOOMHAVEN", u: "../images/board-games/gloomhaven.webp" },
     { n: "SCYTHE", u: "../images/board-games/scythe.webp" },
     { n: "TERRAFORMING MARS", u: "../images/board-games/terraforming-mars.webp" },
@@ -286,6 +316,8 @@ const megaData = [
     { n: "BRASS BIRMINGHAM", u: "../images/board-games/brass-birmingham.webp" },
     { n: "TWILIGHT IMPERIUM", u: "../images/board-games/twilight-imperium.webp" },
     { n: "DEAD OF WINTER", u: "../images/board-games/dead-of-winter.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "AGRICOLA", u: "../images/board-games/agricola.webp" },
     { n: "PUERTO RICO", u: "../images/board-games/puerto-rico.webp" },
     { n: "DOMINION", u: "../images/board-games/dominion.webp" },
@@ -295,6 +327,7 @@ const megaData = [
     { n: "COSMIC ENCOUNTER", u: "../images/board-games/cosmic-encounter.webp" },
     { n: "SECRET HITLER", u: "../images/board-games/secret-hitler.webp" },
     { n: "THE RESISTANCE", u: "../images/board-games/the-resistance.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "WASHINGTON D.C.", u: "../images/capital-cities/washington-d-c.webp" },
     { n: "LONDON", u: "../images/capital-cities/london.webp" },
     { n: "PARIS", u: "../images/capital-cities/paris.webp" },
@@ -310,6 +343,8 @@ const megaData = [
     { n: "SEOUL", u: "../images/capital-cities/seoul.webp" },
     { n: "CAIRO", u: "../images/capital-cities/cairo.webp" },
     { n: "ATHENS", u: "../images/capital-cities/athens.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "BANGKOK", u: "../images/capital-cities/bangkok.webp" },
     { n: "BUENOS AIRES", u: "../images/capital-cities/buenos-aires.webp" },
     { n: "BOGOTA", u: "../images/capital-cities/bogota.webp" },
@@ -325,6 +360,8 @@ const megaData = [
     { n: "SANTIAGO", u: "../images/capital-cities/santiago.webp" },
     { n: "JAKARTA", u: "../images/capital-cities/jakarta.webp" },
     { n: "MANILA", u: "../images/capital-cities/manila.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "WARSAW", u: "../images/capital-cities/warsaw.webp" },
     { n: "BUDAPEST", u: "../images/capital-cities/budapest.webp" },
     { n: "ANKARA", u: "../images/capital-cities/ankara.webp" },
@@ -335,6 +372,8 @@ const megaData = [
     { n: "KUALA LUMPUR", u: "../images/capital-cities/kuala-lumpur.webp" },
     { n: "NAIROBI", u: "../images/capital-cities/nairobi.webp" },
     { n: "CAPE TOWN", u: "../images/capital-cities/cape-town.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "ADDIS ABABA", u: "../images/capital-cities/addis-ababa.webp" },
     { n: "WELLINGTON", u: "../images/capital-cities/wellington.webp" },
     { n: "HELSINKI", u: "../images/capital-cities/helsinki.webp" },
@@ -345,6 +384,8 @@ const megaData = [
     { n: "MONTEVIDEO", u: "../images/capital-cities/montevideo.webp" },
     { n: "BEIRUT", u: "../images/capital-cities/beirut.webp" },
     { n: "BAGHDAD", u: "../images/capital-cities/baghdad.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "KIEV", u: "../images/capital-cities/kiev.webp" },
     { n: "DAKAR", u: "../images/capital-cities/dakar.webp" },
     { n: "ACCRA", u: "../images/capital-cities/accra.webp" },
@@ -355,36 +396,31 @@ const megaData = [
     { n: "RABAT", u: "../images/capital-cities/rabat.webp" },
     { n: "BERN", u: "../images/capital-cities/bern.webp" },
     { n: "BRUSSELS", u: "../images/capital-cities/brussels.webp" },
+// Tier 2 — Very Easy (Original Tier 1)
     { n: "UNO", u: "../images/card-games/uno.webp" },
     { n: "POKER", u: "../images/card-games/poker.webp" },
     { n: "SOLITAIRE", u: "../images/card-games/solitaire.webp" },
-    { n: "GO FISH", u: "../images/card-games/go-fish.webp" },
-    { n: "CRAZY EIGHTS", u: "../images/card-games/crazy-eights.webp" },
     { n: "CARDS AGAINST HUMANITY", u: "../images/card-games/cards-against-humanity.webp" },
     { n: "BLACKJACK", u: "../images/card-games/blackjack.webp" },
-    { n: "TEXAS HOLD'EM", u: "../images/card-games/texas-holdem.webp" },
     { n: "SPADES", u: "../images/card-games/spades.webp" },
     { n: "HEARTS", u: "../images/card-games/hearts.webp" },
     { n: "OLD MAID", u: "../images/card-games/old-maid.webp" },
-    { n: "WAR", u: "../images/card-games/war.webp" },
-    { n: "GIN RUMMY", u: "../images/card-games/gin-rummy.webp" },
     { n: "MAGIC: THE GATHERING", u: "../images/card-games/magic-the-gathering.webp" },
     { n: "POKÉMON TCG", u: "../images/card-games/pokemon-tcg.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "YU-GI-OH!", u: "../images/card-games/yu-gi-oh.webp" },
     { n: "PHASE 10", u: "../images/card-games/phase-10.webp" },
     { n: "SKIP-BO", u: "../images/card-games/skip-bo.webp" },
     { n: "APPLES TO APPLES", u: "../images/card-games/apples-to-apples.webp" },
     { n: "EXPLODING KITTENS", u: "../images/card-games/exploding-kittens.webp" },
     { n: "DO YOU MEME?", u: "../images/card-games/do-you-meme.webp" },
-    { n: "TABOO", u: "../images/card-games/taboo.webp" },
     { n: "BRIDGE", u: "../images/card-games/bridge.webp" },
-    { n: "CANASTA", u: "../images/card-games/canasta.webp" },
     { n: "CRIBBAGE", u: "../images/card-games/cribbage.webp" },
-    { n: "PINOCHLE", u: "../images/card-games/pinochle.webp" },
     { n: "BACCARAT", u: "../images/card-games/baccarat.webp" },
     { n: "EGYPTIAN RAT SCREW", u: "../images/card-games/egyptian-rat-screw.webp" },
-    { n: "SPEED", u: "../images/card-games/speed.webp" },
-    { n: "SLAPJACK", u: "../images/card-games/slapjack.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "HEARTHSTONE", u: "../images/card-games/hearthstone.webp" },
     { n: "GWENT", u: "../images/card-games/gwent.webp" },
     { n: "DOMINION", u: "../images/card-games/dominion.webp" },
@@ -394,19 +430,13 @@ const megaData = [
     { n: "LOVE LETTER", u: "../images/card-games/love-letter.webp" },
     { n: "MONOPOLY DEAL", u: "../images/card-games/monopoly-deal.webp" },
     { n: "SPOONS", u: "../images/card-games/spoons.webp" },
-    { n: "ROOK", u: "../images/card-games/rook.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "TARNEEB", u: "../images/card-games/tarneeb.webp" },
     { n: "DURAK", u: "../images/card-games/durak.webp" },
     { n: "BRISCOLA", u: "../images/card-games/briscola.webp" },
-    { n: "PIQUET", u: "../images/card-games/piquet.webp" },
-    { n: "EUCHRE", u: "../images/card-games/euchre.webp" },
-    { n: "OH HELL", u: "../images/card-games/oh-hell.webp" },
-    { n: "PITCH", u: "../images/card-games/pitch.webp" },
-    { n: "HAND AND FOOT", u: "../images/card-games/hand-and-foot.webp" },
-    { n: "KEMPS", u: "../images/card-games/kemps.webp" },
-    { n: "NERTZ", u: "../images/card-games/nertz.webp" },
-    { n: "PRESIDENT", u: "../images/card-games/president.webp" },
-    { n: "WE'RE NOT REALLY STRANGERS", u: "../images/card-games/were-not-really-strangers.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "FLUXX", u: "../images/card-games/fluxx.webp" },
     { n: "MUNCHKIN", u: "../images/card-games/munchkin.webp" },
     { n: "BOSS MONSTER", u: "../images/card-games/boss-monster.webp" },
@@ -415,6 +445,20 @@ const megaData = [
     { n: "MARVEL CHAMPIONS", u: "../images/card-games/marvel-champions.webp" },
     { n: "ARKHAM HORROR LCG", u: "../images/card-games/arkham-horror-lcg.webp" },
     { n: "NETRUNNER", u: "../images/card-games/netrunner.webp" },
+
+    // Super backups
+    { n: "WAR", u: "../images/card-games/war.webp" },
+    { n: "SLAPJACK", u: "../images/card-games/slapjack.webp" },
+    { n: "HANAFUDA", u: "../images/card-games/hanafuda.webp" },
+    { n: "GARBAGE", u: "../images/card-games/garbage.webp" },
+    { n: "SPIT", u: "../images/card-games/spit.webp" },
+    { n: "UNSTABLE UNICORNS", u: "../images/card-games/unstable-unicorns.webp" },
+    { n: "HERE TO SLAY", u: "../images/card-games/here-to-slay.webp" },
+    { n: "MANTIS", u: "../images/card-games/mantis.webp" },
+    { n: "POETRY FOR NEANDERTHALS", u: "../images/card-games/poetry-for-neanderthals.webp" },
+    { n: "6 NIMMT!", u: "../images/card-games/6-nimmt.webp" },
+    { n: "THE MIND", u: "../images/card-games/the-mind.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "MICHIGAN", u: "../images/college-logos/michigan.svg" },
     { n: "ALABAMA", u: "../images/college-logos/alabama.svg" },
     { n: "OHIO STATE", u: "../images/college-logos/ohio-state.png" },
@@ -430,6 +474,8 @@ const megaData = [
     { n: "GEORGIA", u: "../images/college-logos/georgia.svg" },
     { n: "MICHIGAN STATE", u: "../images/college-logos/michigan-state.jpg" },
     { n: "TENNESSEE", u: "../images/college-logos/tennessee.png" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "AUBURN", u: "../images/college-logos/auburn.svg" },
     { n: "OKLAHOMA", u: "../images/college-logos/oklahoma.svg" },
     { n: "WISCONSIN", u: "../images/college-logos/wisconsin.svg" },
@@ -444,6 +490,8 @@ const megaData = [
     { n: "STANFORD", u: "../images/college-logos/stanford.svg" },
     { n: "ARKANSAS", u: "../images/college-logos/arkansas.jpg" },
     { n: "WASHINGTON", u: "../images/college-logos/washington.png" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "KANSAS", u: "../images/college-logos/kansas.svg" },
     { n: "COLORADO", u: "../images/college-logos/colorado.svg" },
     { n: "MARYLAND", u: "../images/college-logos/maryland.png" },
@@ -454,6 +502,8 @@ const megaData = [
     { n: "OREGON STATE", u: "../images/college-logos/oregon-state.svg" },
     { n: "PITTSBURGH", u: "../images/college-logos/pittsburgh.jpg" },
     { n: "OLE MISS", u: "../images/college-logos/ole-miss.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "WAKE FOREST", u: "../images/college-logos/wake-forest.png" },
     { n: "PURDUE", u: "../images/college-logos/purdue.svg" },
     { n: "VANDERBILT", u: "../images/college-logos/vanderbilt.jpg" },
@@ -464,6 +514,8 @@ const megaData = [
     { n: "CINCINNATI", u: "../images/college-logos/cincinnati.svg" },
     { n: "HOUSTON", u: "../images/college-logos/houston.svg" },
     { n: "UCF", u: "../images/college-logos/ucf.svg" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "BYU", u: "../images/college-logos/byu.png" },
     { n: "ARMY", u: "../images/college-logos/army.svg" },
     { n: "NAVY", u: "../images/college-logos/navy.svg" },
@@ -474,6 +526,7 @@ const megaData = [
     { n: "VILLANOVA", u: "../images/college-logos/villanova.png" },
     { n: "CONNECTICUT", u: "../images/college-logos/connecticut.svg" },
     { n: "AIR FORCE", u: "../images/college-logos/air-force.svg" },
+// Tier 1 — Obvious (1–15)
     { n: "THE LION KING", u: "../images/disney-movies/the-lion-king.webp" },
     { n: "FROZEN", u: "../images/disney-movies/frozen.webp" },
     { n: "TOY STORY", u: "../images/disney-movies/toy-story.webp" },
@@ -489,6 +542,8 @@ const megaData = [
     { n: "MULAN", u: "../images/disney-movies/mulan.webp" },
     { n: "TANGLED", u: "../images/disney-movies/tangled.webp" },
     { n: "ENCANTO", u: "../images/disney-movies/encanto.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "THE INCREDIBLES", u: "../images/disney-movies/the-incredibles.webp" },
     { n: "UP", u: "../images/disney-movies/up.webp" },
     { n: "INSIDE OUT", u: "../images/disney-movies/inside-out.webp" },
@@ -503,6 +558,8 @@ const megaData = [
     { n: "DUMBO", u: "../images/disney-movies/dumbo.webp" },
     { n: "BAMBI", u: "../images/disney-movies/bambi.webp" },
     { n: "RATATOUILLE", u: "../images/disney-movies/ratatouille.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "THE NIGHTMARE BEFORE CHRISTMAS", u: "../images/disney-movies/the-nightmare-before-christmas.webp" },
     { n: "LILO & STITCH", u: "../images/disney-movies/lilo-and-stitch.webp" },
     { n: "BIG HERO 6", u: "../images/disney-movies/big-hero-6.webp" },
@@ -513,6 +570,8 @@ const megaData = [
     { n: "A BUG'S LIFE", u: "../images/disney-movies/a-bugs-life.webp" },
     { n: "BROTHER BEAR", u: "../images/disney-movies/brother-bear.webp" },
     { n: "THE EMPEROR'S NEW GROOVE", u: "../images/disney-movies/the-emperors-new-groove.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "ATLANTIS: THE LOST EMPIRE", u: "../images/disney-movies/atlantis-the-lost-empire.webp" },
     { n: "TREASURE PLANET", u: "../images/disney-movies/treasure-planet.webp" },
     { n: "THE ARISTOCATS", u: "../images/disney-movies/the-aristocats.webp" },
@@ -522,6 +581,8 @@ const megaData = [
     { n: "TURNING RED", u: "../images/disney-movies/turning-red.webp" },
     { n: "LUCA", u: "../images/disney-movies/luca.webp" },
     { n: "SOUL", u: "../images/disney-movies/soul.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "OLIVER & COMPANY", u: "../images/disney-movies/oliver-and-company.webp" },
     { n: "THE FOX AND THE HOUND", u: "../images/disney-movies/the-fox-and-the-hound.webp" },
     { n: "THE RESCUERS", u: "../images/disney-movies/the-rescuers.webp" },
@@ -532,6 +593,7 @@ const megaData = [
     { n: "BOLT", u: "../images/disney-movies/bolt.webp" },
     { n: "THE PRINCESS AND THE FROG", u: "../images/disney-movies/the-princess-and-the-frog.webp" },
     { n: "RAYA AND THE LAST DRAGON", u: "../images/disney-movies/raya-and-the-last-dragon.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "BARBIE", u: "../images/dolls/barbie.jpg" },
     { n: "CABBAGE PATCH KIDS", u: "../images/dolls/cabbage-patch-kids.jpg" },
     { n: "RAGGEDY ANN", u: "../images/dolls/raggedy-ann.jpg" },
@@ -547,6 +609,8 @@ const megaData = [
     { n: "POLLY POCKET", u: "../images/dolls/polly-pocket.jpg" },
     { n: "STRAWBERRY SHORTCAKE", u: "../images/dolls/strawberry-shortcake.jpg" },
     { n: "BABY ALIVE", u: "../images/dolls/baby-alive.jpg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "MONSTER HIGH", u: "../images/dolls/monster-high.webp" },
     { n: "RAGGEDY ANDY", u: "../images/dolls/raggedy-andy.jpg" },
     { n: "FURBY", u: "../images/dolls/furby.jpg" },
@@ -562,6 +626,8 @@ const megaData = [
     { n: "CHUCKY", u: "../images/dolls/chucky.jpg" },
     { n: "LALALOOPSY", u: "../images/dolls/lalaloopsy.webp" },
     { n: "RAINBOW HIGH", u: "../images/dolls/rainbow-high.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "BLYTHE", u: "../images/dolls/blythe.jpg" },
     { n: "ANNABELLE", u: "../images/dolls/annabelle.jpg" },
     { n: "MADAME ALEXANDER", u: "../images/dolls/madame-alexander.jpg" },
@@ -572,6 +638,8 @@ const megaData = [
     { n: "BETSY WETSY", u: "../images/dolls/betsy-wetsy.jpg" },
     { n: "DARUMA", u: "../images/dolls/daruma.jpg" },
     { n: "PRECIOUS MOMENTS", u: "../images/dolls/precious-moments.jpg" },
+
+    // Tier 4 — Expert (41–50)
     { n: "PULLIP", u: "../images/dolls/pullip.jpg" },
     { n: "KACHINA DOLL", u: "../images/dolls/kachina-doll.jpg" },
     { n: "WORRY DOLL", u: "../images/dolls/worry-doll.jpg" },
@@ -582,6 +650,8 @@ const megaData = [
     { n: "WAYANG", u: "../images/dolls/wayang.jpg" },
     { n: "LIDDLE KIDDLES", u: "../images/dolls/liddle-kiddles.jpg" },
     { n: "BUNRAKU", u: "../images/dolls/bunraku.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "SKIPPER", u: "../images/dolls/skipper.jpg" },
     { n: "DAWN DOLL", u: "../images/dolls/dawn-doll.jpg" },
     { n: "FLATSY", u: "../images/dolls/flatsy.jpg" },
@@ -592,6 +662,7 @@ const megaData = [
     { n: "PARIAN DOLL", u: "../images/dolls/parian-doll.jpg" },
     { n: "KATHE KRUSE", u: "../images/dolls/kathe-kruse.jpg" },
     { n: "SHADOW PUPPET", u: "../images/dolls/shadow-puppet.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "LEWIS HAMILTON", u: "../images/f1/lewis-hamilton.webp" },
     { n: "MAX VERSTAPPEN", u: "../images/f1/max-verstappen.webp" },
     { n: "MICHAEL SCHUMACHER", u: "../images/f1/michael-schumacher.webp" },
@@ -606,6 +677,8 @@ const megaData = [
     { n: "TIRES", u: "../images/f1/tires.webp" },
     { n: "PODIUM", u: "../images/f1/podium.webp" },
     { n: "STARTING GRID", u: "../images/f1/starting-grid.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "FERNANDO ALONSO", u: "../images/f1/fernando-alonso.webp" },
     { n: "SEBASTIAN VETTEL", u: "../images/f1/sebastian-vettel.webp" },
     { n: "CHARLES LECLERC", u: "../images/f1/charles-leclerc.webp" },
@@ -618,6 +691,8 @@ const megaData = [
     { n: "POLE POSITION", u: "../images/f1/pole-position.webp" },
     { n: "MONACO GRAND PRIX", u: "../images/f1/monaco-grand-prix.webp" },
     { n: "SILVERSTONE", u: "../images/f1/silverstone.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "NIKI LAUDA", u: "../images/f1/niki-lauda.webp" },
     { n: "ALAIN PROST", u: "../images/f1/alain-prost.webp" },
     { n: "JAMES HUNT", u: "../images/f1/james-hunt.webp" },
@@ -628,6 +703,8 @@ const megaData = [
     { n: "FRONT WING", u: "../images/f1/front-wing.webp" },
     { n: "REAR WING", u: "../images/f1/rear-wing.webp" },
     { n: "SLIPSTREAM", u: "../images/f1/slipstream.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "JACKIE STEWART", u: "../images/f1/jackie-stewart.webp" },
     { n: "JIM CLARK", u: "../images/f1/jim-clark.webp" },
     { n: "JUAN MANUEL FANGIO", u: "../images/f1/juan-manuel-fangio.webp" },
@@ -635,6 +712,8 @@ const megaData = [
     { n: "NELSON PIQUET", u: "../images/f1/nelson-piquet.webp" },
     { n: "BRABHAM", u: "../images/f1/brabham.webp" },
     { n: "OVERSTEER", u: "../images/f1/oversteer.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "NIGEL MANSELL", u: "../images/f1/nigel-mansell.webp" },
     { n: "KIMI RAIKKONEN", u: "../images/f1/kimi-raikkonen.webp" },
     { n: "JENSON BUTTON", u: "../images/f1/jenson-button.webp" },
@@ -642,6 +721,7 @@ const megaData = [
     { n: "EMERSON FITTIPALDI", u: "../images/f1/emerson-fittipaldi.webp" },
     { n: "TELEMETRY", u: "../images/f1/telemetry.webp" },
     { n: "GRAVEL TRAP", u: "../images/f1/gravel-trap.webp" },
+// Tier 1 — Obvious (New 15 Easy Books)
     { n: "WINNIE-THE-POOH", u: "../images/famous-books/winnie-the-pooh.webp" },
     { n: "THE WIZARD OF OZ", u: "../images/famous-books/the-wizard-of-oz.webp" },
     { n: "DIARY OF A WIMPY KID", u: "../images/famous-books/diary-of-a-wimpy-kid.webp" },
@@ -656,6 +736,8 @@ const megaData = [
     { n: "WHERE'S WALDO?", u: "../images/famous-books/wheres-waldo.webp" },
     { n: "PETER PAN", u: "../images/famous-books/peter-pan.webp" },
     { n: "THE SNOWY DAY", u: "../images/famous-books/the-snowy-day.webp" },
+
+    // Tier 2 — Familiar (Existing)
     { n: "HARRY POTTER", u: "../images/famous-books/harry-potter.jpg" },
     { n: "THE LORD OF THE RINGS", u: "../images/famous-books/the-lord-of-the-rings.jpg" },
     { n: "THE CAT IN THE HAT", u: "../images/famous-books/the-cat-in-the-hat.webp" },
@@ -671,6 +753,8 @@ const megaData = [
     { n: "CHARLOTTE'S WEB", u: "../images/famous-books/charlottes-web.jpg" },
     { n: "THE VERY HUNGRY CATERPILLAR", u: "../images/famous-books/the-very-hungry-caterpillar.gif" },
     { n: "FRANKENSTEIN", u: "../images/famous-books/frankenstein.jpg" },
+    
+    // Tier 3 — Knowledgeable (Existing)
     { n: "PRIDE AND PREJUDICE", u: "../images/famous-books/pride-and-prejudice.jpg" },
     { n: "THE CATCHER IN THE RYE", u: "../images/famous-books/the-catcher-in-the-rye.jpg" },
     { n: "WHERE THE WILD THINGS ARE", u: "../images/famous-books/where-the-wild-things-are.jpg" },
@@ -686,6 +770,8 @@ const megaData = [
     { n: "DUNE", u: "../images/famous-books/dune.jpg" },
     { n: "THE TALE OF PETER RABBIT", u: "../images/famous-books/the-tale-of-peter-rabbit.jpg" },
     { n: "THE FAULT IN OUR STARS", u: "../images/famous-books/the-fault-in-our-stars.webp" },
+    
+    // Tier 4 — Expert (Existing)
     { n: "PERCY JACKSON", u: "../images/famous-books/percy-jackson.jpg" },
     { n: "A GAME OF THRONES", u: "../images/famous-books/a-game-of-thrones.png" },
     { n: "THE DA VINCI CODE", u: "../images/famous-books/the-da-vinci-code.webp" },
@@ -696,6 +782,8 @@ const megaData = [
     { n: "LES MISÉRABLES", u: "../images/famous-books/les-miserables.webp" },
     { n: "WUTHERING HEIGHTS", u: "../images/famous-books/wuthering-heights.jpg" },
     { n: "THE ALCHEMIST", u: "../images/famous-books/the-alchemist.webp" },
+
+    // ── BACKUPS (51–60) ──────────────── (Existing)
     { n: "THE COLOR PURPLE", u: "../images/famous-books/the-color-purple.png" },
     { n: "THE HITCHHIKER'S GUIDE", u: "../images/famous-books/the-hitchhikers-guide.webp" },
     { n: "THE HANDMAID'S TALE", u: "../images/famous-books/the-handmaids-tale.jpg" },
@@ -703,6 +791,7 @@ const megaData = [
     { n: "IT", u: "../images/famous-books/it.png" },
     { n: "THE SHINING", u: "../images/famous-books/the-shining.jpg" },
     { n: "A WRINKLE IN TIME", u: "../images/famous-books/a-wrinkle-in-time.png" },
+// Tier 1 — Obvious (1–15)
     { n: "FISHING ROD", u: "../images/fishing/fishing-rod.webp" },
     { n: "HOOK", u: "../images/fishing/hook.webp" },
     { n: "BAIT (WORM)", u: "../images/fishing/bait.webp" },
@@ -710,14 +799,13 @@ const megaData = [
     { n: "NET", u: "../images/fishing/net.webp" },
     { n: "TACKLE BOX", u: "../images/fishing/tackle-box.webp" },
     { n: "BOAT", u: "../images/fishing/boat.webp" },
-    { n: "FISHERMAN", u: "../images/fishing/fisherman.webp" },
     { n: "BASS", u: "../images/fishing/bass.webp" },
     { n: "SALMON", u: "../images/fishing/salmon.webp" },
     { n: "TROUT", u: "../images/fishing/trout.webp" },
-    { n: "LURE", u: "../images/fishing/lure.webp" },
-    { n: "REEL", u: "../images/fishing/reel.webp" },
     { n: "ANCHOR", u: "../images/fishing/anchor.webp" },
     { n: "DOCK", u: "../images/fishing/dock.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "LIFE JACKET", u: "../images/fishing/life-jacket.webp" },
     { n: "OARS", u: "../images/fishing/oars.webp" },
     { n: "CANOE", u: "../images/fishing/canoe.webp" },
@@ -730,9 +818,10 @@ const megaData = [
     { n: "SNAPPER", u: "../images/fishing/snapper.webp" },
     { n: "FLY FISHING", u: "../images/fishing/fly-fishing.webp" },
     { n: "SINKER", u: "../images/fishing/sinker.webp" },
-    { n: "FISHING LINE", u: "../images/fishing/fishing-line.webp" },
     { n: "PLIERS", u: "../images/fishing/pliers.webp" },
     { n: "STRINGER", u: "../images/fishing/stringer.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "SPINNERBAIT", u: "../images/fishing/spinnerbait.webp" },
     { n: "CRANKBAIT", u: "../images/fishing/crankbait.webp" },
     { n: "JIG", u: "../images/fishing/jig.webp" },
@@ -743,6 +832,8 @@ const megaData = [
     { n: "HARPOON", u: "../images/fishing/harpoon.webp" },
     { n: "SPEARGUN", u: "../images/fishing/speargun.webp" },
     { n: "MARLIN", u: "../images/fishing/marlin.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "DOWNRIGGER", u: "../images/fishing/downrigger.webp" },
     { n: "OUTRIGGER", u: "../images/fishing/outrigger.webp" },
     { n: "GAFF", u: "../images/fishing/gaff.webp" },
@@ -753,16 +844,17 @@ const megaData = [
     { n: "BITE ALARM", u: "../images/fishing/bite-alarm.webp" },
     { n: "BAITCASTING REEL", u: "../images/fishing/baitcasting-reel.webp" },
     { n: "SPINCAST REEL", u: "../images/fishing/spincast-reel.webp" },
-    { n: "TROTLINE", u: "../images/fishing/trotline.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "ICE AUGER", u: "../images/fishing/ice-auger.webp" },
     { n: "TIP-UP", u: "../images/fishing/tip-up.webp" },
     { n: "CREEL", u: "../images/fishing/creel.webp" },
     { n: "SEINE NET", u: "../images/fishing/seine-net.webp" },
     { n: "TRAWL NET", u: "../images/fishing/trawl-net.webp" },
-    { n: "FISH SCALES", u: "../images/fishing/fish-scales.webp" },
+    { n: "FISH SCALER", u: "../images/fishing/fish-scaler.webp" },
     { n: "FILLET KNIFE", u: "../images/fishing/fillet-knife.webp" },
-    { n: "BARBLESS HOOK", u: "../images/fishing/barbless-hook.webp" },
     { n: "ROD HOLDER", u: "../images/fishing/rod-holder.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "PIZZA", u: "../images/food/pizza.jpg" },
     { n: "BANANA", u: "../images/food/banana.jpg" },
     { n: "HAMBURGER", u: "../images/food/hamburger.jpg" },
@@ -778,6 +870,8 @@ const megaData = [
     { n: "STEAK", u: "../images/food/steak.jpg" },
     { n: "CROISSANT", u: "../images/food/croissant.png" },
     { n: "LOBSTER", u: "../images/food/lobster.jpg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "BROCCOLI", u: "../images/food/broccoli.png" },
     { n: "WAFFLE", u: "../images/food/waffle.jpg" },
     { n: "SPAGHETTI", u: "../images/food/spaghetti.jpg" },
@@ -793,6 +887,8 @@ const megaData = [
     { n: "DRAGON FRUIT", u: "../images/food/dragon-fruit.jpg" },
     { n: "CANNOLI", u: "../images/food/cannoli.jpg" },
     { n: "RAMEN", u: "../images/food/ramen.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "FALAFEL", u: "../images/food/falafel.jpg" },
     { n: "BAGUETTE", u: "../images/food/baguette.jpg" },
     { n: "BAKLAVA", u: "../images/food/baklava.jpg" },
@@ -803,6 +899,8 @@ const megaData = [
     { n: "PLANTAIN", u: "../images/food/plantain.jpg" },
     { n: "PERSIMMON", u: "../images/food/persimmon.jpg" },
     { n: "JACKFRUIT", u: "../images/food/jackfruit.webp" },
+
+    // Tier 4 — Expert (41–60)
     { n: "TRUFFLE", u: "../images/food/truffle.jpg" },
     { n: "DURIAN", u: "../images/food/durian.jpg" },
     { n: "BEET", u: "../images/food/beet.jpg" },
@@ -823,6 +921,8 @@ const megaData = [
     { n: "ENDIVE", u: "../images/food/endive.jpg" },
     { n: "CROQUEMBOUCHE", u: "../images/food/croquembouche.jpg" },
     { n: "LONGAN", u: "../images/food/longan.webp" },
+
+    // ── BACKUPS (61–70) ────────────────
     { n: "WONTON", u: "../images/food/wonton.jpg" },
     { n: "BRIOCHE", u: "../images/food/brioche.jpg" },
     { n: "PASSION FRUIT", u: "../images/food/passion-fruit.jpg" },
@@ -833,6 +933,7 @@ const megaData = [
     { n: "ÉCLAIR", u: "../images/food/eclair.jpg" },
     { n: "OKRA", u: "../images/food/okra.jpg" },
     { n: "KIWI", u: "../images/food/kiwi.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "FOOTBALL", u: "../images/football/football.webp" },
     { n: "HELMET", u: "../images/football/helmet.webp" },
     { n: "GOAL POST", u: "../images/football/goal-post.webp" },
@@ -848,6 +949,8 @@ const megaData = [
     { n: "SHOULDER PADS", u: "../images/football/shoulder-pads.webp" },
     { n: "MOUTHGUARD", u: "../images/football/mouthguard.webp" },
     { n: "END ZONE PYLON", u: "../images/football/end-zone-pylon.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "AARON RODGERS", u: "../images/football/aaron-rodgers.webp" },
     { n: "ROB GRONKOWSKI", u: "../images/football/rob-gronkowski.webp" },
     { n: "ODELL BECKHAM JR.", u: "../images/football/odell-beckham-jr.webp" },
@@ -863,6 +966,8 @@ const megaData = [
     { n: "PLAYBOOK", u: "../images/football/playbook.webp" },
     { n: "FOAM FINGER", u: "../images/football/foam-finger.webp" },
     { n: "CALVIN JOHNSON", u: "../images/football/calvin-johnson.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "JERRY RICE", u: "../images/football/jerry-rice.webp" },
     { n: "JUMBOTRON", u: "../images/football/jumbotron.webp" },
     { n: "BRETT FAVRE", u: "../images/football/brett-favre.webp" },
@@ -873,6 +978,8 @@ const megaData = [
     { n: "RANDY MOSS", u: "../images/football/randy-moss.webp" },
     { n: "DAN MARINO", u: "../images/football/dan-marino.webp" },
     { n: "DEION SANDERS", u: "../images/football/deion-sanders.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "DREW BREES", u: "../images/football/drew-brees.webp" },
     { n: "JOHN MADDEN", u: "../images/football/john-madden.webp" },
     { n: "MARSHAWN LYNCH", u: "../images/football/marshawn-lynch.webp" },
@@ -883,6 +990,8 @@ const megaData = [
     { n: "JUSTIN JEFFERSON", u: "../images/football/justin-jefferson.webp" },
     { n: "TYREEK HILL", u: "../images/football/tyreek-hill.webp" },
     { n: "GEORGE KITTLE", u: "../images/football/george-kittle.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "EYE BLACK", u: "../images/football/eye-black.webp" },
     { n: "HAND WARMER", u: "../images/football/hand-warmer.webp" },
     { n: "CHIN STRAP", u: "../images/football/chin-strap.webp" },
@@ -893,6 +1002,7 @@ const megaData = [
     { n: "RUSSELL WILSON", u: "../images/football/russell-wilson.webp" },
     { n: "HEADSET", u: "../images/football/headset.webp" },
     { n: "GATORADE BATH", u: "../images/football/gatorade-bath.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "WHEEL OF FORTUNE", u: "../images/gameshows/wheel-of-fortune.webp" },
     { n: "JEOPARDY!", u: "../images/gameshows/jeopardy.png" },
     { n: "THE PRICE IS RIGHT", u: "../images/gameshows/the-price-is-right.webp" },
@@ -908,6 +1018,8 @@ const megaData = [
     { n: "THE VOICE", u: "../images/gameshows/the-voice.jpg" },
     { n: "BIG BROTHER", u: "../images/gameshows/big-brother.jpg" },
     { n: "DANCING WITH THE STARS", u: "../images/gameshows/dancing-with-the-stars.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "FEAR FACTOR", u: "../images/gameshows/fear-factor.jpg" },
     { n: "WIPEOUT", u: "../images/gameshows/wipeout.webp" },
     { n: "THE FLOOR", u: "../images/gameshows/the-floor.jpg" },
@@ -923,6 +1035,8 @@ const megaData = [
     { n: "MINUTE TO WIN IT", u: "../images/gameshows/minute-to-win-it.webp" },
     { n: "TOTAL DRAMA", u: "../images/gameshows/total-drama.webp" },
     { n: "CASH CAB", u: "../images/gameshows/cash-cab.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "PRESS YOUR LUCK", u: "../images/gameshows/press-your-luck.jpg" },
     { n: "THE CHASE", u: "../images/gameshows/the-chase.webp" },
     { n: "LET'S MAKE A DEAL", u: "../images/gameshows/lets-make-a-deal.png" },
@@ -933,6 +1047,8 @@ const megaData = [
     { n: "LEGENDS OF THE HIDDEN TEMPLE", u: "../images/gameshows/legends-of-the-hidden-temple.webp" },
     { n: "DOUBLE DARE", u: "../images/gameshows/double-dare.jpg" },
     { n: "NAME THAT TUNE", u: "../images/gameshows/name-that-tune.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "THE $100,000 PYRAMID", u: "../images/gameshows/the-100000-pyramid.jpg" },
     { n: "SUPERMARKET SWEEP", u: "../images/gameshows/supermarket-sweep.jpg" },
     { n: "INK MASTER", u: "../images/gameshows/ink-master.jpeg" },
@@ -943,16 +1059,19 @@ const megaData = [
     { n: "SHOP TIL YOU DROP", u: "../images/gameshows/shop-til-you-drop.webp" },
     { n: "THE JOKER'S WILD", u: "../images/gameshows/the-jokers-wild.jpg" },
     { n: "AMERICAN NINJA WARRIOR", u: "../images/gameshows/american-ninja-warrior.jpeg" },
-    { n: "IMPRACTICAL JOKERS", u: "../images/gameshows/impractical-jokers.jpg" },
-    { n: "THE BACHELORETTE", u: "../images/gameshows/the-bachelorette.jpg" },
-    { n: "THE WALL", u: "../images/gameshows/the-wall.jpg" },
-    { n: "1 VS 100", u: "../images/gameshows/1-vs-100.jpg" },
-    { n: "HOLLYWOOD GAME NIGHT", u: "../images/gameshows/hollywood-game-night.jpg" },
-    { n: "BEAT SHAZAM", u: "../images/gameshows/beat-shazam.jpg" },
-    { n: "REMOTE CONTROL", u: "../images/gameshows/remote-control.jpg" },
-    { n: "SPLIT SECOND", u: "../images/gameshows/split-second.jpg" },
-    { n: "LINGO", u: "../images/gameshows/lingo.jpg" },
-    { n: "PASSWORD", u: "../images/gameshows/password.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "IMPRACTICAL JOKERS", u: "../images/gameshows/impractical-jokers.jpg" },
+    // { n: "THE BACHELORETTE", u: "../images/gameshows/the-bachelorette.jpg" },
+    // { n: "THE WALL", u: "../images/gameshows/the-wall.jpg" },
+    // { n: "1 VS 100", u: "../images/gameshows/1-vs-100.jpg" },
+    // { n: "HOLLYWOOD GAME NIGHT", u: "../images/gameshows/hollywood-game-night.jpg" },
+    // { n: "BEAT SHAZAM", u: "../images/gameshows/beat-shazam.jpg" },
+    // { n: "REMOTE CONTROL", u: "../images/gameshows/remote-control.jpg" },
+    // { n: "SPLIT SECOND", u: "../images/gameshows/split-second.jpg" },
+    // { n: "LINGO", u: "../images/gameshows/lingo.jpg" },
+    // { n: "PASSWORD", u: "../images/gameshows/password.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "SPICE GIRLS", u: "../images/girl-groups/spice-girls.jpg" },
     { n: "DESTINY'S CHILD", u: "../images/girl-groups/destinys-child.jpg" },
     { n: "TLC", u: "../images/girl-groups/TLC.jpeg" },
@@ -968,6 +1087,8 @@ const megaData = [
     { n: "GIRLS' GENERATION", u: "../images/girl-groups/girls-generation.jpg" },
     { n: "THE ANDREWS SISTERS", u: "../images/girl-groups/andrew-sisters.webp" },
     { n: "SISTER SLEDGE", u: "../images/girl-groups/sister-sledge.jpeg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "THE BANGLES", u: "../images/girl-groups/the-bangles.webp" },
     { n: "TWICE", u: "../images/girl-groups/twice.jpg" },
     { n: "WILSON PHILLIPS", u: "../images/girl-groups/wilson-phillips.webp" },
@@ -983,6 +1104,8 @@ const megaData = [
     { n: "THE SHANGRI-LAS", u: "../images/girl-groups/the-shangri-las.png" },
     { n: "DANITY KANE", u: "../images/girl-groups/danity-kane.webp" },
     { n: "MAMAMOO", u: "../images/girl-groups/mamamoo.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "SUGABABES", u: "../images/girl-groups/Sugababes.avif" },
     { n: "ITZY", u: "../images/girl-groups/itzy.png" },
     { n: "MARTHA AND THE VANDELLAS", u: "../images/girl-groups/martha-and-the-vandellas.jpeg" },
@@ -993,6 +1116,8 @@ const megaData = [
     { n: "3LW", u: "../images/girl-groups/3lw.jpg" },
     { n: "(G)I-DLE", u: "../images/girl-groups/g-idle.webp" },
     { n: "THE CRYSTALS", u: "../images/girl-groups/the-crystals.jpeg" },
+
+    // Tier 4 — Expert (41–50)
     { n: "IVE", u: "../images/girl-groups/ive.webp" },
     { n: "B*WITCHED", u: "../images/girl-groups/bwitched.webp" },
     { n: "WONDER GIRLS", u: "../images/girl-groups/wonder-girls.jpg" },
@@ -1003,16 +1128,19 @@ const megaData = [
     { n: "T-ARA", u: "../images/girl-groups/tara.webp" },
     { n: "TOTAL", u: "../images/girl-groups/total.jpg" },
     { n: "KARA", u: "../images/girl-groups/kara.webp" },
-    { n: "SISTAR", u: "../images/girl-groups/sistar.jpg" },
-    { n: "BRAVE GIRLS", u: "../images/girl-groups/brave-girls.jpg" },
-    { n: "LOONA", u: "../images/girl-groups/loona.jpg" },
-    { n: "BLAQUE", u: "../images/girl-groups/blaque.jpg" },
-    { n: "APINK", u: "../images/girl-groups/apink.jpg" },
-    { n: "702", u: "../images/girl-groups/702.jpg" },
-    { n: "BROWNSTONE", u: "../images/girl-groups/brownstone.jpg" },
-    { n: "CLEOPATRA", u: "../images/girl-groups/cleopatra.jpg" },
-    { n: "AOA", u: "../images/girl-groups/aoa.jpg" },
-    { n: "STAYC", u: "../images/girl-groups/stayc.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "SISTAR", u: "../images/girl-groups/sistar.jpg" },
+    // { n: "BRAVE GIRLS", u: "../images/girl-groups/brave-girls.jpg" },
+    // { n: "LOONA", u: "../images/girl-groups/loona.jpg" },
+    // { n: "BLAQUE", u: "../images/girl-groups/blaque.jpg" },
+    // { n: "APINK", u: "../images/girl-groups/apink.jpg" },
+    // { n: "702", u: "../images/girl-groups/702.jpg" },
+    // { n: "BROWNSTONE", u: "../images/girl-groups/brownstone.jpg" },
+    // { n: "CLEOPATRA", u: "../images/girl-groups/cleopatra.jpg" },
+    // { n: "AOA", u: "../images/girl-groups/aoa.jpg" },
+    // { n: "STAYC", u: "../images/girl-groups/stayc.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "GOLF BALL", u: "../images/golf/golf-ball.webp" },
     { n: "GOLF CLUB", u: "../images/golf/golf-club.png" },
     { n: "GOLF CART", u: "../images/golf/golf-cart.jpg" },
@@ -1028,6 +1156,8 @@ const megaData = [
     { n: "SAND TRAP", u: "../images/golf/sand-trap.webp" },
     { n: "ARNOLD PALMER", u: "../images/golf/arnold-palmer.webp" },
     { n: "THE MASTERS GREEN JACKET", u: "../images/golf/masters-green-jacket.avif" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "JACK NICKLAUS", u: "../images/golf/jack-nicklaus.jpg" },
     { n: "GOLF VISOR", u: "../images/golf/golf-visor.webp" },
     { n: "AUGUSTA NATIONAL", u: "../images/golf/augusta-national.jpg" },
@@ -1043,6 +1173,8 @@ const megaData = [
     { n: "PEBBLE BEACH", u: "../images/golf/pebble-beach.webp" },
     { n: "BALL MARKER", u: "../images/golf/ball-marker.webp" },
     { n: "CLARET JUG", u: "../images/golf/claret-jug.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "BROOKS KOEPKA", u: "../images/golf/brooks-koepka.jpg" },
     { n: "HYBRID CLUB", u: "../images/golf/hybrid-club.jpg" },
     { n: "DUSTIN JOHNSON", u: "../images/golf/dustin-johnson.avif" },
@@ -1053,6 +1185,8 @@ const megaData = [
     { n: "WANAMAKER TROPHY", u: "../images/golf/wanamaker-trophy.jpg" },
     { n: "WHISTLING STRAITS", u: "../images/golf/whistling-straits.jpeg" },
     { n: "HEADCOVER", u: "../images/golf/headcover.avif" },
+
+    // Tier 4 — Expert (41–50)
     { n: "BUBBA WATSON", u: "../images/golf/bubba-watson.webp" },
     { n: "ALIGNMENT STICKS", u: "../images/golf/alignment-sticks.png" },
     { n: "ROYAL TROON", u: "../images/golf/royal-troon.webp" },
@@ -1063,16 +1197,19 @@ const megaData = [
     { n: "STIMPMETER", u: "../images/golf/stimpmeter.jpg" },
     { n: "XANDER SCHAUFFELE", u: "../images/golf/xander-schauffele.avif" },
     { n: "WINGED FOOT", u: "../images/golf/winged-foot.avif" },
-    { n: "SCOTTIE SCHEFFLER", u: "../images/golf/scottie-scheffler.jpg" },
-    { n: "DRIVING RANGE", u: "../images/golf/driving-range.jpg" },
-    { n: "GARY PLAYER", u: "../images/golf/gary-player.jpg" },
-    { n: "PITCH MARK REPAIRER", u: "../images/golf/pitch-mark-repairer.jpg" },
-    { n: "BETHPAGE BLACK", u: "../images/golf/bethpage-black.jpg" },
-    { n: "CADDIE BIB", u: "../images/golf/caddie-bib.jpg" },
-    { n: "LEE TREVINO", u: "../images/golf/lee-trevino.jpg" },
-    { n: "SHINNECOCK HILLS", u: "../images/golf/shinnecock-hills.jpg" },
-    { n: "RAIN COVER", u: "../images/golf/rain-cover.jpg" },
-    { n: "TPC SAWGRASS", u: "../images/golf/tpc-sawgrass.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "SCOTTIE SCHEFFLER", u: "../images/golf/scottie-scheffler.jpg" },
+    // { n: "DRIVING RANGE", u: "../images/golf/driving-range.jpg" },
+    // { n: "GARY PLAYER", u: "../images/golf/gary-player.jpg" },
+    // { n: "PITCH MARK REPAIRER", u: "../images/golf/pitch-mark-repairer.jpg" },
+    // { n: "BETHPAGE BLACK", u: "../images/golf/bethpage-black.jpg" },
+    // { n: "CADDIE BIB", u: "../images/golf/caddie-bib.jpg" },
+    // { n: "LEE TREVINO", u: "../images/golf/lee-trevino.jpg" },
+    // { n: "SHINNECOCK HILLS", u: "../images/golf/shinnecock-hills.jpg" },
+    // { n: "RAIN COVER", u: "../images/golf/rain-cover.jpg" },
+    // { n: "TPC SAWGRASS", u: "../images/golf/tpc-sawgrass.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "MOON LANDING", u: "../images/historic-events/moon-landing.avif" },
     { n: "SINKING OF THE TITANIC", u: "../images/historic-events/sinking-of-the-titanic.jpg" },
     { n: "SIGNING THE DECLARATION OF INDEPENDENCE", u: "../images/historic-events/signing-the-declaration-of-independence.jpg" },
@@ -1088,6 +1225,8 @@ const megaData = [
     { n: "COLUMBUS ARRIVING IN AMERICA", u: "../images/historic-events/columbus-america.jpg" },
     { n: "RAISING THE FLAG ON IWO JIMA", u: "../images/historic-events/iwo-jima.webp" },
     { n: "BATTLE OF WATERLOO", u: "../images/historic-events/battle-of-waterloo.avif" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "MLK I HAVE A DREAM", u: "../images/historic-events/mlk-i-have-a-dream.webp" },
     { n: "HINDENBURG DISASTER", u: "../images/historic-events/hindenburg-disaster.jpg" },
     { n: "FRENCH REVOLUTION", u: "../images/historic-events/french-revolution.jpg" },
@@ -1104,6 +1243,8 @@ const megaData = [
     { n: "CROSSING THE DELAWARE", u: "../images/historic-events/crossing-the-delaware.jpg" },
     { n: "GOLD RUSH", u: "../images/historic-events/gold-rush.jpg" },
     { n: "APOLLO 13", u: "../images/historic-events/apollo-13.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "STORMING OF THE BASTILLE", u: "../images/historic-events/storming-of-the-bastille.jpg" },
     { n: "BATTLE OF GETTYSBURG", u: "../images/historic-events/battle-of-gettysburg.webp" },
     { n: "ROSETTA STONE DISCOVERY", u: "../images/historic-events/rosetta-stone-discovery.png" },
@@ -1114,6 +1255,8 @@ const megaData = [
     { n: "ERUPTION OF VESUVIUS", u: "../images/historic-events/eruption-of-vesuvius.jpg" },
     { n: "TRANSCONTINENTAL RAILROAD", u: "../images/historic-events/transcontinental-railroad.jpg" },
     { n: "RUSSIAN REVOLUTION", u: "../images/historic-events/russian-revolution.jpg" },
+
+    // Tier 4 — Expert (41–50)
     { n: "DEFENESTRATION OF PRAGUE", u: "../images/historic-events/defenestration-of-prague.jpg" },
     { n: "BATTLE OF THERMOPYLAE", u: "../images/historic-events/battle-of-thermopylae.jpg" },
     { n: "CONGRESS OF VIENNA", u: "../images/historic-events/congress-of-vienna.jpg" },
@@ -1124,6 +1267,7 @@ const megaData = [
     { n: "BURNING OF WASHINGTON D.C.", u: "../images/historic-events/burning-of-washington-dc.jpg" },
     { n: "CHARGE OF THE LIGHT BRIGADE", u: "../images/historic-events/charge-of-the-light-brigade.jpg" },
     { n: "SIGNING OF THE TREATY OF WESTPHALIA", u: "../images/historic-events/signing-of-the-treaty-of-westphalia.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "THE SHINING", u: "../images/horror-movies/the-shining.webp" },
     { n: "IT", u: "../images/horror-movies/it.webp" },
     { n: "HALLOWEEN", u: "../images/horror-movies/halloween.webp" },
@@ -1139,6 +1283,8 @@ const megaData = [
     { n: "THE SILENCE OF THE LAMBS", u: "../images/horror-movies/the-silence-of-the-lambs.webp" },
     { n: "PSYCHO", u: "../images/horror-movies/psycho.webp" },
     { n: "GET OUT", u: "../images/horror-movies/get-out.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "THE TEXAS CHAINSAW MASSACRE", u: "../images/horror-movies/the-texas-chainsaw-massacre.webp" },
     { n: "THE CONJURING", u: "../images/horror-movies/the-conjuring.webp" },
     { n: "A QUIET PLACE", u: "../images/horror-movies/a-quiet-place.webp" },
@@ -1154,6 +1300,8 @@ const megaData = [
     { n: "EVIL DEAD", u: "../images/horror-movies/evil-dead.webp" },
     { n: "THE THING", u: "../images/horror-movies/the-thing.webp" },
     { n: "ROSEMARY'S BABY", u: "../images/horror-movies/rosemarys-baby.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "HELLRAISER", u: "../images/horror-movies/hellraiser.webp" },
     { n: "NIGHT OF THE LIVING DEAD", u: "../images/horror-movies/night-of-the-living-dead.webp" },
     { n: "28 DAYS LATER", u: "../images/horror-movies/28-days-later.webp" },
@@ -1164,6 +1312,8 @@ const megaData = [
     { n: "BARBARIAN", u: "../images/horror-movies/barbarian.webp" },
     { n: "IT FOLLOWS", u: "../images/horror-movies/it-follows.webp" },
     { n: "PEARL", u: "../images/horror-movies/pearl.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "X", u: "../images/horror-movies/x.webp" },
     { n: "THE BLACK PHONE", u: "../images/horror-movies/the-black-phone.webp" },
     { n: "DON'T BREATHE", u: "../images/horror-movies/dont-breathe.webp" },
@@ -1174,6 +1324,8 @@ const megaData = [
     { n: "THE FLY", u: "../images/horror-movies/the-fly.webp" },
     { n: "THE WITCH", u: "../images/horror-movies/the-witch.webp" },
     { n: "MALIGNANT", u: "../images/horror-movies/malignant.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "TERRIFIER", u: "../images/horror-movies/terrifier.webp" },
     { n: "THE PURGE", u: "../images/horror-movies/the-purge.webp" },
     { n: "FINAL DESTINATION", u: "../images/horror-movies/final-destination.webp" },
@@ -1184,6 +1336,7 @@ const megaData = [
     { n: "TRAIN TO BUSAN", u: "../images/horror-movies/train-to-busan.webp" },
     { n: "FIVE NIGHTS AT FREDDY'S", u: "../images/horror-movies/five-nights-at-freddys.webp" },
     { n: "BLAIR WITCH PROJECT", u: "../images/horror-movies/blair-witch-project.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "THE TRIDENT LOGO", u: "../images/indiana-university/the-trident-logo.webp" },
     { n: "SAMPLE GATES", u: "../images/indiana-university/sample-gates.webp" },
     { n: "SIMON SKJODT ASSEMBLY HALL", u: "../images/indiana-university/simon-skjodt-assembly-hall.webp" },
@@ -1197,8 +1350,9 @@ const megaData = [
     { n: "JACOBS SCHOOL OF MUSIC", u: "../images/indiana-university/jacobs-school-of-music.webp" },
     { n: "BOB KNIGHT", u: "../images/indiana-university/bob-knight.webp" },
     { n: "OLD OAKEN BUCKET", u: "../images/indiana-university/old-oaken-bucket.webp" },
-    { n: "STUDENT BUILDING", u: "../images/indiana-university/student-building.webp" },
     { n: "WRIGHT QUADRANGLE", u: "../images/indiana-university/wright-quadrangle.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "BRISCOE QUADRANGLE", u: "../images/indiana-university/briscoe-quadrangle.webp" },
     { n: "EIGENMANN HALL", u: "../images/indiana-university/eigenmann-hall.webp" },
     { n: "IU AUDITORIUM", u: "../images/indiana-university/iu-auditorium.webp" },
@@ -1207,23 +1361,25 @@ const megaData = [
     { n: "DUNN WOODS", u: "../images/indiana-university/dunn-woods.webp" },
     { n: "JORDAN RIVER", u: "../images/indiana-university/jordan-river.webp" },
     { n: "ROSE WELL HOUSE", u: "../images/indiana-university/rose-well-house.webp" },
-    { n: "KINSEY INSTITUTE", u: "../images/indiana-university/kinsey-institute.webp" },
     { n: "HOOSIER HYSTERIA", u: "../images/indiana-university/hoosier-hysteria.webp" },
     { n: "MARK CUBAN", u: "../images/indiana-university/mark-cuban.webp" },
     { n: "ISIAH THOMAS", u: "../images/indiana-university/isiah-thomas.webp" },
     { n: "VICTOR OLADIPO", u: "../images/indiana-university/victor-oladipo.webp" },
     { n: "TRAYCE JACKSON-DAVIS", u: "../images/indiana-university/trayce-jackson-davis.webp" },
     { n: "WOODBURN HALL", u: "../images/indiana-university/woodburn-hall.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "BALLANTINE HALL", u: "../images/indiana-university/ballantine-hall.webp" },
     { n: "FRANKLIN HALL", u: "../images/indiana-university/franklin-hall.webp" },
     { n: "MAXWELL HALL", u: "../images/indiana-university/maxwell-hall.webp" },
     { n: "O'NEILL SCHOOL", u: "../images/indiana-university/oneill-school.webp" },
     { n: "LUDDY SCHOOL", u: "../images/indiana-university/luddy-school.webp" },
-    { n: "THE MEDIA SCHOOL", u: "../images/indiana-university/the-media-school.webp" },
     { n: "OPTOMETRY SCHOOL", u: "../images/indiana-university/optometry-school.webp" },
     { n: "ERNIE PYLE HALL", u: "../images/indiana-university/ernie-pyle-hall.webp" },
     { n: "BECK CHAPEL", u: "../images/indiana-university/beck-chapel.webp" },
     { n: "SRSC", u: "../images/indiana-university/srsc.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "METZ CARILLON", u: "../images/indiana-university/metz-carillon.webp" },
     { n: "TETER QUADRANGLE", u: "../images/indiana-university/teter-quadrangle.webp" },
     { n: "READ CENTER", u: "../images/indiana-university/read-center.webp" },
@@ -1231,19 +1387,18 @@ const megaData = [
     { n: "WILLKIE QUADRANGLE", u: "../images/indiana-university/willkie-quadrangle.webp" },
     { n: "ASHTON CENTER", u: "../images/indiana-university/ashton-center.webp" },
     { n: "GOODBODY HALL", u: "../images/indiana-university/goodbody-hall.webp" },
-    { n: "NICK'S ENGLISH HUT", u: "../images/indiana-university/nicks-english-hut.webp" },
     { n: "KILROY'S ON KIRKWOOD", u: "../images/indiana-university/kilroys-on-kirkwood.webp" },
     { n: "MOTHER BEAR'S PIZZA", u: "../images/indiana-university/mother-bears-pizza.webp" },
-    { n: "BLUEBIRD NIGHTCLUB", u: "../images/indiana-university/bluebird-nightclub.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "BUFFALOUIE'S", u: "../images/indiana-university/buffalouies.webp" },
     { n: "SOMA COFFEEHOUSE", u: "../images/indiana-university/soma-coffeehouse.webp" },
-    { n: "UPLAND BREWING CO", u: "../images/indiana-university/upland-brewing-co.webp" },
     { n: "KIRKWOOD AVENUE", u: "../images/indiana-university/kirkwood-avenue.webp" },
     { n: "MONROE COUNTY COURTHOUSE", u: "../images/indiana-university/monroe-county-courthouse.webp" },
     { n: "BILL ARMSTRONG STADIUM", u: "../images/indiana-university/bill-armstrong-stadium.webp" },
     { n: "ALUMNI HALL", u: "../images/indiana-university/alumni-hall.webp" },
     { n: "FOSTER QUADRANGLE", u: "../images/indiana-university/foster-quadrangle.webp" },
-    { n: "COLLINS LIVING-LEARNING CENTER", u: "../images/indiana-university/collins-living-learning-center.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "PIANO", u: "../images/instruments/piano.jpg" },
     { n: "ACOUSTIC GUITAR", u: "../images/instruments/acoustic-guitar.jpg" },
     { n: "VIOLIN", u: "../images/instruments/violin.jpg" },
@@ -1259,6 +1414,8 @@ const megaData = [
     { n: "TROMBONE", u: "../images/instruments/trombone.jpg" },
     { n: "CLARINET", u: "../images/instruments/clarinet.png" },
     { n: "TUBA", u: "../images/instruments/tuba.jpg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "ELECTRIC GUITAR", u: "../images/instruments/electric-guitar.jpg" },
     { n: "FRENCH HORN", u: "../images/instruments/french-horn.jpg" },
     { n: "BANJO", u: "../images/instruments/banjo.jpg" },
@@ -1274,6 +1431,8 @@ const megaData = [
     { n: "TIMPANI", u: "../images/instruments/timpani.jpg" },
     { n: "ORGAN", u: "../images/instruments/organ.png" },
     { n: "PICCOLO", u: "../images/instruments/piccolo.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "SYNTHESIZER", u: "../images/instruments/synthesizer.jpg" },
     { n: "SITAR", u: "../images/instruments/sitar.jpg" },
     { n: "ENGLISH HORN", u: "../images/instruments/english-horn.jpg" },
@@ -1284,6 +1443,8 @@ const megaData = [
     { n: "BAGPIPE", u: "../images/instruments/bagpipe.jpg" },
     { n: "LYRE", u: "../images/instruments/lyre.jpg" },
     { n: "BUGLE", u: "../images/instruments/bugle.jpg" },
+
+    // Tier 4 — Expert (41–50)
     { n: "THEREMIN", u: "../images/instruments/theremin.jpg" },
     { n: "BOUZOUKI", u: "../images/instruments/bouzouki.jpg" },
     { n: "BALALAIKA", u: "../images/instruments/balalaika.jpg" },
@@ -1294,6 +1455,8 @@ const megaData = [
     { n: "GUZHENG", u: "../images/instruments/guzheng.webp" },
     { n: "PAN FLUTE", u: "../images/instruments/pan-flute.jpg" },
     { n: "OUD", u: "../images/instruments/oud.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "CORNET", u: "../images/instruments/cornet.jpg" },
     { n: "FINGER CYMBALS", u: "../images/instruments/finger-cymbals.jpg" },
     { n: "DJEMBE", u: "../images/instruments/djembe.jpg" },
@@ -1301,66 +1464,66 @@ const megaData = [
     { n: "PENNYWHISTLE", u: "../images/instruments/pennywhistle.jpg" },
     { n: "GUSLI", u: "../images/instruments/gusli.jpg" },
     { n: "CRWTH", u: "../images/instruments/crwth.jpg" },
-    { n: "BAND DIRECTOR", u: "../images/marching-band/band-director.webp" },
-    { n: "FOOTBALL FIELD", u: "../images/marching-band/football-field.webp" },
-    { n: "FLAG", u: "../images/marching-band/flag.webp" },
-    { n: "MARCHING BAND UNIFORM", u: "../images/marching-band/marching-band-uniform.webp" },
-    { n: "SCHOOL BUS", u: "../images/marching-band/school-bus.webp" },
-    { n: "DRUM MAJOR", u: "../images/marching-band/drum-major.webp" },
-    { n: "BLEACHERS", u: "../images/marching-band/bleachers.webp" },
-    { n: "WHISTLE", u: "../images/marching-band/whistle.webp" },
-    { n: "WATER COOLER", u: "../images/marching-band/water-cooler.webp" },
-    { n: "COLOR GUARD", u: "../images/marching-band/color-guard.webp" },
-    { n: "SHEET MUSIC", u: "../images/marching-band/sheet-music.webp" },
-    { n: "MEGAPHONE", u: "../images/marching-band/megaphone.webp" },
-    { n: "CONCESSION STAND", u: "../images/marching-band/concession-stand.webp" },
-    { n: "BATON", u: "../images/marching-band/baton.webp" },
-    { n: "SUNSCREEN", u: "../images/marching-band/sunscreen.webp" },
-    { n: "DRUM MAJOR PODIUM", u: "../images/marching-band/drum-major-podium.webp" },
-    { n: "PLUME", u: "../images/marching-band/plume.webp" },
-    { n: "RIFLE", u: "../images/marching-band/rifle.webp" },
-    { n: "EQUIPMENT TRUCK", u: "../images/marching-band/equipment-truck.webp" },
-    { n: "WATER JUG", u: "../images/marching-band/water-jug.webp" },
-    { n: "SECTION SHIRT", u: "../images/marching-band/section-shirt.webp" },
-    { n: "METRONOME", u: "../images/marching-band/metronome.webp" },
-    { n: "SABRE", u: "../images/marching-band/sabre.webp" },
-    { n: "BINDER", u: "../images/marching-band/binder.webp" },
-    { n: "GARMENT BAG", u: "../images/marching-band/garment-bag.webp" },
-    { n: "FLIP FOLDER", u: "../images/marching-band/flip-folder.webp" },
-    { n: "FANNY PACK", u: "../images/marching-band/fanny-pack.webp" },
-    { n: "YARD-LINE MARKER", u: "../images/marching-band/yard-line-marker.webp" },
-    { n: "LANYARD", u: "../images/marching-band/lanyard.webp" },
-    { n: "PONCHO", u: "../images/marching-band/poncho.webp" },
-    { n: "SHAKO", u: "../images/marching-band/shako.webp" },
-    { n: "DIRECTOR TOWER", u: "../images/marching-band/director-tower.webp" },
-    { n: "WHITE GLOVES", u: "../images/marching-band/white-gloves.webp" },
-    { n: "MACE", u: "../images/marching-band/mace.webp" },
-    { n: "BIBBERS", u: "../images/marching-band/bibbers.webp" },
-    { n: "DOT BOOK", u: "../images/marching-band/dot-book.webp" },
-    { n: "MARCHING SHOES", u: "../images/marching-band/marching-shoes.webp" },
-    { n: "PROP SCENERY", u: "../images/marching-band/prop-scenery.webp" },
-    { n: "SPATS", u: "../images/marching-band/spats.webp" },
-    { n: "GAUNTLET", u: "../images/marching-band/gauntlet.webp" },
-    { n: "DRILL SHEET", u: "../images/marching-band/drill-sheet.webp" },
-    { n: "PLUME BOX", u: "../images/marching-band/plume-box.webp" },
-    { n: "BALDRIC", u: "../images/marching-band/baldric.webp" },
-    { n: "ELECTRICAL TAPE", u: "../images/marching-band/electrical-tape.webp" },
-    { n: "UNIFORM RACK", u: "../images/marching-band/uniform-rack.webp" },
-    { n: "HASH MARK", u: "../images/marching-band/hash-mark.webp" },
-    { n: "GUARD GLOVES", u: "../images/marching-band/guard-gloves.webp" },
-    { n: "LONG RANGER", u: "../images/marching-band/long-ranger.webp" },
-    { n: "FLAG SILK", u: "../images/marching-band/flag-silk.webp" },
-    { n: "YARD LINE", u: "../images/marching-band/yard-line.webp" },
-    { n: "WATER MISTER", u: "../images/marching-band/water-mister.webp" },
-    { n: "CHALK", u: "../images/marching-band/chalk.webp" },
-    { n: "CHAPERONE", u: "../images/marching-band/chaperone.webp" },
-    { n: "HAND WARMERS", u: "../images/marching-band/hand-warmers.webp" },
-    { n: "SEAT CUSHION", u: "../images/marching-band/seat-cushion.webp" },
-    { n: "GOLF CART", u: "../images/marching-band/golf-cart.webp" },
-    { n: "FIRST AID KIT", u: "../images/marching-band/first-aid-kit.webp" },
-    { n: "BUS LUGGAGE COMPARTMENT", u: "../images/marching-band/bus-luggage-compartment.webp" },
-    { n: "MAJORETTE", u: "../images/marching-band/majorette.webp" },
-    { n: "TROPHY", u: "../images/marching-band/trophy.webp" },
+// Tier 1 — Obvious (items 1–15)
+  { n: "BAND DIRECTOR", u: "../images/marching-band/band-director.webp" },
+  { n: "FOOTBALL FIELD", u: "../images/marching-band/football-field.webp" },
+  { n: "FLAG", u: "../images/marching-band/flag.webp" },
+  { n: "MARCHING BAND UNIFORM", u: "../images/marching-band/marching-band-uniform.webp" },
+  { n: "SCHOOL BUS", u: "../images/marching-band/school-bus.webp" },
+  { n: "DRUM MAJOR", u: "../images/marching-band/drum-major.webp" },
+  { n: "BLEACHERS", u: "../images/marching-band/bleachers.webp" },
+  { n: "WHISTLE", u: "../images/marching-band/whistle.webp" },
+  { n: "WATER COOLER", u: "../images/marching-band/water-cooler.webp" },
+  { n: "COLOR GUARD", u: "../images/marching-band/color-guard.webp" },
+  { n: "SHEET MUSIC", u: "../images/marching-band/sheet-music.webp" },
+  { n: "MEGAPHONE", u: "../images/marching-band/megaphone.webp" },
+  { n: "CONCESSION STAND", u: "../images/marching-band/concession-stand.webp" },
+  { n: "BATON", u: "../images/marching-band/baton.webp" },
+  { n: "SUNSCREEN", u: "../images/marching-band/sunscreen.webp" },
+
+  // Tier 2 — Familiar (items 16–30)
+  { n: "DRUM MAJOR PODIUM", u: "../images/marching-band/drum-major-podium.webp" },
+  { n: "PLUME", u: "../images/marching-band/plume.webp" },
+  { n: "RIFLE", u: "../images/marching-band/rifle.webp" },
+  { n: "EQUIPMENT TRUCK", u: "../images/marching-band/equipment-truck.webp" },
+  { n: "WATER JUG", u: "../images/marching-band/water-jug.webp" },
+  { n: "METRONOME", u: "../images/marching-band/metronome.webp" },
+  { n: "SABRE", u: "../images/marching-band/sabre.webp" },
+  { n: "BINDER", u: "../images/marching-band/binder.webp" },
+  { n: "GARMENT BAG", u: "../images/marching-band/garment-bag.webp" },
+  { n: "FLIP FOLDER", u: "../images/marching-band/flip-folder.webp" },
+  { n: "FANNY PACK", u: "../images/marching-band/fanny-pack.webp" },
+  { n: "YARD-LINE MARKER", u: "../images/marching-band/yard-line-marker.webp" },
+  { n: "LANYARD", u: "../images/marching-band/lanyard.webp" },
+  { n: "PONCHO", u: "../images/marching-band/poncho.webp" },
+
+  // Tier 3 — Knowledgeable (items 31–40)
+  { n: "SHAKO", u: "../images/marching-band/shako.webp" },
+  { n: "DIRECTOR TOWER", u: "../images/marching-band/director-tower.webp" },
+  { n: "WHITE GLOVES", u: "../images/marching-band/white-gloves.webp" },
+  { n: "MACE", u: "../images/marching-band/mace.webp" },
+  { n: "BIBBERS", u: "../images/marching-band/bibbers.webp" },
+  { n: "DOT BOOK", u: "../images/marching-band/dot-book.webp" },
+  { n: "MARCHING SHOES", u: "../images/marching-band/marching-shoes.webp" },
+  { n: "PROP SCENERY", u: "../images/marching-band/prop-scenery.webp" },
+  { n: "SPATS", u: "../images/marching-band/spats.webp" },
+  { n: "GAUNTLET", u: "../images/marching-band/gauntlet.webp" },
+
+  // Tier 4 — Expert (items 41–50)
+  { n: "DRILL SHEET", u: "../images/marching-band/drill-sheet.webp" },
+  { n: "PLUME BOX", u: "../images/marching-band/plume-box.webp" },
+  { n: "BALDRIC", u: "../images/marching-band/baldric.webp" },
+  { n: "ELECTRICAL TAPE", u: "../images/marching-band/electrical-tape.webp" },
+  { n: "UNIFORM RACK", u: "../images/marching-band/uniform-rack.webp" },
+
+  // ── BACKUPS (items 51–60) ────────────────
+  { n: "WATER MISTER", u: "../images/marching-band/water-mister.webp" },
+  { n: "CHALK", u: "../images/marching-band/chalk.webp" },
+  { n: "HAND WARMERS", u: "../images/marching-band/hand-warmers.webp" },
+  { n: "GOLF CART", u: "../images/marching-band/golf-cart.webp" },
+  { n: "FIRST AID KIT", u: "../images/marching-band/first-aid-kit.webp" },
+  { n: "TROPHY", u: "../images/marching-band/trophy.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "CREEPER", u: "../images/minecraft/creeper.png" },
     { n: "DIAMOND SWORD", u: "../images/minecraft/diamond-sword.webp" },
     { n: "STEVE", u: "../images/minecraft/steve.png" },
@@ -1375,6 +1538,8 @@ const megaData = [
     { n: "PIG", u: "../images/minecraft/pig.jpg" },
     { n: "SPIDER", u: "../images/minecraft/spider.webp" },
     { n: "CHEST", u: "../images/minecraft/chest.png" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "IRON GOLEM", u: "../images/minecraft/iron-golem.jpg" },
     { n: "FURNACE", u: "../images/minecraft/furnace.jpg" },
     { n: "VILLAGER", u: "../images/minecraft/villager.jpg" },
@@ -1390,6 +1555,8 @@ const megaData = [
     { n: "SHEEP", u: "../images/minecraft/sheep.webp" },
     { n: "CHICKEN", u: "../images/minecraft/chicken.webp" },
     { n: "CAT", u: "../images/minecraft/cat.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "WARDEN", u: "../images/minecraft/warden.png" },
     { n: "OCEAN MONUMENT", u: "../images/minecraft/ocean-monument.png" },
     { n: "GUARDIAN", u: "../images/minecraft/guardian.webp" },
@@ -1400,6 +1567,8 @@ const megaData = [
     { n: "PHANTOM", u: "../images/minecraft/phantom.png" },
     { n: "EVOKER", u: "../images/minecraft/evoker.webp" },
     { n: "WITCH", u: "../images/minecraft/witch.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "ALLAY", u: "../images/minecraft/allay.jpg" },
     { n: "SCULK SENSOR", u: "../images/minecraft/sculk-sensor.jpg" },
     { n: "VEX", u: "../images/minecraft/vex.png" },
@@ -1410,6 +1579,8 @@ const megaData = [
     { n: "ELDER GUARDIAN", u: "../images/minecraft/elder-guardian.webp" },
     { n: "END CRYSTAL", u: "../images/minecraft/end-crystal.webp" },
     { n: "WITHER SKELETON", u: "../images/minecraft/wither-skeleton.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "RAVAGER", u: "../images/minecraft/ravager.webp" },
     { n: "HOGLIN", u: "../images/minecraft/hoglin.webp" },
     { n: "DROWNED", u: "../images/minecraft/drowned.webp" },
@@ -1420,60 +1591,70 @@ const megaData = [
     { n: "LODESTONE", u: "../images/minecraft/lodestone.jpg" },
     { n: "ARMADILLO", u: "../images/minecraft/armadillo.webp" },
     { n: "CAMEL", u: "../images/minecraft/camel.webp" },
-    { n: "YOUTUBE", u: "../images/mobile-apps/youtube.jpg" },
-    { n: "INSTAGRAM", u: "../images/mobile-apps/instagram.jpg" },
-    { n: "TIKTOK", u: "../images/mobile-apps/tiktok.jpg" },
-    { n: "FACEBOOK", u: "../images/mobile-apps/facebook.jpg" },
-    { n: "SNAPCHAT", u: "../images/mobile-apps/snapchat.jpg" },
-    { n: "WHATSAPP", u: "../images/mobile-apps/whatsapp.jpg" },
-    { n: "NETFLIX", u: "../images/mobile-apps/netflix.jpg" },
-    { n: "SPOTIFY", u: "../images/mobile-apps/spotify.jpg" },
-    { n: "GOOGLE MAPS", u: "../images/mobile-apps/google-maps.jpg" },
-    { n: "TINDER", u: "../images/mobile-apps/tinder.jpg" },
-    { n: "GMAIL", u: "../images/mobile-apps/gmail.jpg" },
-    { n: "AMAZON", u: "../images/mobile-apps/amazon.jpg" },
-    { n: "PINTEREST", u: "../images/mobile-apps/pinterest.jpg" },
-    { n: "REDDIT", u: "../images/mobile-apps/reddit.jpg" },
-    { n: "DISCORD", u: "../images/mobile-apps/discord.jpg" },
-    { n: "DUOLINGO", u: "../images/mobile-apps/duolingo.jpg" },
-    { n: "TWITCH", u: "../images/mobile-apps/twitch.jpg" },
-    { n: "AIRBNB", u: "../images/mobile-apps/airbnb.jpg" },
-    { n: "LINKEDIN", u: "../images/mobile-apps/linkedin.jpg" },
-    { n: "ZOOM", u: "../images/mobile-apps/zoom.jpg" },
-    { n: "VENMO", u: "../images/mobile-apps/venmo.jpg" },
-    { n: "CANDY CRUSH", u: "../images/mobile-apps/candy-crush.jpg" },
-    { n: "ROBLOX", u: "../images/mobile-apps/roblox.jpg" },
-    { n: "WAZE", u: "../images/mobile-apps/waze.jpg" },
-    { n: "DOORDASH", u: "../images/mobile-apps/doordash.jpg" },
-    { n: "YELP", u: "../images/mobile-apps/yelp.jpg" },
-    { n: "SHAZAM", u: "../images/mobile-apps/shazam.jpg" },
-    { n: "TELEGRAM", u: "../images/mobile-apps/telegram.jpg" },
-    { n: "BUMBLE", u: "../images/mobile-apps/bumble.jpg" },
-    { n: "HINGE", u: "../images/mobile-apps/hinge.jpg" },
-    { n: "STRAVA", u: "../images/mobile-apps/strava.jpg" },
-    { n: "MYFITNESSPAL", u: "../images/mobile-apps/myfitnesspal.jpg" },
-    { n: "ZILLOW", u: "../images/mobile-apps/zillow.jpg" },
-    { n: "ROBINHOOD", u: "../images/mobile-apps/robinhood.jpg" },
-    { n: "CANVA", u: "../images/mobile-apps/canva.jpg" },
-    { n: "NOTION", u: "../images/mobile-apps/notion.jpg" },
-    { n: "AUDIBLE", u: "../images/mobile-apps/audible.jpg" },
-    { n: "SLACK", u: "../images/mobile-apps/slack.jpg" },
-    { n: "CAPCUT", u: "../images/mobile-apps/capcut.jpg" },
-    { n: "VSCO", u: "../images/mobile-apps/vsco.jpg" },
-    { n: "LETTERBOXD", u: "../images/mobile-apps/letterboxd.jpg" },
-    { n: "FLIGHTRADAR24", u: "../images/mobile-apps/flightradar24.jpg" },
-    { n: "DRAFTKINGS", u: "../images/mobile-apps/draftkings.jpg" },
-    { n: "ALLTRAILS", u: "../images/mobile-apps/alltrails.jpg" },
-    { n: "LIBBY", u: "../images/mobile-apps/libby.jpg" },
-    { n: "SIGNAL", u: "../images/mobile-apps/signal.jpg" },
-    { n: "SKYPE", u: "../images/mobile-apps/skype.jpg" },
-    { n: "DROPBOX", u: "../images/mobile-apps/dropbox.jpg" },
-    { n: "SOUNDCLOUD", u: "../images/mobile-apps/soundcloud.jpg" },
-    { n: "SHEIN", u: "../images/mobile-apps/shein.jpg" },
-    { n: "EXPEDIA", u: "../images/mobile-apps/expedia.jpg" },
-    { n: "GROUPME", u: "../images/mobile-apps/groupme.jpg" },
-    { n: "PANDORA", u: "../images/mobile-apps/pandora.jpg" },
-    { n: "CASH APP", u: "../images/mobile-apps/cash-app.jpg" },
+// Tier 1 — Obvious (items 1–15)
+  { n: "YOUTUBE", u: "../images/mobile-apps/youtube.jpg" },
+  { n: "INSTAGRAM", u: "../images/mobile-apps/instagram.jpg" },
+  { n: "TIKTOK", u: "../images/mobile-apps/tiktok.jpg" },
+  { n: "FACEBOOK", u: "../images/mobile-apps/facebook.jpg" },
+  { n: "SNAPCHAT", u: "../images/mobile-apps/snapchat.jpg" },
+  { n: "WHATSAPP", u: "../images/mobile-apps/whatsapp.jpg" },
+  { n: "NETFLIX", u: "../images/mobile-apps/netflix.jpg" },
+  { n: "SPOTIFY", u: "../images/mobile-apps/spotify.jpg" },
+  { n: "GOOGLE MAPS", u: "../images/mobile-apps/google-maps.jpg" },
+  { n: "TINDER", u: "../images/mobile-apps/tinder.jpg" },
+  { n: "GMAIL", u: "../images/mobile-apps/gmail.jpg" },
+  { n: "AMAZON", u: "../images/mobile-apps/amazon.jpg" },
+  { n: "PINTEREST", u: "../images/mobile-apps/pinterest.jpg" },
+
+  // Tier 2 — Familiar (items 16–30)
+  { n: "REDDIT", u: "../images/mobile-apps/reddit.jpg" },
+  { n: "DISCORD", u: "../images/mobile-apps/discord.jpg" },
+  { n: "DUOLINGO", u: "../images/mobile-apps/duolingo.jpg" },
+  { n: "TWITCH", u: "../images/mobile-apps/twitch.jpg" },
+  { n: "AIRBNB", u: "../images/mobile-apps/airbnb.jpg" },
+  { n: "LINKEDIN", u: "../images/mobile-apps/linkedin.jpg" },
+  { n: "ZOOM", u: "../images/mobile-apps/zoom.jpg" },
+  { n: "VENMO", u: "../images/mobile-apps/venmo.jpg" },
+  { n: "CANDY CRUSH", u: "../images/mobile-apps/candy-crush.jpg" },
+  { n: "ROBLOX", u: "../images/mobile-apps/roblox.jpg" },
+  { n: "WAZE", u: "../images/mobile-apps/waze.jpg" },
+  { n: "DOORDASH", u: "../images/mobile-apps/doordash.jpg" },
+  { n: "YELP", u: "../images/mobile-apps/yelp.jpg" },
+  { n: "SHAZAM", u: "../images/mobile-apps/shazam.jpg" },
+  { n: "TELEGRAM", u: "../images/mobile-apps/telegram.jpg" },
+
+  // Tier 3 — Knowledgeable (items 31–40)
+  { n: "BUMBLE", u: "../images/mobile-apps/bumble.jpg" },
+  { n: "HINGE", u: "../images/mobile-apps/hinge.jpg" },
+  { n: "STRAVA", u: "../images/mobile-apps/strava.jpg" },
+  { n: "MYFITNESSPAL", u: "../images/mobile-apps/myfitnesspal.jpg" },
+  { n: "ZILLOW", u: "../images/mobile-apps/zillow.jpg" },
+  { n: "ROBINHOOD", u: "../images/mobile-apps/robinhood.jpg" },
+  { n: "CANVA", u: "../images/mobile-apps/canva.jpg" },
+  { n: "NOTION", u: "../images/mobile-apps/notion.jpg" },
+  { n: "AUDIBLE", u: "../images/mobile-apps/audible.jpg" },
+  { n: "SLACK", u: "../images/mobile-apps/slack.jpg" },
+
+  // Tier 4 — Expert (items 41–50)
+  { n: "CAPCUT", u: "../images/mobile-apps/capcut.jpg" },
+  { n: "VSCO", u: "../images/mobile-apps/vsco.jpg" },
+  { n: "LETTERBOXD", u: "../images/mobile-apps/letterboxd.jpg" },
+  { n: "FLIGHTRADAR24", u: "../images/mobile-apps/flightradar24.jpg" },
+  { n: "DRAFTKINGS", u: "../images/mobile-apps/draftkings.jpg" },
+  { n: "ALLTRAILS", u: "../images/mobile-apps/alltrails.jpg" },
+  { n: "LIBBY", u: "../images/mobile-apps/libby.jpg" },
+  { n: "SIGNAL", u: "../images/mobile-apps/signal.jpg" },
+
+  // ── BACKUPS (items 51–60) ────────────────
+  { n: "SKYPE", u: "../images/mobile-apps/skype.jpg" },
+  { n: "DROPBOX", u: "../images/mobile-apps/dropbox.jpg" },
+  { n: "SOUNDCLOUD", u: "../images/mobile-apps/soundcloud.jpg" },
+  { n: "SHEIN", u: "../images/mobile-apps/shein.jpg" },
+  { n: "EXPEDIA", u: "../images/mobile-apps/expedia.jpg" },
+  { n: "GROUPME", u: "../images/mobile-apps/groupme.jpg" },
+  { n: "PANDORA", u: "../images/mobile-apps/pandora.jpg" },
+  { n: "CASH APP", u: "../images/mobile-apps/cash-app.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "MARIO", u: "../images/nintendo/mario.webp" },
     { n: "SUPER MUSHROOM", u: "../images/nintendo/super-mushroom.png" },
     { n: "GAME BOY", u: "../images/nintendo/game-boy.jpg" },
@@ -1489,6 +1670,8 @@ const megaData = [
     { n: "WII REMOTE", u: "../images/nintendo/wii-remote.jpg" },
     { n: "GREEN SHELL", u: "../images/nintendo/green-shell.webp" },
     { n: "WARP PIPE", u: "../images/nintendo/warp-pipe.png" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "NINTENDO 64", u: "../images/nintendo/nintendo-64.jpg" },
     { n: "HYLIAN SHIELD", u: "../images/nintendo/hylian-shield.webp" },
     { n: "N64 CONTROLLER", u: "../images/nintendo/n64-controller.jpg" },
@@ -1503,6 +1686,8 @@ const megaData = [
     { n: "1-UP MUSHROOM", u: "../images/nintendo/1-up-mushroom.jpg" },
     { n: "GAMECUBE CONTROLLER", u: "../images/nintendo/gamecube-controller.jpg" },
     { n: "COIN", u: "../images/nintendo/coin.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "R.O.B.", u: "../images/nintendo/rob.webp" },
     { n: "OCARINA", u: "../images/nintendo/ocarina.png" },
     { n: "POWER GLOVE", u: "../images/nintendo/power-glove.jpg" },
@@ -1512,6 +1697,8 @@ const megaData = [
     { n: "SUPER SCOPE", u: "../images/nintendo/super-scope.jpg" },
     { n: "STAR ROD", u: "../images/nintendo/star-rod.jpg" },
     { n: "NINTENDO 3DS", u: "../images/nintendo/nintendo-3ds.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "VIRTUAL BOY", u: "../images/nintendo/virtual-boy.jpg" },
     { n: "FAMICOM", u: "../images/nintendo/famicom.jpg" },
     { n: "GAME BOY CAMERA", u: "../images/nintendo/game-boy-camera.jpg" },
@@ -1520,6 +1707,8 @@ const megaData = [
     { n: "GAME BOY MICRO", u: "../images/nintendo/game-boy-micro.png" },
     { n: "WARP STAR", u: "../images/nintendo/warp-star.webp" },
     { n: "SUPER FAMICOM", u: "../images/nintendo/super-famicom.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "NUNCHUK", u: "../images/nintendo/nunchuk.jpg" },
     { n: "WII BALANCE BOARD", u: "../images/nintendo/wii-balance-board.jpg" },
     { n: "NINTENDO DSi", u: "../images/nintendo/nintendo-dsi.png" },
@@ -1530,6 +1719,7 @@ const megaData = [
     { n: "LINK CABLE", u: "../images/nintendo/link-cable.png" },
     { n: "PRO CONTROLLER", u: "../images/nintendo/pro-controller.jpg" },
     { n: "GAME BOY PLAYER", u: "../images/nintendo/game-boy-player.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "PIKACHU", u: "../images/pokemon-everything/pikachu.webp" },
     { n: "POKÉ BALL", u: "../images/pokemon-everything/poke-ball.webp" },
     { n: "ASH KETCHUM", u: "../images/pokemon-everything/ash-ketchum.webp" },
@@ -1545,6 +1735,8 @@ const megaData = [
     { n: "TEAM ROCKET", u: "../images/pokemon-everything/team-rocket.webp" },
     { n: "JIGGLYPUFF", u: "../images/pokemon-everything/jigglypuff.webp" },
     { n: "POKÉMON CENTER", u: "../images/pokemon-everything/pokemon-center.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "GREAT BALL", u: "../images/pokemon-everything/great-ball.webp" },
     { n: "SNORLAX", u: "../images/pokemon-everything/snorlax.webp" },
     { n: "MISTY", u: "../images/pokemon-everything/misty.webp" },
@@ -1559,6 +1751,8 @@ const megaData = [
     { n: "EXP. SHARE", u: "../images/pokemon-everything/exp-share.webp" },
     { n: "GRENINJA", u: "../images/pokemon-everything/greninja.webp" },
     { n: "OFFICER JENNY", u: "../images/pokemon-everything/officer-jenny.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "ULTRA BALL", u: "../images/pokemon-everything/ultra-ball.webp" },
     { n: "HO-OH", u: "../images/pokemon-everything/ho-oh.webp" },
     { n: "GYM LEADER", u: "../images/pokemon-everything/gym-leader.webp" },
@@ -1567,6 +1761,8 @@ const megaData = [
     { n: "ELITE FOUR", u: "../images/pokemon-everything/elite-four.webp" },
     { n: "TOGEPI", u: "../images/pokemon-everything/togepi.webp" },
     { n: "KANTO REGION", u: "../images/pokemon-everything/kanto-region.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "MASTER BALL", u: "../images/pokemon-everything/master-ball.webp" },
     { n: "CHAMPION", u: "../images/pokemon-everything/champion.webp" },
     { n: "LAPRAS", u: "../images/pokemon-everything/lapras.webp" },
@@ -1575,6 +1771,8 @@ const megaData = [
     { n: "LEFTOVERS", u: "../images/pokemon-everything/leftovers.webp" },
     { n: "MEW", u: "../images/pokemon-everything/mew.webp" },
     { n: "Z-RING", u: "../images/pokemon-everything/z-ring.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "PREMIER BALL", u: "../images/pokemon-everything/premier-ball.webp" },
     { n: "DESTINY KNOT", u: "../images/pokemon-everything/destiny-knot.webp" },
     { n: "POKÉBLOCK", u: "../images/pokemon-everything/pokeblock.webp" },
@@ -1583,6 +1781,7 @@ const megaData = [
     { n: "CHOICE BAND", u: "../images/pokemon-everything/choice-band.webp" },
     { n: "DYNAMAX BAND", u: "../images/pokemon-everything/dynamax-band.webp" },
     { n: "SITRUS BERRY", u: "../images/pokemon-everything/sitrus-berry.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "RUPAUL'S DRAG RACE", u: "../images/queer-movies-tv/rupauls-drag-race.webp" },
     { n: "WILL & GRACE", u: "../images/queer-movies-tv/will-and-grace.webp" },
     { n: "QUEER EYE", u: "../images/queer-movies-tv/queer-eye.webp" },
@@ -1598,6 +1797,8 @@ const megaData = [
     { n: "SCHITT'S CREEK", u: "../images/queer-movies-tv/schitts-creek.webp" },
     { n: "SEX EDUCATION", u: "../images/queer-movies-tv/sex-education.webp" },
     { n: "POSE", u: "../images/queer-movies-tv/pose.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "HEARTSTOPPER", u: "../images/queer-movies-tv/heartstopper.webp" },
     { n: "RED, WHITE & ROYAL BLUE", u: "../images/queer-movies-tv/red-white-and-royal-blue.webp" },
     { n: "BOTTOMS", u: "../images/queer-movies-tv/bottoms.webp" },
@@ -1613,6 +1814,8 @@ const megaData = [
     { n: "MILK", u: "../images/queer-movies-tv/milk.webp" },
     { n: "BOYS DON'T CRY", u: "../images/queer-movies-tv/boys-dont-cry.webp" },
     { n: "DALLAS BUYERS CLUB", u: "../images/queer-movies-tv/dallas-buyers-club.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "THE BOYS IN THE BAND", u: "../images/queer-movies-tv/the-boys-in-the-band.webp" },
     { n: "BLUE IS THE WARMEST COLOR", u: "../images/queer-movies-tv/blue-is-the-warmest-color.webp" },
     { n: "A SINGLE MAN", u: "../images/queer-movies-tv/a-single-man.webp" },
@@ -1622,6 +1825,8 @@ const megaData = [
     { n: "BUT I'M A CHEERLEADER", u: "../images/queer-movies-tv/but-im-a-cheerleader.webp" },
     { n: "MY OWN PRIVATE IDAHO", u: "../images/queer-movies-tv/my-own-private-idaho.webp" },
     { n: "GOD'S OWN COUNTRY", u: "../images/queer-movies-tv/gods-own-country.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "FELLOW TRAVELERS", u: "../images/queer-movies-tv/fellow-travelers.webp" },
     { n: "YOUNG ROYALS", u: "../images/queer-movies-tv/young-royals.webp" },
     { n: "FIRE ISLAND", u: "../images/queer-movies-tv/fire-island.webp" },
@@ -1630,6 +1835,8 @@ const megaData = [
     { n: "THE HALF OF IT", u: "../images/queer-movies-tv/the-half-of-it.webp" },
     { n: "BOOKSMART", u: "../images/queer-movies-tv/booksmart.webp" },
     { n: "ALL OF US STRANGERS", u: "../images/queer-movies-tv/all-of-us-strangers.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "DESERT HEARTS", u: "../images/queer-movies-tv/desert-hearts.webp" },
     { n: "BOUND", u: "../images/queer-movies-tv/bound.webp" },
     { n: "THE KIDS ARE ALL RIGHT", u: "../images/queer-movies-tv/the-kids-are-all-right.webp" },
@@ -1639,65 +1846,7 @@ const megaData = [
     { n: "BOY ERASED", u: "../images/queer-movies-tv/boy-erased.webp" },
     { n: "THE PROM", u: "../images/queer-movies-tv/the-prom.webp" },
     { n: "SHELTER", u: "../images/queer-movies-tv/shelter.webp" },
-    { n: "CROSS", u: "../images/religion/cross.webp" },
-    { n: "BIBLE", u: "../images/religion/bible.webp" },
-    { n: "JESUS CHRIST", u: "../images/religion/jesus-christ.webp" },
-    { n: "STAR OF DAVID", u: "../images/religion/star-of-david.webp" },
-    { n: "QURAN", u: "../images/religion/quran.webp" },
-    { n: "BUDDHA STATUE", u: "../images/religion/buddha-statue.webp" },
-    { n: "ANGEL", u: "../images/religion/angel.webp" },
-    { n: "CHURCH", u: "../images/religion/church.webp" },
-    { n: "MOSQUE", u: "../images/religion/mosque.webp" },
-    { n: "SYNAGOGUE", u: "../images/religion/synagogue.webp" },
-    { n: "POPE", u: "../images/religion/pope.webp" },
-    { n: "MENORAH", u: "../images/religion/menorah.webp" },
-    { n: "NUN", u: "../images/religion/nun.webp" },
-    { n: "PRIEST", u: "../images/religion/priest.webp" },
-    { n: "TEMPLE", u: "../images/religion/temple.webp" },
-    { n: "ROSARY", u: "../images/religion/rosary.webp" },
-    { n: "YIN YANG", u: "../images/religion/yin-yang.webp" },
-    { n: "TORAH", u: "../images/religion/torah.webp" },
-    { n: "MONK", u: "../images/religion/monk.webp" },
-    { n: "HALO", u: "../images/religion/halo.webp" },
-    { n: "MECCA (KAABA)", u: "../images/religion/mecca-kaaba.webp" },
-    { n: "LOTUS FLOWER", u: "../images/religion/lotus-flower.webp" },
-    { n: "CRUCIFIX", u: "../images/religion/crucifix.webp" },
-    { n: "HOLY WATER", u: "../images/religion/holy-water.webp" },
-    { n: "OM SYMBOL", u: "../images/religion/om-symbol.webp" },
-    { n: "PRAYER MAT", u: "../images/religion/prayer-mat.webp" },
-    { n: "TEN COMMANDMENTS", u: "../images/religion/ten-commandments.webp" },
-    { n: "STAINED GLASS WINDOW", u: "../images/religion/stained-glass-window.webp" },
-    { n: "ALTAR", u: "../images/religion/altar.webp" },
-    { n: "GANESHA", u: "../images/religion/ganesha.webp" },
-    { n: "SHIVA", u: "../images/religion/shiva.webp" },
-    { n: "DALAI LAMA", u: "../images/religion/dalai-lama.webp" },
-    { n: "HIJAB", u: "../images/religion/hijab.webp" },
-    { n: "KIPPAH / YARMULKE", u: "../images/religion/kippah.webp" },
-    { n: "DREIDEL", u: "../images/religion/dreidel.webp" },
-    { n: "CHALICE", u: "../images/religion/chalice.webp" },
-    { n: "KHANDA", u: "../images/religion/khanda.webp" },
-    { n: "TURBAN", u: "../images/religion/turban.webp" },
-    { n: "SHINTO SHRINE (TORII GATE)", u: "../images/religion/shinto-shrine.webp" },
-    { n: "DHARMACHAKRA", u: "../images/religion/dharmachakra.webp" },
-    { n: "AHIMSA HAND", u: "../images/religion/ahimsa-hand.webp" },
-    { n: "MITRE", u: "../images/religion/mitre.webp" },
-    { n: "THURIBLE", u: "../images/religion/thurible.webp" },
-    { n: "SHOFAR", u: "../images/religion/shofar.webp" },
-    { n: "MEZUZAH", u: "../images/religion/mezuzah.webp" },
-    { n: "TALLIT", u: "../images/religion/tallit.webp" },
-    { n: "MALA BEADS", u: "../images/religion/mala-beads.webp" },
-    { n: "VAJRA", u: "../images/religion/vajra.webp" },
-    { n: "ZUCCHETTO", u: "../images/religion/zucchetto.webp" },
-    { n: "MANDALA", u: "../images/religion/mandala.webp" },
-    { n: "STATUE OF DAVID", u: "../images/religion/statue-of-david.webp" },
-    { n: "VOODOO DOLL", u: "../images/religion/voodoo-doll.webp" },
-    { n: "PENTAGRAM", u: "../images/religion/pentagram.webp" },
-    { n: "THOR'S HAMMER", u: "../images/religion/thors-hammer.webp" },
-    { n: "ANKH", u: "../images/religion/ankh.webp" },
-    { n: "EYE OF HORUS", u: "../images/religion/eye-of-horus.webp" },
-    { n: "BODHI TREE", u: "../images/religion/bodhi-tree.webp" },
-    { n: "HAMSA", u: "../images/religion/hamsa.webp" },
-    { n: "PRAYER WHEEL", u: "../images/religion/prayer-wheel.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "PAC-MAN", u: "../images/retro-video-games/pac-man.jpg" },
     { n: "TETRIS", u: "../images/retro-video-games/tetris.jpg" },
     { n: "SUPER MARIO BROS", u: "../images/retro-video-games/super-mario-bros.jpg" },
@@ -1713,6 +1862,8 @@ const megaData = [
     { n: "FROGGER", u: "../images/retro-video-games/frogger.jpg" },
     { n: "ASTEROIDS", u: "../images/retro-video-games/asteroids.jpg" },
     { n: "MS. PAC-MAN", u: "../images/retro-video-games/ms-pac-man.jpg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "CONTRA", u: "../images/retro-video-games/contra.jpg" },
     { n: "DUCK HUNT", u: "../images/retro-video-games/duck-hunt.jpg" },
     { n: "CENTIPEDE", u: "../images/retro-video-games/centipede.webp" },
@@ -1728,6 +1879,8 @@ const megaData = [
     { n: "FINAL FANTASY", u: "../images/retro-video-games/final-fantasy.jpg" },
     { n: "BURGERTIME", u: "../images/retro-video-games/burgertime.jpg" },
     { n: "Q*BERT", u: "../images/retro-video-games/qbert.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "GHOSTS 'N GOBLINS", u: "../images/retro-video-games/ghosts-n-goblins.png" },
     { n: "R-TYPE", u: "../images/retro-video-games/r-type.jpg" },
     { n: "DEFENDER", u: "../images/retro-video-games/defender.png" },
@@ -1738,6 +1891,8 @@ const megaData = [
     { n: "GOLDEN AXE", u: "../images/retro-video-games/golden-axe.jpg" },
     { n: "BUBBLE BOBBLE", u: "../images/retro-video-games/bubble-bobble.png" },
     { n: "SPY HUNTER", u: "../images/retro-video-games/spy-hunter.jpg" },
+
+    // Tier 4 — Expert (41–50)
     { n: "PITFALL", u: "../images/retro-video-games/pitfall.webp" },
     { n: "TEMPEST", u: "../images/retro-video-games/tempest.png" },
     { n: "JOUST", u: "../images/retro-video-games/joust.jpg" },
@@ -1748,6 +1903,8 @@ const megaData = [
     { n: "RIVER RAID", u: "../images/retro-video-games/river-raid.webp" },
     { n: "BERZERK", u: "../images/retro-video-games/berzerk.jpg" },
     { n: "ADVENTURE", u: "../images/retro-video-games/adventure.gif" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "GAUNTLET", u: "../images/retro-video-games/gauntlet.png" },
     { n: "RAMPAGE", u: "../images/retro-video-games/rampage.jpg" },
     { n: "ELEVATOR ACTION", u: "../images/retro-video-games/elevator-action.jpg" },
@@ -1758,6 +1915,7 @@ const megaData = [
     { n: "ICE CLIMBER", u: "../images/retro-video-games/ice-climber.jpg" },
     { n: "BALLOON FIGHT", u: "../images/retro-video-games/balloon-fight.jpg" },
     { n: "MAPPY", u: "../images/retro-video-games/mappy.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "OLYMPICS", u: "../images/sports-logos/olympics.svg" },
     { n: "DALLAS COWBOYS", u: "../images/sports-logos/dallas-cowboys.svg" },
     { n: "NEW YORK YANKEES", u: "../images/sports-logos/new-york-yankees.jpg" },
@@ -1773,6 +1931,8 @@ const megaData = [
     { n: "REAL MADRID", u: "../images/sports-logos/real-madrid.jpg" },
     { n: "TORONTO RAPTORS", u: "../images/sports-logos/toronto-raptors.png" },
     { n: "MIAMI HEAT", u: "../images/sports-logos/miami-heat.gif" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "SAN FRANCISCO 49ERS", u: "../images/sports-logos/san-francisco-49ers.jpg" },
     { n: "INDIANAPOLIS COLTS", u: "../images/sports-logos/indianapolis-colts.png" },
     { n: "DETROIT RED WINGS", u: "../images/sports-logos/detroit-red-wings.jpg" },
@@ -1788,6 +1948,8 @@ const megaData = [
     { n: "PITTSBURGH PENGUINS", u: "../images/sports-logos/pittsburgh-penguins.png" },
     { n: "TAMPA BAY BUCCANEERS", u: "../images/sports-logos/tampa-bay-buccaneers.png" },
     { n: "BAYERN MUNICH", u: "../images/sports-logos/bayern-munich.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "MILWAUKEE BUCKS", u: "../images/sports-logos/milwaukee-bucks.png" },
     { n: "PORTLAND TRAIL BLAZERS", u: "../images/sports-logos/portland-trail-blazers.png" },
     { n: "DETROIT LIONS", u: "../images/sports-logos/detroit-lions.png" },
@@ -1798,6 +1960,8 @@ const megaData = [
     { n: "ARIZONA CARDINALS", u: "../images/sports-logos/arizona-cardinals.png" },
     { n: "CELTIC FC", u: "../images/sports-logos/celtic-fc.webp" },
     { n: "INTER MILAN", u: "../images/sports-logos/inter-milan.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "MEMPHIS GRIZZLIES", u: "../images/sports-logos/memphis-grizzlies.webp" },
     { n: "VEGAS GOLDEN KNIGHTS", u: "../images/sports-logos/vegas-golden-knights.png" },
     { n: "ATLANTA BRAVES", u: "../images/sports-logos/atlanta-braves.png" },
@@ -1808,6 +1972,8 @@ const megaData = [
     { n: "DALLAS STARS", u: "../images/sports-logos/dallas-stars.png" },
     { n: "BALTIMORE ORIOLES", u: "../images/sports-logos/baltimore-orioles.png" },
     { n: "LOS ANGELES KINGS", u: "../images/sports-logos/los-angeles-kings.png" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "COLORADO AVALANCHE", u: "../images/sports-logos/colorado-avalanche.png" },
     { n: "WASHINGTON COMMANDERS", u: "../images/sports-logos/washington-commanders.png" },
     { n: "NEW ORLEANS PELICANS", u: "../images/sports-logos/new-orleans-pelicans.png" },
@@ -1818,7 +1984,7 @@ const megaData = [
     { n: "CAROLINA PANTHERS", u: "../images/sports-logos/carolina-panthers.jpg" },
     { n: "TENNESSEE TITANS", u: "../images/sports-logos/tennessee-titans.png" },
     { n: "SACRAMENTO KINGS", u: "../images/sports-logos/sacramento-kings.png" },
-    { n: "TEXAS", u: "../images/state-flags/texas.webp" },
+{ n: "TEXAS", u: "../images/state-flags/texas.webp" },
     { n: "CALIFORNIA", u: "../images/state-flags/california.webp" },
     { n: "COLORADO", u: "../images/state-flags/colorado.webp" },
     { n: "NEW MEXICO", u: "../images/state-flags/new-mexico.webp" },
@@ -1868,10 +2034,13 @@ const megaData = [
     { n: "NEBRASKA", u: "../images/state-flags/nebraska.webp" },
     { n: "KANSAS", u: "../images/state-flags/kansas.webp" },
     { n: "UTAH", u: "../images/state-flags/utah.webp" },
+    
+    // ── BACKUPS (items 51–60) ────────────────
     { n: "WASHINGTON D.C.", u: "../images/state-flags/washington-dc.webp" },
     { n: "PUERTO RICO", u: "../images/state-flags/puerto-rico.webp" },
     { n: "GUAM", u: "../images/state-flags/guam.webp" },
     { n: "US VIRGIN ISLANDS", u: "../images/state-flags/us-virgin-islands.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "PLATYPUS", u: "../images/strange-animals/platypus.webp" },
     { n: "AXOLOTL", u: "../images/strange-animals/axolotl.webp" },
     { n: "BLOBFISH", u: "../images/strange-animals/blobfish.webp" },
@@ -1887,6 +2056,8 @@ const megaData = [
     { n: "PORCUPINE", u: "../images/strange-animals/porcupine.webp" },
     { n: "ANTEATER", u: "../images/strange-animals/anteater.webp" },
     { n: "OPOSSUM", u: "../images/strange-animals/opossum.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "PANGOLIN", u: "../images/strange-animals/pangolin.webp" },
     { n: "SHOEBILL STORK", u: "../images/strange-animals/shoebill-stork.webp" },
     { n: "KOMODO DRAGON", u: "../images/strange-animals/komodo-dragon.webp" },
@@ -1901,6 +2072,8 @@ const megaData = [
     { n: "SUNFISH", u: "../images/strange-animals/sunfish.webp" },
     { n: "CAPYBARA", u: "../images/strange-animals/capybara.webp" },
     { n: "QUOKKA", u: "../images/strange-animals/quokka.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "FOSSA", u: "../images/strange-animals/fossa.webp" },
     { n: "BINTURONG", u: "../images/strange-animals/binturong.webp" },
     { n: "BABIRUSA", u: "../images/strange-animals/babirusa.webp" },
@@ -1911,6 +2084,8 @@ const megaData = [
     { n: "LAMPREY", u: "../images/strange-animals/lamprey.webp" },
     { n: "DUMBO OCTOPUS", u: "../images/strange-animals/dumbo-octopus.webp" },
     { n: "BLUE DRAGON", u: "../images/strange-animals/blue-dragon.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "SAIGA ANTELOPE", u: "../images/strange-animals/saiga-antelope.webp" },
     { n: "PINK FAIRY ARMADILLO", u: "../images/strange-animals/pink-fairy-armadillo.webp" },
     { n: "TUFTED DEER", u: "../images/strange-animals/tufted-deer.webp" },
@@ -1921,6 +2096,8 @@ const megaData = [
     { n: "LEAFY SEADRAGON", u: "../images/strange-animals/leafy-seadragon.webp" },
     { n: "YETI CRAB", u: "../images/strange-animals/yeti-crab.webp" },
     { n: "VAMPIRE SQUID", u: "../images/strange-animals/vampire-squid.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "DHOLE", u: "../images/strange-animals/dhole.webp" },
     { n: "MANED WOLF", u: "../images/strange-animals/maned-wolf.webp" },
     { n: "DUGONG", u: "../images/strange-animals/dugong.webp" },
@@ -1931,6 +2108,7 @@ const megaData = [
     { n: "TARSIER", u: "../images/strange-animals/tarsier.webp" },
     { n: "PROBOSCIS MONKEY", u: "../images/strange-animals/proboscis-monkey.webp" },
     { n: "MUDSKIPPER", u: "../images/strange-animals/mudskipper.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "TAYLOR SWIFT", u: "../images/taylor-swift/taylor-swift.jpg" },
     { n: "ERAS TOUR", u: "../images/taylor-swift/eras-tour.png" },
     { n: "FRIENDSHIP BRACELETS", u: "../images/taylor-swift/friendship-bracelets.jpg" },
@@ -1946,6 +2124,8 @@ const megaData = [
     { n: "FOLKLORE (ALBUM COVER)", u: "../images/taylor-swift/folklore-album-cover.png" },
     { n: "EVERMORE (ALBUM COVER)", u: "../images/taylor-swift/evermore-album-cover.png" },
     { n: "TRAVIS KELCE", u: "../images/taylor-swift/travis-kelce.jpg" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "THE TORTURED POETS DEPARTMENT (ALBUM COVER)", u: "../images/taylor-swift/the-tortured-poets-department-album-cover.webp" },
     { n: "TEARDROPS ON MY GUITAR MUSIC VIDEO", u: "../images/taylor-swift/teardrops-on-my-guitar-music-video.jpg" },
     { n: "GRAMMY AWARDS", u: "../images/taylor-swift/grammy.png" },
@@ -1961,6 +2141,8 @@ const megaData = [
     { n: "SCOOTER BRAUN", u: "../images/taylor-swift/scooter-braun.jpg" },
     { n: "ERAS TOUR WRISTBAND GLOW", u: "../images/taylor-swift/eras-tour-wristband-glow.jpg" },
     { n: "ANTI-HERO MUSIC VIDEO", u: "../images/taylor-swift/anti-hero-music-video.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "ME! MUSIC VIDEO", u: "../images/taylor-swift/me-music-video.jpg" },
     { n: "DELICATE MUSIC VIDEO", u: "../images/taylor-swift/delicate-music-video.jpg" },
     { n: "YOU BELONG WITH ME MUSIC VIDEO", u: "../images/taylor-swift/you-belong-with-me-music-video.jpg" },
@@ -1971,6 +2153,8 @@ const megaData = [
     { n: "VAULT DOOR", u: "../images/taylor-swift/vault-door.png" },
     { n: "JACK ANTONOFF", u: "../images/taylor-swift/jack-antonoff.jpg" },
     { n: "LOOK WHAT YOU MADE ME DO MUSIC VIDEO", u: "../images/taylor-swift/look-what-you-made-me-do-music-video.png" },
+
+    // Tier 4 — Expert (41–50)
     { n: "CAT (OLIVIA BENSON)", u: "../images/taylor-swift/cat-olivia-benson.jpg" },
     { n: "EXILE MUSIC VIDEO", u: "../images/taylor-swift/exile-music-video.jpg" },
     { n: "FORTNIGHT MUSIC VIDEO", u: "../images/taylor-swift/fortnight-music-video.jpg" },
@@ -1981,16 +2165,19 @@ const megaData = [
     { n: "AARON DESSNER", u: "../images/taylor-swift/aaron-dessner.jpg" },
     { n: "BAD BLOOD MUSIC VIDEO", u: "../images/taylor-swift/bad-blood-music-video.jpg" },
     { n: "I KNEW YOU WERE TROUBLE MUSIC VIDEO", u: "../images/taylor-swift/i-knew-you-were-trouble-music-video.jpg" },
-    { n: "SUPER BOWL (WITH KELCE)", u: "../images/taylor-swift/super-bowl-with-kelce.jpg" },
-    { n: "ME! MUSIC VIDEO", u: "../images/taylor-swift/me-music-video.jpg" },
-    { n: "FORTNIGHT MUSIC VIDEO", u: "../images/taylor-swift/fortnight-music-video.jpg" },
-    { n: "MIRRORBALL", u: "../images/taylor-swift/mirrorball.jpg" },
-    { n: "SURPRISE SONGS PIANO", u: "../images/taylor-swift/surprise-songs-piano.jpg" },
-    { n: "JOE ALWYN", u: "../images/taylor-swift/joe-alwyn.jpg" },
-    { n: "DELICATE MUSIC VIDEO", u: "../images/taylor-swift/delicate-music-video.jpg" },
-    { n: "STYLE MUSIC VIDEO", u: "../images/taylor-swift/style-music-video.jpg" },
-    { n: "ENCHANTED (SPEAK NOW TOUR)", u: "../images/taylor-swift/enchanted-speak-now-tour.jpg" },
-    { n: "TEARDROPS ON MY GUITAR", u: "../images/taylor-swift/teardrops-on-my-guitar.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────────
+    // { n: "SUPER BOWL (WITH KELCE)", u: "../images/taylor-swift/super-bowl-with-kelce.jpg" },
+    // { n: "ME! MUSIC VIDEO", u: "../images/taylor-swift/me-music-video.jpg" },
+    // { n: "FORTNIGHT MUSIC VIDEO", u: "../images/taylor-swift/fortnight-music-video.jpg" },
+    // { n: "MIRRORBALL", u: "../images/taylor-swift/mirrorball.jpg" },
+    // { n: "SURPRISE SONGS PIANO", u: "../images/taylor-swift/surprise-songs-piano.jpg" },
+    // { n: "JOE ALWYN", u: "../images/taylor-swift/joe-alwyn.jpg" },
+    // { n: "DELICATE MUSIC VIDEO", u: "../images/taylor-swift/delicate-music-video.jpg" },
+    // { n: "STYLE MUSIC VIDEO", u: "../images/taylor-swift/style-music-video.jpg" },
+    // { n: "ENCHANTED (SPEAK NOW TOUR)", u: "../images/taylor-swift/enchanted-speak-now-tour.jpg" },
+    // { n: "TEARDROPS ON MY GUITAR", u: "../images/taylor-swift/teardrops-on-my-guitar.jpg" },
+// Tier 1 — Obvious (1–15)
     { n: "GAME BOY", u: "../images/the-90s/game-boy.jpg" },
     { n: "FURBY", u: "../images/the-90s/furby.jpg" },
     { n: "TAMAGOTCHI", u: "../images/the-90s/tamagotchi.webp" },
@@ -2006,6 +2193,8 @@ const megaData = [
     { n: "MAGIC 8 BALL", u: "../images/the-90s/magic-8-ball.webp" },
     { n: "SLAP BRACELET", u: "../images/the-90s/slap-bracelet.webp" },
     { n: "WALKMAN", u: "../images/the-90s/walkman.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "POLLY POCKET", u: "../images/the-90s/polly-pocket.webp" },
     { n: "SKIP-IT", u: "../images/the-90s/skip-it.webp" },
     { n: "GOOSEBUMPS BOOKS", u: "../images/the-90s/goosebumps-books.webp" },
@@ -2021,6 +2210,8 @@ const megaData = [
     { n: "SEGA GENESIS", u: "../images/the-90s/sega-genesis.webp" },
     { n: "HITCLIPS", u: "../images/the-90s/hitclips.webp" },
     { n: "LITE-BRITE", u: "../images/the-90s/lite-brite.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "TICKLE ME ELMO", u: "../images/the-90s/tickle-me-elmo.webp" },
     { n: "POGO STICK", u: "../images/the-90s/pogo-stick.webp" },
     { n: "NICKELODEON MAGAZINE", u: "../images/the-90s/nickelodeon-magazine.webp" },
@@ -2031,6 +2222,8 @@ const megaData = [
     { n: "CREEPY CRAWLERS", u: "../images/the-90s/creepy-crawlers.webp" },
     { n: "TRAPPER KEEPER", u: "../images/the-90s/trapper-keeper.webp" },
     { n: "STRETCH ARMSTRONG", u: "../images/the-90s/stretch-armstrong.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "SKY DANCERS", u: "../images/the-90s/sky-dancers.webp" },
     { n: "CRAZY BONES", u: "../images/the-90s/crazy-bones.webp" },
     { n: "GAK", u: "../images/the-90s/gak.webp" },
@@ -2040,6 +2233,8 @@ const megaData = [
     { n: "PUPPY SURPRISE", u: "../images/the-90s/puppy-surprise.webp" },
     { n: "POUND PUPPIES", u: "../images/the-90s/pound-puppies.webp" },
     { n: "SEA MONKEYS", u: "../images/the-90s/sea-monkeys.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "YAK BAK", u: "../images/the-90s/yak-bak.webp" },
     { n: "POCKET KITTY", u: "../images/the-90s/pocket-kitty.webp" },
     { n: "VIEW-MASTER", u: "../images/the-90s/view-master.webp" },
@@ -2049,7 +2244,7 @@ const megaData = [
     { n: "BEYBLADES", u: "../images/the-90s/beyblades.webp" },
     { n: "CUPCAKE DOLLS", u: "../images/the-90s/cupcake-dolls.webp" },
     { n: "CROCODILE DENTIST", u: "../images/the-90s/crocodile-dentist.webp" },
-    { n: "USAIN BOLT", u: "../images/track-and-field/usain-bolt.webp" },
+{ n: "USAIN BOLT", u: "../images/track-and-field/usain-bolt.webp" },
     { n: "RUNNING SHOES", u: "../images/track-and-field/running-shoes.webp" },
     { n: "BATON", u: "../images/track-and-field/baton.webp" },
     { n: "HURDLES", u: "../images/track-and-field/hurdles.webp" },
@@ -2092,6 +2287,8 @@ const megaData = [
     { n: "JUDICIAL OFFICIAL", u: "../images/track-and-field/judicial-official.webp" },
     { n: "CLEATS", u: "../images/track-and-field/cleats.webp" },
     { n: "SWEATBAND", u: "../images/track-and-field/sweatband.webp" },
+    
+    // ── BACKUPS (items 51–60) ────────────────
     { n: "KELVIN KIPTUM", u: "../images/track-and-field/kelvin-kiptum.webp" },
     { n: "ALLYSON FELIX", u: "../images/track-and-field/allyson-felix.webp" },
     { n: "MICHAEL JOHNSON", u: "../images/track-and-field/michael-johnson.webp" },
@@ -2099,6 +2296,7 @@ const megaData = [
     { n: "HYDRATION STATION", u: "../images/track-and-field/hydration-station.webp" },
     { n: "STADIUM", u: "../images/track-and-field/stadium.webp" },
     { n: "FINISH TAPE", u: "../images/track-and-field/finish-tape.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "DOKI DOKI LITERATURE CLUB!", u: "../images/visual-novels/doki-doki-literature-club.webp" },
     { n: "PHOENIX WRIGHT: ACE ATTORNEY", u: "../images/visual-novels/phoenix-wright-ace-attorney.webp" },
     { n: "DANGANRONPA: TRIGGER HAPPY HAVOC", u: "../images/visual-novels/danganronpa.webp" },
@@ -2114,12 +2312,12 @@ const megaData = [
     { n: "NEKOPARA", u: "../images/visual-novels/nekopara.webp" },
     { n: "THE FRUIT OF GRISAIA", u: "../images/visual-novels/the-fruit-of-grisaia.webp" },
     { n: "HIGURASHI WHEN THEY CRY", u: "../images/visual-novels/higurashi-when-they-cry.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "UMINEKO WHEN THEY CRY", u: "../images/visual-novels/umineko-when-they-cry.webp" },
     { n: "MUV-LUV ALTERNATIVE", u: "../images/visual-novels/muv-luv-alternative.webp" },
     { n: "AI: THE SOMNIUM FILES", u: "../images/visual-novels/ai-the-somnium-files.webp" },
-    { n: "DANGANRONPA 2: GOODBYE DESPAIR", u: "../images/visual-novels/danganronpa-2.webp" },
     { n: "ZERO ESCAPE: VIRTUE'S LAST REWARD", u: "../images/visual-novels/zero-escape-vlr.webp" },
-    { n: "CLANNAD AFTER STORY", u: "../images/visual-novels/clannad-after-story.webp" },
     { n: "EVER17: THE OUT OF INFINITY", u: "../images/visual-novels/ever17.webp" },
     { n: "SCIENCE ADVENTURE SERIES", u: "../images/visual-novels/science-adventure-series.webp" },
     { n: "MAJIKOI!", u: "../images/visual-novels/majikoi.webp" },
@@ -2129,6 +2327,8 @@ const megaData = [
     { n: "AMNESIA: MEMORIES", u: "../images/visual-novels/amnesia-memories.webp" },
     { n: "CODE: REALIZE", u: "../images/visual-novels/code-realize.webp" },
     { n: "HAKUOKI", u: "../images/visual-novels/hakuoki.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "BALDR SKY", u: "../images/visual-novels/baldr-sky.webp" },
     { n: "WHITE ALBUM 2", u: "../images/visual-novels/white-album-2.webp" },
     { n: "DIES IRAE", u: "../images/visual-novels/dies-irae.webp" },
@@ -2139,6 +2339,8 @@ const megaData = [
     { n: "THE HOUSE IN FATA MORGANA", u: "../images/visual-novels/the-house-in-fata-morgana.webp" },
     { n: "WONDERFUL EVERYDAY", u: "../images/visual-novels/wonderful-everyday.webp" },
     { n: "ROOT DOUBLE", u: "../images/visual-novels/root-double.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "SUMMER POCKETS", u: "../images/visual-novels/summer-pockets.webp" },
     { n: "UTOWARERUMONO", u: "../images/visual-novels/utawarerumono.webp" },
     { n: "KIMINOZO", u: "../images/visual-novels/kiminozo.webp" },
@@ -2147,8 +2349,9 @@ const megaData = [
     { n: "SCHOOL DAYS", u: "../images/visual-novels/school-days.webp" },
     { n: "SAYA NO UTA", u: "../images/visual-novels/saya-no-uta.webp" },
     { n: "KARA NO SHOUJO", u: "../images/visual-novels/kara-no-shoujo.webp" },
-    { n: "STEINS;GATE 0", u: "../images/visual-novels/steins-gate-zero.webp" },
     { n: "CHAOS;HEAD", u: "../images/visual-novels/chaos-head.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "CHAOS;CHILD", u: "../images/visual-novels/chaos-child.webp" },
     { n: "ROBOTICS;NOTES", u: "../images/visual-novels/robotics-notes.webp" },
     { n: "ANONYMOUS;CODE", u: "../images/visual-novels/anonymous-code.webp" },
@@ -2159,6 +2362,7 @@ const megaData = [
     { n: "MARBLE PHANTASM", u: "../images/visual-novels/marble-phantasm.webp" },
     { n: "NUKITASHI", u: "../images/visual-novels/nukitashi.webp" },
     { n: "ATRI: MY DEAR MOMENTS", u: "../images/visual-novels/atri-my-dear-moments.webp" },
+// Tier 1 — Obvious (1–15)
     { n: "GEORGE WASHINGTON", u: "../images/world-leaders/george-washington.webp" },
     { n: "ABRAHAM LINCOLN", u: "../images/world-leaders/abraham-lincoln.webp" },
     { n: "WINSTON CHURCHILL", u: "../images/world-leaders/winston-churchill.webp" },
@@ -2174,6 +2378,8 @@ const megaData = [
     { n: "CLEOPATRA", u: "../images/world-leaders/cleopatra.webp" },
     { n: "KING HENRY VIII", u: "../images/world-leaders/king-henry-viii.webp" },
     { n: "VLADIMIR PUTIN", u: "../images/world-leaders/vladimir-putin.webp" },
+
+    // Tier 2 — Familiar (16–30)
     { n: "JOE BIDEN", u: "../images/world-leaders/joe-biden.webp" },
     { n: "BILL CLINTON", u: "../images/world-leaders/bill-clinton.webp" },
     { n: "GEORGE W. BUSH", u: "../images/world-leaders/george-w-bush.webp" },
@@ -2188,6 +2394,8 @@ const megaData = [
     { n: "CHE GUEVARA", u: "../images/world-leaders/che-guevara.webp" },
     { n: "KIM JONG UN", u: "../images/world-leaders/kim-jong-un.webp" },
     { n: "POPE FRANCIS", u: "../images/world-leaders/pope-francis.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
     { n: "TEDDY ROOSEVELT", u: "../images/world-leaders/teddy-roosevelt.webp" },
     { n: "THOMAS JEFFERSON", u: "../images/world-leaders/thomas-jefferson.webp" },
     { n: "MIKHAIL GORBACHEV", u: "../images/world-leaders/mikhail-gorbachev.webp" },
@@ -2198,6 +2406,8 @@ const megaData = [
     { n: "VOLODYMYR ZELENSKY", u: "../images/world-leaders/volodymyr-zelensky.webp" },
     { n: "BENJAMIN NETANYAHU", u: "../images/world-leaders/benjamin-netanyahu.webp" },
     { n: "SADDAM HUSSEIN", u: "../images/world-leaders/saddam-hussein.webp" },
+
+    // Tier 4 — Expert (41–50)
     { n: "HO CHI MINH", u: "../images/world-leaders/ho-chi-minh.webp" },
     { n: "BENITO MUSSOLINI", u: "../images/world-leaders/benito-mussolini.webp" },
     { n: "EMPEROR HIROHITO", u: "../images/world-leaders/emperor-hirohito.webp" },
@@ -2208,6 +2418,8 @@ const megaData = [
     { n: "XI JINPING", u: "../images/world-leaders/xi-jinping.webp" },
     { n: "NARENDRA MODI", u: "../images/world-leaders/narendra-modi.webp" },
     { n: "KING LOUIS XVI", u: "../images/world-leaders/king-louis-xvi.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
     { n: "MARIE ANTOINETTE", u: "../images/world-leaders/marie-antoinette.webp" },
     { n: "JOAN OF ARC", u: "../images/world-leaders/joan-of-arc.webp" },
     { n: "SIMÓN BOLÍVAR", u: "../images/world-leaders/simon-bolivar.webp" },
