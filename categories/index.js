@@ -65,6 +65,7 @@ const CATEGORY_REGISTRY = [
     { key: 'logos', label: 'Logos', emoji: '🏷️', script: 'logos.js', global: 'logosData', tier: 'EXTRAS' },
     { key: 'memes', label: 'Memes', emoji: '😂', script: 'memes.js', global: 'memesData', tier: 'EXTRAS' },
     { key: 'mega', label: 'Mega Category', emoji: '🌟', script: 'mega.js', global: 'megaData', tier: 'EXTRAS' },
+    { key: 'mega-filtered', label: 'Mega-Filtered', emoji: '✨', script: 'mega-filtered.js', global: 'megaFilteredData', tier: 'EXTRAS' },
     { key: 'religion', label: 'Religion', emoji: '⛪', script: 'religion.js', global: 'religionData', tier: 'EXTRAS' },
 ];
 if (typeof window !== 'undefined') window.CATEGORY_REGISTRY = CATEGORY_REGISTRY;

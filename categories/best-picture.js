@@ -6,6 +6,7 @@ const bestPictureData = [
     { n: "FORREST GUMP", u: "../images/best-picture/forrest-gump.jpg" },
     { n: "GLADIATOR", u: "../images/best-picture/gladiator.avif" },
     { n: "THE SOUND OF MUSIC", u: "../images/best-picture/the-sound-of-music.jpg" },
+    { n: "ONE BATTLE AFTER ANOTHER", u: "../images/best-picture/one-battle-after-another.jpg" },
     { n: "ROCKY", u: "../images/best-picture/rocky.jpg" },
     { n: "SCHINDLER'S LIST", u: "../images/best-picture/schindlers-list.jpg" },
     { n: "THE SILENCE OF THE LAMBS", u: "../images/best-picture/silence-of-the-lambs.jpg" },
@@ -57,17 +58,5 @@ const bestPictureData = [
     { n: "DRIVING MISS DAISY", u: "../images/best-picture/driving-miss-daisy.jpg" },
     { n: "ANORA", u: "../images/best-picture/anora.jpg" },
     { n: "CODA", u: "../images/best-picture/coda.webp" },
-
-    // ── BACKUPS (51–60) ────────────────────
-    // { n: "THE STING", u: "../images/best-picture/the-sting.jpg" },
-    // { n: "ON THE WATERFRONT", u: "../images/best-picture/on-the-waterfront.jpg" },
-    // { n: "MIDNIGHT COWBOY", u: "../images/best-picture/midnight-cowboy.jpg" },
-    // { n: "MY FAIR LADY", u: "../images/best-picture/my-fair-lady.jpg" },
-    // { n: "THE BRIDGE ON THE RIVER KWAI", u: "../images/best-picture/the-bridge-on-the-river-kwai.jpg" },
-    // { n: "ORDINARY PEOPLE", u: "../images/best-picture/ordinary-people.jpg" },
-    // { n: "CHARIOTS OF FIRE", u: "../images/best-picture/chariots-of-fire.jpg" },
-    // { n: "OUT OF AFRICA", u: "../images/best-picture/out-of-africa.jpg" },
-    // { n: "THE ENGLISH PATIENT", u: "../images/best-picture/the-english-patient.jpg" },
-    // { n: "TERMS OF ENDEARMENT", u: "../images/best-picture/terms-of-endearment.jpg" }
 ];
 if (typeof window !== 'undefined') window.bestPictureData = bestPictureData;
