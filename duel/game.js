@@ -2003,7 +2003,7 @@ function handleImageError(img) {
         ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
 
     // Extensions to probe (excluding the one that already failed)
-    const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+    const ALT_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg', 'avif', 'svg', 'gif'];
     const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
     const isFileProtocol = window.location.protocol === 'file:';
     const cb = isFileProtocol ? '' : '?v=' + Date.now();

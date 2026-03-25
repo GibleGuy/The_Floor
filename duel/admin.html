@@ -842,7 +842,7 @@
             const originalDotIdx = originalUrlNoQ.lastIndexOf('.');
             const originalExt = originalDotIdx > 0 ? originalUrlNoQ.substring(originalDotIdx + 1).toLowerCase() : '';
             
-            const ALT_EXTENSIONS = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'];
+            const ALT_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg', 'avif', 'svg', 'gif'];
             const toTry = ALT_EXTENSIONS.filter(ext => ext !== originalExt);
             const isFileProtocol = window.location.protocol === 'file:';
             const cb = isFileProtocol ? '' : '?v=' + Date.now();
