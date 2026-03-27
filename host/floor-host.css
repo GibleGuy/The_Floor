@@ -1419,12 +1419,6 @@ body.floor-battle-mode .floor-swap-bar {
     pointer-events: none;
 }
 
-/* Faded state for expired timer (10s after hitting zero) */
-.floor-timer-expired-faded .floor-presentation-clock-section {
-    opacity: 0.05;
-    transition: opacity 2s ease;
-}
-
 @keyframes logo-float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }

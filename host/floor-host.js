@@ -1697,7 +1697,11 @@ function startFloorTimer() {
             if (autoHideTimeoutId) clearTimeout(autoHideTimeoutId);
             autoHideTimeoutId = setTimeout(() => {
                 if (floorTimerRemaining === 0) {
-                    document.body.classList.add('floor-timer-expired-faded');
+                    // Close sidebar if open (this also hides presentation clock)
+                    const sidebar = document.getElementById('floor-timer-sidebar');
+                    if (sidebar && sidebar.classList.contains('open')) {
+                        toggleFloorTimer();
+                    }
                 }
             }, 10000);
         }
@@ -1726,7 +1730,6 @@ function resetFloorTimer() {
         clearTimeout(autoHideTimeoutId);
         autoHideTimeoutId = null;
     }
-    document.body.classList.remove('floor-timer-expired-faded');
     floorTimerRemaining = floorTimerStartValue;
     updateFloorTimerDisplay();
 }
@@ -1753,7 +1756,6 @@ function handleTimerEdit(e) {
             clearTimeout(autoHideTimeoutId);
             autoHideTimeoutId = null;
         }
-        document.body.classList.remove('floor-timer-expired-faded');
     }
     updateFloorTimerDisplay();
 }
