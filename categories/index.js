@@ -34,6 +34,8 @@ const CATEGORY_REGISTRY = [
     { key: 'instruments', label: 'Instruments', emoji: '🎵', script: 'instruments.js', global: 'instrumentsData', tier: 'REAL DEAL' },
     { key: 'marching-band', label: 'Marching Band', emoji: '🥁', script: 'marching-band.js', global: 'marchingBandData', tier: 'REAL DEAL' },
     { key: 'minecraft', label: 'Minecraft', emoji: '⛏️', script: 'minecraft.js', global: 'minecraftData', tier: 'REAL DEAL' },
+    { key: 'flowers', label: 'Flowers', emoji: '🌻', script: 'flowers.js', global: 'flowersData', tier: 'REAL DEAL' },
+
 
     { key: 'nintendo', label: 'Nintendo', emoji: '🎮', script: 'nintendo.js', global: 'nintendoData', tier: 'REAL DEAL' },
     { key: 'pokemon-everything', label: 'Pokemon Everything', emoji: '🔴', script: 'pokemon-everything.js', global: 'pokemonEverythingData', tier: 'REAL DEAL' },

@@ -2429,6 +2429,77 @@ const megaData = [
     { n: "JACINDA ARDERN", u: "../images/world-leaders/jacinda-ardern.webp" },
     { n: "SHINZO ABE", u: "../images/world-leaders/shinzo-abe.webp" },
     { n: "NICOLAS SARKOZY", u: "../images/world-leaders/nicolas-sarkozy.webp" },
-    { n: "TONY BLAIR", u: "../images/world-leaders/tony-blair.webp" }
+    { n: "TONY BLAIR", u: "../images/world-leaders/tony-blair.webp" },
+
+    // Tier 1 — Obvious (1–15)
+    { n: "SUNFLOWER", u: "../images/flowers/Sunflower.jpg" },
+    { n: "ROSE", u: "../images/flowers/Rose.jpg" },
+    { n: "DAISY", u: "../images/flowers/Daisy.jpg" },
+    { n: "TULIP", u: "../images/flowers/Tulip.jpg" },
+    { n: "DANDELION", u: "../images/flowers/Dandelion.jpg" },
+    { n: "LILY", u: "../images/flowers/Lily.jpg" },
+    { n: "DAFFODIL", u: "../images/flowers/Daffodil.jpg" },
+    { n: "ORCHID", u: "../images/flowers/Orchid.jpg" },
+    { n: "CHERRY BLOSSOM", u: "../images/flowers/Cherry Blossom.jpg" },
+    { n: "LAVENDER", u: "../images/flowers/Lavender.jpg" },
+    { n: "POPPY", u: "../images/flowers/Poppy.jpg" },
+    { n: "HIBISCUS", u: "../images/flowers/Hibiscus.jpg" },
+    { n: "MORNING GLORY", u: "../images/flowers/Morning Glory.jpg" },
+    { n: "PANSY", u: "../images/flowers/Pansy.jpg" },
+    { n: "MARIGOLD", u: "../images/flowers/Marigold.jpg" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "IRIS", u: "../images/flowers/Iris.jpg" },
+    { n: "LOTUS", u: "../images/flowers/Lotus.jpg" },
+    { n: "HYDRANGEA", u: "../images/flowers/Hydrangea.jpg" },
+    { n: "PEONY", u: "../images/flowers/Peony.jpg" },
+    { n: "JASMINE", u: "../images/flowers/Jasmine.jpg" },
+    { n: "LILAC", u: "../images/flowers/Lilac.jpg" },
+    { n: "VIOLET", u: "../images/flowers/Violet.jpg" },
+    { n: "BLUEBELL", u: "../images/flowers/Bluebell.jpg" },
+    { n: "WATER LILY", u: "../images/flowers/Water Lily.jpg" },
+    { n: "POINSETTIA", u: "../images/flowers/Poinsettia.jpg" },
+    { n: "CHRYSANTHEMUM", u: "../images/flowers/Chrysanthemum.jpg" },
+    { n: "PETUNIA", u: "../images/flowers/Petunia.jpg" },
+    { n: "GERBERA DAISY", u: "../images/flowers/Gerbera Daisy.jpg" },
+    { n: "MAGNOLIA", u: "../images/flowers/Magnolia.jpg" },
+    { n: "CARNATION", u: "../images/flowers/Carnation.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "CAMELLIA", u: "../images/flowers/Camellia.jpg" },
+    { n: "BEGONIA", u: "../images/flowers/Begonia.jpg" },
+    { n: "AZALEA", u: "../images/flowers/Azalea.jpg" },
+    { n: "WISTERIA", u: "../images/flowers/Wisteria.jpg" },
+    { n: "ZINNIA", u: "../images/flowers/Zinnia.jpg" },
+    { n: "SNAPDRAGON", u: "../images/flowers/Snapdragon.jpg" },
+    { n: "GARDENIA", u: "../images/flowers/Gardenia.jpg" },
+    { n: "FOXGLOVE", u: "../images/flowers/Foxglove.jpg" },
+    { n: "FORGET-ME-NOT", u: "../images/flowers/Forget-Me-Not.jpg" },
+    { n: "BIRD OF PARADISE", u: "../images/flowers/Bird of Paradise.jpg" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "DAHLIA", u: "../images/flowers/Dahlia.jpg" },
+    { n: "GLADIOLUS", u: "../images/flowers/Gladiolus.jpg" },
+    { n: "CALLA LILY", u: "../images/flowers/Calla Lily.jpg" },
+    { n: "AMARYLLIS", u: "../images/flowers/Amaryllis.jpg" },
+    { n: "ASTER", u: "../images/flowers/Aster.jpg" },
+    { n: "ANEMONE", u: "../images/flowers/Anemone.jpg" },
+    { n: "BUTTERCUP", u: "../images/flowers/Buttercup.jpg" },
+    { n: "HEATHER", u: "../images/flowers/Heather.jpg" },
+    { n: "PROTEA", u: "../images/flowers/Protea.jpg" },
+    { n: "SWEET PEA", u: "../images/flowers/Sweet Pea.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "NARCISSUS", u: "../images/flowers/Narcissus.jpg" },
+    { n: "GERANIUM", u: "../images/flowers/geranium.jpg" },
+    { n: "BLEEDING HEART", u: "../images/flowers/bleeding-heart.jpg" },
+    { n: "COLUMBINE", u: "../images/flowers/columbine.jpg" },
+    { n: "ANTHURIUM", u: "../images/flowers/anthurium.jpg" },
+    { n: "PEACE LILY", u: "../images/flowers/peace-lily.jpg" },
+    { n: "BLUE BONNET", u: "../images/flowers/blue-bonnet.jpg" },
+    { n: "CROCUS", u: "../images/flowers/crocus.jpg" },
+    { n: "EDELWEISS", u: "../images/flowers/edelweiss.jpg" },
+    { n: "PRIMROSE", u: "../images/flowers/primrose.jpg" }
 ];
+
 if (typeof window !== 'undefined') window.megaData = megaData;
