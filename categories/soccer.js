@@ -1,0 +1,72 @@
+const soccerData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "SOCCER BALL", u: "../images/soccer/soccer-ball.jpg" },
+    { n: "GOAL", u: "../images/soccer/goal.jpg" },
+    { n: "LIONEL MESSI", u: "../images/soccer/lionel-messi.jpg" },
+    { n: "CRISTIANO RONALDO", u: "../images/soccer/cristiano-ronaldo.jpg" },
+    { n: "RED CARD", u: "../images/soccer/red-card.jpg" },
+    { n: "YELLOW CARD", u: "../images/soccer/yellow-card.jpg" },
+    { n: "REFEREE", u: "../images/soccer/referee.jpg" },
+    { n: "SOCCER CLEATS", u: "../images/soccer/soccer-cleats.jpg" },
+    { n: "SHIN GUARDS", u: "../images/soccer/shin-guards.jpg" },
+    { n: "NEYMAR JR.", u: "../images/soccer/neymar-jr.jpg" },
+    { n: "CORNER FLAG", u: "../images/soccer/corner-flag.jpg" },
+    { n: "KYLIAN MBAPPE", u: "../images/soccer/kylian-mbappe.jpg" },
+    { n: "WHISTLE", u: "../images/soccer/whistle.jpg" },
+    { n: "JERSEY", u: "../images/soccer/jersey.jpg" },
+    { n: "PELE", u: "../images/soccer/pele.jpg" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "WORLD CUP TROPHY", u: "../images/soccer/world-cup-trophy.jpg" },
+    { n: "SOCCER PITCH", u: "../images/soccer/soccer-pitch.jpg" },
+    { n: "GOALIE GLOVES", u: "../images/soccer/goalie-gloves.jpg" },
+    { n: "RONALDINHO", u: "../images/soccer/ronaldinho.jpg" },
+    { n: "SIDELINE", u: "../images/soccer/sideline.jpg" },
+    { n: "DAVID BECKHAM", u: "../images/soccer/david-beckham.jpg" },
+    { n: "STADIUM", u: "../images/soccer/stadium.jpg" },
+    { n: "DIEGO MARADONA", u: "../images/soccer/diego-maradona.jpg" },
+    { n: "NET", u: "../images/soccer/net.jpg" },
+    { n: "ZINEDINE ZIDANE", u: "../images/soccer/zinedine-zidane.jpg" },
+    { n: "CAPTAIN'S ARMBAND", u: "../images/soccer/captains-armband.jpg" },
+    { n: "ERLING HAALAND", u: "../images/soccer/erling-haaland.jpg" },
+    { n: "DUGOUT", u: "../images/soccer/dugout.jpg" },
+    { n: "LUKA MODRIC", u: "../images/soccer/luka-modric.jpg" },
+    { n: "SUBSTITUTION BOARD", u: "../images/soccer/substitution-board.jpg" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "KEVIN DE BRUYNE", u: "../images/soccer/kevin-de-bruyne.jpg" },
+    { n: "CROSSBAR", u: "../images/soccer/crossbar.jpg" },
+    { n: "MOHAMED SALAH", u: "../images/soccer/mohamed-salah.jpg" },
+    { n: "CORNER KICK", u: "../images/soccer/corner-kick.jpg" },
+    { n: "ROBERT LEWANDOWSKI", u: "../images/soccer/robert-lewandowski.jpg" },
+    { n: "VAR MONITOR", u: "../images/soccer/var-monitor.jpg" },
+    { n: "HARRY KANE", u: "../images/soccer/harry-kane.jpg" },
+    { n: "FREE KICK", u: "../images/soccer/free-kick.jpg" },
+    { n: "KARIM BENZEMA", u: "../images/soccer/karim-benzema.jpg" },
+    { n: "THROW-IN", u: "../images/soccer/throw-in.jpg" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "ANDRES INIESTA", u: "../images/soccer/andres-iniesta.jpg" },
+    { n: "PENALTY SPOT", u: "../images/soccer/penalty-spot.jpg" },
+    { n: "XAVI HERNANDEZ", u: "../images/soccer/xavi-hernandez.jpg" },
+    { n: "BALL PUMP", u: "../images/soccer/ball-pump.jpg" },
+    { n: "THIERRY HENRY", u: "../images/soccer/thierry-henry.jpg" },
+    { n: "TRAINING CONES", u: "../images/soccer/training-cones.jpg" },
+    { n: "ZLATAN IBRAHIMOVIC", u: "../images/soccer/zlatan-ibrahimovic.jpg" },
+    { n: "CENTER CIRCLE", u: "../images/soccer/center-circle.jpg" },
+    { n: "SERGIO RAMOS", u: "../images/soccer/sergio-ramos.jpg" },
+    { n: "WATER BOTTLES", u: "../images/soccer/water-bottles.jpg" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "COACH", u: "../images/soccer/coach.jpg" },
+    { n: "BALL BAG", u: "../images/soccer/ball-bag.jpg" },
+    { n: "SCOREBOARD", u: "../images/soccer/scoreboard.jpg" },
+    { n: "CAPTAIN", u: "../images/soccer/captain.jpg" },
+    { n: "MEDICAL STRETCHER", u: "../images/soccer/medical-stretcher.jpg" },
+    { n: "COIN TOSS", u: "../images/soccer/coin-toss.jpg" },
+    { n: "FOAM SPRAY", u: "../images/soccer/foam-spray.jpg" },
+    { n: "LINESMAN FLAG", u: "../images/soccer/linesman-flag.jpg" },
+    { n: "SPECTATORS", u: "../images/soccer/spectators.jpg" },
+    { n: "SOCCER SOCKS", u: "../images/soccer/soccer-socks.jpg" }
+];
+if (typeof window !== 'undefined') window.soccerData = soccerData;

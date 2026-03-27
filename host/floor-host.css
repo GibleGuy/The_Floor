@@ -9,6 +9,15 @@
     margin-bottom: 24px;
     padding-bottom: 16px;
     border-bottom: 3px solid var(--floor-yellow);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+.floor-host-header.header-idle {
+    transform: translateY(-90%);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .floor-header-title-row {
@@ -1208,4 +1217,113 @@ body.floor-battle-mode .floor-swap-bar {
 .floor-tile--empty:hover {
     opacity: 0.9;
     background: #252540 !important;
+}
+
+/* ---------- Floor Host Body Wrapper ---------- */
+.floor-host-body-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: calc(100vh - 160px);
+    overflow: hidden;
+    --timer-sidebar-width: 320px;
+}
+
+.floor-host-main {
+    flex: 1;
+    padding: 0 20px 20px;
+    overflow-y: auto;
+    transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Timer Sidebar ---------- */
+.floor-timer-sidebar {
+    width: 0;
+    opacity: 0;
+    overflow: visible; /* Changed to visible to let resizer overflow slightly if needed */
+    position: relative;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-left: 3px solid var(--floor-yellow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.floor-timer-sidebar.open {
+    width: var(--timer-sidebar-width);
+    opacity: 1;
+}
+
+.floor-timer-resizer {
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 12px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 100;
+    transition: background 0.2s ease;
+}
+
+.floor-timer-resizer:hover {
+    background: rgba(255, 230, 0, 0.15);
+}
+
+.floor-timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    padding: 20px;
+}
+
+.floor-timer-display {
+    font-size: calc(var(--timer-sidebar-width) * 0.28);
+    font-weight: 900;
+    color: var(--floor-yellow);
+    font-family: 'Arial Black', sans-serif;
+    text-shadow: 0 0 20px rgba(255, 230, 0, 0.4), 0 4px 10px rgba(0,0,0,0.5);
+    cursor: text;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    min-width: 80%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.floor-timer-display:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--floor-yellow);
+    box-shadow: 0 0 30px rgba(255, 230, 0, 0.2);
+}
+
+.floor-timer-controls {
+    display: flex;
+    gap: 16px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.floor-timer-controls.idle-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+}
+
+.floor-btn-timer {
+    background: var(--floor-green);
+    min-width: 100px;
+}
+
+.floor-btn-timer.running {
+    background: #FF4444;
+    color: white;
 }

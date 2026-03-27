@@ -68,9 +68,10 @@ let isMuted = false;
 let currentAudio = null;
 
 /** Background settings */
-let backgroundStyle = 'tiles';
+let backgroundStyle = 'pop';
 let blueVariant = 'b';
 let driftSpeed = 2;
+let timerSidebarWidth = 320;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
@@ -254,6 +255,7 @@ function cancelSwapMode() {
 }
 
 function startBattleMode(defender) {
+    dismissRandomizer();
     battleState = { active: true, defender: { r: defender.r, c: defender.c }, challenger: null };
     if (swapPromptEl) swapPromptEl.textContent = 'Select challenger (adjacent tile)';
     if (gridEl) gridEl.classList.add('floor-battle-mode');
@@ -1014,6 +1016,16 @@ function handleKeydown(e) {
         e.preventDefault();
         handleUndo();
     }
+    const key = e.key.toLowerCase();
+    if (key === 'j' || key === 'r') {
+        // Don't trigger if typing in an input or contenteditable
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        handleRandomizerToggle();
+    }
+    if (key === 'k' || key === 'c') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleFloorTimer();
+    }
 }
 
 function handleClickOutside(e) {
@@ -1570,6 +1582,7 @@ function loadHostPreferences() {
         if (p.backgroundStyle && BG_STYLES.includes(p.backgroundStyle)) backgroundStyle = p.backgroundStyle;
         if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
         if (typeof p.driftSpeed === 'number') driftSpeed = p.driftSpeed;
+        if (typeof p.timerSidebarWidth === 'number') timerSidebarWidth = p.timerSidebarWidth;
         if (typeof p.isMuted === 'boolean') {
             isMuted = p.isMuted;
             updateMuteButton();
@@ -1583,6 +1596,7 @@ function saveHostPreferences() {
             backgroundStyle,
             blueVariant,
             driftSpeed,
+            timerSidebarWidth,
             isMuted
         };
         localStorage.setItem(HOST_PREFS_KEY, JSON.stringify(p));
@@ -1604,6 +1618,8 @@ function applyHostPreferencesToDOM() {
     document.body.classList.add('bg-' + backgroundStyle);
     document.body.classList.add('blue-' + blueVariant);
     document.body.style.setProperty('--bg-drift-speed', String(driftSpeed));
+    const wrapper = document.querySelector('.floor-host-body-wrapper');
+    if (wrapper) wrapper.style.setProperty('--timer-sidebar-width', timerSidebarWidth + 'px');
 }
 
 function updateMuteButton() {
@@ -1619,11 +1635,186 @@ function updateMuteButton() {
     }
 }
 
+
+/** Timer variables */
+let floorTimerRemaining = 900; // 15 mins
+let floorTimerStartValue = 900;
+let floorTimerInterval = null;
+let floorTimerIsRunning = false;
+let idleTimeoutId = null;
+
+function updateFloorTimerDisplay() {
+    const display = document.getElementById('floor-timer-display');
+    if (!display) return;
+    const mins = Math.floor(Math.max(0, floorTimerRemaining) / 60);
+    const secs = Math.floor(Math.max(0, floorTimerRemaining) % 60);
+    display.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function startFloorTimer() {
+    if (floorTimerIsRunning) {
+        stopFloorTimer();
+        return;
+    }
+    floorTimerIsRunning = true;
+    const startBtn = document.getElementById('floor-timer-start-btn');
+    if (startBtn) {
+        startBtn.textContent = 'Stop';
+        startBtn.classList.add('running');
+    }
+    floorTimerInterval = setInterval(() => {
+        floorTimerRemaining--;
+        if (floorTimerRemaining <= 0) {
+            floorTimerRemaining = 0;
+            stopFloorTimer();
+        }
+        updateFloorTimerDisplay();
+    }, 1000);
+}
+
+function stopFloorTimer() {
+    floorTimerIsRunning = false;
+    if (floorTimerInterval) clearInterval(floorTimerInterval);
+    const startBtn = document.getElementById('floor-timer-start-btn');
+    if (startBtn) {
+        startBtn.textContent = 'Start';
+        startBtn.classList.remove('running');
+    }
+}
+
+function resetFloorTimer() {
+    stopFloorTimer();
+    floorTimerRemaining = floorTimerStartValue;
+    updateFloorTimerDisplay();
+}
+
+function handleTimerEdit(e) {
+    const text = e.target.textContent.trim();
+    const parts = text.split(':');
+    let totalSeconds = 0;
+    if (parts.length === 2) {
+        const m = parseInt(parts[0]);
+        const s = parseInt(parts[1]);
+        if (!isNaN(m) && !isNaN(s)) {
+            totalSeconds = (m * 60) + s;
+        }
+    } else if (parts.length === 1) {
+        const m = parseInt(parts[0]);
+        if (!isNaN(m)) totalSeconds = m * 60;
+    }
+
+    if (totalSeconds > 0) {
+        floorTimerStartValue = totalSeconds;
+        floorTimerRemaining = totalSeconds;
+    }
+    updateFloorTimerDisplay();
+}
+
+function resetIdleTimer() {
+    const controls = document.getElementById('floor-timer-controls');
+    if (!controls) return;
+    controls.classList.remove('idle-hidden');
+    if (idleTimeoutId) clearTimeout(idleTimeoutId);
+    idleTimeoutId = setTimeout(() => {
+        if (floorTimerIsRunning) {
+            controls.classList.add('idle-hidden');
+        }
+    }, 10000);
+}
+
+function toggleFloorTimer() {
+    const sidebar = document.getElementById('floor-timer-sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+        const isOpen = sidebar.classList.contains('open');
+        const toggleBtn = document.getElementById('floor-timer-toggle');
+        if (toggleBtn) toggleBtn.classList.toggle('active', isOpen);
+    }
+}
+
+let headerIdleTimeout = null;
+function initHeaderAutoHide() {
+    const header = document.querySelector('.floor-host-header');
+    if (!header) return;
+
+    function showHeader() {
+        header.classList.remove('header-idle');
+        if (headerIdleTimeout) clearTimeout(headerIdleTimeout);
+    }
+
+    function startHeaderIdleTimer() {
+        if (headerIdleTimeout) clearTimeout(headerIdleTimeout);
+        headerIdleTimeout = setTimeout(() => {
+            header.classList.add('header-idle');
+        }, 5000);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+        // If mouse is in top 150px, show header
+        if (e.clientY < 150) {
+            showHeader();
+        } else {
+            // Only start counting down if it's currently showing
+            if (!header.classList.contains('header-idle') && !headerIdleTimeout) {
+                startHeaderIdleTimer();
+            } else if (!header.classList.contains('header-idle')) {
+                // If moving outside header area, keep/reset the timer
+                startHeaderIdleTimer();
+            }
+        }
+    });
+
+    // Start hidden or visible? Let's start visible then hide after 5s.
+    startHeaderIdleTimer();
+}
+
+function handleGridDblClick(e) {
+    const tile = getTileFromTarget(e.target);
+    if (tile) {
+        startBattleMode(tile);
+    }
+}
+
+function initResizableTimerSidebar() {
+    const resizer = document.getElementById('floor-timer-resizer');
+    const sidebar = document.getElementById('floor-timer-sidebar');
+    const wrapper = document.querySelector('.floor-host-body-wrapper');
+    if (!resizer || !sidebar || !wrapper) return;
+
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        // Sidebar is on the right, so width is (windowWidth - mouseX)
+        const newWidth = window.innerWidth - e.clientX;
+        if (newWidth > 150 && newWidth < window.innerWidth * 0.8) {
+            timerSidebarWidth = newWidth;
+            wrapper.style.setProperty('--timer-sidebar-width', timerSidebarWidth + 'px');
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            saveHostPreferences();
+        }
+    });
+}
+
 function init() {
     state = buildState(DEFAULT_ROWS, DEFAULT_COLS);
 
     gridEl.addEventListener('contextmenu', handleContextMenu);
     gridEl.addEventListener('click', handleGridClick);
+    gridEl.addEventListener('dblclick', handleGridDblClick);
 
     contextMenuEl.addEventListener('click', handleContextAction);
 
@@ -1665,7 +1856,36 @@ function init() {
         driftSpeedInput.addEventListener('input', (e) => setDriftSpeed(parseFloat(e.target.value)));
     }
 
+    // Timer controls
+    const timerToggle = document.getElementById('floor-timer-toggle');
+    if (timerToggle) timerToggle.addEventListener('click', toggleFloorTimer);
+
+    const timerStartBtn = document.getElementById('floor-timer-start-btn');
+    if (timerStartBtn) timerStartBtn.addEventListener('click', startFloorTimer);
+
+    const timerResetBtn = document.getElementById('floor-timer-reset-btn');
+    if (timerResetBtn) timerResetBtn.addEventListener('click', resetFloorTimer);
+
+    const timerDisplay = document.getElementById('floor-timer-display');
+    if (timerDisplay) {
+        timerDisplay.addEventListener('blur', handleTimerEdit);
+        timerDisplay.addEventListener('focus', () => {
+            stopFloorTimer();
+        });
+        timerDisplay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                timerDisplay.blur();
+            }
+        });
+    }
+
+    document.addEventListener('mousemove', resetIdleTimer);
+    document.addEventListener('keydown', resetIdleTimer);
+
     createPopLayer();
+    initResizableTimerSidebar();
+    initHeaderAutoHide();
     loadHostPreferences();
     updateHostPreferencesUI();
     applyHostPreferencesToDOM();
@@ -1724,3 +1944,4 @@ if (document.readyState === 'loading') {
 }
 
 export { animationHooks };
+

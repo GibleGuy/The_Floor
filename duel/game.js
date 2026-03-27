@@ -48,7 +48,7 @@ let clockInterval = null;
 let isPaused = false;
 let gamemode = 'classic'; // 'singleplayer' or 'classic'
 let hostMode = false; // Separate toggle that works with either gamemode
-let gibleMode = false; // Gible mode: unlocks beta categories
+// let gibleMode = false; // Gible mode: removed [/]
 let isPinned = false;
 let adminWindow = null;
 let adminWindowOpen = false;
@@ -74,7 +74,7 @@ let disableExtras = false;
 let showTimerDecimal = false;
 let highContrastReducedMotion = false;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
-let backgroundStyle = 'grid';
+let backgroundStyle = 'pop';
 let backgroundDriftSpeed = 1;   // 0.25–2, multiplier for drift
 let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
 let currentStreak = 0;
@@ -119,7 +119,7 @@ function loadPreferences() {
         const raw = localStorage.getItem(PREFS_KEY);
         if (!raw) return;
         const p = JSON.parse(raw);
-        if (p.theme && ['dark', 'light', 'gible'].includes(p.theme)) currentTheme = p.theme;
+        if (p.theme && ['dark', 'light'].includes(p.theme)) currentTheme = p.theme;
         if (typeof p.mute === 'boolean') isMuted = p.mute;
         if (typeof p.musicVolume === 'number') musicVolume = p.musicVolume;
         if (typeof p.sfxVolume === 'number') sfxVolume = p.sfxVolume;
@@ -161,10 +161,8 @@ function applyPreferencesToDOM() {
     if (hc) hc.checked = highContrastReducedMotion;
     const td = document.getElementById('theme-dark');
     const tl = document.getElementById('theme-light');
-    const tg = document.getElementById('theme-gible');
     if (td) td.checked = (currentTheme === 'dark');
     if (tl) tl.checked = (currentTheme === 'light');
-    if (tg) tg.checked = (currentTheme === 'gible');
     changeTheme(currentTheme);
     document.body.classList.toggle('high-contrast-reduced-motion', highContrastReducedMotion);
     document.body.style.setProperty('--bg-drift-speed', String(backgroundDriftSpeed));
@@ -1081,7 +1079,6 @@ function populateCategoryGrid() {
     const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
     window.CATEGORY_REGISTRY.forEach(function (c) {
         const t = c.tier || 'REAL DEAL';
-        if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gibleMode) return;
         if (tiers[t]) tiers[t].push(c);
         else tiers['REAL DEAL'].push(c);
     });
@@ -1518,37 +1515,13 @@ function toggleHostMode() {
     const adminWindowBtn = document.getElementById('admin-window-btn');
     if (adminWindowBtn) adminWindowBtn.style.display = hostMode ? 'block' : 'none';
 
-    // Show/hide Gible mode toggle based on host mode
-    const gibleContainer = document.getElementById('gible-mode-container');
-    if (gibleContainer) {
-        if (hostMode) {
-            gibleContainer.style.display = '';
-        } else {
-            // Turn off Gible mode when host mode is disabled
-            gibleContainer.style.display = 'none';
-            const gibleToggle = document.getElementById('gible-mode-toggle');
-            if (gibleToggle) gibleToggle.checked = false;
-            gibleMode = false;
-            window.gibleMode = false;
-            localStorage.removeItem('floorGibleMode');
-            if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
-        }
-    }
+
 
     updateKeyboardHintsVisibility();
     updateDisplay();
 }
 
-function toggleGibleMode() {
-    gibleMode = document.getElementById('gible-mode-toggle').checked;
-    window.gibleMode = gibleMode;
-    if (gibleMode) {
-        localStorage.setItem('floorGibleMode', '1');
-    } else {
-        localStorage.removeItem('floorGibleMode');
-    }
-    if (typeof populateCategoryGrid === 'function') populateCategoryGrid();
-}
+/* toggleGibleMode removed */
 
 function togglePin() {
     isPinned = document.getElementById('pin-toggle').checked;
@@ -1840,8 +1813,6 @@ function openCustomization() {
         document.getElementById('theme-dark').checked = true;
     } else if (currentTheme === 'light') {
         document.getElementById('theme-light').checked = true;
-    } else if (currentTheme === 'gible') {
-        document.getElementById('theme-gible').checked = true;
     }
     document.getElementById('confetti-toggle').checked = confettiEnabled;
     document.getElementById('disable-extras-toggle').checked = disableExtras;
@@ -2059,8 +2030,6 @@ function changeTheme(theme) {
     document.body.classList.remove('light-theme', 'gible-theme');
     if (theme === 'light') {
         document.body.classList.add('light-theme');
-    } else if (theme === 'gible') {
-        document.body.classList.add('gible-theme');
     }
     savePreferences();
 }

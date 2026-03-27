@@ -193,13 +193,7 @@
                     <span class="slider"></span>
                 </label>
             </div>
-            <div class="switch-container" id="gible-mode-container" style="display: none;">
-                <span class="switch-label">GIBLE MODE</span>
-                <label class="switch">
-                    <input type="checkbox" id="gible-mode-toggle" onchange="toggleGibleMode()">
-                    <span class="slider"></span>
-                </label>
-            </div>
+
             <div class="switch-container">
                 <span class="switch-label">PIN</span>
                 <label class="switch">
@@ -297,10 +291,7 @@
                         <input type="radio" id="theme-light" name="theme" value="light" onchange="changeTheme('light')">
                         <label for="theme-light">Light</label>
                     </div>
-                    <div class="radio-option">
-                        <input type="radio" id="theme-gible" name="theme" value="gible" onchange="changeTheme('gible')">
-                        <label for="theme-gible">Gible</label>
-                    </div>
+
                 </div>
             </div>
             <div class="switch-container">
@@ -341,7 +332,7 @@
                         <label for="bg-solid">Solid</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-grid" name="background-style" value="grid" checked
+                        <input type="radio" id="bg-grid" name="background-style" value="grid"
                             onchange="setBackgroundStyle('grid')">
                         <label for="bg-grid">Grid</label>
                     </div>
@@ -356,7 +347,7 @@
                         <label for="bg-diagonal">Diagonal</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="bg-pop" name="background-style" value="pop"
+                        <input type="radio" id="bg-pop" name="background-style" value="pop" checked
                             onchange="setBackgroundStyle('pop')">
                         <label for="bg-pop">Pop (WARNING: May cause lag)</label>
                     </div>

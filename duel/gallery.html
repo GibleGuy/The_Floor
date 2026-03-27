@@ -261,16 +261,9 @@
         const categories = {};
         const categoryLabels = {};
 
-        // Check if Gible mode is enabled (from localStorage)
-        const galleryGibleMode = localStorage.getItem('floorGibleMode') === '1';
-
         (function loadAllCategories() {
             if (!window.CATEGORY_REGISTRY) return;
-            const filtered = window.CATEGORY_REGISTRY.filter(function (c) {
-                const isGibleRestricted = (c.tier === 'REAL DEAL' || c.tier === 'TIEBREAK');
-                return !isGibleRestricted || galleryGibleMode;
-            });
-            const promises = filtered.map(function (c) {
+            const promises = window.CATEGORY_REGISTRY.map(function (c) {
                 categoryLabels[c.key] = c.label;
                 return new Promise(function (resolve) {
                     var s = document.createElement('script');

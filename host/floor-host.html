@@ -65,9 +65,10 @@
                 </div>
                 <div class="floor-control-row">
                     <button type="button" id="floor-pick-btn" class="floor-btn floor-btn-pick">Activate the
-                        Randomizer</button>
+                        Randomizer (J/R)</button>
                     <button type="button" id="floor-undo-btn" class="floor-btn floor-btn-secondary">Undo</button>
                     <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound</button>
+                    <button type="button" id="floor-timer-toggle" class="floor-btn floor-btn-secondary">⏲️ Timer (K/C)</button>
                 </div>
 
                 <!-- NEW: Background pattern controls -->
@@ -105,17 +106,30 @@
         </div>
     </header>
 
-    <main class="floor-host-main">
-        <div id="floor-swap-overlay" class="floor-swap-overlay" aria-hidden="true"></div>
-        <div class="floor-swap-bar">
-            <span id="floor-swap-prompt" class="floor-swap-prompt" role="status" aria-live="polite"></span>
-            <button type="button" id="floor-swap-cancel"
-                class="floor-btn floor-btn-secondary floor-swap-cancel">Cancel</button>
-        </div>
-        <div id="floor-grid" class="floor-grid" role="grid" aria-label="Floor grid">
-            <p class="floor-grid-loading" id="floor-grid-loading">Loading…</p>
-        </div>
-    </main>
+    <div class="floor-host-body-wrapper">
+        <main class="floor-host-main">
+            <div id="floor-swap-overlay" class="floor-swap-overlay" aria-hidden="true"></div>
+            <div class="floor-swap-bar">
+                <span id="floor-swap-prompt" class="floor-swap-prompt" role="status" aria-live="polite"></span>
+                <button type="button" id="floor-swap-cancel"
+                    class="floor-btn floor-btn-secondary floor-swap-cancel">Cancel</button>
+            </div>
+            <div id="floor-grid" class="floor-grid" role="grid" aria-label="Floor grid">
+                <p class="floor-grid-loading" id="floor-grid-loading">Loading…</p>
+            </div>
+        </main>
+
+        <aside id="floor-timer-sidebar" class="floor-timer-sidebar">
+            <div id="floor-timer-resizer" class="floor-timer-resizer"></div>
+            <div class="floor-timer-container">
+                <div id="floor-timer-display" class="floor-timer-display" contenteditable="true">15:00</div>
+                <div id="floor-timer-controls" class="floor-timer-controls">
+                    <button type="button" id="floor-timer-start-btn" class="floor-btn floor-btn-timer">Start</button>
+                    <button type="button" id="floor-timer-reset-btn" class="floor-btn floor-btn-secondary">Reset</button>
+                </div>
+            </div>
+        </aside>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             setTimeout(function () {

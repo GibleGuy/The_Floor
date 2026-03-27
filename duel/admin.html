@@ -741,8 +741,7 @@
                             checked><label for="admin-theme-dark">Dark</label></div>
                     <div class="radio-option"><input type="radio" id="admin-theme-light" name="admin-theme"
                             value="light"><label for="admin-theme-light">Light</label></div>
-                    <div class="radio-option"><input type="radio" id="admin-theme-gible" name="admin-theme"
-                            value="gible"><label for="admin-theme-gible">Gible</label></div>
+
                 </div>
             </div>
             <div class="custom-row">
@@ -889,7 +888,7 @@
                 'admin-btn-pause', 'admin-btn-reset', 'admin-btn-more-specific', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
                 'admin-vol-music', 'admin-vol-sfx',
-                'admin-theme-dark', 'admin-theme-light', 'admin-theme-gible', 'admin-confetti', 'admin-disable-extras',
+                'admin-theme-dark', 'admin-theme-light', 'admin-confetti', 'admin-disable-extras',
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
                 'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
@@ -930,13 +929,10 @@
         function populateAdminCatGrid() {
             var grid = document.getElementById('admin-cat-grid');
             if (!grid || !window.CATEGORY_REGISTRY) return;
-            var gible = localStorage.getItem('floorGibleMode') === '1';
             grid.innerHTML = '';
-            
-            var tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [] };
+            var tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
             window.CATEGORY_REGISTRY.forEach(function (c) {
                 var t = c.tier || 'REAL DEAL';
-                if ((t === 'REAL DEAL' || t === 'TIEBREAK') && !gible) return;
                 if (tiers[t]) tiers[t].push(c);
                 else tiers['REAL DEAL'].push(c);
             });
@@ -1047,9 +1043,6 @@
         });
         document.getElementById('admin-theme-light').addEventListener('change', function () {
             if (this.checked) send({ action: 'theme', value: 'light' });
-        });
-        document.getElementById('admin-theme-gible').addEventListener('change', function () {
-            if (this.checked) send({ action: 'theme', value: 'gible' });
         });
         document.getElementById('admin-confetti').addEventListener('change', function () {
             send({ action: 'confetti', value: this.checked });
