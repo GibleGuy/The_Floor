@@ -57,6 +57,7 @@
             font-weight: 700;
             background: linear-gradient(135deg, var(--accent), #a29bfe);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             white-space: nowrap;
         }
@@ -527,7 +528,7 @@
     <!-- ── Category scripts are loaded dynamically ── -->
     <script>
         (function () {
-            const API = `${location.protocol}//${location.hostname}:8642`;
+            const API = `${location.protocol}//${location.hostname}:${location.port}`;
             let serverAvailable = false;
             let currentFilter = 'all';
             let currentImages = {};  // stem -> filename on disk

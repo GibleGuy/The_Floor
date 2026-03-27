@@ -1327,3 +1327,110 @@ body.floor-battle-mode .floor-swap-bar {
     background: #FF4444;
     color: white;
 }
+/* ---------- Presentation Mode ---------- */
+.floor-presentation-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 500; /* Below header, above grid */
+    background: transparent;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.floor-presentation-overlay[aria-hidden="false"] {
+    display: flex;
+}
+
+.presentation-active .floor-host-body-wrapper {
+    visibility: hidden;
+}
+
+/* Resizable Logo Container */
+.floor-presentation-logo-container {
+    position: relative;
+    max-width: 90%;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    pointer-events: auto; /* Enable for resizing */
+}
+
+.floor-presentation-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.6));
+    animation: logo-float 6s ease-in-out infinite;
+    pointer-events: none; /* Let resizer handle clicks */
+}
+
+.floor-logo-resizer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 24px;
+    height: 24px;
+    background: var(--floor-yellow);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    cursor: nwse-resize;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.floor-presentation-logo-container:hover .floor-logo-resizer {
+    opacity: 1;
+}
+
+/* Interactive Clock Section */
+.floor-presentation-clock-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    pointer-events: auto;
+}
+
+.floor-presentation-clock {
+    font-size: clamp(4rem, 15vw, 10rem);
+    font-family: 'Arial Black', sans-serif;
+    color: white;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    cursor: text;
+}
+
+.floor-presentation-timer-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+.floor-presentation-timer-controls.idle-hidden,
+.floor-logo-resizer.idle-hidden {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+/* Faded state for expired timer (10s after hitting zero) */
+.floor-timer-expired-faded .floor-presentation-clock-section {
+    opacity: 0.05;
+    transition: opacity 2s ease;
+}
+
+@keyframes logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+#floor-presentation-btn.active {
+    background: var(--floor-green);
+    color: black;
+}

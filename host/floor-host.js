@@ -72,6 +72,9 @@ let backgroundStyle = 'pop';
 let blueVariant = 'b';
 let driftSpeed = 2;
 let timerSidebarWidth = 320;
+let presentationLogoWidth = null; // null = use CSS default
+let anthemAudio = null;
+let autoHideTimeoutId = null;
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
@@ -1026,6 +1029,14 @@ function handleKeydown(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         toggleFloorTimer();
     }
+    if (key === 'p') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        togglePresentationMode();
+    }
+    if (key === 'a') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleAnthem();
+    }
 }
 
 function handleClickOutside(e) {
@@ -1583,6 +1594,7 @@ function loadHostPreferences() {
         if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
         if (typeof p.driftSpeed === 'number') driftSpeed = p.driftSpeed;
         if (typeof p.timerSidebarWidth === 'number') timerSidebarWidth = p.timerSidebarWidth;
+        if (typeof p.presentationLogoWidth === 'number') presentationLogoWidth = p.presentationLogoWidth;
         if (typeof p.isMuted === 'boolean') {
             isMuted = p.isMuted;
             updateMuteButton();
@@ -1597,6 +1609,7 @@ function saveHostPreferences() {
             blueVariant,
             driftSpeed,
             timerSidebarWidth,
+            presentationLogoWidth,
             isMuted
         };
         localStorage.setItem(HOST_PREFS_KEY, JSON.stringify(p));
@@ -1620,6 +1633,11 @@ function applyHostPreferencesToDOM() {
     document.body.style.setProperty('--bg-drift-speed', String(driftSpeed));
     const wrapper = document.querySelector('.floor-host-body-wrapper');
     if (wrapper) wrapper.style.setProperty('--timer-sidebar-width', timerSidebarWidth + 'px');
+
+    const logoContainer = document.getElementById('floor-presentation-logo-container');
+    if (logoContainer && presentationLogoWidth) {
+        logoContainer.style.width = presentationLogoWidth + 'px';
+    }
 }
 
 function updateMuteButton() {
@@ -1645,10 +1663,13 @@ let idleTimeoutId = null;
 
 function updateFloorTimerDisplay() {
     const display = document.getElementById('floor-timer-display');
+    const pClock = document.getElementById('floor-presentation-clock');
     if (!display) return;
     const mins = Math.floor(Math.max(0, floorTimerRemaining) / 60);
     const secs = Math.floor(Math.max(0, floorTimerRemaining) % 60);
-    display.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+    display.textContent = timeStr;
+    if (pClock) pClock.textContent = timeStr;
 }
 
 function startFloorTimer() {
@@ -1658,15 +1679,27 @@ function startFloorTimer() {
     }
     floorTimerIsRunning = true;
     const startBtn = document.getElementById('floor-timer-start-btn');
+    const pStartBtn = document.getElementById('floor-presentation-start-btn');
     if (startBtn) {
         startBtn.textContent = 'Stop';
         startBtn.classList.add('running');
+    }
+    if (pStartBtn) {
+        pStartBtn.textContent = 'Stop';
+        pStartBtn.classList.add('running');
     }
     floorTimerInterval = setInterval(() => {
         floorTimerRemaining--;
         if (floorTimerRemaining <= 0) {
             floorTimerRemaining = 0;
             stopFloorTimer();
+            // Auto-hide clock after 10 seconds
+            if (autoHideTimeoutId) clearTimeout(autoHideTimeoutId);
+            autoHideTimeoutId = setTimeout(() => {
+                if (floorTimerRemaining === 0) {
+                    document.body.classList.add('floor-timer-expired-faded');
+                }
+            }, 10000);
         }
         updateFloorTimerDisplay();
     }, 1000);
@@ -1676,14 +1709,24 @@ function stopFloorTimer() {
     floorTimerIsRunning = false;
     if (floorTimerInterval) clearInterval(floorTimerInterval);
     const startBtn = document.getElementById('floor-timer-start-btn');
+    const pStartBtn = document.getElementById('floor-presentation-start-btn');
     if (startBtn) {
         startBtn.textContent = 'Start';
         startBtn.classList.remove('running');
+    }
+    if (pStartBtn) {
+        pStartBtn.textContent = 'Start';
+        pStartBtn.classList.remove('running');
     }
 }
 
 function resetFloorTimer() {
     stopFloorTimer();
+    if (autoHideTimeoutId) {
+        clearTimeout(autoHideTimeoutId);
+        autoHideTimeoutId = null;
+    }
+    document.body.classList.remove('floor-timer-expired-faded');
     floorTimerRemaining = floorTimerStartValue;
     updateFloorTimerDisplay();
 }
@@ -1706,6 +1749,11 @@ function handleTimerEdit(e) {
     if (totalSeconds > 0) {
         floorTimerStartValue = totalSeconds;
         floorTimerRemaining = totalSeconds;
+        if (autoHideTimeoutId) {
+            clearTimeout(autoHideTimeoutId);
+            autoHideTimeoutId = null;
+        }
+        document.body.classList.remove('floor-timer-expired-faded');
     }
     updateFloorTimerDisplay();
 }
@@ -1729,6 +1777,115 @@ function toggleFloorTimer() {
         const isOpen = sidebar.classList.contains('open');
         const toggleBtn = document.getElementById('floor-timer-toggle');
         if (toggleBtn) toggleBtn.classList.toggle('active', isOpen);
+        updatePresentationClockVisibility();
+    }
+}
+
+function togglePresentationMode() {
+    const overlay = document.getElementById('floor-presentation-overlay');
+    const btn = document.getElementById('floor-presentation-btn');
+    if (!overlay) return;
+
+    const isHidden = overlay.getAttribute('aria-hidden') === 'true';
+    overlay.setAttribute('aria-hidden', !isHidden);
+    document.body.classList.toggle('presentation-active', isHidden);
+    if (btn) btn.classList.toggle('active', isHidden);
+
+    if (isHidden) updateFloorTimerDisplay();
+    updatePresentationClockVisibility();
+}
+
+function updatePresentationClockVisibility() {
+    const sidebar = document.getElementById('floor-timer-sidebar');
+    const pClockSection = document.querySelector('.floor-presentation-clock-section');
+    if (!sidebar || !pClockSection) return;
+
+    const isTimerSidebarOpen = sidebar.classList.contains('open');
+    pClockSection.style.display = isTimerSidebarOpen ? 'flex' : 'none';
+}
+
+function initPresentationFeatures() {
+    const overlay = document.getElementById('floor-presentation-overlay');
+    const pClock = document.getElementById('floor-presentation-clock');
+    const pControls = document.getElementById('floor-presentation-timer-controls');
+    const pStartBtn = document.getElementById('floor-presentation-start-btn');
+    const pResetBtn = document.getElementById('floor-presentation-reset-btn');
+
+    if (pClock) {
+        pClock.addEventListener('blur', handleTimerEdit);
+        pClock.addEventListener('focus', stopFloorTimer);
+        pClock.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                pClock.blur();
+            }
+        });
+    }
+
+    if (pStartBtn) pStartBtn.addEventListener('click', startFloorTimer);
+    if (pResetBtn) pResetBtn.addEventListener('click', resetFloorTimer);
+
+    // Idle Hide for Presentation Controls (3s)
+    let pIdleTimeout = null;
+    function resetPIdleTimer() {
+        if (!pControls) return;
+        pControls.classList.remove('idle-hidden');
+        const resizer = document.getElementById('floor-logo-resizer');
+        if (resizer) resizer.classList.remove('idle-hidden');
+
+        if (pIdleTimeout) clearTimeout(pIdleTimeout);
+        pIdleTimeout = setTimeout(() => {
+            if (floorTimerIsRunning || overlay.getAttribute('aria-hidden') === 'false') {
+                pControls.classList.add('idle-hidden');
+                if (resizer) resizer.classList.add('idle-hidden');
+            }
+        }, 3000);
+    }
+    document.addEventListener('mousemove', resetPIdleTimer);
+    document.addEventListener('keydown', resetPIdleTimer);
+
+    // Logo Resizer
+    const resizer = document.getElementById('floor-logo-resizer');
+    const logoContainer = document.getElementById('floor-presentation-logo-container');
+    if (resizer && logoContainer) {
+        let isResizing = false;
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'nwse-resize';
+            e.preventDefault();
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const rect = logoContainer.getBoundingClientRect();
+            // Resizing from bottom-right, so new width is mouseX - rectLeft
+            const newWidth = e.clientX - rect.left;
+            if (newWidth > 100 && newWidth < window.innerWidth * 0.95) {
+                presentationLogoWidth = newWidth;
+                logoContainer.style.width = newWidth + 'px';
+            }
+        });
+        window.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                saveHostPreferences();
+            }
+        });
+    }
+}
+
+function toggleAnthem() {
+    if (anthemAudio) {
+        if (!anthemAudio.paused) {
+            anthemAudio.pause();
+            return;
+        }
+        anthemAudio.currentTime = 0;
+        anthemAudio.play().catch(e => console.error('Audio play failed', e));
+    } else {
+        anthemAudio = new Audio('../sounds/MainAnthem.mp3');
+        anthemAudio.muted = isMuted;
+        anthemAudio.play().catch(e => console.error('Audio play failed', e));
     }
 }
 
@@ -1842,6 +1999,7 @@ function init() {
         isMuted = !isMuted;
         updateMuteButton();
         if (currentAudio) currentAudio.muted = isMuted;
+        if (anthemAudio) anthemAudio.muted = isMuted;
         saveHostPreferences();
     });
 
@@ -1859,6 +2017,9 @@ function init() {
     // Timer controls
     const timerToggle = document.getElementById('floor-timer-toggle');
     if (timerToggle) timerToggle.addEventListener('click', toggleFloorTimer);
+
+    const presentationToggle = document.getElementById('floor-presentation-btn');
+    if (presentationToggle) presentationToggle.addEventListener('click', togglePresentationMode);
 
     const timerStartBtn = document.getElementById('floor-timer-start-btn');
     if (timerStartBtn) timerStartBtn.addEventListener('click', startFloorTimer);
@@ -1885,6 +2046,7 @@ function init() {
 
     createPopLayer();
     initResizableTimerSidebar();
+    initPresentationFeatures();
     initHeaderAutoHide();
     loadHostPreferences();
     updateHostPreferencesUI();

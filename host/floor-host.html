@@ -69,6 +69,7 @@
                     <button type="button" id="floor-undo-btn" class="floor-btn floor-btn-secondary">Undo</button>
                     <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound</button>
                     <button type="button" id="floor-timer-toggle" class="floor-btn floor-btn-secondary">⏲️ Timer (K/C)</button>
+                    <button type="button" id="floor-presentation-btn" class="floor-btn floor-btn-secondary">🖼️ Presentation (P)</button>
                 </div>
 
                 <!-- NEW: Background pattern controls -->
@@ -202,6 +203,19 @@
             <div class="floor-edit-actions">
                 <button type="button" id="floor-kill-confirm" class="floor-btn floor-btn-danger">Confirm Kill</button>
                 <button type="button" id="floor-kill-cancel" class="floor-btn floor-btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="floor-presentation-overlay" class="floor-presentation-overlay" aria-hidden="true">
+        <div id="floor-presentation-logo-container" class="floor-presentation-logo-container">
+            <img src="../images/TheFloorLogo.png" alt="The Floor" class="floor-presentation-logo">
+            <div id="floor-logo-resizer" class="floor-logo-resizer" title="Drag to resize"></div>
+        </div>
+        <div class="floor-presentation-clock-section">
+            <div id="floor-presentation-clock" class="floor-presentation-clock" contenteditable="true">15:00</div>
+            <div id="floor-presentation-timer-controls" class="floor-presentation-timer-controls">
+                <button type="button" id="floor-presentation-start-btn" class="floor-btn floor-btn-timer">Start</button>
+                <button type="button" id="floor-presentation-reset-btn" class="floor-btn floor-btn-secondary">Reset</button>
             </div>
         </div>
     </div>
