@@ -35,6 +35,8 @@ const CATEGORY_REGISTRY = [
     { key: 'marching-band', label: 'Marching Band', emoji: '🥁', script: 'marching-band.js', global: 'marchingBandData', tier: 'REAL DEAL' },
     { key: 'minecraft', label: 'Minecraft', emoji: '⛏️', script: 'minecraft.js', global: 'minecraftData', tier: 'REAL DEAL' },
     { key: 'flowers', label: 'Flowers', emoji: '🌻', script: 'flowers.js', global: 'flowersData', tier: 'REAL DEAL' },
+    { key: 'fortnite-collabs', label: 'Fortnite Collabs', emoji: '🎮', script: 'fortnite-collabs.js', global: 'fortniteCollabsData', tier: 'REAL DEAL' },
+
 
 
     { key: 'nintendo', label: 'Nintendo', emoji: '🎮', script: 'nintendo.js', global: 'nintendoData', tier: 'REAL DEAL' },
