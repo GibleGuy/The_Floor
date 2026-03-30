@@ -65,6 +65,19 @@ const killCancelBtn = document.getElementById('floor-kill-cancel');
 const killContextBtn = document.querySelector('[data-action="kill"]');
 let killTarget = null;
 
+/** Golden Square DOM refs */
+const goldenToggleEl = document.getElementById('floor-golden-square-toggle');
+const goldenAnnouncementEl = document.getElementById('floor-golden-announcement');
+const goldenDismissBtn = document.getElementById('floor-golden-dismiss');
+if (goldenToggleEl) goldenToggleEl.checked = false;
+
+/** Developer Mode state & DOM refs */
+let isDevMode = false;
+const devSidebarEl = document.getElementById('floor-dev-sidebar');
+const devGoldenPosEl = document.getElementById('floor-dev-golden-pos');
+const devRandomizerPickEl = document.getElementById('floor-dev-randomizer-pick');
+const devStatusEl = document.getElementById('floor-dev-status');
+
 /** Audio mute state */
 let isMuted = false;
 let currentAudio = null;
@@ -77,6 +90,7 @@ let timerSidebarWidth = 320;
 let presentationLogoWidth = null; // null = use CSS default
 let anthemAudio = null;
 let autoHideTimeoutId = null;
+let useGoldenSquare = false; // Default to false as requested
 const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 
 /** @type {import('./floor-core/index.js').GameState} */
@@ -155,7 +169,47 @@ function buildState(rows, cols, greyCount = 0) {
         s.refreshAreas();
     }
 
+    if (useGoldenSquare) {
+        assignGoldenSquare(s);
+    }
+
     return s;
+}
+
+function assignGoldenSquare(s) {
+    const validTiles = [];
+    for (let r = 0; r < s.rows; r++) {
+        for (let c = 0; c < s.cols; c++) {
+            const t = s.getTile(r, c);
+            if (t && t.ownerId) {
+                validTiles.push({ r, c });
+            }
+        }
+    }
+    if (validTiles.length > 0) {
+        const picked = validTiles[Math.floor(Math.random() * validTiles.length)];
+        s.goldenTile = picked;
+        updateDevSidebar();
+    }
+}
+
+function updateDevSidebar() {
+    if (!devSidebarEl) return;
+    if (state && state.goldenTile) {
+        devGoldenPosEl.textContent = `(${state.goldenTile.r}, ${state.goldenTile.c})`;
+        const tile = state.getTile(state.goldenTile.r, state.goldenTile.c);
+        if (tile) {
+            devGoldenPosEl.textContent += ` - ${tile.category || 'No Category'}`;
+        }
+    } else {
+        devGoldenPosEl.textContent = 'Not Assigned';
+    }
+    devSidebarEl.classList.toggle('active', isDevMode);
+}
+
+function toggleDevMode() {
+    isDevMode = !isDevMode;
+    updateDevSidebar();
 }
 
 function getDisplayMode() {
@@ -259,10 +313,11 @@ function cancelSwapMode() {
     render();
 }
 
-function startBattleMode(defender) {
+function startBattleMode(attacker) {
     dismissRandomizer();
-    battleState = { active: true, defender: { r: defender.r, c: defender.c }, challenger: null };
-    if (swapPromptEl) swapPromptEl.textContent = 'Select challenger (adjacent tile)';
+    // The person you double-click is the Attacker (Challenger)
+    battleState = { active: true, challenger: { r: attacker.r, c: attacker.c }, defender: null };
+    if (swapPromptEl) swapPromptEl.textContent = 'Select defender (opponent)';
     if (gridEl) gridEl.classList.add('floor-battle-mode');
     document.body.classList.add('floor-battle-mode');
     render();
@@ -496,9 +551,9 @@ function handleTileClick(tile) {
 }
 
 function handleBattleTileClick(tile) {
-    if (!battleState.active || !battleState.defender || !tile) return;
-    const d = battleState.defender;
-    const subjectTile = state.getTile(d.r, d.c);
+    if (!battleState.active || !battleState.challenger || !tile) return;
+    const c = battleState.challenger;
+    const subjectTile = state.getTile(c.r, c.c);
     const subjectOwner = subjectTile ? subjectTile.ownerId : null;
 
     if (tile.ownerId === subjectOwner) return; // Clicked self
@@ -506,7 +561,7 @@ function handleBattleTileClick(tile) {
     // 1. Identify if the clicked player is a valid candidate
     // A player is valid if ANY of their tiles are in battleState.candidates
     let isValidOpponent = false;
-    let validChallengerTile = null; // The specific border tile we will use
+    let validDefenderTile = null; // The specific border tile we will use
 
     // Convert candidates set to an iterable of tile objects/coords to check owners
     // Optimization: We could cache candidateOwners in render, but battleState is simple enough to re-scan or we can trust the loop.
@@ -515,7 +570,7 @@ function handleBattleTileClick(tile) {
         const clickCoord = `${tile.r},${tile.c}`;
         if (battleState.candidates.has(clickCoord)) {
             isValidOpponent = true;
-            validChallengerTile = { r: tile.r, c: tile.c };
+            validDefenderTile = { r: tile.r, c: tile.c };
         } else {
             // Fallback: Find ANY valid contact point for this player
             for (const coord of battleState.candidates) {
@@ -523,7 +578,7 @@ function handleBattleTileClick(tile) {
                 const t = state.getTile(r, c);
                 if (t && t.ownerId === tile.ownerId) {
                     isValidOpponent = true;
-                    validChallengerTile = { r, c };
+                    validDefenderTile = { r, c };
                     break; // Found a valid contact point for this player
                 }
             }
@@ -532,26 +587,26 @@ function handleBattleTileClick(tile) {
 
     // FALLBACK: Safe adjacency check for simple cases (1x1 vs 1x1)
     if (!isValidOpponent) {
-        const dist = Math.abs(tile.r - d.r) + Math.abs(tile.c - d.c);
+        const dist = Math.abs(tile.r - c.r) + Math.abs(tile.c - c.c);
         if (dist === 1 && tile.ownerId !== subjectOwner) {
             isValidOpponent = true;
-            validChallengerTile = { r: tile.r, c: tile.c };
+            validDefenderTile = { r: tile.r, c: tile.c };
         }
     }
 
-    if (!isValidOpponent || !validChallengerTile) {
-        if (swapPromptEl) swapPromptEl.textContent = 'Not a valid challenger (must be adjacent to territory)';
+    if (!isValidOpponent || !validDefenderTile) {
+        if (swapPromptEl) swapPromptEl.textContent = 'Not a valid defender (must be adjacent to territory)';
         return;
     }
 
-    // 2. Find the Subject Border Tile adjacent to the validChallengerTile
+    // 2. Find the Subject Border Tile adjacent to the validDefenderTile
     // (We found A valid border tile for the challenger, now find the subject tile touching it)
-    let validSubjectTile = d; // Default
+    let validSubjectTile = c; // Default
 
     if (subjectOwner) {
         const ownedTiles = state.getTilesOwnedBy(subjectOwner);
         for (const t of ownedTiles) {
-            const dist = Math.abs(t.row - validChallengerTile.r) + Math.abs(t.col - validChallengerTile.c);
+            const dist = Math.abs(t.row - validDefenderTile.r) + Math.abs(t.col - validDefenderTile.c);
             if (dist === 1) {
                 validSubjectTile = { r: t.row, c: t.col };
                 break;
@@ -559,9 +614,10 @@ function handleBattleTileClick(tile) {
         }
     }
 
-    // Update state
-    battleState.defender = validSubjectTile;
-    battleState.challenger = validChallengerTile;
+    // Update state - the person who double-clicked is the challenger, 
+    // and the person selected as the opponent is the defender.
+    // battleState.challenger was already set in startBattleMode.
+    battleState.defender = validDefenderTile; 
     showDuelOverlay();
 }
 
@@ -687,6 +743,10 @@ function confirmKill() {
 
 function showDuelOverlay() {
     if (!state || !battleState.defender || !battleState.challenger) return;
+    
+    // Dev Tool: Reset randomizer pick when a battle is finalized
+    if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
+    
     const { r: cr, c: cc } = battleState.challenger;
     const { r: dr, c: dc } = battleState.defender;
     const challengerTile = state.getTile(cr, cc);
@@ -701,6 +761,46 @@ function showDuelOverlay() {
     if (challengerWinsBtn) challengerWinsBtn.textContent = `${challengerPlayer.name} wins`;
     if (defenderWinsBtn) defenderWinsBtn.textContent = `${defenderPlayer.name} wins`;
 
+    // Reset visibility before logic
+    if (goldenAnnouncementEl) goldenAnnouncementEl.setAttribute('aria-hidden', 'true');
+
+    // Check for Golden Square (Area-wide logic)
+    if (useGoldenSquare && state.goldenTile) {
+        const goldenOwnerId = state.getTile(state.goldenTile.r, state.goldenTile.c)?.ownerId;
+        if (goldenOwnerId && defenderPlayer.id === goldenOwnerId) {
+            state.goldenTile = null; // Consume it!
+            updateDevSidebar();
+            showGoldenAnnouncement();
+            return; // Wait for dismissal to show duel overlay
+        }
+    }
+
+    proceedToDuel(challengerPlayer, defenderPlayer, category);
+}
+
+function showGoldenAnnouncement() {
+    if (goldenAnnouncementEl) {
+        goldenAnnouncementEl.setAttribute('aria-hidden', 'false');
+    }
+}
+
+function dismissGoldenAnnouncement() {
+    if (goldenAnnouncementEl) {
+        goldenAnnouncementEl.setAttribute('aria-hidden', 'true');
+    }
+    // After dismissal, proceed to the duel overlay
+    const { r: cr, c: cc } = battleState.challenger;
+    const { r: dr, c: dc } = battleState.defender;
+    const challengerTile = state.getTile(cr, cc);
+    const defenderTile = state.getTile(dr, dc);
+    const challengerPlayer = challengerTile?.ownerId ? state.getPlayer(challengerTile.ownerId) : null;
+    const defenderPlayer = defenderTile?.ownerId ? state.getPlayer(defenderTile.ownerId) : null;
+    const category = getBattleCategory(state, dr, dc, cr, cc);
+    
+    proceedToDuel(challengerPlayer, defenderPlayer, category);
+}
+
+function proceedToDuel(challengerPlayer, defenderPlayer, category) {
     animationHooks.onDuelStart(challengerPlayer, defenderPlayer, category);
 
     duelOverlayEl.setAttribute('aria-hidden', 'false');
@@ -826,6 +926,11 @@ function runRandomizer() {
         pickBtn.classList.add('floor-btn--stop');
     }
 
+    // Dev Tool: Leak the winner immediately in the console
+    if (devRandomizerPickEl) {
+        devRandomizerPickEl.textContent = `${selectedPlayer.name} (${selectedPlayer.expertCategory})`;
+    }
+
     // Play randomizer sound effect (always play but respect mute state)
     const audio = new Audio('../sounds/randomizer.mp3');
     currentAudio = audio;
@@ -938,6 +1043,10 @@ function cancelRandomizer() {
         currentAudio = null;
     }
     if (!randomizerState && !randomizerResult) return;
+    
+    // Clear dev pick when cancelled
+    if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
+
     const tid = randomizerState && randomizerState.timeoutId;
     randomizerState = null;
     if (tid) clearTimeout(tid);
@@ -960,6 +1069,10 @@ function dismissRandomizer() {
     if (!randomizerResult) return;
     randomizerResult = null;
     if (randomizerResultEl) randomizerResultEl.setAttribute('aria-hidden', 'true');
+    
+    // Clear dev pick when dismissed
+    if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
+
     if (pickBtn) {
         pickBtn.textContent = 'Run Randomizer';
         pickBtn.classList.remove('floor-btn--stop');
@@ -1036,6 +1149,10 @@ function handleKeydown(e) {
     if (key === 'm') {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         toggleMute();
+    }
+    if (key === 'z') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleDevMode();
     }
 }
 
@@ -1114,6 +1231,9 @@ function render() {
                 cell.setAttribute('role', 'gridcell');
                 cell.dataset.row = String(r);
                 cell.dataset.col = String(c);
+                if (state.goldenTile && state.goldenTile.r === r && state.goldenTile.c === c) {
+                    cell.dataset.golden = 'true';
+                }
                 cell.tabIndex = 0;
 
                 // Grey square styling for unowned tiles
@@ -1155,9 +1275,9 @@ function render() {
                 }
 
                 // Battle Mode Logic
-                if (battleState.active && battleState.defender) {
-                    const d = battleState.defender;
-                    const clickedTile = state.getTile(d.r, d.c);
+                if (battleState.active && battleState.challenger) {
+                    const c = battleState.challenger;
+                    const clickedTile = state.getTile(c.r, c.c);
                     const subjectOwnerId = clickedTile?.ownerId;
 
                     const isSubject = tile.ownerId === subjectOwnerId;
@@ -1202,6 +1322,10 @@ function render() {
                     }
 
                     if (isSubject) {
+                        // Attacker (Challenger) highlighted in Yellow
+                        cell.classList.add('floor-tile--battle-challenger');
+                    } else if (battleState.defender && battleState.defender.r === r && battleState.defender.c === c) {
+                        // Selected Defender highlighted in Red
                         cell.classList.add('floor-tile--battle-defender');
                     } else if (isCandidate) {
                         cell.classList.add('floor-tile--battle-candidate');
@@ -1352,14 +1476,19 @@ function applyGrid() {
     randomizerResult = null;
     undoManager.clear();
     state = buildState(rows, cols, greyCount);
+    if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
     render();
     updateUndoButton();
+    updateDevSidebar();
 }
 
 function handleExport() {
     if (!state) return;
     const rows = [];
     rows.push('Row,Col,Name,Category,TimeBoost');
+    if (state.goldenTile) {
+        rows.push(`__METADATA__,goldenSquare,${state.goldenTile.r},${state.goldenTile.c},`);
+    }
     for (let r = 0; r < state.rows; r++) {
         for (let c = 0; c < state.cols; c++) {
             const tile = state.getTile(r, c);
@@ -1428,6 +1557,11 @@ function handleImport(file) {
         battleState = { active: false, defender: null, challenger: null };
         swapState = { active: false, first: null, second: null };
 
+        // Dev Tool: Refresh Console
+        if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
+        if (devStatusEl) devStatusEl.textContent = 'Data Loaded';
+        updateDevSidebar();
+
         render();
         updateUndoButton();
     };
@@ -1440,8 +1574,20 @@ function importFullState(rowsData) {
     let maxR = 0;
     let maxC = 0;
     const items = [];
+    let goldenTileFromCSV = null;
+
     for (const row of rowsData) {
         if (row.length < 4) continue;
+        
+        if (row[0] === '__METADATA__' && row[1] === 'goldenSquare') {
+            const gr = parseInt(row[2], 10);
+            const gc = parseInt(row[3], 10);
+            if (!isNaN(gr) && !isNaN(gc)) {
+                goldenTileFromCSV = { r: gr, c: gc };
+            }
+            continue;
+        }
+
         const r = parseInt(row[0], 10);
         const c = parseInt(row[1], 10);
         if (!isNaN(r) && !isNaN(c)) {
@@ -1494,6 +1640,17 @@ function importFullState(rowsData) {
 
     // Refresh player areas
     state.refreshAreas();
+
+    if (goldenTileFromCSV) {
+        state.goldenTile = goldenTileFromCSV;
+    } else if (useGoldenSquare) {
+        assignGoldenSquare(state);
+    }
+    
+    if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
+    render();
+    saveGame();
+    updateDevSidebar();
 }
 
 function importSimpleList(rowsData) {
@@ -1546,8 +1703,11 @@ function importSimpleList(rowsData) {
 
     // Refresh player areas
     state.refreshAreas();
-}
 
+    if (useGoldenSquare) {
+        assignGoldenSquare(state);
+    }
+}
 
 
 function createPopLayer() {
@@ -1599,6 +1759,10 @@ function loadHostPreferences() {
             isMuted = p.isMuted;
             updateMuteButton();
         }
+        if (typeof p.useGoldenSquare === 'boolean') {
+            useGoldenSquare = p.useGoldenSquare;
+            if (goldenToggleEl) goldenToggleEl.checked = useGoldenSquare;
+        }
     } catch (e) { console.error('Failed to load prefs', e); }
 }
 
@@ -1610,7 +1774,8 @@ function saveHostPreferences() {
             driftSpeed,
             timerSidebarWidth,
             presentationLogoWidth,
-            isMuted
+            isMuted,
+            useGoldenSquare
         };
         localStorage.setItem(HOST_PREFS_KEY, JSON.stringify(p));
     } catch (e) { }
@@ -1620,6 +1785,7 @@ function updateHostPreferencesUI() {
     if (bgStyleSelect) bgStyleSelect.value = backgroundStyle;
     if (blueVariantSelect) blueVariantSelect.value = blueVariant;
     if (driftSpeedInput) driftSpeedInput.value = driftSpeed;
+    if (goldenToggleEl) goldenToggleEl.checked = useGoldenSquare;
 }
 
 function applyHostPreferencesToDOM() {
@@ -2019,6 +2185,21 @@ function init() {
     }
     if (driftSpeedInput) {
         driftSpeedInput.addEventListener('input', (e) => setDriftSpeed(parseFloat(e.target.value)));
+    }
+    if (goldenToggleEl) {
+        goldenToggleEl.addEventListener('change', (e) => {
+            useGoldenSquare = e.target.checked;
+            saveHostPreferences();
+            if (useGoldenSquare && state && !state.goldenTile) {
+                assignGoldenSquare(state);
+            } else if (!useGoldenSquare && state) {
+                state.goldenTile = null;
+                updateDevSidebar();
+            }
+        });
+    }
+    if (goldenDismissBtn) {
+        goldenDismissBtn.addEventListener('click', dismissGoldenAnnouncement);
     }
 
     // Timer controls

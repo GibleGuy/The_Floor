@@ -40,7 +40,6 @@ const CATEGORY_REGISTRY = [
     { key: 'taylor-swift', label: 'Taylor Swift', emoji: '🎶', script: 'taylor-swift.js', global: 'taylorSwiftData', tier: 'Gible Verified' },
     { key: 'track-and-field', label: 'Track & Field', emoji: '🏃', script: 'track-and-field.js', global: 'trackAndFieldData', tier: 'Gible Verified' },
     { key: 'visual-novels', label: 'Visual Novels', emoji: '📖', script: 'visual-novels.js', global: 'visualNovelsData', tier: 'Gible Verified' },
-    { key: 'puppets', label: 'Puppets', emoji: '🎭', script: 'puppets.js', global: 'puppetsData', tier: 'Gible Verified' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'Gible Verified' },

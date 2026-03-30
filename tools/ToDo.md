@@ -1,0 +1,4 @@
+- Add floor hosting functionality to work like the show
+- Add disclaimer in ? menu
+- Make mega category REALLY mega.
+- Update "how the game works" and "how to run" and "structure"

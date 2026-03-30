@@ -50,6 +50,8 @@ function createGameState(opts = {}) {
         players,
         playerMap,
 
+        goldenTile: opts.goldenTile || null,
+
         getTile(r, c) {
             if (r < 0 || r >= rows || c < 0 || c >= cols) return null;
             return grid[r][c];
@@ -250,6 +252,7 @@ function createGameState(opts = {}) {
                 grid: gridCopy,
                 players: playersCopy,
                 playerMap: playerMapCopy,
+                goldenTile: this.goldenTile ? { ...this.goldenTile } : null,
             };
         },
 
@@ -270,6 +273,7 @@ function createGameState(opts = {}) {
                 players.push(clonePlayer(p));
                 playerMap.set(p.id, players[players.length - 1]);
             }
+            this.goldenTile = snap.goldenTile ? { ...snap.goldenTile } : null;
         },
     };
 }
