@@ -528,7 +528,7 @@
     <!-- ── Category scripts are loaded dynamically ── -->
     <script>
         (function () {
-            const API = `${location.protocol}//${location.hostname}:${location.port}`;
+            const API = `${location.protocol}//${location.hostname}:8642`;
             let serverAvailable = false;
             let currentFilter = 'all';
             let currentImages = {};  // stem -> filename on disk
@@ -576,6 +576,7 @@
                 const needsImages = [];
                 const complete = [];
                 const doNotTouch = [];
+                const pptGames = [];
                 const doNotTouchKeys = ['logos', 'flags', 'pokemon', 'dogs', 'memes', 'mega'];
 
                 // Update UI to show loading
@@ -620,12 +621,14 @@
                         if (!data) continue;
                         totalItems = data.length;
 
+                        const folder = data.length > 0 ? extractCategory(data[0].u) : cat.key;
+
                         if (serverAvailable) {
                             try {
                                 const res = await fetch(`${API}/api/list-images`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ category: cat.key })
+                                    body: JSON.stringify({ category: folder })
                                 });
                                 const images = await res.json();
                                 // Count how many items have a matching image
@@ -638,7 +641,9 @@
 
                         const entry = { cat, totalItems, foundItems };
 
-                        if (doNotTouchKeys.includes(cat.key)) {
+                        if (cat.tier === 'PPTGAMES') {
+                            pptGames.push(entry);
+                        } else if (doNotTouchKeys.includes(cat.key)) {
                             doNotTouch.push(entry);
                         } else if (foundItems < totalItems) {
                             needsImages.push(entry);
@@ -653,6 +658,13 @@
                 // Remove loading text
                 select.innerHTML = '<option value="">— Select Category —</option>';
                 select.disabled = false;
+
+                // Sort alphabetically by label within each status group
+                const sortByLabel = (a, b) => a.cat.label.localeCompare(b.cat.label);
+                needsImages.sort(sortByLabel);
+                complete.sort(sortByLabel);
+                doNotTouch.sort(sortByLabel);
+                pptGames.sort(sortByLabel);
 
                 // Build optgroups
                 if (needsImages.length) {
@@ -685,6 +697,19 @@
                     const group = document.createElement('optgroup');
                     group.label = `⛔ DO NOT TOUCH (${doNotTouch.length})`;
                     doNotTouch.forEach(({ cat, totalItems, foundItems }) => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.key;
+                        opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
+                        opt.dataset.script = cat.script;
+                        opt.dataset.global = cat.global;
+                        group.appendChild(opt);
+                    });
+                    select.appendChild(group);
+                }
+                if (pptGames.length) {
+                    const group = document.createElement('optgroup');
+                    group.label = `🎮 PPT (${pptGames.length})`;
+                    pptGames.forEach(({ cat, totalItems, foundItems }) => {
                         const opt = document.createElement('option');
                         opt.value = cat.key;
                         opt.textContent = `${cat.label}  (${foundItems}/${totalItems})`;
@@ -751,6 +776,8 @@
                     return;
                 }
 
+                const folder = data.length > 0 ? extractCategory(data[0].u) : key;
+
                 // Get existing images from server (or empty)
                 currentImages = {};
                 if (serverAvailable) {
@@ -758,7 +785,7 @@
                         const res = await fetch(`${API}/api/list-images`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ category: key })
+                            body: JSON.stringify({ category: folder })
                         });
                         currentImages = await res.json();
                     } catch { /* ignore */ }
@@ -777,8 +804,12 @@
             }
 
             function extractCategory(urlPath) {
-                // "../images/gameshows/wheel-of-fortune.webp" -> "gameshows"
+                // Standard: "../images/gameshows/wheel-of-fortune.webp" -> "gameshows"
+                // PPT: "../images/pptGames/Tennis/ball.jpg" -> "pptGames/Tennis"
                 const parts = urlPath.split('/');
+                if (parts.length >= 4 && (parts[parts.length - 3].toLowerCase() === 'pptgames')) {
+                    return parts[parts.length - 3] + '/' + parts[parts.length - 2];
+                }
                 return parts[parts.length - 2];
             }
 

@@ -32,7 +32,7 @@ function shuffle(a) {
  * @returns {PlayerData[]}
  */
 function getEligiblePlayers(state) {
-    return state.players.filter((p) => !p.eliminated);
+    return state.players.filter((p) => !p.eliminated && (p.area ?? 0) > 0);
 }
 
 /**
@@ -53,8 +53,8 @@ function sortByEligibility(state, opts = {}) {
     const withTie = eligible.map((p) => ({ p, tie: rng() }));
 
     withTie.sort((a, b) => {
-        if (a.p.duelCount !== b.p.duelCount) return a.p.duelCount - b.p.duelCount;
         if (a.p.area !== b.p.area) return a.p.area - b.p.area;
+        if (a.p.duelCount !== b.p.duelCount) return a.p.duelCount - b.p.duelCount;
         return a.tie - b.tie;
     });
 
@@ -74,9 +74,8 @@ function pickOne(state, opts = {}) {
     const sorted = sortByEligibility(state, opts);
     if (sorted.length === 0) return null;
 
-    const bestDuel = sorted[0].duelCount;
     const bestArea = sorted[0].area;
-    const tied = sorted.filter((p) => p.duelCount === bestDuel && p.area === bestArea);
+    const tied = sorted.filter((p) => p.area === bestArea);
     const idx = Math.floor((opts.rng ?? Math.random)() * tied.length);
     return tied[idx] ?? null;
 }

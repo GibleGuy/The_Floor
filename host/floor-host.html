@@ -25,28 +25,8 @@
         <div id="floor-controls-container" class="floor-controls-container">
             <div class="floor-host-controls">
                 <div class="floor-control-row">
-                    <label class="floor-label">Grid</label>
-                    <input type="number" id="floor-rows" min="1" max="20" value="5" class="floor-input">
-                    <span class="floor-sep">×</span>
-                    <input type="number" id="floor-cols" min="1" max="20" value="5" class="floor-input">
-                    <label class="floor-label" style="margin-left:12px">Grey</label>
-                    <input type="number" id="floor-grey-count" min="0" max="100" value="0" class="floor-input">
-
-                    <button type="button" id="floor-apply-grid" class="floor-btn">Apply</button>
-                </div>
-                <div class="floor-control-row">
-                    <span class="floor-label">Data</span>
-                    <input type="file" id="floor-import-file" accept=".csv" style="display: none;">
-                    <button type="button" id="floor-import-btn" class="floor-btn floor-btn-secondary">Import
-                        CSV</button>
-                    <label class="floor-edit-check" style="margin-left: 8px; font-size: 14px;">
-                        <input type="checkbox" id="floor-randomize-check"> Randomize
-                    </label>
-                    <button type="button" id="floor-export-btn" class="floor-btn floor-btn-secondary"
-                        style="margin-left: 8px;">Export CSV</button>
-                </div>
-
-                <div class="floor-control-row">
+                    <button type="button" id="floor-setup-open-btn" class="floor-btn floor-btn-setup">⚙️ Floor Setup</button>
+                    <span class="floor-sep" style="margin: 0 12px; border-left: 1px solid rgba(255,255,255,0.2); height: 24px;"></span>
                     <span class="floor-label">Display</span>
                     <div class="floor-radio-group">
                         <label class="floor-radio">
@@ -64,39 +44,13 @@
                     </div>
                 </div>
                 <div class="floor-control-row">
-                    <button type="button" id="floor-pick-btn" class="floor-btn floor-btn-pick">Activate the
-                        Randomizer (J/R)</button>
+                    <button type="button" id="floor-pick-btn" class="floor-btn floor-btn-pick">Activate the Randomizer (R)</button>
                     <button type="button" id="floor-undo-btn" class="floor-btn floor-btn-secondary">Undo</button>
-                    <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound</button>
+                    <button type="button" id="floor-mute-btn" class="floor-btn floor-btn-secondary">🔊 Sound (M)</button>
                     <button type="button" id="floor-timer-toggle" class="floor-btn floor-btn-secondary">⏲️ Timer (K/C)</button>
                     <button type="button" id="floor-presentation-btn" class="floor-btn floor-btn-secondary">🖼️ Presentation (P)</button>
                 </div>
 
-                <!-- NEW: Background pattern controls -->
-                <div class="floor-control-row">
-                    <span class="floor-label">Background</span>
-                    <select id="floor-bg-style" class="floor-select">
-                        <option value="pop">Pop</option>
-                        <option value="grid">Grid</option>
-                        <option value="tiles">Tiles</option>
-                        <option value="diagonal">Diagonal</option>
-                        <option value="solid">Solid</option>
-                    </select>
-
-                    <span class="floor-sep"></span>
-                    <span class="floor-label">Blue</span>
-                    <select id="floor-blue-variant" class="floor-select">
-                        <option value="a">A (Darkest)</option>
-                        <option value="b" selected>B (Default)</option>
-                        <option value="c">C (Lighter)</option>
-                        <option value="d">D (Vivid)</option>
-                    </select>
-
-                    <span class="floor-sep"></span>
-                    <span class="floor-label">Drift</span>
-                    <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="2"
-                        style="width: 80px; vertical-align: middle;">
-                </div>
             </div>
             <div id="floor-randomizer-result" class="floor-randomizer-result" role="status" aria-live="polite"
                 aria-hidden="true">
@@ -216,6 +170,76 @@
             <div id="floor-presentation-timer-controls" class="floor-presentation-timer-controls">
                 <button type="button" id="floor-presentation-start-btn" class="floor-btn floor-btn-timer">Start</button>
                 <button type="button" id="floor-presentation-reset-btn" class="floor-btn floor-btn-secondary">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="floor-setup-modal" class="floor-edit-modal" role="dialog" aria-labelledby="floor-setup-title" aria-hidden="true">
+        <div class="floor-edit-content">
+            <h2 id="floor-setup-title" class="floor-edit-title">Floor Setup</h2>
+            <div class="floor-edit-form">
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label">Grid Dimensions</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="number" id="floor-rows" min="1" max="20" value="5" class="floor-edit-input" style="width: 60px;">
+                        <span class="floor-sep">×</span>
+                        <input type="number" id="floor-cols" min="1" max="20" value="5" class="floor-edit-input" style="width: 60px;">
+                    </div>
+                </div>
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-grey-count">Grey Squares</label>
+                    <input type="number" id="floor-grey-count" min="0" max="100" value="0" class="floor-edit-input" style="width: 80px;">
+                </div>
+                <div style="margin-bottom: 24px;">
+                    <button type="button" id="floor-apply-grid" class="floor-btn" style="width: 100%;">Apply Grid Changes</button>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 0 0 24px 0;">
+                
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label">Data Management</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="file" id="floor-import-file" accept=".csv" style="display: none;">
+                        <button type="button" id="floor-import-btn" class="floor-btn floor-btn-secondary" style="flex: 1;">Import CSV</button>
+                        <button type="button" id="floor-export-btn" class="floor-btn floor-btn-secondary" style="flex: 1;">Export CSV</button>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 24px 0;">
+
+                <h3 style="color: var(--floor-yellow); font-size: 1.1rem; margin-bottom: 16px;">Customization</h3>
+                
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-bg-style">Background Pattern</label>
+                    <select id="floor-bg-style" class="floor-edit-input" style="width: 100%;">
+                        <option value="pop">Pop</option>
+                        <option value="grid">Grid</option>
+                        <option value="tiles">Tiles</option>
+                        <option value="diagonal">Diagonal</option>
+                        <option value="solid">Solid</option>
+                    </select>
+                </div>
+
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-blue-variant">Color Theme</label>
+                    <select id="floor-blue-variant" class="floor-edit-input" style="width: 100%;">
+                        <option value="a">A (Darkest)</option>
+                        <option value="b" selected>B (Default)</option>
+                        <option value="c">C (Lighter)</option>
+                        <option value="d">D (Vivid)</option>
+                    </select>
+                </div>
+
+                <div class="floor-edit-row">
+                    <label class="floor-edit-label" for="floor-drift-speed">Drift Speed</label>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <input type="range" id="floor-drift-speed" min="0.25" max="2" step="0.25" value="2" style="flex: 1;">
+                    </div>
+                </div>
+                
+                <div class="floor-edit-actions" style="margin-top: 32px;">
+                    <button type="button" id="floor-setup-close" class="floor-btn floor-btn-secondary" style="width: 100%;">Close</button>
+                </div>
             </div>
         </div>
     </div>

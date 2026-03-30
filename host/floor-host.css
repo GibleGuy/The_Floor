@@ -77,10 +77,11 @@
 
 .floor-host-controls {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
-    gap: 20px 24px;
+    gap: 12px;
     align-items: center;
+    padding: 8px 0;
 }
 
 .floor-control-row {
@@ -137,6 +138,17 @@
 .floor-btn-pick {
     background: var(--floor-green);
     color: #000;
+    min-width: 240px;
+}
+
+.floor-btn-setup {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.floor-btn-setup:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .floor-btn--stop {
@@ -1427,4 +1439,17 @@ body.floor-battle-mode .floor-swap-bar {
 #floor-presentation-btn.active {
     background: var(--floor-green);
     color: black;
+}
+/* setup modal specific spacing */
+#floor-setup-modal .floor-edit-content {
+    max-width: 450px;
+}
+
+#floor-setup-modal .floor-edit-row {
+    margin-bottom: 20px;
+}
+
+#floor-setup-modal .floor-edit-label {
+    margin-bottom: 8px;
+    display: block;
 }

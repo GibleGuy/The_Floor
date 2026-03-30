@@ -286,8 +286,13 @@ async function setupGame(cat, opts) {
     currentStreak = 0;
     answerStartTime = Date.now();
 
-    // Store category name (replace hyphens with spaces for display)
-    currentCategory = cat.replace(/-/g, ' ').toUpperCase();
+    // Lookup proper label from the registry
+    const registryItem = window.CATEGORY_REGISTRY.find(c => c.key === cat);
+    let label = (registryItem ? registryItem.label : cat.replace(/-/g, ' '));
+    
+    // Specifically strip "PPT" or "ppt" prefixes and (PPT) suffixes
+    currentCategory = label.replace(/^(PPT|ppt)[\s-]?/i, '').replace(/[\s-]\(PPT\)$/i, '').toUpperCase();
+    
     document.getElementById('category-display').innerText = currentCategory;
     document.getElementById('category-display').style.display = 'block';
 
@@ -344,6 +349,7 @@ async function setupGame(cat, opts) {
         fallback.remove();
     }
 
+    resetTimerStyles();
     // Handle host mode differently
     if (hostMode && !fromAdminWindow) {
         // Main-page host: show category and start button instead of auto-starting
@@ -1076,16 +1082,19 @@ function populateCategoryGrid() {
     if (!grid || !window.CATEGORY_REGISTRY) return;
     grid.innerHTML = '';
     
-    const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
+    const tiers = { 'Gible Verified': [], 'PPTGAMES': [] };
     window.CATEGORY_REGISTRY.forEach(function (c) {
-        const t = c.tier || 'REAL DEAL';
+        const t = c.tier || 'Gible Verified';
         if (tiers[t]) tiers[t].push(c);
-        else tiers['REAL DEAL'].push(c);
+        else tiers['Gible Verified'].push(c);
     });
 
     Object.keys(tiers).forEach(function(tier) {
         const cats = tiers[tier];
         if (cats.length === 0) return;
+        
+        // Alphabetize categories by label
+        cats.sort((a, b) => a.label.localeCompare(b.label));
         
         const header = document.createElement('h3');
         header.className = 'tier-header';
@@ -1419,16 +1428,7 @@ function resetGame(skipConfirm) {
     img.dataset.errorHandled = 'false';
 
     // Reset timer colors and classes (clear winner/loser styling)
-    const p1Display = document.getElementById('p1-display');
-    const p2Display = document.getElementById('p2-display');
-    p1Display.style.borderColor = '';
-    p1Display.style.color = '';
-    p1Display.style.boxShadow = '';
-    p2Display.style.borderColor = '';
-    p2Display.style.color = '';
-    p2Display.style.boxShadow = '';
-    p1Display.className = 'clock';
-    p2Display.className = 'clock';
+    resetTimerStyles();
 
     imgFrame.classList.remove('correct-border');
     imgFrame.classList.remove('pass-border');
@@ -2308,3 +2308,24 @@ function createConfetti() {
     }
 }
 
+function resetTimerStyles() {
+    const p1Display = document.getElementById('p1-display');
+    const p2Display = document.getElementById('p2-display');
+    const p1Name = document.getElementById('p1-name');
+    const p2Name = document.getElementById('p2-name');
+
+    if (p1Display) {
+        p1Display.style.borderColor = '';
+        p1Display.style.color = '';
+        p1Display.style.boxShadow = '';
+        p1Display.className = 'clock';
+    }
+    if (p2Display) {
+        p2Display.style.borderColor = '';
+        p2Display.style.color = '';
+        p2Display.style.boxShadow = '';
+        p2Display.className = 'clock';
+    }
+    if (p1Name) p1Name.style.color = '#888';
+    if (p2Name) p2Name.style.color = '#888';
+}

@@ -930,16 +930,19 @@
             var grid = document.getElementById('admin-cat-grid');
             if (!grid || !window.CATEGORY_REGISTRY) return;
             grid.innerHTML = '';
-            var tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
+            var tiers = { 'Gible Verified': [], 'PPTGAMES': [] };
             window.CATEGORY_REGISTRY.forEach(function (c) {
-                var t = c.tier || 'REAL DEAL';
+                var t = c.tier || 'Gible Verified';
                 if (tiers[t]) tiers[t].push(c);
-                else tiers['REAL DEAL'].push(c);
+                else tiers['Gible Verified'].push(c);
             });
 
             Object.keys(tiers).forEach(function(tier) {
                 var cats = tiers[tier];
                 if (cats.length === 0) return;
+                
+                // Alphabetize categories by label
+                cats.sort((a, b) => a.label.localeCompare(b.label));
                 
                 var header = document.createElement('h3');
                 header.className = 'admin-tier-header';

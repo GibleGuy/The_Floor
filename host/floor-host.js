@@ -49,8 +49,10 @@ const displayRadios = document.querySelectorAll('input[name="floor-display"]');
 const importFile = document.getElementById('floor-import-file');
 const importBtn = document.getElementById('floor-import-btn');
 const exportBtn = document.getElementById('floor-export-btn');
-const randomizeCheck = document.getElementById('floor-randomize-check');
 const muteBtn = document.getElementById('floor-mute-btn');
+const setupModalEl = document.getElementById('floor-setup-modal');
+const setupOpenBtn = document.getElementById('floor-setup-open-btn');
+const setupCloseBtn = document.getElementById('floor-setup-close');
 const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
@@ -773,29 +775,21 @@ function handleDuelCancel() {
 function runRandomizer() {
     if (!state || randomizerState) return;
 
+    // Ensure area counts are fresh before selection
+    state.refreshAreas();
+
     const statusEl = document.getElementById('floor-debug-status');
 
-    // Pick Logic: Prioritize fresh players (duelCount = 0 or undefined).
-    // CRITICAL FIX: Only consider players who actually OWN tiles.
-    let eligible = getEligiblePlayers(state).filter(p => state.getTilesOwnedBy(p.id).length > 0);
+    // Consolidated selection logic from floor-core
+    const selectedPlayer = pickOne(state);
 
-    if (eligible.length === 0) {
+    if (!selectedPlayer) {
         alert('No eligible players with tiles.');
         return;
     }
 
-    const freshPlayers = eligible.filter(p => !p.duelCount);
-    const pool = freshPlayers.length > 0 ? freshPlayers : eligible;
-
-    if (statusEl) statusEl.textContent = `Randomizer: Pool ${pool.length} (Total eligible: ${eligible.length})`;
-
-    // Simple random pick from the pool
-    const selectedPlayer = pool[Math.floor(Math.random() * pool.length)];
-
-    if (!selectedPlayer) {
-        console.error("Failed to select player");
-        return;
-    }
+    const eligible = getEligiblePlayers(state);
+    if (statusEl) statusEl.textContent = `Randomizer: Pool ${eligible.length} eligible`;
 
     // Get tiles for animation - ensure randomizer works even if "ordered" list logic is tricky
     // Just pick random tiles from grid to flash?
@@ -1000,6 +994,8 @@ function handleKeydown(e) {
         } else if (editModalEl.getAttribute('aria-hidden') === 'false') {
             hideEditModal();
             hideContextMenu();
+        } else if (setupModalEl && setupModalEl.getAttribute('aria-hidden') === 'false') {
+            hideSetupModal();
         } else if (duelOverlayEl && duelOverlayEl.getAttribute('aria-hidden') === 'false') {
             handleDuelCancel();
         } else if (randomizerResult) {
@@ -1037,6 +1033,18 @@ function handleKeydown(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         toggleAnthem();
     }
+    if (key === 'm') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleMute();
+    }
+}
+
+function toggleMute() {
+    isMuted = !isMuted;
+    updateMuteButton();
+    if (currentAudio) currentAudio.muted = isMuted;
+    if (anthemAudio) anthemAudio.muted = isMuted;
+    saveHostPreferences();
 }
 
 function handleClickOutside(e) {
@@ -1498,14 +1506,6 @@ function importSimpleList(rowsData) {
 
     if (items.length === 0) return;
 
-    if (randomizeCheck && randomizeCheck.checked) {
-        // Fisher-Yates shuffle
-        for (let i = items.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [items[i], items[j]] = [items[j], items[i]];
-        }
-    }
-
     // Determine grid size (closest square)
     const count = items.length;
     const side = Math.ceil(Math.sqrt(count));
@@ -1642,7 +1642,7 @@ function applyHostPreferencesToDOM() {
 
 function updateMuteButton() {
     if (muteBtn) {
-        muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
+        muteBtn.textContent = isMuted ? '🔇 Muted (M)' : '🔊 Sound (M)';
         if (isMuted) {
             muteBtn.classList.add('floor-btn-danger'); // optional style
             // or just keep secondary, depending on taste. Let's stick to simple text change
@@ -1651,6 +1651,14 @@ function updateMuteButton() {
             muteBtn.classList.add('floor-btn-secondary');
         }
     }
+}
+
+function showSetupModal() {
+    if (setupModalEl) setupModalEl.setAttribute('aria-hidden', 'false');
+}
+
+function hideSetupModal() {
+    if (setupModalEl) setupModalEl.setAttribute('aria-hidden', 'true');
 }
 
 
@@ -1997,13 +2005,10 @@ function init() {
     if (pickBtn) pickBtn.addEventListener('click', handleRandomizerToggle);
     if (randomizerDismissBtn) randomizerDismissBtn.addEventListener('click', dismissRandomizer);
     if (undoBtn) undoBtn.addEventListener('click', handleUndo);
-    if (muteBtn) muteBtn.addEventListener('click', () => {
-        isMuted = !isMuted;
-        updateMuteButton();
-        if (currentAudio) currentAudio.muted = isMuted;
-        if (anthemAudio) anthemAudio.muted = isMuted;
-        saveHostPreferences();
-    });
+    if (muteBtn) muteBtn.addEventListener('click', toggleMute);
+
+    if (setupOpenBtn) setupOpenBtn.addEventListener('click', showSetupModal);
+    if (setupCloseBtn) setupCloseBtn.addEventListener('click', hideSetupModal);
 
     // Background controls
     if (bgStyleSelect) {

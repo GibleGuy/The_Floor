@@ -32,7 +32,6 @@ const fortniteCollabsData = [
     { n: "THE WITCHER", u: "../images/fortnite-collabs/the-witcher.webp" },
     { n: "DOOM", u: "../images/fortnite-collabs/doom.webp" },
     { n: "PAC-MAN", u: "../images/fortnite-collabs/pac-man.webp" },
-    { n: "TETRIS", u: "../images/fortnite-collabs/tetris.webp" },
 
     // Tier 3 — Knowledgeable (31–40)
     { n: "AMONG US", u: "../images/fortnite-collabs/among-us.webp" },
@@ -63,11 +62,7 @@ const fortniteCollabsData = [
     { n: "ROBOCOP", u: "../images/fortnite-collabs/robocop.webp" },
     { n: "TRON", u: "../images/fortnite-collabs/tron.webp" },
     { n: "EVIL DEAD", u: "../images/fortnite-collabs/evil-dead.webp" },
-    { n: "GOAT SIMULATOR", u: "../images/fortnite-collabs/goat-simulator.webp" },
     { n: "WWE", u: "../images/fortnite-collabs/wwe.webp" },
-    { n: "NFL", u: "../images/fortnite-collabs/nfl.webp" },
     { n: "NBA", u: "../images/fortnite-collabs/nba.webp" },
-    { n: "NIKE", u: "../images/fortnite-collabs/nike.webp" },
-    { n: "BALENCIAGA", u: "../images/fortnite-collabs/balenciaga.webp" },
 ];
 if (typeof window !== 'undefined') window.fortniteCollabsData = fortniteCollabsData;

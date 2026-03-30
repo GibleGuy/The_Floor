@@ -356,12 +356,12 @@
             const select = document.getElementById('category-select');
 
             // Populate dropdown (grouped by tier)
-            const tiers = { 'REAL DEAL': [], 'EXAMPLES': [], 'TIEBREAK': [], 'EXTRAS': [], 'PPTGAMES': [] };
+            const tiers = { 'Gible Verified': [], 'PPTGAMES': [] };
             for (const [key, label] of Object.entries(categoryLabels)) {
                 const items = categories[key] || [];
                 if (items.length === 0) continue;
                 const registryItem = window.CATEGORY_REGISTRY.find(c => c.key === key);
-                const tier = (registryItem && registryItem.tier) ? registryItem.tier : 'REAL DEAL';
+                const tier = (registryItem && registryItem.tier) ? registryItem.tier : 'Gible Verified';
                 if (!tiers[tier]) tiers[tier] = [];
                 tiers[tier].push({ key, label });
             }
@@ -369,6 +369,9 @@
             Object.keys(tiers).forEach(function (tier) {
                 const cats = tiers[tier];
                 if (cats.length === 0) return;
+                
+                // Alphabetize categories by label
+                cats.sort((a, b) => a.label.localeCompare(b.label));
                 const optgroup = document.createElement('optgroup');
                 optgroup.label = tier;
                 cats.forEach(function (c) {
