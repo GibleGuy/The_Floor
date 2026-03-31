@@ -10,6 +10,7 @@
  * @property {string} expertCategory
  * @property {number} area - Tile count (cached; recompute from grid when needed)
  * @property {number} duelCount
+ * @property {boolean} hasDueled
  * @property {boolean} hasTimeBoost
  * @property {boolean} eliminated
  */
@@ -32,6 +33,7 @@ function createPlayer(opts) {
         expertCategory: opts.expertCategory || '',
         area: 0,
         duelCount: 0,
+        hasDueled: false,
         hasTimeBoost: opts.hasTimeBoost ?? false,
         eliminated: false,
     };
@@ -56,6 +58,7 @@ function clonePlayer(p) {
         expertCategory: p.expertCategory,
         area: p.area,
         duelCount: p.duelCount,
+        hasDueled: p.hasDueled || false,
         hasTimeBoost: p.hasTimeBoost,
         eliminated: p.eliminated,
     };

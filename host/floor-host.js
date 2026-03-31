@@ -56,6 +56,9 @@ const setupCloseBtn = document.getElementById('floor-setup-close');
 const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
+const randomizerHelpBtn = document.getElementById('floor-randomizer-help');
+const randomizerHelpModalEl = document.getElementById('floor-randomizer-help-modal');
+const randomizerHelpCloseBtn = document.getElementById('floor-randomizer-help-close');
 
 /** Kill modal DOM refs */
 const killModalEl = document.getElementById('floor-kill-modal');
@@ -879,9 +882,11 @@ function runRandomizer() {
     state.refreshAreas();
 
     const statusEl = document.getElementById('floor-debug-status');
+    const modeSelect = document.getElementById('floor-randomizer-mode');
+    const strategy = modeSelect ? modeSelect.value : 'show';
 
     // Consolidated selection logic from floor-core
-    const selectedPlayer = pickOne(state);
+    const selectedPlayer = pickOne(state, { strategy });
 
     if (!selectedPlayer) {
         alert('No eligible players with tiles.');
@@ -895,7 +900,7 @@ function runRandomizer() {
     // Just pick random tiles from grid to flash?
     // The original logic followed a pattern "getOrderedEligible".
     // Let's stick to that but ensure it doesn't fail.
-    const ordered = getOrderedEligible(state);
+    const ordered = getOrderedEligible(state, { strategy });
     let rapidTiles = ordered
         .map((p) => {
             const tiles = state.getTilesOwnedBy(p.id);
@@ -1827,6 +1832,14 @@ function hideSetupModal() {
     if (setupModalEl) setupModalEl.setAttribute('aria-hidden', 'true');
 }
 
+function showRandomizerHelpModal() {
+    if (randomizerHelpModalEl) randomizerHelpModalEl.setAttribute('aria-hidden', 'false');
+}
+
+function hideRandomizerHelpModal() {
+    if (randomizerHelpModalEl) randomizerHelpModalEl.setAttribute('aria-hidden', 'true');
+}
+
 
 /** Timer variables */
 let floorTimerRemaining = 900; // 15 mins
@@ -2175,6 +2188,9 @@ function init() {
 
     if (setupOpenBtn) setupOpenBtn.addEventListener('click', showSetupModal);
     if (setupCloseBtn) setupCloseBtn.addEventListener('click', hideSetupModal);
+
+    if (randomizerHelpBtn) randomizerHelpBtn.addEventListener('click', showRandomizerHelpModal);
+    if (randomizerHelpCloseBtn) randomizerHelpCloseBtn.addEventListener('click', hideRandomizerHelpModal);
 
     // Background controls
     if (bgStyleSelect) {

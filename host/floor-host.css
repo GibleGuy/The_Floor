@@ -1443,6 +1443,8 @@ body.floor-battle-mode .floor-swap-bar {
 /* setup modal specific spacing */
 #floor-setup-modal .floor-edit-content {
     max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 #floor-setup-modal .floor-edit-row {

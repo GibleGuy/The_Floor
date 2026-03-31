@@ -53,9 +53,16 @@ function sortByEligibility(state, opts = {}) {
     const withTie = eligible.map((p) => ({ p, tie: rng() }));
 
     withTie.sort((a, b) => {
-        if (a.p.area !== b.p.area) return a.p.area - b.p.area;
-        if (a.p.duelCount !== b.p.duelCount) return a.p.duelCount - b.p.duelCount;
-        return a.tie - b.tie;
+        if (opts.strategy === 'show') {
+            const aDueled = a.p.hasDueled ? 1 : 0;
+            const bDueled = b.p.hasDueled ? 1 : 0;
+            if (aDueled !== bDueled) return aDueled - bDueled;
+            return a.tie - b.tie;
+        } else {
+            if (a.p.area !== b.p.area) return a.p.area - b.p.area;
+            if (a.p.duelCount !== b.p.duelCount) return a.p.duelCount - b.p.duelCount;
+            return a.tie - b.tie;
+        }
     });
 
     return withTie.map((x) => x.p);
@@ -74,10 +81,17 @@ function pickOne(state, opts = {}) {
     const sorted = sortByEligibility(state, opts);
     if (sorted.length === 0) return null;
 
-    const bestArea = sorted[0].area;
-    const tied = sorted.filter((p) => p.area === bestArea);
-    const idx = Math.floor((opts.rng ?? Math.random)() * tied.length);
-    return tied[idx] ?? null;
+    if (opts.strategy === 'show') {
+        const bestHasDueled = sorted[0].hasDueled;
+        const tied = sorted.filter((p) => p.hasDueled === bestHasDueled);
+        const idx = Math.floor((opts.rng ?? Math.random)() * tied.length);
+        return tied[idx] ?? null;
+    } else {
+        const bestArea = sorted[0].area;
+        const tied = sorted.filter((p) => p.area === bestArea);
+        const idx = Math.floor((opts.rng ?? Math.random)() * tied.length);
+        return tied[idx] ?? null;
+    }
 }
 
 /**

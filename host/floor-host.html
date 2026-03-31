@@ -211,6 +211,19 @@
                 </div>
                 
                 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 0 0 24px 0;">
+
+                <div class="floor-edit-row" style="align-items: center;">
+                    <label class="floor-edit-label" for="floor-randomizer-mode" style="margin-bottom: 0; flex-shrink: 0;">Randomizer Mode</label>
+                    <div style="display: flex; gap: 8px; flex: 1; align-items: center;">
+                        <select id="floor-randomizer-mode" class="floor-edit-input" style="flex: 1;">
+                            <option value="show" selected>Show Mode (Has Dueled)</option>
+                            <option value="standard">Competitive Mode (Least Area)</option>
+                        </select>
+                        <button type="button" id="floor-randomizer-help" class="floor-btn floor-btn-secondary" style="border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold;" title="What are these modes?">?</button>
+                    </div>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 24px 0 24px 0;">
                 
                 <div class="floor-edit-row">
                     <label class="floor-edit-label">Data Management</label>
@@ -262,6 +275,19 @@
     </div>
 
     <!-- Developer Sidebar (Z Key) -->
+    
+    <div id="floor-randomizer-help-modal" class="floor-edit-modal" role="dialog" aria-labelledby="floor-randomizer-help-title" aria-hidden="true">
+        <div class="floor-edit-content">
+            <h2 id="floor-randomizer-help-title" class="floor-edit-title">Randomizer Options</h2>
+            <div class="floor-edit-form" style="line-height: 1.5; font-size: 0.95rem;">
+                <p style="margin-bottom: 12px; color: #fff;"><strong>Competitive Mode (Least Area):</strong> Selects the person with the least amount of total tiles, and if there's a tie picks randomly between the players tied.</p>
+                <p style="color: #fff;"><strong>Show Mode (Has Dueled):</strong> Randomly selects a player who has not dueled yet in the current cycle. If all players have dueled at least once, then reset who has dueled and select randomly, until everyone has dueled a second round.</p>
+                <div class="floor-edit-actions" style="margin-top: 24px;">
+                    <button type="button" id="floor-randomizer-help-close" class="floor-btn floor-btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="floor-dev-sidebar" class="floor-dev-sidebar">
         <div class="floor-dev-title">
             <span>Dev Console</span>

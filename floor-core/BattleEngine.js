@@ -118,6 +118,13 @@ function applyBattleResult(state, cr, cc, dr, dc, winnerIsChallenger) {
     // 5. Stats
     loser.duelCount++;
     winner.duelCount++;
+    loser.hasDueled = true;
+    winner.hasDueled = true;
+
+    const activePlayers = state.players.filter((p) => !p.eliminated && (p.area ?? 0) > 0);
+    if (activePlayers.length > 0 && activePlayers.every((p) => p.hasDueled)) {
+        activePlayers.forEach((p) => { p.hasDueled = false; });
+    }
 
     // 6. Absorb any adjacent grey squares (chain reaction)
     absorbGreySquares(state, winnerId);
