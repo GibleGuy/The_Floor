@@ -53,6 +53,11 @@ const muteBtn = document.getElementById('floor-mute-btn');
 const setupModalEl = document.getElementById('floor-setup-modal');
 const setupOpenBtn = document.getElementById('floor-setup-open-btn');
 const setupCloseBtn = document.getElementById('floor-setup-close');
+const statsModalEl = document.getElementById('floor-stats-modal');
+const statsCloseBtn = document.getElementById('floor-stats-close');
+const statsBodyEl = document.getElementById('floor-stats-body');
+let statsSortCol = 'tiles';
+let statsSortAsc = false;
 const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
@@ -1114,6 +1119,8 @@ function handleKeydown(e) {
             hideContextMenu();
         } else if (setupModalEl && setupModalEl.getAttribute('aria-hidden') === 'false') {
             hideSetupModal();
+        } else if (statsModalEl && statsModalEl.getAttribute('aria-hidden') === 'false') {
+            hideStatsModal();
         } else if (duelOverlayEl && duelOverlayEl.getAttribute('aria-hidden') === 'false') {
             handleDuelCancel();
         } else if (randomizerResult) {
@@ -1158,6 +1165,10 @@ function handleKeydown(e) {
     if (key === 'z') {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         toggleDevMode();
+    }
+    if (key === 's') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleStatsModal();
     }
 }
 
@@ -1832,6 +1843,91 @@ function hideSetupModal() {
     if (setupModalEl) setupModalEl.setAttribute('aria-hidden', 'true');
 }
 
+function toggleStatsModal() {
+    if (statsModalEl && statsModalEl.getAttribute('aria-hidden') === 'false') {
+        hideStatsModal();
+    } else {
+        showStatsModal();
+    }
+}
+
+function showStatsModal() {
+    if (statsModalEl) {
+        statsModalEl.setAttribute('aria-hidden', 'false');
+        renderStatsTable();
+    }
+}
+
+function hideStatsModal() {
+    if (statsModalEl) statsModalEl.setAttribute('aria-hidden', 'true');
+}
+
+function renderStatsTable() {
+    if (!state || !statsBodyEl) return;
+    
+    // Get active players
+    let rows = state.players
+        .filter(p => !p.eliminated && typeof p.area === 'number' && p.area > 0)
+        .map(p => ({
+            name: p.name || 'Unknown',
+            category: p.expertCategory || '—',
+            duels: p.duelCount || 0,
+            tiles: p.area,
+            hasDueled: !!p.hasDueled
+        }));
+
+    // Sort
+    rows.sort((a, b) => {
+        let valA = a[statsSortCol];
+        let valB = b[statsSortCol];
+        
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return statsSortAsc ? -1 : 1;
+        if (valA > valB) return statsSortAsc ? 1 : -1;
+        return 0;
+    });
+
+    // Render body
+    statsBodyEl.innerHTML = '';
+    for (const row of rows) {
+        const tr = document.createElement('tr');
+        
+        const tdName = document.createElement('td');
+        tdName.textContent = row.name;
+        
+        const tdCat = document.createElement('td');
+        tdCat.textContent = row.category;
+        
+        const tdDuels = document.createElement('td');
+        tdDuels.textContent = row.duels;
+        
+        const tdTiles = document.createElement('td');
+        tdTiles.textContent = row.tiles;
+        
+        const tdHasDueled = document.createElement('td');
+        tdHasDueled.textContent = row.hasDueled ? 'True' : 'False';
+        
+        tr.appendChild(tdName);
+        tr.appendChild(tdCat);
+        tr.appendChild(tdDuels);
+        tr.appendChild(tdTiles);
+        tr.appendChild(tdHasDueled);
+        
+        statsBodyEl.appendChild(tr);
+    }
+    
+    // Update header classes
+    const headers = statsModalEl.querySelectorAll('th[data-sort]');
+    headers.forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.getAttribute('data-sort') === statsSortCol) {
+            th.classList.add(statsSortAsc ? 'sort-asc' : 'sort-desc');
+        }
+    });
+}
+
 function showRandomizerHelpModal() {
     if (randomizerHelpModalEl) randomizerHelpModalEl.setAttribute('aria-hidden', 'false');
 }
@@ -2258,6 +2354,26 @@ function init() {
 
     document.addEventListener('keydown', handleKeydown);
     document.addEventListener('click', handleClickOutside);
+
+    if (statsCloseBtn) {
+        statsCloseBtn.addEventListener('click', hideStatsModal);
+    }
+
+    if (statsModalEl) {
+        const headers = statsModalEl.querySelectorAll('th[data-sort]');
+        headers.forEach(th => {
+            th.addEventListener('click', () => {
+                const sortKey = th.getAttribute('data-sort');
+                if (statsSortCol === sortKey) {
+                    statsSortAsc = !statsSortAsc;
+                } else {
+                    statsSortCol = sortKey;
+                    statsSortAsc = false; // default to descending for new category
+                }
+                renderStatsTable();
+            });
+        });
+    }
 
     applyBtn.addEventListener('click', applyGrid);
     rowsInput.addEventListener('keydown', (e) => {
