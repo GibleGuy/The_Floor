@@ -263,6 +263,63 @@ function preloadCategoryImages() {
     }
 }
 
+// ========== CATEGORY REVEAL ==========
+let categoryRevealAudio = null;
+async function showCategoryReveal(categoryName) {
+    return new Promise(resolve => {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'category-reveal-overlay';
+        overlay.innerHTML = `
+            <div class="category-reveal-label">Category</div>
+            <div class="category-reveal-name">${categoryName}</div>
+            <div class="category-reveal-line"></div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Play anthem sound
+        if (!isMuted) {
+            categoryRevealAudio = new Audio('../sounds/MainAnthem.mp3');
+            categoryRevealAudio.volume = sfxVolume;
+            categoryRevealAudio.play().catch(() => {});
+        }
+
+        // Trigger fade-in
+        requestAnimationFrame(() => {
+            overlay.classList.add('visible');
+        });
+
+        // After zoom completes, add glow pulse
+        setTimeout(() => {
+            const nameEl = overlay.querySelector('.category-reveal-name');
+            if (nameEl) nameEl.classList.add('glow');
+        }, 1200);
+
+        // Hold for 2.5s total, then fade out
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            // Stop audio fade
+            if (categoryRevealAudio) {
+                const fadeAudio = setInterval(() => {
+                    if (categoryRevealAudio && categoryRevealAudio.volume > 0.05) {
+                        categoryRevealAudio.volume = Math.max(0, categoryRevealAudio.volume - 0.05);
+                    } else {
+                        clearInterval(fadeAudio);
+                        if (categoryRevealAudio) {
+                            categoryRevealAudio.pause();
+                            categoryRevealAudio = null;
+                        }
+                    }
+                }, 50);
+            }
+            setTimeout(() => {
+                overlay.remove();
+                resolve();
+            }, 500);
+        }, 2500);
+    });
+}
+
 // ========== GAME FLOW (setup, start, loop, correct, pass, end) ==========
 async function setupGame(cat, opts) {
     if (gameActive) return;
@@ -348,6 +405,10 @@ async function setupGame(cat, opts) {
     if (fallback) {
         fallback.remove();
     }
+    const imgEl = document.getElementById('prompt-image');
+    if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
+    const mathEl = document.getElementById('math-problem');
+    if (mathEl) { mathEl.innerHTML = ''; mathEl.style.display = 'none'; }
 
     resetTimerStyles();
     // Handle host mode differently
@@ -387,7 +448,8 @@ async function setupGame(cat, opts) {
         if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
         document.getElementById('reveal-text').innerText = "";
     } else {
-        // Normal mode - 3-Second Countdown
+        // Normal mode - Category Reveal then 3-Second Countdown
+        await showCategoryReveal(currentCategory);
         const overlay = document.getElementById('overlay');
         overlay.style.display = 'flex';
         // Play countdown sound once at the start
@@ -447,7 +509,8 @@ async function startGameFromHost() {
     // Clear any reveal text
     document.getElementById('reveal-text').innerText = "";
 
-    // 3-Second Countdown with fully opaque overlay
+    // Category Reveal then 3-Second Countdown
+    await showCategoryReveal(currentCategory);
     const overlay = document.getElementById('overlay');
     overlay.style.display = 'flex';
     overlay.style.zIndex = '20';
@@ -650,6 +713,7 @@ async function handleCorrect() {
     for (let i = 0; i < 20; i++) {
         if (!gameActive) break;
         await new Promise(r => setTimeout(r, 100));
+        if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 2 - (i + 1) * 0.1);
     }
     gameTimerRemaining = null;
@@ -715,6 +779,7 @@ async function handlePass() {
     for (let i = 0; i < 30; i++) {
         if (!gameActive) break;
         await new Promise(r => setTimeout(r, 100));
+        if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
     }
     gameTimerRemaining = null;
@@ -1277,11 +1342,6 @@ function updateFirstPlayerLabels() {
     if (l2) l2.textContent = playerNames[1] || 'Right Player';
 }
 
-function updateKeyboardHintsVisibility() {
-    const el = document.getElementById('keyboard-hints');
-    if (!el) return;
-    el.style.display = (hostMode && !adminWindowOpen && !disableExtras) ? 'block' : 'none';
-}
 
 function updateMenuVisibility() {
     const menu = document.querySelector('.menu');
@@ -1517,7 +1577,7 @@ function toggleHostMode() {
 
 
 
-    updateKeyboardHintsVisibility();
+
     updateDisplay();
 }
 
@@ -1565,7 +1625,7 @@ function openAdminWindow() {
     document.getElementById('help-button').style.display = 'none';
     document.body.classList.add('admin-window-open');
     if (!gameActive) showWelcomeOnMain();
-    updateKeyboardHintsVisibility();
+
     if (adminInterval) clearInterval(adminInterval);
     postStateToAdmin();
     adminInterval = setInterval(function () {
@@ -1758,7 +1818,7 @@ window.addEventListener('message', function (e) {
         }
         updateDisplay();
         savePreferences();
-        updateKeyboardHintsVisibility();
+
     }
     else if (d.action === 'showTimerDecimal' && d.value != null) {
         showTimerDecimal = !!d.value;
@@ -1952,6 +2012,8 @@ function showTextFallback(itemName) {
 }
 
 function handleImageError(img) {
+    if (!img.src || img.src === '' || img.src === window.location.href) return;
+
     // Prevent multiple error handlers from firing for the same load attempt
     if (img.dataset.errorHandled === 'true') return;
 
@@ -2160,7 +2222,7 @@ function toggleDisableExtras() {
         scoreDisplay.classList.remove('hidden');
     }
     updateDisplay();
-    updateKeyboardHintsVisibility();
+
     savePreferences();
 }
 
@@ -2281,7 +2343,7 @@ function initPage() {
     applyPreferencesToDOM();
     changeGamemode();
     updateFirstPlayerLabels();
-    updateKeyboardHintsVisibility();
+
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPage);
