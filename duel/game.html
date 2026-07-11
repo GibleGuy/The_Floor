@@ -145,6 +145,11 @@
 
     <div class="answer-reveal" id="reveal-text"></div>
     <input type="text" id="answer-input" placeholder="SELECT A CATEGORY" disabled autocomplete="off">
+    <div id="study-controls" style="display: none;">
+        <button id="study-reveal-btn" onclick="revealAnswer()" class="study-btn">REVEAL ANSWER</button>
+        <button id="study-knew-btn" onclick="handleStudyKnewIt()" class="study-btn study-btn-correct" style="display: none;">I KNEW IT</button>
+        <button id="study-again-btn" onclick="handleStudyAgain()" class="study-btn study-btn-wrong" style="display: none;">STUDY AGAIN</button>
+    </div>
 
     <div class="menu">
         <button type="button" class="category-select-btn" id="category-select-btn" onclick="openCategoryMenu()">CATEGORY SELECT</button>
@@ -172,7 +177,15 @@
                     style="width: 100%; padding: 8px; font-size: 0.9rem;">
                     <option value="singleplayer">Singleplayer</option>
                     <option value="classic" selected>Classic</option>
+                    <option value="study">Study Mode</option>
                 </select>
+            </div>
+            <div class="custom-row" id="study-shuffle-row" style="display: none; align-items: center; justify-content: space-between; margin-top: 10px;">
+                <label class="custom-label" style="margin: 0; cursor: pointer;" for="study-shuffle-toggle">Shuffle Clues:</label>
+                <label class="switch" style="transform: scale(0.8); margin: 0;">
+                    <input type="checkbox" id="study-shuffle-toggle" checked onchange="savePreferences()">
+                    <span class="slider"></span>
+                </label>
             </div>
             <div class="custom-row">
                 <label class="custom-label">Jump to Clue:</label>
