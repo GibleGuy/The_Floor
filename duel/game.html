@@ -180,14 +180,14 @@
                     <option value="study">Study Mode</option>
                 </select>
             </div>
-            <div class="custom-row" id="study-shuffle-row" style="display: none; align-items: center; justify-content: space-between; margin-top: 10px;">
-                <label class="custom-label" style="margin: 0; cursor: pointer;" for="study-shuffle-toggle">Shuffle Clues:</label>
+            <div class="custom-row" id="shuffle-clues-row" style="display: none; align-items: center; justify-content: space-between; margin-top: 10px;">
+                <label class="custom-label" style="margin: 0; cursor: pointer;" for="shuffle-clues-toggle">Shuffle Clues:</label>
                 <label class="switch" style="transform: scale(0.8); margin: 0;">
-                    <input type="checkbox" id="study-shuffle-toggle" checked onchange="savePreferences()">
+                    <input type="checkbox" id="shuffle-clues-toggle" checked onchange="savePreferences()">
                     <span class="slider"></span>
                 </label>
             </div>
-            <div class="custom-row">
+            <div class="custom-row" id="clue-jump-row" style="display: none;">
                 <label class="custom-label">Jump to Clue:</label>
                 <select id="clue-jump-select" class="custom-input" onchange="jumpToClue(this.value)"
                     style="width: 100%; padding: 8px; font-size: 0.9rem;">

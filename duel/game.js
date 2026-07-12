@@ -81,6 +81,8 @@ let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
 let currentStreak = 0;
 let inPassPhase = false;
 let unpauseCountdownActive = false;
+let shuffleCluesNormal = false;
+let shuffleCluesStudy = true;
 
 // Stats tracking
 let answerStartTime = 0;
@@ -137,6 +139,8 @@ function loadPreferences() {
         if (p.backgroundStyle && BG_STYLES.includes(p.backgroundStyle)) backgroundStyle = p.backgroundStyle;
         if (typeof p.backgroundDriftSpeed === 'number' && p.backgroundDriftSpeed >= 0.25 && p.backgroundDriftSpeed <= 2) backgroundDriftSpeed = p.backgroundDriftSpeed;
         if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
+        if (typeof p.shuffleCluesNormal === 'boolean') shuffleCluesNormal = p.shuffleCluesNormal;
+        if (typeof p.shuffleCluesStudy === 'boolean') shuffleCluesStudy = p.shuffleCluesStudy;
     } catch (e) { }
 }
 function applyPreferencesToDOM() {
@@ -179,6 +183,10 @@ function applyPreferencesToDOM() {
     if (speedLabel) speedLabel.textContent = backgroundDriftSpeed + '×';
     const bvRadios = document.querySelectorAll('input[name="blue-variant"]');
     bvRadios.forEach(function (r) { r.checked = (r.value === blueVariant); });
+    const shuffleToggle = document.getElementById('shuffle-clues-toggle');
+    if (shuffleToggle) {
+        shuffleToggle.checked = (gamemode === 'study' ? shuffleCluesStudy : shuffleCluesNormal);
+    }
     const helpBtn = document.getElementById('help-button');
     const fullscreenBtn = document.getElementById('fullscreen-button');
     const streakDisplay = document.getElementById('streak-display');
@@ -197,6 +205,14 @@ function applyPreferencesToDOM() {
 }
 function savePreferences() {
     try {
+        const shuffleToggle = document.getElementById('shuffle-clues-toggle');
+        if (shuffleToggle) {
+            if (gamemode === 'study') {
+                shuffleCluesStudy = shuffleToggle.checked;
+            } else {
+                shuffleCluesNormal = shuffleToggle.checked;
+            }
+        }
         const p = {
             theme: currentTheme,
             mute: isMuted,
@@ -211,7 +227,9 @@ function savePreferences() {
             highContrastReducedMotion,
             backgroundStyle,
             backgroundDriftSpeed,
-            blueVariant
+            blueVariant,
+            shuffleCluesNormal,
+            shuffleCluesStudy
         };
         localStorage.setItem(PREFS_KEY, JSON.stringify(p));
     } catch (e) { }
@@ -382,7 +400,10 @@ async function setupGame(cat, opts) {
         document.getElementById('p2-boost-btn').disabled = false;
         document.getElementById('p2-boost-btn').textContent = 'Time Boost? (+5s)';
     }
-    if (hostMode || cat === 'math' || gamemode === 'study') {
+    const shuffleToggle = document.getElementById('shuffle-clues-toggle');
+    const shouldShuffle = shuffleToggle ? shuffleToggle.checked : (gamemode === 'study' ? shuffleCluesStudy : shuffleCluesNormal);
+
+    if (hostMode || cat === 'math' || gamemode === 'study' || !shouldShuffle) {
         currentPool = [...data];
     } else {
         // Shuffle normal games
@@ -398,8 +419,7 @@ async function setupGame(cat, opts) {
         studyQueue = Array.from({length: currentPool.length}, (_, i) => i);
         
         // Shuffle if the option is checked
-        const shuffleToggle = document.getElementById('study-shuffle-toggle');
-        if (shuffleToggle && shuffleToggle.checked) {
+        if (shouldShuffle) {
             for (let i = studyQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
@@ -1062,7 +1082,15 @@ function nextSlide() {
     updateClueDropdown();
 }
 
+function updateClueJumpVisibility() {
+    const row = document.getElementById('clue-jump-row');
+    if (row) {
+        row.style.display = (hostMode && isPaused && gameActive) ? 'flex' : 'none';
+    }
+}
+
 function updateClueDropdown() {
+    updateClueJumpVisibility();
     const select = document.getElementById('clue-jump-select');
     if (!select) return;
     
@@ -1303,6 +1331,7 @@ function formatTimer(val) {
 }
 
 function updateDisplay() {
+    updateClueJumpVisibility();
     // Study mode: don't touch timers or player names — they're managed by study logic
     if (gamemode === 'study') {
         // Hide extras in study mode
@@ -1809,30 +1838,34 @@ function showWelcomeOnMain() {
 function changeGamemode() {
     const select = document.getElementById('gamemode-select');
     gamemode = select.value;
+
+    const shuffleToggle = document.getElementById('shuffle-clues-toggle');
+    if (shuffleToggle) {
+        shuffleToggle.checked = (gamemode === 'study' ? shuffleCluesStudy : shuffleCluesNormal);
+    }
     savePreferences();
 
     // Update UI based on gamemode
     const p1Container = document.querySelector('.clocks > div:nth-child(1)');
     const p2Container = document.querySelector('.clocks > div:nth-child(2)');
     const studyControls = document.getElementById('study-controls');
-    const shuffleRow = document.getElementById('study-shuffle-row');
+    const shuffleRow = document.getElementById('shuffle-clues-row');
+
+    if (shuffleRow) shuffleRow.style.display = 'flex';
 
     if (gamemode === 'study') {
         // Hide both timer containers for study
         if (p1Container) p1Container.style.display = 'none';
         if (p2Container) p2Container.style.display = 'none';
         if (studyControls) studyControls.style.display = 'none';
-        if (shuffleRow) shuffleRow.style.display = 'flex';
     } else if (gamemode === 'singleplayer') {
         if (p1Container) p1Container.style.display = 'block';
         if (p2Container) p2Container.style.display = 'none';
         if (studyControls) studyControls.style.display = 'none';
-        if (shuffleRow) shuffleRow.style.display = 'none';
     } else {
         if (p1Container) p1Container.style.display = 'block';
         if (p2Container) p2Container.style.display = 'block';
         if (studyControls) studyControls.style.display = 'none';
-        if (shuffleRow) shuffleRow.style.display = 'none';
     }
 
     // Update answer input based on host mode (if enabled)
