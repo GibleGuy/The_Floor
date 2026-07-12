@@ -510,28 +510,37 @@ async function setupGame(cat, opts) {
         const answerInput = document.getElementById('answer-input');
         if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
         document.getElementById('reveal-text').innerText = "";
-    } else {
-        // Normal mode - Category Reveal then 3-Second Countdown
-        if (gamemode !== 'study') {
-            await showCategoryReveal(currentCategory);
-            const overlay = document.getElementById('overlay');
-            overlay.style.display = 'flex';
-            // Play countdown sound once at the start
-            if (!isMuted) {
-                sounds.countdown.currentTime = 0;
-                sounds.countdown.play().catch(() => { });
-            }
-            for (let i = 3; i > 0; i--) {
-                overlay.innerText = i;
-                await new Promise(r => setTimeout(r, 1000));
-            }
-            overlay.style.display = 'none';
+        } else {
+            // Normal mode - Category Reveal then 3-Second Countdown
+            if (gamemode !== 'study') {
+                await showCategoryReveal(currentCategory);
+                if (currentPool.length === 0) return;
+                const overlay = document.getElementById('overlay');
+                overlay.style.display = 'flex';
+                // Play countdown sound once at the start
+                if (!isMuted) {
+                    sounds.countdown.currentTime = 0;
+                    sounds.countdown.play().catch(() => { });
+                }
+                for (let i = 3; i > 0; i--) {
+                    if (currentPool.length === 0) {
+                        overlay.style.display = 'none';
+                        return;
+                    }
+                    overlay.innerText = i;
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+                if (currentPool.length === 0) {
+                    overlay.style.display = 'none';
+                    return;
+                }
+                overlay.style.display = 'none';
 
-            if (!isMuted) {
-                sounds.duelMusic.currentTime = 0;
-                sounds.duelMusic.play().catch(() => { });
+                if (!isMuted) {
+                    sounds.duelMusic.currentTime = 0;
+                    sounds.duelMusic.play().catch(() => { });
+                }
             }
-        }
 
         gameActive = true;
         inputLocked = false;
@@ -589,6 +598,7 @@ async function startGameFromHost() {
     
     if (gamemode !== 'study') {
         await showCategoryReveal(currentCategory);
+        if (currentPool.length === 0) return;
         overlay.style.display = 'flex';
         overlay.style.zIndex = '20';
         overlay.style.background = 'rgba(0,0,0,1)';
@@ -598,8 +608,18 @@ async function startGameFromHost() {
             sounds.countdown.play().catch(() => { });
         }
         for (let i = 3; i > 0; i--) {
+            if (currentPool.length === 0) {
+                overlay.style.display = 'none';
+                overlay.style.background = 'rgba(0,0,0,0.9)';
+                return;
+            }
             overlay.innerText = i;
             await new Promise(r => setTimeout(r, 1000));
+        }
+        if (currentPool.length === 0) {
+            overlay.style.display = 'none';
+            overlay.style.background = 'rgba(0,0,0,0.9)';
+            return;
         }
         overlay.style.display = 'none';
         overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
@@ -806,6 +826,7 @@ async function handleStudyKnewIt() {
     document.getElementById('study-controls').style.display = 'none';
     
     await new Promise(r => setTimeout(r, 600));
+    if (!gameActive) return;
     
     // Clean up border
     document.getElementById('img-frame').classList.remove('correct-border');
@@ -844,6 +865,7 @@ async function handleStudyAgain() {
     }
     
     await new Promise(r => setTimeout(r, 1000));
+    if (!gameActive) return;
     
     // Clean up border
     document.getElementById('img-frame').classList.remove('pass-border');
@@ -925,6 +947,7 @@ async function handleCorrect() {
         if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 2 - (i + 1) * 0.1);
     }
+    if (!gameActive) return;
     gameTimerRemaining = null;
     // Switch players only in classic mode
     if (gamemode === 'classic') {
@@ -995,6 +1018,7 @@ async function handlePass() {
         if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
     }
+    if (!gameActive) return;
     gameTimerRemaining = null;
     inPassPhase = false;
     answerStartTime = Date.now();
@@ -1002,6 +1026,7 @@ async function handlePass() {
 }
 
 function nextSlide() {
+    if (!gameActive) return;
     if (gamemode === 'study') {
         if (studyQueue.length === 0) {
             handleCategoryComplete();
@@ -1582,8 +1607,20 @@ async function runUnpauseCountdown() {
         c.play().catch(() => { });
     }
     for (let i = 3; i > 0; i--) {
+        if (currentPool.length === 0) {
+            overlay.style.display = 'none';
+            overlay.style.background = '';
+            overlay.style.zIndex = '20';
+            return;
+        }
         overlay.innerText = i;
         await new Promise(r => setTimeout(r, 1000));
+    }
+    if (currentPool.length === 0) {
+        overlay.style.display = 'none';
+        overlay.style.background = '';
+        overlay.style.zIndex = '20';
+        return;
     }
     overlay.style.display = 'none';
     overlay.style.background = '';
