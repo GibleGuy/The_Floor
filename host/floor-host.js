@@ -131,12 +131,14 @@ const animationHooks = {
 
 const playerConfig = [];
 // Generate enough unique players for a standard grid (e.g. 400 for 20x20)
-const NAMES = ['Boston Rob', 'Parvati', 'Sandra', 'Tony', 'Kim', 'Jeremy', 'Sarah', 'Yul', 'Natalie', 'Tyson', 'Sophie', 'Denise', 'Ethan', 'Amber', 'Todd', 'Earl', 'JT', 'Fabio', 'Cochran', 'Wendell', 'Tommy', 'Ben', 'Adam', 'Nick', 'Chris', 'Michele'];
+const NAMES = ['Boston Rob', 'Parvati', 'Sandra', 'Brandon', 'Rob C.', 'Sam', 'Gible', 'Derek', 'Tony', 'Kim', 'Jeremy', 'Sarah', 'Yul', 'Natalie', 'Tyson', 'Sophie', 'Denise', 'Ethan', 'Amber', 'Todd', 'Earl', 'JT', 'Fabio', 'Cochran', 'Wendell', 'Tommy', 'Ben', 'Adam', 'Nick', 'Chris', 'Michele'];
 const CATEGORIES = ['History', 'Geography', 'Science', 'Math', 'Literature', 'Art', 'Music', 'Movies', 'Sports', 'Food', 'Animals', 'Technology', 'Politics', 'Religion', 'Mythology', 'Language', 'Fashion', 'Architecture', 'Business', 'Economics', 'Psychology', 'Sociology', 'Philosophy', 'Physics', 'Chemistry', 'Biology'];
 
 for (let i = 0; i < 400; i++) {
-    const name = `${NAMES[i % NAMES.length]} ${Math.floor(i / NAMES.length) + 1}`;
-    const category = `${CATEGORIES[i % CATEGORIES.length]} ${Math.floor(i / CATEGORIES.length) + 1}`;
+    const nameCycle = Math.floor(i / NAMES.length);
+    const categoryCycle = Math.floor(i / CATEGORIES.length);
+    const name = NAMES[i % NAMES.length] + (nameCycle > 0 ? ` ${nameCycle + 1}` : '');
+    const category = CATEGORIES[i % CATEGORIES.length] + (categoryCycle > 0 ? ` ${categoryCycle + 1}` : '');
     playerConfig.push({ name, expertCategory: category });
 }
 if (playerConfig.length > 0) playerConfig[0].hasTimeBoost = true;
@@ -620,7 +622,7 @@ function handleBattleTileClick(tile) {
     // Update state - the person who double-clicked is the challenger, 
     // and the person selected as the opponent is the defender.
     // battleState.challenger was already set in startBattleMode.
-    battleState.defender = validDefenderTile; 
+    battleState.defender = validDefenderTile;
     showDuelOverlay();
 }
 
@@ -746,10 +748,10 @@ function confirmKill() {
 
 function showDuelOverlay() {
     if (!state || !battleState.defender || !battleState.challenger) return;
-    
+
     // Dev Tool: Reset randomizer pick when a battle is finalized
     if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
-    
+
     const { r: cr, c: cc } = battleState.challenger;
     const { r: dr, c: dc } = battleState.defender;
     const challengerTile = state.getTile(cr, cc);
@@ -799,7 +801,7 @@ function dismissGoldenAnnouncement() {
     const challengerPlayer = challengerTile?.ownerId ? state.getPlayer(challengerTile.ownerId) : null;
     const defenderPlayer = defenderTile?.ownerId ? state.getPlayer(defenderTile.ownerId) : null;
     const category = getBattleCategory(state, dr, dc, cr, cc);
-    
+
     proceedToDuel(challengerPlayer, defenderPlayer, category);
 }
 
@@ -1048,7 +1050,7 @@ function cancelRandomizer() {
         currentAudio = null;
     }
     if (!randomizerState && !randomizerResult) return;
-    
+
     // Clear dev pick when cancelled
     if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
 
@@ -1074,7 +1076,7 @@ function dismissRandomizer() {
     if (!randomizerResult) return;
     randomizerResult = null;
     if (randomizerResultEl) randomizerResultEl.setAttribute('aria-hidden', 'true');
-    
+
     // Clear dev pick when dismissed
     if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
 
@@ -1583,7 +1585,7 @@ function importFullState(rowsData) {
 
     for (const row of rowsData) {
         if (row.length < 4) continue;
-        
+
         if (row[0] === '__METADATA__' && row[1] === 'goldenSquare') {
             const gr = parseInt(row[2], 10);
             const gc = parseInt(row[3], 10);
@@ -1651,7 +1653,7 @@ function importFullState(rowsData) {
     } else if (useGoldenSquare) {
         assignGoldenSquare(state);
     }
-    
+
     if (devRandomizerPickEl) devRandomizerPickEl.textContent = '---';
     render();
     saveGame();
