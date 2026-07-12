@@ -41,6 +41,7 @@ async function getCategoryData(cat) {
 let activePlayer = 1;
 let timers = [45.0, 45.0];
 let currentPool = [];
+let studyQueue = [];
 let currentIndex = 0;
 let gameActive = false;
 let inputLocked = true;
@@ -126,7 +127,7 @@ function loadPreferences() {
         if (typeof p.showTimerDecimal === 'boolean') showTimerDecimal = p.showTimerDecimal;
         if (typeof p.disableExtras === 'boolean') disableExtras = p.disableExtras;
         if (typeof p.confettiEnabled === 'boolean') confettiEnabled = p.confettiEnabled;
-        if (p.gamemode && ['singleplayer', 'classic'].includes(p.gamemode)) gamemode = p.gamemode;
+        if (p.gamemode && ['singleplayer', 'classic', 'study'].includes(p.gamemode)) gamemode = p.gamemode;
         if (Array.isArray(p.playerNames) && p.playerNames.length >= 2) {
             playerNames[0] = String(p.playerNames[0] || 'Challenger');
             playerNames[1] = String(p.playerNames[1] || 'Expert');
@@ -263,6 +264,63 @@ function preloadCategoryImages() {
     }
 }
 
+// ========== CATEGORY REVEAL ==========
+let categoryRevealAudio = null;
+async function showCategoryReveal(categoryName) {
+    return new Promise(resolve => {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'category-reveal-overlay';
+        overlay.innerHTML = `
+            <div class="category-reveal-label">Category</div>
+            <div class="category-reveal-name">${categoryName}</div>
+            <div class="category-reveal-line"></div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Play anthem sound
+        if (!isMuted) {
+            categoryRevealAudio = new Audio('../sounds/MainAnthem.mp3');
+            categoryRevealAudio.volume = sfxVolume;
+            categoryRevealAudio.play().catch(() => {});
+        }
+
+        // Trigger fade-in
+        requestAnimationFrame(() => {
+            overlay.classList.add('visible');
+        });
+
+        // After zoom completes, add glow pulse
+        setTimeout(() => {
+            const nameEl = overlay.querySelector('.category-reveal-name');
+            if (nameEl) nameEl.classList.add('glow');
+        }, 1200);
+
+        // Hold for 2.5s total, then fade out
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            // Stop audio fade
+            if (categoryRevealAudio) {
+                const fadeAudio = setInterval(() => {
+                    if (categoryRevealAudio && categoryRevealAudio.volume > 0.05) {
+                        categoryRevealAudio.volume = Math.max(0, categoryRevealAudio.volume - 0.05);
+                    } else {
+                        clearInterval(fadeAudio);
+                        if (categoryRevealAudio) {
+                            categoryRevealAudio.pause();
+                            categoryRevealAudio = null;
+                        }
+                    }
+                }, 50);
+            }
+            setTimeout(() => {
+                overlay.remove();
+                resolve();
+            }, 500);
+        }, 2500);
+    });
+}
+
 // ========== GAME FLOW (setup, start, loop, correct, pass, end) ==========
 async function setupGame(cat, opts) {
     if (gameActive) return;
@@ -300,7 +358,7 @@ async function setupGame(cat, opts) {
     activePlayer = firstPlayerIsLeft ? 1 : 2;
 
     // Initialize timers based on gamemode
-    if (gamemode === 'singleplayer') {
+    if (gamemode === 'singleplayer' || gamemode === 'study') {
         timers = [0.0, 0.0]; // Start at 0, count up
     } else {
         // Apply time boosts if they were used before game start
@@ -324,17 +382,55 @@ async function setupGame(cat, opts) {
         document.getElementById('p2-boost-btn').disabled = false;
         document.getElementById('p2-boost-btn').textContent = 'Time Boost? (+5s)';
     }
-    if (hostMode || cat === 'math') {
+    if (hostMode || cat === 'math' || gamemode === 'study') {
         currentPool = [...data];
     } else {
-        currentPool = [...data].sort(function () { return Math.random() - 0.5; });
+        // Shuffle normal games
+        let arr = [...data];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        currentPool = arr;
+    }
+
+    if (gamemode === 'study') {
+        studyQueue = Array.from({length: currentPool.length}, (_, i) => i);
+        
+        // Shuffle if the option is checked
+        const shuffleToggle = document.getElementById('study-shuffle-toggle');
+        if (shuffleToggle && shuffleToggle.checked) {
+            for (let i = studyQueue.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
+            }
+        }
+        
+        if (studyQueue.length > 0) {
+            currentIndex = studyQueue.shift();
+        }
     }
 
     updateClueDropdown();
 
-    // In single player, always use player 1
-    if (gamemode === 'singleplayer') {
+    // In single player or study mode, always use player 1
+    if (gamemode === 'singleplayer' || gamemode === 'study') {
         activePlayer = 1;
+    }
+
+    const p1Container = document.querySelector('.clocks > div:nth-child(1)');
+    const p2Container = document.querySelector('.clocks > div:nth-child(2)');
+
+    if (gamemode === 'study') {
+        // Study mode: hide both timer containers entirely
+        if (p1Container) p1Container.style.display = 'none';
+        if (p2Container) p2Container.style.display = 'none';
+    } else if (gamemode === 'singleplayer') {
+        if (p1Container) p1Container.style.display = 'block';
+        if (p2Container) p2Container.style.display = 'none';
+    } else {
+        if (p1Container) p1Container.style.display = 'block';
+        if (p2Container) p2Container.style.display = 'block';
     }
 
     updateDisplay();
@@ -348,6 +444,10 @@ async function setupGame(cat, opts) {
     if (fallback) {
         fallback.remove();
     }
+    const imgEl = document.getElementById('prompt-image');
+    if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
+    const mathEl = document.getElementById('math-problem');
+    if (mathEl) { mathEl.innerHTML = ''; mathEl.style.display = 'none'; }
 
     resetTimerStyles();
     // Handle host mode differently
@@ -362,10 +462,14 @@ async function setupGame(cat, opts) {
                         <button onclick="startGameFromHost()" style="padding: 20px 40px; font-size: 2rem; background: var(--floor-green); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">START</button>
                     </div>
                 `;
+
+
+        
         const answerInput = document.getElementById('answer-input');
         answerInput.disabled = true;
         answerInput.style.display = 'none';
         document.getElementById('reveal-text').innerText = "";
+        
     } else if (hostMode && fromAdminWindow && loadOnly) {
         // Admin Window LOAD: show category in display, preload, enable START on admin
         const imgFrame = document.getElementById('img-frame');
@@ -387,23 +491,26 @@ async function setupGame(cat, opts) {
         if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
         document.getElementById('reveal-text').innerText = "";
     } else {
-        // Normal mode - 3-Second Countdown
-        const overlay = document.getElementById('overlay');
-        overlay.style.display = 'flex';
-        // Play countdown sound once at the start
-        if (!isMuted) {
-            sounds.countdown.currentTime = 0;
-            sounds.countdown.play().catch(() => { });
-        }
-        for (let i = 3; i > 0; i--) {
-            overlay.innerText = i;
-            await new Promise(r => setTimeout(r, 1000));
-        }
-        overlay.style.display = 'none';
+        // Normal mode - Category Reveal then 3-Second Countdown
+        if (gamemode !== 'study') {
+            await showCategoryReveal(currentCategory);
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'flex';
+            // Play countdown sound once at the start
+            if (!isMuted) {
+                sounds.countdown.currentTime = 0;
+                sounds.countdown.play().catch(() => { });
+            }
+            for (let i = 3; i > 0; i--) {
+                overlay.innerText = i;
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            overlay.style.display = 'none';
 
-        if (!isMuted) {
-            sounds.duelMusic.currentTime = 0;
-            sounds.duelMusic.play().catch(() => { });
+            if (!isMuted) {
+                sounds.duelMusic.currentTime = 0;
+                sounds.duelMusic.play().catch(() => { });
+            }
         }
 
         gameActive = true;
@@ -419,6 +526,16 @@ async function setupGame(cat, opts) {
         answerInput.style.display = 'block';
         answerInput.placeholder = 'TYPE ANSWER HERE';
         answerInput.focus();
+
+        if (gamemode === 'study') {
+            const studyControls = document.getElementById('study-controls');
+            if (studyControls) {
+                studyControls.style.display = 'flex';
+                document.getElementById('study-reveal-btn').style.display = 'block';
+                document.getElementById('study-knew-btn').style.display = 'none';
+                document.getElementById('study-again-btn').style.display = 'none';
+            }
+        }
     }
 }
 
@@ -447,26 +564,32 @@ async function startGameFromHost() {
     // Clear any reveal text
     document.getElementById('reveal-text').innerText = "";
 
-    // 3-Second Countdown with fully opaque overlay
+    // Category Reveal then 3-Second Countdown
     const overlay = document.getElementById('overlay');
-    overlay.style.display = 'flex';
-    overlay.style.zIndex = '20';
-    overlay.style.background = 'rgba(0,0,0,1)';
-    // Play countdown sound once at the start
-    if (!isMuted) {
-        sounds.countdown.currentTime = 0;
-        sounds.countdown.play().catch(() => { });
-    }
-    for (let i = 3; i > 0; i--) {
-        overlay.innerText = i;
-        await new Promise(r => setTimeout(r, 1000));
-    }
-    overlay.style.display = 'none';
-    overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
+    
+    if (gamemode !== 'study') {
+        await showCategoryReveal(currentCategory);
+        overlay.style.display = 'flex';
+        overlay.style.zIndex = '20';
+        overlay.style.background = 'rgba(0,0,0,1)';
+        // Play countdown sound once at the start
+        if (!isMuted) {
+            sounds.countdown.currentTime = 0;
+            sounds.countdown.play().catch(() => { });
+        }
+        for (let i = 3; i > 0; i--) {
+            overlay.innerText = i;
+            await new Promise(r => setTimeout(r, 1000));
+        }
+        overlay.style.display = 'none';
+        overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
 
-    if (!isMuted) {
-        sounds.duelMusic.currentTime = 0;
-        sounds.duelMusic.play().catch(() => { });
+        if (!isMuted) {
+            sounds.duelMusic.currentTime = 0;
+            sounds.duelMusic.play().catch(() => { });
+        }
+    } else {
+        overlay.style.display = 'none';
     }
 
     gameActive = true;
@@ -477,8 +600,18 @@ async function startGameFromHost() {
 
     // Now show and load the image after countdown
     const img = document.getElementById('prompt-image');
-    img.style.display = 'block';
+    if (img) img.style.display = 'block';
     loadImage();
+
+    if (gamemode === 'study') {
+        const studyControls = document.getElementById('study-controls');
+        if (studyControls) {
+            studyControls.style.display = 'flex';
+            document.getElementById('study-reveal-btn').style.display = 'block';
+            document.getElementById('study-knew-btn').style.display = 'none';
+            document.getElementById('study-again-btn').style.display = 'none';
+        }
+    }
 
     updateMenuVisibility();
     if (clockInterval) clearInterval(clockInterval);
@@ -487,6 +620,12 @@ async function startGameFromHost() {
 
 function gameLoop() {
     if (!gameActive || categoryComplete) return;
+
+    if (gamemode === 'study') {
+        // Study mode: no timer logic needed, just update display
+        updateDisplay();
+        return;
+    }
 
     if (gamemode === 'singleplayer') {
         // Single player: count up
@@ -505,19 +644,52 @@ function gameLoop() {
     updateDisplay();
 }
 
+const NUM_WORDS = {
+    'ONE': '1', 'TWO': '2', 'THREE': '3', 'FOUR': '4', 'FIVE': '5',
+    'SIX': '6', 'SEVEN': '7', 'EIGHT': '8', 'NINE': '9', 'TEN': '10',
+    'ELEVEN': '11', 'TWELVE': '12', 'THIRTEEN': '13', 'FOURTEEN': '14',
+    'FIFTEEN': '15', 'SIXTEEN': '16', 'SEVENTEEN': '17', 'EIGHTEEN': '18',
+    'NINETEEN': '19', 'TWENTY': '20', 'THIRTY': '30', 'FORTY': '40',
+    'FIFTY': '50', 'SIXTY': '60', 'SEVENTY': '70', 'EIGHTY': '80',
+    'NINETY': '90', 'HUNDRED': '100'
+};
+
+function normalizeAnswer(str) {
+    if (!str) return "";
+    let s = str.toUpperCase();
+    
+    // Convert number words to digits using word boundaries
+    for (const [word, num] of Object.entries(NUM_WORDS)) {
+        s = s.replace(new RegExp('\\b' + word + '\\b', 'g'), num);
+    }
+    
+    // Normalize & to AND, remove punctuation, strip leading articles
+    return s.replace(/&/g, 'AND')
+        .replace(/[^A-Z0-9\s]/g, '')
+        .replace(/^\s*(THE|A|AN)\s+/i, '')
+        .replace(/\s+/g, '');
+}
+
 document.getElementById('answer-input').addEventListener('input', (e) => {
     if (!gameActive || inputLocked) return;
-    let val = e.target.value.toUpperCase().trim();
-    // Match Logic
-    if (val === currentPool[currentIndex].n) handleCorrect();
+    let val = e.target.value;
+    // Match Logic: ignore spaces and punctuation
+    if (normalizeAnswer(val) === normalizeAnswer(currentPool[currentIndex].n)) handleCorrect();
 });
 
 document.getElementById('answer-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && gameActive && !inputLocked) {
         const val = e.target.value.trim();
+        if (gamemode === 'study') {
+            // In study mode: Enter with wrong/empty answer reveals it
+            if (val === "" || normalizeAnswer(val) !== normalizeAnswer(currentPool[currentIndex].n)) {
+                revealAnswer();
+            }
+            return;
+        }
         if (val === "") {
             handlePass();
-        } else if (val.toUpperCase() !== currentPool[currentIndex].n) {
+        } else if (normalizeAnswer(val) !== normalizeAnswer(currentPool[currentIndex].n)) {
             // Incorrect answer - flash red and clear
             const input = e.target;
             input.style.backgroundColor = 'rgba(231, 76, 60, 0.3)';
@@ -588,7 +760,87 @@ function toggleMoreSpecific(forceState) {
     }
 }
 
+function revealAnswer() {
+    if (!gameActive || gamemode !== 'study') return;
+    const answerText = currentPool[currentIndex].n;
+    document.getElementById('reveal-text').innerText = answerText;
+    document.getElementById('reveal-text').style.color = 'var(--floor-yellow)';
+    document.getElementById('study-reveal-btn').style.display = 'none';
+    document.getElementById('study-knew-btn').style.display = 'inline-block';
+    document.getElementById('study-again-btn').style.display = 'inline-block';
+    // Lock the text input while choosing
+    document.getElementById('answer-input').disabled = true;
+}
+
+async function handleStudyKnewIt() {
+    if (!gameActive || gamemode !== 'study') return;
+    inputLocked = true;
+    playDingSound();
+    
+    // Show correct answer with green flash
+    document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
+    document.getElementById('reveal-text').style.color = 'var(--floor-green)';
+    document.getElementById('img-frame').classList.add('correct-border');
+    
+    // Hide study controls during transition
+    document.getElementById('study-controls').style.display = 'none';
+    
+    await new Promise(r => setTimeout(r, 600));
+    
+    // Clean up border
+    document.getElementById('img-frame').classList.remove('correct-border');
+    
+    // Re-enable input for next slide
+    const answerInput = document.getElementById('answer-input');
+    answerInput.disabled = false;
+    answerInput.value = '';
+    
+    nextSlide();
+}
+
+async function handleStudyAgain() {
+    if (!gameActive || gamemode !== 'study') return;
+    inputLocked = true;
+    playPassSound();
+    
+    // Show answer with red flash
+    document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
+    document.getElementById('reveal-text').style.color = 'var(--floor-red)';
+    document.getElementById('img-frame').classList.add('pass-border');
+    
+    // Hide study controls during transition
+    document.getElementById('study-controls').style.display = 'none';
+    
+    // Reinsert: once nearby (3 items from now) and once at the end
+    const idx = currentIndex;
+    if (studyQueue.length >= 3) {
+        studyQueue.splice(3, 0, idx);
+        studyQueue.push(idx);
+    } else {
+        studyQueue.push(idx);
+        if (studyQueue.length >= 2) {
+            studyQueue.push(idx);
+        }
+    }
+    
+    await new Promise(r => setTimeout(r, 1000));
+    
+    // Clean up border
+    document.getElementById('img-frame').classList.remove('pass-border');
+    
+    // Re-enable input for next slide
+    const answerInput = document.getElementById('answer-input');
+    answerInput.disabled = false;
+    answerInput.value = '';
+    
+    nextSlide();
+}
+
 async function handleCorrect() {
+    if (gamemode === 'study') {
+        handleStudyKnewIt();
+        return;
+    }
     inputLocked = true;
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('correct-border');
@@ -650,6 +902,7 @@ async function handleCorrect() {
     for (let i = 0; i < 20; i++) {
         if (!gameActive) break;
         await new Promise(r => setTimeout(r, 100));
+        if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 2 - (i + 1) * 0.1);
     }
     gameTimerRemaining = null;
@@ -662,6 +915,10 @@ async function handleCorrect() {
 }
 
 async function handlePass() {
+    if (gamemode === 'study') {
+        handleStudyAgain();
+        return;
+    }
     inputLocked = true;
     inPassPhase = true; // Mark as pass phase so timer continues
     toggleMoreSpecific(false);
@@ -715,6 +972,7 @@ async function handlePass() {
     for (let i = 0; i < 30; i++) {
         if (!gameActive) break;
         await new Promise(r => setTimeout(r, 100));
+        if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
     }
     gameTimerRemaining = null;
@@ -724,6 +982,51 @@ async function handlePass() {
 }
 
 function nextSlide() {
+    if (gamemode === 'study') {
+        if (studyQueue.length === 0) {
+            handleCategoryComplete();
+            return;
+        }
+        currentIndex = studyQueue.shift();
+        document.getElementById('answer-input').value = "";
+        document.getElementById('reveal-text').innerText = "";
+        
+        const studyControls = document.getElementById('study-controls');
+        if (studyControls) {
+            studyControls.style.display = 'flex';
+            document.getElementById('study-reveal-btn').style.display = 'block';
+            document.getElementById('study-knew-btn').style.display = 'none';
+            document.getElementById('study-again-btn').style.display = 'none';
+        }
+        
+        const imgFrame = document.getElementById('img-frame');
+        imgFrame.className = "image-container";
+        if (!imgFrame.querySelector('#prompt-image')) {
+            imgFrame.innerHTML = `
+                        <div id="overlay"></div>
+                        <img id="prompt-image" src="" onerror="handleImageError(this)">
+                        <div id="math-problem" class="math-problem"></div>
+                        <div id="pause-overlay">
+                            <span class="pause-text">PAUSED</span>
+                            <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
+                        </div>
+                        <div id="pause-hide-bar">
+                            <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
+                        </div>
+                    `;
+        }
+        loadImage();
+        inputLocked = false;
+        answerStartTime = Date.now();
+        updateClueDropdown();
+        // Update category display to show progress
+        document.getElementById('category-display').innerText = `${currentCategory} — ${studyQueue.length + 1} LEFT`;
+        // Focus the input for typing
+        const answerInput = document.getElementById('answer-input');
+        if (answerInput) { answerInput.focus(); }
+        return;
+    }
+
     itemsCompleted++;
 
     // Check if all items have been completed
@@ -821,15 +1124,40 @@ function handleCategoryComplete() {
     toggleMoreSpecific(false);
     clearInterval(clockInterval);
 
+    // Stop timers
+    inputLocked = true;
+
+    // Hide study controls
+    const studyControls = document.getElementById('study-controls');
+    if (studyControls) studyControls.style.display = 'none';
+
+    if (gamemode === 'study') {
+        // Study mode: celebratory completion
+        if (!isMuted) {
+            // Play a nice sound for study completion
+            sounds.duelOver.currentTime = 0;
+            sounds.duelOver.play().catch(() => {});
+        }
+
+        const imgFrame = document.getElementById('img-frame');
+        imgFrame.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-green); gap: 15px;">
+                        <div style="font-size: 3rem; font-weight: bold; text-align: center;">STUDY COMPLETE! 🎉</div>
+                        <div style="font-size: 1.5rem; color: var(--floor-yellow); text-align: center;">You've mastered all ${currentPool.length} items in ${currentCategory}</div>
+                    </div>
+                `;
+
+        document.getElementById('p1-name').innerText = 'ALL DONE!';
+        document.getElementById('p1-name').style.color = 'var(--floor-green)';
+        return;
+    }
+
     if (!isMuted) {
         sounds.duelMusic.pause();
         sounds.duelMusic.currentTime = 0;
         sounds.duelOver.currentTime = 0;
         sounds.duelOver.play().catch(() => {});
     }
-
-    // Stop timers
-    inputLocked = true;
 
     // Display category complete message
     const imgFrame = document.getElementById('img-frame');
@@ -975,6 +1303,14 @@ function formatTimer(val) {
 }
 
 function updateDisplay() {
+    // Study mode: don't touch timers or player names — they're managed by study logic
+    if (gamemode === 'study') {
+        // Hide extras in study mode
+        document.getElementById('streak-display').classList.remove('show');
+        document.getElementById('score-display').classList.remove('show');
+        return;
+    }
+
     let t1 = formatTimer(timers[0]);
     let t2 = formatTimer(timers[1]);
 
@@ -1277,11 +1613,6 @@ function updateFirstPlayerLabels() {
     if (l2) l2.textContent = playerNames[1] || 'Right Player';
 }
 
-function updateKeyboardHintsVisibility() {
-    const el = document.getElementById('keyboard-hints');
-    if (!el) return;
-    el.style.display = (hostMode && !adminWindowOpen && !disableExtras) ? 'block' : 'none';
-}
 
 function updateMenuVisibility() {
     const menu = document.querySelector('.menu');
@@ -1358,7 +1689,7 @@ function resetGame(skipConfirm) {
     activePlayer = firstPlayerIsLeft ? 1 : 2;
 
     // Reset timers based on gamemode
-    if (gamemode === 'singleplayer') {
+    if (gamemode === 'singleplayer' || gamemode === 'study') {
         timers = [0.0, 0.0];
     } else {
         timers = [
@@ -1367,6 +1698,7 @@ function resetGame(skipConfirm) {
         ];
     }
     currentPool = [];
+    studyQueue = [];
     currentIndex = 0;
     itemsCompleted = 0;
     categoryComplete = false;
@@ -1388,6 +1720,10 @@ function resetGame(skipConfirm) {
         clearInterval(clockInterval);
         clockInterval = null;
     }
+
+    // Hide study controls
+    const studyControls = document.getElementById('study-controls');
+    if (studyControls) studyControls.style.display = 'none';
 
     // Reset UI
     updateDisplay();
@@ -1475,14 +1811,28 @@ function changeGamemode() {
     gamemode = select.value;
     savePreferences();
 
-    // Update UI for single player mode
+    // Update UI based on gamemode
+    const p1Container = document.querySelector('.clocks > div:nth-child(1)');
     const p2Container = document.querySelector('.clocks > div:nth-child(2)');
-    if (gamemode === 'singleplayer') {
-        // Hide second player timer in single player
+    const studyControls = document.getElementById('study-controls');
+    const shuffleRow = document.getElementById('study-shuffle-row');
+
+    if (gamemode === 'study') {
+        // Hide both timer containers for study
+        if (p1Container) p1Container.style.display = 'none';
         if (p2Container) p2Container.style.display = 'none';
+        if (studyControls) studyControls.style.display = 'none';
+        if (shuffleRow) shuffleRow.style.display = 'flex';
+    } else if (gamemode === 'singleplayer') {
+        if (p1Container) p1Container.style.display = 'block';
+        if (p2Container) p2Container.style.display = 'none';
+        if (studyControls) studyControls.style.display = 'none';
+        if (shuffleRow) shuffleRow.style.display = 'none';
     } else {
-        // Show both timers in classic
+        if (p1Container) p1Container.style.display = 'block';
         if (p2Container) p2Container.style.display = 'block';
+        if (studyControls) studyControls.style.display = 'none';
+        if (shuffleRow) shuffleRow.style.display = 'none';
     }
 
     // Update answer input based on host mode (if enabled)
@@ -1517,7 +1867,7 @@ function toggleHostMode() {
 
 
 
-    updateKeyboardHintsVisibility();
+
     updateDisplay();
 }
 
@@ -1565,7 +1915,7 @@ function openAdminWindow() {
     document.getElementById('help-button').style.display = 'none';
     document.body.classList.add('admin-window-open');
     if (!gameActive) showWelcomeOnMain();
-    updateKeyboardHintsVisibility();
+
     if (adminInterval) clearInterval(adminInterval);
     postStateToAdmin();
     adminInterval = setInterval(function () {
@@ -1758,7 +2108,7 @@ window.addEventListener('message', function (e) {
         }
         updateDisplay();
         savePreferences();
-        updateKeyboardHintsVisibility();
+
     }
     else if (d.action === 'showTimerDecimal' && d.value != null) {
         showTimerDecimal = !!d.value;
@@ -1952,6 +2302,8 @@ function showTextFallback(itemName) {
 }
 
 function handleImageError(img) {
+    if (!img.src || img.src === '' || img.src === window.location.href) return;
+
     // Prevent multiple error handlers from firing for the same load attempt
     if (img.dataset.errorHandled === 'true') return;
 
@@ -2160,7 +2512,7 @@ function toggleDisableExtras() {
         scoreDisplay.classList.remove('hidden');
     }
     updateDisplay();
-    updateKeyboardHintsVisibility();
+
     savePreferences();
 }
 
@@ -2281,7 +2633,7 @@ function initPage() {
     applyPreferencesToDOM();
     changeGamemode();
     updateFirstPlayerLabels();
-    updateKeyboardHintsVisibility();
+
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPage);

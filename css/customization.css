@@ -524,24 +524,6 @@
             padding-bottom: 150px;
         }
 
-        /* KEYBOARD HINTS */
-        .keyboard-hints {
-            text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255, 204, 0, 0.8);
-            margin: 12px 0;
-            padding: 6px 12px;
-        }
-        .keyboard-hints .hint-key {
-            display: inline-block;
-            padding: 2px 6px;
-            margin: 0 2px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 204, 0, 0.6);
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
         /* HIGH CONTRAST & REDUCED MOTION */
         body.high-contrast-reduced-motion .clock,
         body.high-contrast-reduced-motion .admin-btn,

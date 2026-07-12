@@ -53,6 +53,11 @@ const muteBtn = document.getElementById('floor-mute-btn');
 const setupModalEl = document.getElementById('floor-setup-modal');
 const setupOpenBtn = document.getElementById('floor-setup-open-btn');
 const setupCloseBtn = document.getElementById('floor-setup-close');
+const statsModalEl = document.getElementById('floor-stats-modal');
+const statsCloseBtn = document.getElementById('floor-stats-close');
+const statsBodyEl = document.getElementById('floor-stats-body');
+let statsSortCol = 'tiles';
+let statsSortAsc = false;
 const bgStyleSelect = document.getElementById('floor-bg-style');
 const blueVariantSelect = document.getElementById('floor-blue-variant');
 const driftSpeedInput = document.getElementById('floor-drift-speed');
@@ -119,6 +124,102 @@ let randomizerResult = null;
 
 /** Undo manager. */
 const undoManager = createUndoManager();
+
+/** ========== AUTO-SAVE / RESUME ========== */
+const FLOOR_STATE_KEY = 'floorHostState';
+
+function saveFloorState() {
+    if (!state) return;
+    try {
+        const snap = state.snapshot();
+        const serializable = {
+            rows: snap.rows,
+            cols: snap.cols,
+            grid: snap.grid.map(row => row.map(t => ({ row: t.row, col: t.col, ownerId: t.ownerId, category: t.category }))),
+            players: snap.players.map(p => ({
+                id: p.id, name: p.name, expertCategory: p.expertCategory,
+                area: p.area, duelCount: p.duelCount, hasDueled: p.hasDueled,
+                hasTimeBoost: p.hasTimeBoost, eliminated: p.eliminated
+            })),
+            goldenTile: snap.goldenTile || null,
+            savedAt: Date.now()
+        };
+        localStorage.setItem(FLOOR_STATE_KEY, JSON.stringify(serializable));
+    } catch (e) { console.warn('Auto-save failed:', e); }
+}
+
+function clearFloorState() {
+    try { localStorage.removeItem(FLOOR_STATE_KEY); } catch (e) { }
+}
+
+function loadFloorState() {
+    try {
+        const raw = localStorage.getItem(FLOOR_STATE_KEY);
+        if (!raw) return false;
+        const saved = JSON.parse(raw);
+        // Only offer resume if less than 24 hours old
+        if (Date.now() - saved.savedAt > 86400000) {
+            clearFloorState();
+            return false;
+        }
+        if (!confirm('A saved Floor board was found. Resume where you left off?')) {
+            clearFloorState();
+            return false;
+        }
+        // Rebuild state from saved data
+        state = createGameState({
+            rows: saved.rows,
+            cols: saved.cols,
+            players: saved.players.map(p => ({
+                name: p.name,
+                expertCategory: p.expertCategory,
+                hasTimeBoost: p.hasTimeBoost
+            }))
+        });
+        // Restore grid tile assignments
+        for (let r = 0; r < saved.rows; r++) {
+            for (let c = 0; c < saved.cols; c++) {
+                const savedTile = saved.grid[r][c];
+                state.grid[r][c].ownerId = savedTile.ownerId;
+                state.grid[r][c].category = savedTile.category;
+            }
+        }
+        // Restore player properties (duelCount, eliminated, etc.)
+        // Need to map saved IDs to new IDs since createGameState generates fresh IDs
+        const idMap = new Map();
+        for (let i = 0; i < saved.players.length && i < state.players.length; i++) {
+            idMap.set(saved.players[i].id, state.players[i].id);
+            state.players[i].duelCount = saved.players[i].duelCount || 0;
+            state.players[i].hasDueled = saved.players[i].hasDueled || false;
+            state.players[i].eliminated = saved.players[i].eliminated || false;
+        }
+        // Remap grid ownerIds from saved IDs to new IDs
+        for (let r = 0; r < state.rows; r++) {
+            for (let c = 0; c < state.cols; c++) {
+                const oldId = state.grid[r][c].ownerId;
+                if (oldId && idMap.has(oldId)) {
+                    state.grid[r][c].ownerId = idMap.get(oldId);
+                } else if (oldId) {
+                    state.grid[r][c].ownerId = '';
+                    state.grid[r][c].category = '';
+                }
+            }
+        }
+        // Restore golden tile
+        if (saved.goldenTile) {
+            state.goldenTile = { r: saved.goldenTile.r, c: saved.goldenTile.c };
+        }
+        state.refreshAreas();
+        // Update grid dimension inputs
+        if (rowsInput) rowsInput.value = String(saved.rows);
+        if (colsInput) colsInput.value = String(saved.cols);
+        return true;
+    } catch (e) {
+        console.error('Failed to restore Floor state:', e);
+        clearFloorState();
+        return false;
+    }
+}
 
 /** Animation hooks (no animation yet). */
 const animationHooks = {
@@ -525,6 +626,7 @@ function finishSwap(first, second) {
 
 function updateUndoButton() {
     if (undoBtn) undoBtn.disabled = !undoManager.canUndo();
+    saveFloorState();
 }
 
 function handleUndo() {
@@ -824,7 +926,7 @@ function hideDuelOverlay() {
     duelOverlayEl.addEventListener('transitionend', onEnd, { once: true });
 }
 
-function applyDuelResult(winnerIsChallenger) {
+async function applyDuelResult(winnerIsChallenger) {
     if (!state || !battleState.defender || !battleState.challenger) return;
     const { r: cr, c: cc } = battleState.challenger;
     const { r: dr, c: dc } = battleState.defender;
@@ -833,6 +935,35 @@ function applyDuelResult(winnerIsChallenger) {
     const loserId = winnerIsChallenger ? defender?.ownerId : challenger?.ownerId;
     const wonTiles = loserId ? state.getTilesOwnedBy(loserId).map((t) => ({ r: t.row, c: t.col })) : [];
 
+    // Lock battle state to prevent double-clicks
+    battleState.active = false;
+    hideDuelOverlay();
+
+    // Phase 1: Elimination Animation
+    for (const { r, c } of wonTiles) {
+        const el = getTileEl(r, c);
+        if (el) {
+            el.classList.add('floor-tile--eliminating');
+            // Add flying particles
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floor-tile-particle';
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 60 + Math.random() * 80;
+                particle.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                particle.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                el.appendChild(particle);
+            }
+        }
+    }
+
+    if (wonTiles.length > 0) {
+        await new Promise(res => setTimeout(res, 1200));
+    }
+
+    // Phase 2: State Update & Takeover Animation
     undoManager.push(state);
     const result = applyBattleResult(state, dr, dc, cr, cc, !winnerIsChallenger);
     if (!result.success) return;
@@ -842,11 +973,12 @@ function applyDuelResult(winnerIsChallenger) {
     if (winner) winner.duelCount = (winner.duelCount || 0) + 1; // Track duel counts
     if (winner && loser) animationHooks.onDuelEnd(winner, loser);
 
-    battleState = { active: false, defender: null, challenger: null };
+    battleState.defender = null;
+    battleState.challenger = null;
     if (gridEl) gridEl.classList.remove('floor-battle-mode');
     document.body.classList.remove('floor-battle-mode');
     if (swapPromptEl) swapPromptEl.textContent = '';
-    hideDuelOverlay();
+    
     render();
     updateUndoButton();
 
@@ -1116,6 +1248,8 @@ function handleKeydown(e) {
             hideContextMenu();
         } else if (setupModalEl && setupModalEl.getAttribute('aria-hidden') === 'false') {
             hideSetupModal();
+        } else if (statsModalEl && statsModalEl.getAttribute('aria-hidden') === 'false') {
+            hideStatsModal();
         } else if (duelOverlayEl && duelOverlayEl.getAttribute('aria-hidden') === 'false') {
             handleDuelCancel();
         } else if (randomizerResult) {
@@ -1160,6 +1294,10 @@ function handleKeydown(e) {
     if (key === 'z') {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         toggleDevMode();
+    }
+    if (key === 's') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        toggleStatsModal();
     }
 }
 
@@ -1834,6 +1972,91 @@ function hideSetupModal() {
     if (setupModalEl) setupModalEl.setAttribute('aria-hidden', 'true');
 }
 
+function toggleStatsModal() {
+    if (statsModalEl && statsModalEl.getAttribute('aria-hidden') === 'false') {
+        hideStatsModal();
+    } else {
+        showStatsModal();
+    }
+}
+
+function showStatsModal() {
+    if (statsModalEl) {
+        statsModalEl.setAttribute('aria-hidden', 'false');
+        renderStatsTable();
+    }
+}
+
+function hideStatsModal() {
+    if (statsModalEl) statsModalEl.setAttribute('aria-hidden', 'true');
+}
+
+function renderStatsTable() {
+    if (!state || !statsBodyEl) return;
+    
+    // Get active players
+    let rows = state.players
+        .filter(p => !p.eliminated && typeof p.area === 'number' && p.area > 0)
+        .map(p => ({
+            name: p.name || 'Unknown',
+            category: p.expertCategory || '—',
+            duels: p.duelCount || 0,
+            tiles: p.area,
+            hasDueled: !!p.hasDueled
+        }));
+
+    // Sort
+    rows.sort((a, b) => {
+        let valA = a[statsSortCol];
+        let valB = b[statsSortCol];
+        
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return statsSortAsc ? -1 : 1;
+        if (valA > valB) return statsSortAsc ? 1 : -1;
+        return 0;
+    });
+
+    // Render body
+    statsBodyEl.innerHTML = '';
+    for (const row of rows) {
+        const tr = document.createElement('tr');
+        
+        const tdName = document.createElement('td');
+        tdName.textContent = row.name;
+        
+        const tdCat = document.createElement('td');
+        tdCat.textContent = row.category;
+        
+        const tdDuels = document.createElement('td');
+        tdDuels.textContent = row.duels;
+        
+        const tdTiles = document.createElement('td');
+        tdTiles.textContent = row.tiles;
+        
+        const tdHasDueled = document.createElement('td');
+        tdHasDueled.textContent = row.hasDueled ? 'True' : 'False';
+        
+        tr.appendChild(tdName);
+        tr.appendChild(tdCat);
+        tr.appendChild(tdDuels);
+        tr.appendChild(tdTiles);
+        tr.appendChild(tdHasDueled);
+        
+        statsBodyEl.appendChild(tr);
+    }
+    
+    // Update header classes
+    const headers = statsModalEl.querySelectorAll('th[data-sort]');
+    headers.forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.getAttribute('data-sort') === statsSortCol) {
+            th.classList.add(statsSortAsc ? 'sort-asc' : 'sort-desc');
+        }
+    });
+}
+
 function showRandomizerHelpModal() {
     if (randomizerHelpModalEl) randomizerHelpModalEl.setAttribute('aria-hidden', 'false');
 }
@@ -2158,7 +2381,9 @@ function initResizableTimerSidebar() {
 }
 
 function init() {
-    state = buildState(DEFAULT_ROWS, DEFAULT_COLS);
+    if (!loadFloorState()) {
+        state = buildState(DEFAULT_ROWS, DEFAULT_COLS);
+    }
 
     gridEl.addEventListener('contextmenu', handleContextMenu);
     gridEl.addEventListener('click', handleGridClick);
@@ -2260,6 +2485,26 @@ function init() {
 
     document.addEventListener('keydown', handleKeydown);
     document.addEventListener('click', handleClickOutside);
+
+    if (statsCloseBtn) {
+        statsCloseBtn.addEventListener('click', hideStatsModal);
+    }
+
+    if (statsModalEl) {
+        const headers = statsModalEl.querySelectorAll('th[data-sort]');
+        headers.forEach(th => {
+            th.addEventListener('click', () => {
+                const sortKey = th.getAttribute('data-sort');
+                if (statsSortCol === sortKey) {
+                    statsSortAsc = !statsSortAsc;
+                } else {
+                    statsSortCol = sortKey;
+                    statsSortAsc = false; // default to descending for new category
+                }
+                renderStatsTable();
+            });
+        });
+    }
 
     applyBtn.addEventListener('click', applyGrid);
     rowsInput.addEventListener('keydown', (e) => {
