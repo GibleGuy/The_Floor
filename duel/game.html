@@ -13,6 +13,10 @@
 
 <body>
 
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: var(--floor-yellow); font-family: 'Montserrat', sans-serif;">
+        <h1 style="font-size: 3rem; margin-bottom: 20px;">LOADING CLUES...</h1>
+    </div>
+
     <div id="bg-pop-layer" aria-hidden="true"></div>
 
     <!-- HELP BUTTON & FULLSCREEN BUTTON -->
@@ -130,7 +134,7 @@
         <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span
                 class="welcome-line2">The Floor!</span></div>
         <div id="overlay"></div>
-        <img id="prompt-image" src="" onerror="handleImageError(this)">
+        <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
         <div id="math-problem" class="math-problem"></div>
         <div id="pause-overlay">
             <span class="pause-text">PAUSED</span>

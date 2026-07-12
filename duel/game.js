@@ -286,25 +286,53 @@ function resolveImageSrc(rawSrc) {
 }
 
 function preloadRange(startIndex, count) {
-    if (!currentPool || !currentPool.length) return;
+    if (!currentPool || !currentPool.length) return Promise.resolve();
+    const container = document.getElementById('image-container');
+    if (!container) return Promise.resolve(); // Wait until container exists
+
+    let firstImgPromise = Promise.resolve();
+    let isFirstSet = false;
+
     for (let i = 0; i < count; i++) {
         const idx = (startIndex + i) % currentPool.length;
         const item = currentPool[idx];
         const url = item && item.u;
-        if (url) {
-            const resolvedUrl = resolveImageSrc(url);
-            if (!preloadedUrls.has(resolvedUrl)) {
-                preloadedUrls.add(resolvedUrl);
-                const img = new Image();
+        
+        if (url && typeof item.q !== 'string') {
+            const imgId = 'clue-img-' + idx;
+            if (!document.getElementById(imgId)) {
+                const resolvedUrl = resolveImageSrc(url);
+                const img = document.createElement('img');
+                img.id = imgId;
+
+                if (!isFirstSet) {
+                    firstImgPromise = new Promise(resolve => {
+                        if (img.complete) resolve();
+                        else {
+                            img.addEventListener('load', () => resolve());
+                            img.addEventListener('error', () => resolve());
+                        }
+                    });
+                    isFirstSet = true;
+                }
+
                 img.src = resolvedUrl;
+                img.style.display = 'none';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'contain';
+                img.onerror = function() { handleImageError(this); };
+                container.appendChild(img);
             }
         }
     }
+    
+    return firstImgPromise;
 }
 
 function preloadCategoryImages() {
     preloadedUrls.clear();
-    preloadRange(0, 10);
+    return preloadRange(0, 10);
 }
 
 // ========== CATEGORY REVEAL ==========
@@ -456,7 +484,13 @@ async function setupGame(cat, opts) {
         }
     }
 
-    preloadCategoryImages();
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    
+    await preloadCategoryImages();
+    
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+
     updateClueDropdown();
 
     // In single player or study mode, always use player 1
@@ -490,8 +524,8 @@ async function setupGame(cat, opts) {
     if (fallback) {
         fallback.remove();
     }
-    const imgEl = document.getElementById('prompt-image');
-    if (imgEl) { imgEl.src = ''; imgEl.style.display = 'none'; }
+    const imgContainer = document.getElementById('image-container');
+    if (imgContainer) { imgContainer.innerHTML = ''; }
     const mathEl = document.getElementById('math-problem');
     if (mathEl) { mathEl.innerHTML = ''; mathEl.style.display = 'none'; }
 
@@ -500,8 +534,8 @@ async function setupGame(cat, opts) {
     if (hostMode && !fromAdminWindow) {
         // Main-page host: show category and start button instead of auto-starting
         const imgFrame = document.getElementById('img-frame');
-        const img = document.getElementById('prompt-image');
-        if (img) { img.src = ''; img.style.display = 'none'; }
+        const imgContainer = document.getElementById('image-container');
+        if (imgContainer) { imgContainer.innerHTML = ''; }
         imgFrame.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-yellow);">
                         <div style="font-size: 4rem; font-weight: bold; margin-bottom: 30px;">${currentCategory}</div>
@@ -605,7 +639,7 @@ async function startGameFromHost() {
     const imgFrame = document.getElementById('img-frame');
     imgFrame.innerHTML = `
                 <div id="overlay"></div>
-                <img id="prompt-image" src="" onerror="handleImageError(this)" style="display: none;">
+                <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
                 <div id="math-problem" class="math-problem"></div>
                 <div id="pause-overlay">
                     <span class="pause-text">PAUSED</span>
@@ -1072,10 +1106,10 @@ function nextSlide() {
         
         const imgFrame = document.getElementById('img-frame');
         imgFrame.className = "image-container";
-        if (!imgFrame.querySelector('#prompt-image')) {
+        if (!imgFrame.querySelector('#image-container')) {
             imgFrame.innerHTML = `
                         <div id="overlay"></div>
-                        <img id="prompt-image" src="" onerror="handleImageError(this)">
+                        <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
                         <div id="math-problem" class="math-problem"></div>
                         <div id="pause-overlay">
                             <span class="pause-text">PAUSED</span>
@@ -1113,10 +1147,10 @@ function nextSlide() {
     const imgFrame = document.getElementById('img-frame');
     imgFrame.className = "image-container";
     // Make sure image container has the right structure
-    if (!imgFrame.querySelector('#prompt-image')) {
+    if (!imgFrame.querySelector('#image-container')) {
         imgFrame.innerHTML = `
                     <div id="overlay"></div>
-                    <img id="prompt-image" src="" onerror="handleImageError(this)">
+                    <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
                     <div id="math-problem" class="math-problem"></div>
                     <div id="pause-overlay">
                         <span class="pause-text">PAUSED</span>
@@ -1312,15 +1346,15 @@ function handleCategoryComplete() {
 }
 
 function loadImage() {
-    const container = document.getElementById('img-frame');
-    let img = document.getElementById('prompt-image');
+    const frame = document.getElementById('img-frame');
     const fallback = document.getElementById('text-fallback');
+    let imgContainer = document.getElementById('image-container');
 
     // Ensure image container has the right structure
-    if (!img) {
-        container.innerHTML = `
+    if (!imgContainer) {
+        frame.innerHTML = `
                     <div id="overlay"></div>
-                    <img id="prompt-image" src="" onerror="handleImageError(this)">
+                    <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
                     <div id="math-problem" class="math-problem"></div>
                     <div id="pause-overlay">
                         <span class="pause-text">PAUSED</span>
@@ -1330,35 +1364,56 @@ function loadImage() {
                         <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
                     </div>
                 `;
-        img = document.getElementById('prompt-image');
+        imgContainer = document.getElementById('image-container');
     }
 
     const item = currentPool[currentIndex];
     const isMath = item && typeof item.q === 'string';
-
-    // Reset error handler flag for new image load
-    img.dataset.errorHandled = 'false';
 
     // Remove fallback if it exists
     if (fallback) {
         fallback.remove();
     }
 
-    container.style.display = 'block';
+    frame.style.display = 'block';
 
     const mp = document.getElementById('math-problem');
 
     if (isMath) {
-        img.style.display = 'none';
+        // Hide all preloaded images
+        Array.from(imgContainer.children).forEach(child => {
+            child.style.display = 'none';
+        });
         if (mp) {
             mp.textContent = item.q;
             mp.classList.add('show');
         }
-        img.src = resolveImageSrc(item.u);
     } else {
-        img.style.display = 'block';
         if (mp) mp.classList.remove('show');
-        img.src = resolveImageSrc(item.u);
+        
+        // Ensure the current image exists in the DOM
+        const imgId = 'clue-img-' + currentIndex;
+        let img = document.getElementById(imgId);
+        if (!img) {
+            img = document.createElement('img');
+            img.id = imgId;
+            img.src = resolveImageSrc(item.u);
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            img.onerror = function() { handleImageError(this); };
+            imgContainer.appendChild(img);
+        }
+        img.dataset.errorHandled = 'false';
+
+        // Show only the current image, hide others
+        Array.from(imgContainer.children).forEach(child => {
+            if (child.id === imgId) {
+                child.style.display = 'block';
+            } else {
+                child.style.display = 'none';
+            }
+        });
     }
 
     // Preload next clues in the background
