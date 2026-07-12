@@ -724,6 +724,10 @@
                 <input type="checkbox" id="admin-mute" style="width: auto;">
             </div>
             <div class="custom-row">
+                <label class="custom-label">Shuffle Clues:</label>
+                <input type="checkbox" id="admin-shuffle" style="width: auto;">
+            </div>
+            <div class="custom-row">
                 <label class="custom-label">Music Volume:</label>
                 <input type="range" id="admin-vol-music" min="0" max="1" step="0.05" value="0.2" style="width: 120px; vertical-align: middle;">
                 <span id="admin-vol-music-label" style="margin-left: 6px; min-width: 3em;">20%</span>
@@ -887,7 +891,7 @@
         function setControlsEnabled(enabled) {
             const ids = ['admin-cat-select-btn', 'admin-start-btn', 'admin-help-btn', 'admin-btn-j', 'admin-btn-k', 'admin-btn-l',
                 'admin-btn-pause', 'admin-btn-reset', 'admin-btn-more-specific', 'admin-gamemode', 'admin-clue-jump', 'admin-p1-name', 'admin-p2-name',
-                'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute',
+                'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute', 'admin-shuffle',
                 'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-confetti', 'admin-disable-extras',
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
@@ -1028,6 +1032,9 @@
         document.getElementById('admin-mute').addEventListener('change', function () {
             send({ action: 'mute', value: this.checked });
         });
+        document.getElementById('admin-shuffle').addEventListener('change', function () {
+            send({ action: 'shuffleClues', value: this.checked });
+        });
         document.getElementById('admin-vol-music').addEventListener('input', function () {
             var v = parseFloat(this.value);
             if (!isNaN(v)) { 
@@ -1167,6 +1174,10 @@
                 if (d.isMuted != null) {
                     const m = document.getElementById('admin-mute');
                     if (m && m.checked !== d.isMuted) m.checked = !!d.isMuted;
+                }
+                if (d.shuffleClues != null) {
+                    const sh = document.getElementById('admin-shuffle');
+                    if (sh && sh.checked !== d.shuffleClues) sh.checked = !!d.shuffleClues;
                 }
                 if (typeof d.musicVolume === 'number') {
                     const mv = document.getElementById('admin-vol-music');

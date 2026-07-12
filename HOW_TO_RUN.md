@@ -14,11 +14,11 @@ A local server is required for the Host App and recommended for general use. **Y
 ### Standard Server (for Playing)
 Use this if you just want to run the Game or Host App.
 ```bash
-python3 -m http.server 8765
+python3 -m http.server 3000
 ```
 Then open:
-- Host: `http://localhost:8765/host/floor-host.html`
-- Duel: `http://localhost:8765/duel/game.html`
+- Host: `http://localhost:3000/host/floor-host.html`
+- Duel: `http://localhost:3000/duel/game.html`
 
 ### Image Picker Server (for Editing)
 Use this if you are using the **Image Tool** to source or rename category images. **This server also hosts the rest of the game, so you don't need to run the standard server at the same time.**

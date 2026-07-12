@@ -82,7 +82,7 @@ let currentStreak = 0;
 let inPassPhase = false;
 let unpauseCountdownActive = false;
 let shuffleCluesNormal = false;
-let shuffleCluesStudy = true;
+let shuffleCluesStudy = false;
 
 // Stats tracking
 let answerStartTime = 0;
@@ -232,6 +232,7 @@ function savePreferences() {
             shuffleCluesStudy
         };
         localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+        postStateToAdmin();
     } catch (e) { }
 }
 
@@ -1845,6 +1846,8 @@ function resetGame(skipConfirm) {
     // Reset placeholder text
     const answerInput = document.getElementById('answer-input');
     if (answerInput) answerInput.placeholder = 'SELECT A CATEGORY';
+
+    postStateToAdmin();
 }
 
 function showWelcomeOnMain() {
@@ -2038,6 +2041,7 @@ function postStateToAdmin() {
             t1, t2,
             playerNames: playerNames.slice(),
             gamemode,
+            shuffleClues: (document.getElementById('shuffle-clues-toggle') ? document.getElementById('shuffle-clues-toggle').checked : false),
             moreSpecificActive: moreSpecificActive,
             poolNames: currentPool.map(c => c.n),
             currentIndex: currentIndex,
@@ -2117,6 +2121,19 @@ window.addEventListener('message', function (e) {
     }
     else if (d.action === 'applyTimeBoost' && (d.playerNum === 1 || d.playerNum === 2)) {
         applyTimeBoost(d.playerNum);
+    }
+    else if (d.action === 'shuffleClues' && d.value != null) {
+        const shuffleToggle = document.getElementById('shuffle-clues-toggle');
+        if (shuffleToggle) {
+            shuffleToggle.checked = !!d.value;
+            if (gamemode === 'study') {
+                shuffleCluesStudy = !!d.value;
+            } else {
+                shuffleCluesNormal = !!d.value;
+            }
+        }
+        savePreferences();
+        updateDisplay();
     }
     else if (d.action === 'mute' && d.value != null) {
         isMuted = !!d.value;
