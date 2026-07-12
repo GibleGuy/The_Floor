@@ -20,7 +20,7 @@ const pptPiano = [
     { n: "FORTE (LOUD)", u: "../images/pptGames/Piano/Forte (Loud).jpg" },
     { n: "FORTISSIMO (VERY LOUD)", u: "../images/pptGames/Piano/Fortissimo (Very Loud).jpg" },
     { n: "G KEY", u: "../images/pptGames/Piano/G Key.jpg" },
-    { n: "G#, AB KEY", u: "../images/pptGames/Piano/G#, Ab Key.jpg" },
+    { n: "G#, AB KEY", u: "../images/pptGames/Piano/G-sharp_Ab-Key.jpg" },
     { n: "GRAND PIANO", u: "../images/pptGames/Piano/Grand Piano.jpg" },
     { n: "HAMMERS", u: "../images/pptGames/Piano/Hammers.jpg" },
     { n: "KEYBOARD", u: "../images/pptGames/Piano/Keyboard.jpg" },
