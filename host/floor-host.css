@@ -1293,7 +1293,7 @@ body.floor-battle-mode .floor-swap-bar {
     display: flex;
     flex-direction: row;
     width: 100%;
-    min-height: calc(100vh - 160px);
+    min-height: calc(100vh - 200px);
     overflow: hidden;
     --timer-sidebar-width: 320px;
 }
