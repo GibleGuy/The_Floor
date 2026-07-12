@@ -405,15 +405,27 @@ async function setupGame(cat, opts) {
 
     // Reset last round stats
     lastRoundStats = {
-        p1: { name: playerNames[0], correct: 0, passed: 0 },
-        p2: { name: playerNames[1], correct: 0, passed: 0 },
-        totalCorrect: 0,
-        totalPassed: 0,
-        totalTime: 0,
-        answerCount: 0
-    };
+    gameActive = false;
     currentStreak = 0;
     answerStartTime = Date.now();
+
+    // Ensure img-frame has correct structure and is clean before preloading
+    const imgFrame = document.getElementById('img-frame');
+    if (imgFrame) {
+        imgFrame.className = "image-container";
+        imgFrame.innerHTML = `
+            <div id="overlay"></div>
+            <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
+            <div id="math-problem" class="math-problem"></div>
+            <div id="pause-overlay">
+                <span class="pause-text">PAUSED</span>
+                <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
+            </div>
+            <div id="pause-hide-bar">
+                <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
+            </div>
+        `;
+    }
 
     // Lookup proper label from the registry
     const registryItem = window.CATEGORY_REGISTRY.find(c => c.key === cat);
@@ -522,15 +534,12 @@ async function setupGame(cat, opts) {
     updatePauseButton();
     document.getElementById('reveal-text').innerText = "";
     document.getElementById('answer-input').value = "";
-    document.getElementById('img-frame').className = "image-container";
-
+    
     // Clear any fallback text
     const fallback = document.getElementById('text-fallback');
     if (fallback) {
         fallback.remove();
     }
-    const imgContainer = document.getElementById('image-container');
-    if (imgContainer) { imgContainer.innerHTML = ''; }
     const mathEl = document.getElementById('math-problem');
     if (mathEl) { mathEl.innerHTML = ''; mathEl.style.display = 'none'; }
 
@@ -538,15 +547,16 @@ async function setupGame(cat, opts) {
     // Handle host mode differently
     if (hostMode && !fromAdminWindow) {
         // Main-page host: show category and start button instead of auto-starting
-        const imgFrame = document.getElementById('img-frame');
-        const imgContainer = document.getElementById('image-container');
-        if (imgContainer) { imgContainer.innerHTML = ''; }
-        imgFrame.innerHTML = `
+        const overlay = document.getElementById('overlay');
+        if (overlay) {
+            overlay.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-yellow);">
                         <div style="font-size: 4rem; font-weight: bold; margin-bottom: 30px;">${currentCategory}</div>
                         <button onclick="startGameFromHost()" style="padding: 20px 40px; font-size: 2rem; background: var(--floor-green); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">START</button>
                     </div>
                 `;
+            overlay.style.display = 'flex';
+        }
 
 
         
@@ -557,14 +567,15 @@ async function setupGame(cat, opts) {
         
     } else if (hostMode && fromAdminWindow && loadOnly) {
         // Admin Window LOAD: show category in display, preload, enable START on admin
-        const imgFrame = document.getElementById('img-frame');
-        const img = document.getElementById('prompt-image');
-        if (img) { img.src = ''; img.style.display = 'none'; }
-        imgFrame.innerHTML = `
+        const overlay = document.getElementById('overlay');
+        if (overlay) {
+            overlay.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--floor-yellow); text-align: center;">
                         <div style="font-size: 4rem; font-weight: bold;">${currentCategory}</div>
                     </div>
                 `;
+            overlay.style.display = 'flex';
+        }
         const answerInput = document.getElementById('answer-input');
         if (answerInput) { answerInput.disabled = true; answerInput.style.display = 'none'; }
         document.getElementById('reveal-text').innerText = "";
@@ -640,20 +651,12 @@ async function startGameFromHost() {
     if (fl) firstPlayerIsLeft = fl.checked;
     activePlayer = firstPlayerIsLeft ? 1 : 2;
     updateDisplay();
-    // Restore image container and ensure it's empty/hidden
-    const imgFrame = document.getElementById('img-frame');
-    imgFrame.innerHTML = `
-                <div id="overlay"></div>
-                <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
-                <div id="math-problem" class="math-problem"></div>
-                <div id="pause-overlay">
-                    <span class="pause-text">PAUSED</span>
-                    <button type="button" class="pause-unhide-btn" onclick="unhidePauseImage()">UNHIDE</button>
-                </div>
-                <div id="pause-hide-bar">
-                    <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
-                </div>
-            `;
+    // Hide the overlay that had the START button
+    const overlay = document.getElementById('overlay');
+    if (overlay) {
+        overlay.innerHTML = '';
+        overlay.style.display = 'none';
+    }
 
     // Clear any reveal text
     document.getElementById('reveal-text').innerText = "";
