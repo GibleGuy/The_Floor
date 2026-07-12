@@ -405,6 +405,13 @@ async function setupGame(cat, opts) {
 
     // Reset last round stats
     lastRoundStats = {
+        p1: { name: playerNames[0], correct: 0, passed: 0 },
+        p2: { name: playerNames[1], correct: 0, passed: 0 },
+        totalCorrect: 0,
+        totalPassed: 0,
+        totalTime: 0,
+        answerCount: 0
+    };
     gameActive = false;
     currentStreak = 0;
     answerStartTime = Date.now();
@@ -415,7 +422,7 @@ async function setupGame(cat, opts) {
         imgFrame.className = "image-container";
         imgFrame.innerHTML = `
             <div id="overlay"></div>
-            <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
+            <div id="image-container" style="width: 100%; height: 100%; position: relative; visibility: hidden;"></div>
             <div id="math-problem" class="math-problem"></div>
             <div id="pause-overlay">
                 <span class="pause-text">PAUSED</span>
@@ -496,17 +503,15 @@ async function setupGame(cat, opts) {
         }
     }
 
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        loadingOverlay.style.display = 'flex';
-        // Force the browser to render the overlay before blocking the thread
+    const answerInputForLoad = document.getElementById('answer-input');
+    if (answerInputForLoad) {
+        answerInputForLoad.placeholder = "LOADING CLUES...";
+        // Force browser to render placeholder
         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
         await new Promise(r => setTimeout(r, 50));
     }
     
     await preloadCategoryImages();
-    
-    if (loadingOverlay) loadingOverlay.style.display = 'none';
 
     updateClueDropdown();
 
@@ -662,7 +667,6 @@ async function startGameFromHost() {
     document.getElementById('reveal-text').innerText = "";
 
     // Category Reveal then 3-Second Countdown
-    const overlay = document.getElementById('overlay');
     
     if (gamemode !== 'study') {
         await showCategoryReveal(currentCategory);
@@ -845,13 +849,16 @@ document.addEventListener('keydown', (e) => {
         } else if (e.key === 'l' || e.key === 'L') {
             e.preventDefault();
             if (!inputLocked) handlePass();
-        } else if (e.key === 'r' || e.key === 'R') {
-            e.preventDefault();
-            resetGame();
         } else if (e.key === 'h' || e.key === 'H') {
             e.preventDefault();
             if (gameActive && !isPaused) toggleMoreSpecific();
         }
+    }
+    
+    // Reset Game works for everyone
+    if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        resetGame();
     }
 });
 
@@ -1362,7 +1369,7 @@ function loadImage() {
     if (!imgContainer) {
         frame.innerHTML = `
                     <div id="overlay"></div>
-                    <div id="image-container" style="width: 100%; height: 100%; position: relative;"></div>
+                    <div id="image-container" style="width: 100%; height: 100%; position: relative; visibility: hidden;"></div>
                     <div id="math-problem" class="math-problem"></div>
                     <div id="pause-overlay">
                         <span class="pause-text">PAUSED</span>
@@ -1373,6 +1380,11 @@ function loadImage() {
                     </div>
                 `;
         imgContainer = document.getElementById('image-container');
+    }
+    
+    // Make container visible now that the game is starting
+    if (imgContainer) {
+        imgContainer.style.visibility = 'visible';
     }
 
     const item = currentPool[currentIndex];
@@ -1815,14 +1827,13 @@ function updatePauseButton() {
 function resetGame(skipConfirm) {
     if (!skipConfirm && !confirm('Are you sure you want to reset the game? This will clear all progress and stats.')) return;
 
-    toggleMoreSpecific(false);
-    if (clockInterval) clearInterval(clockInterval);
+    // ---- AUDIO ----
+    if (sounds && sounds.duelMusic) { try { sounds.duelMusic.pause(); sounds.duelMusic.currentTime = 0; } catch(e){} }
+    if (sounds && sounds.duelOver)  { try { sounds.duelOver.pause();  sounds.duelOver.currentTime = 0; } catch(e){} }
+    if (categoryRevealAudio)        { try { categoryRevealAudio.pause(); categoryRevealAudio = null; } catch(e){} }
 
-    // Stop audio immediately
-    sounds.duelMusic.pause();
-    sounds.duelMusic.currentTime = 0;
-    sounds.duelOver.pause();
-    sounds.duelOver.currentTime = 0;
+    toggleMoreSpecific(false);
+    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
 
     // Reset background
     document.body.classList.remove('game-ended');
@@ -1847,52 +1858,36 @@ function resetGame(skipConfirm) {
     itemsCompleted = 0;
     categoryComplete = false;
     inPassPhase = false;
-    updateClueDropdown();
-    // Reset time boosts on reset
+    // Reset time boosts
     timeBoostsUsed = [false, false];
+    const p1Boost = document.getElementById('p1-boost-btn');
+    if (p1Boost) { p1Boost.classList.remove('used'); p1Boost.disabled = false; p1Boost.textContent = 'Time Boost? (+5s)'; }
+    const p2Boost = document.getElementById('p2-boost-btn');
+    if (p2Boost) { p2Boost.classList.remove('used'); p2Boost.disabled = false; p2Boost.textContent = 'Time Boost? (+5s)'; }
 
-    // Hide host pause controls
-    document.getElementById('host-pause-controls').style.display = 'none';
-    document.getElementById('p1-boost-btn').classList.remove('used');
-    document.getElementById('p1-boost-btn').disabled = false;
-    document.getElementById('p1-boost-btn').textContent = 'Time Boost? (+5s)';
-    document.getElementById('p2-boost-btn').classList.remove('used');
-    document.getElementById('p2-boost-btn').disabled = false;
-    document.getElementById('p2-boost-btn').textContent = 'Time Boost? (+5s)';
-
-    if (clockInterval) {
-        clearInterval(clockInterval);
-        clockInterval = null;
-    }
-
-    // Hide study controls
+    const hostPause = document.getElementById('host-pause-controls');
+    if (hostPause) hostPause.style.display = 'none';
     const studyControls = document.getElementById('study-controls');
     if (studyControls) studyControls.style.display = 'none';
+    const catDisplay = document.getElementById('category-display');
+    if (catDisplay) catDisplay.style.display = 'none';
+    const revealText = document.getElementById('reveal-text');
+    if (revealText) revealText.innerText = '';
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) { answerInput.value = ''; answerInput.disabled = true; answerInput.style.display = 'block'; answerInput.placeholder = 'SELECT A CATEGORY'; }
 
-    // Reset UI
-    updateDisplay();
-    document.getElementById('reveal-text').innerText = "";
-    document.getElementById('answer-input').value = "";
-    document.getElementById('answer-input').disabled = true;
-    document.getElementById('answer-input').style.display = 'block';
-    document.getElementById('img-frame').className = "image-container";
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('category-display').style.display = 'none';
-    currentCategory = "";
+    currentCategory = '';
     categoryLoadedForHost = false;
+    updateClueDropdown();
 
-    // Clear any fallback text
-    const fallback = document.getElementById('text-fallback');
-    if (fallback) {
-        fallback.remove();
-    }
-
-    // Reset image
+    // Rebuild img-frame with welcome screen
     const imgFrame = document.getElementById('img-frame');
-    imgFrame.innerHTML = `
+    if (imgFrame) {
+        imgFrame.className = 'image-container';
+        imgFrame.innerHTML = `
             <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
             <div id="overlay"></div>
-            <img id="prompt-image" src="" onerror="handleImageError(this)">
+            <div id="image-container" style="width: 100%; height: 100%; position: relative; visibility: hidden;"></div>
             <div id="math-problem" class="math-problem"></div>
             <div id="pause-overlay">
                 <span class="pause-text">PAUSED</span>
@@ -1902,28 +1897,17 @@ function resetGame(skipConfirm) {
                 <button type="button" class="pause-hide-btn" onclick="hidePauseImage()">HIDE</button>
             </div>
         `;
-    const img = document.getElementById('prompt-image');
-    img.src = "";
-    img.style.display = 'block';
-    img.dataset.errorHandled = 'false';
+        imgFrame.classList.remove('correct-border', 'pass-border');
+    }
 
-    // Reset timer colors and classes (clear winner/loser styling)
+    // Overlay is now in the DOM — safe to access
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.style.display = 'none';
+
     resetTimerStyles();
-
-    imgFrame.classList.remove('correct-border');
-    imgFrame.classList.remove('pass-border');
-
-    // Hide overlay
-    document.getElementById('overlay').style.display = 'none';
-
     updateMenuVisibility();
     updatePauseButton();
     updateDisplay();
-
-    // Reset placeholder text
-    const answerInput = document.getElementById('answer-input');
-    if (answerInput) answerInput.placeholder = 'SELECT A CATEGORY';
-
     postStateToAdmin();
 }
 
@@ -1934,7 +1918,7 @@ function showWelcomeOnMain() {
     imgFrame.innerHTML = `
             <div id="welcome-message" class="welcome-message"><span class="welcome-line1">Welcome to</span><span class="welcome-line2">The Floor!</span></div>
             <div id="overlay"></div>
-            <img id="prompt-image" src="" onerror="handleImageError(this)" style="display: none;">
+            <div id="image-container" style="width: 100%; height: 100%; position: relative; visibility: hidden;"></div>
             <div id="math-problem" class="math-problem"></div>
             <div id="pause-overlay">
                 <span class="pause-text">PAUSED</span>
