@@ -485,7 +485,12 @@ async function setupGame(cat, opts) {
     }
 
     const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+        // Force the browser to render the overlay before blocking the thread
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise(r => setTimeout(r, 50));
+    }
     
     await preloadCategoryImages();
     
