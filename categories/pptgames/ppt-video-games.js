@@ -25,7 +25,7 @@ const pptVideoGames = [
     { n: "NBA 2K", u: "../images/pptGames/Video Games/NBA 2K.jpg" },
     { n: "OVERWATCH", u: "../images/pptGames/Video Games/Overwatch.jpg" },
     { n: "PAC-MAN", u: "../images/pptGames/Video Games/Pac-Man.jpg" },
-    { n: "POKEMON (RED & BLUE)", u: "../images/pptGames/Video Games/Pokemon (Red & Blue).jpg" },
+    { n: "POKEMON (RED & BLUE)", u: "../images/pptGames/Video Games/Pokemon (Red and Blue).jpg" },
     { n: "PORTAL", u: "../images/pptGames/Video Games/Portal.jpg" },
     { n: "RESIDENT EVIL", u: "../images/pptGames/Video Games/Resident Evil.jpg" },
     { n: "SKYRIM (THE ELDER SCROLLS V)", u: "../images/pptGames/Video Games/Skyrim (The Elder Scrolls V).jpg" },

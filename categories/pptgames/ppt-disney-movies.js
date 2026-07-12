@@ -15,7 +15,7 @@ const pptDisneyMovies = [
     { n: "FROZEN", u: "../images/pptGames/Disney Movies/Frozen.jpg" },
     { n: "INSIDE OUT", u: "../images/pptGames/Disney Movies/Inside Out.jpg" },
     { n: "LADY AND THE TRAMP", u: "../images/pptGames/Disney Movies/Lady and the Tramp.jpg" },
-    { n: "LILO & STITCH", u: "../images/pptGames/Disney Movies/Lilo & Stitch.jpg" },
+    { n: "LILO & STITCH", u: "../images/pptGames/Disney Movies/Lilo and Stitch.jpg" },
     { n: "MARY POPPINS", u: "../images/pptGames/Disney Movies/Mary Poppins.jpg" },
     { n: "MOANA", u: "../images/pptGames/Disney Movies/Moana.jpg" },
     { n: "MONSTERS, INC.", u: "../images/pptGames/Disney Movies/Monsters, Inc..jpg" },

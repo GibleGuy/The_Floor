@@ -1,7 +1,7 @@
 // Soda Brands — images in images/pptgames/Soda Brands/
 const pptSodaBrands = [
     { n: "7UP", u: "../images/pptGames/Soda Brands/7UP.jpg" },
-    { n: "A&W ROOT BEER", u: "../images/pptGames/Soda Brands/A&W Root Beer.jpg" },
+    { n: "A&W ROOT BEER", u: "../images/pptGames/Soda Brands/A and W Root Beer.jpg" },
     { n: "BARQ'S ROOT BEER", u: "../images/pptGames/Soda Brands/Barq\'s Root Beer.jpg" },
     { n: "BIG RED", u: "../images/pptGames/Soda Brands/Big Red.jpg" },
     { n: "BUBLY", u: "../images/pptGames/Soda Brands/Bubly.jpg" },

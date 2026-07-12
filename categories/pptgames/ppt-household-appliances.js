@@ -38,7 +38,7 @@ const pptHouseholdAppliances = [
     { n: "TOASTER", u: "../images/pptGames/Household Appliances/Toaster.jpg" },
     { n: "VACUUM CLEANER", u: "../images/pptGames/Household Appliances/Vacuum Cleaner.jpg" },
     { n: "WAFFLE MAKER", u: "../images/pptGames/Household Appliances/Waffle Maker.jpg" },
-    { n: "WASHER & DRYER", u: "../images/pptGames/Household Appliances/Washer & Dryer.jpg" },
+    { n: "WASHER & DRYER", u: "../images/pptGames/Household Appliances/Washer and Dryer.jpg" },
     { n: "WATER COOLER, WATER DISPENSER", u: "../images/pptGames/Household Appliances/Water Cooler, Water Dispenser.jpg" }
 ];
 if (typeof window !== "undefined") window.pptHouseholdAppliances = pptHouseholdAppliances;

@@ -20,7 +20,7 @@ const pptCandyBrands = [
     { n: "KIT KAT", u: "../images/pptGames/Candy Brands/Kit Kat.jpg" },
     { n: "LIFESAVERS", u: "../images/pptGames/Candy Brands/Lifesavers.jpg" },
     { n: "LINDT", u: "../images/pptGames/Candy Brands/Lindt.jpg" },
-    { n: "M&MS", u: "../images/pptGames/Candy Brands/M&Ms.jpg" },
+    { n: "M&MS", u: "../images/pptGames/Candy Brands/M and Ms.jpg" },
     { n: "MIKE AND IKE", u: "../images/pptGames/Candy Brands/Mike and Ike.jpg" },
     { n: "MILKY WAY", u: "../images/pptGames/Candy Brands/Milky Way.jpg" },
     { n: "NERDS", u: "../images/pptGames/Candy Brands/Nerds.jpg" },

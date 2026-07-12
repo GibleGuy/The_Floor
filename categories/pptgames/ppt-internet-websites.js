@@ -8,7 +8,7 @@ const pptInternetWebsites = [
     { n: "CNN", u: "../images/pptGames/Internet Websites/CNN.jpg" },
     { n: "CHATGPT", u: "../images/pptGames/Internet Websites/ChatGPT.jpg" },
     { n: "DISCORD", u: "../images/pptGames/Internet Websites/Discord.jpg" },
-    { n: "DISNEY+", u: "../images/pptGames/Internet Websites/Disney+.jpg" },
+    { n: "DISNEY+", u: "../images/pptGames/Internet Websites/Disney Plus.jpg" },
     { n: "DROPBOX", u: "../images/pptGames/Internet Websites/Dropbox.jpg" },
     { n: "ESPN", u: "../images/pptGames/Internet Websites/ESPN.jpg" },
     { n: "ETSY", u: "../images/pptGames/Internet Websites/Etsy.jpg" },

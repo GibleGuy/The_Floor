@@ -47,6 +47,6 @@ const pptMovieTitles = [
     { n: "TITANIC", u: "../images/pptGames/Movie Titles/Titanic.jpg" },
     { n: "TOP GUN", u: "../images/pptGames/Movie Titles/Top Gun.jpg" },
     { n: "TOY STORY", u: "../images/pptGames/Movie Titles/Toy Story.jpg" },
-    { n: "WILLY WONKA & THE CHOCOLATE FACTORY", u: "../images/pptGames/Movie Titles/Willy Wonka & the Chocolate Factory.jpg" }
+    { n: "WILLY WONKA & THE CHOCOLATE FACTORY", u: "../images/pptGames/Movie Titles/Willy Wonka and the Chocolate Factory.jpg" }
 ];
 if (typeof window !== "undefined") window.pptMovieTitles = pptMovieTitles;

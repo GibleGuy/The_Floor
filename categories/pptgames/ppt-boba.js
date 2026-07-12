@@ -6,7 +6,7 @@ const pptBoba = [
     { n: "CHATIME", u: "../images/pptGames/Boba/Chatime.jpg" },
     { n: "CHEESE, MILK FOAM", u: "../images/pptGames/Boba/Cheese, Milk Foam.jpg" },
     { n: "CHOCOLATE", u: "../images/pptGames/Boba/Chocolate.jpg" },
-    { n: "COCO (FRESH TEA & JUICE)", u: "../images/pptGames/Boba/CoCo (Fresh Tea & Juice).jpg" },
+    { n: "COCO (FRESH TEA & JUICE)", u: "../images/pptGames/Boba/CoCo (Fresh Tea and Juice).jpg" },
     { n: "COCONUT JELLY", u: "../images/pptGames/Boba/Coconut Jelly.jpg" },
     { n: "COFFEE", u: "../images/pptGames/Boba/Coffee.jpg" },
     { n: "CRYSTAL BOBA", u: "../images/pptGames/Boba/Crystal Boba.jpg" },

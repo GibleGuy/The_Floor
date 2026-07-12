@@ -44,7 +44,7 @@ const pptTeenageMutantNinjaTurtles = [
     { n: "SUPERFLY", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Superfly.jpg" },
     { n: "THE LAST RONIN", u: "../images/pptGames/Teenage Mutant Ninja Turtles/The Last Ronin.jpg" },
     { n: "THE TECHNODROME", u: "../images/pptGames/Teenage Mutant Ninja Turtles/The Technodrome.jpg" },
-    { n: "TOKKA & RAHZAR", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Tokka & Rahzar.jpg" },
+    { n: "TOKKA & RAHZAR", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Tokka and Rahzar.jpg" },
     { n: "TRICERATON", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Triceraton.jpg" },
     { n: "TURTLE BLIMP", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Turtle Blimp.jpg" },
     { n: "TURTLE COMM (SHELLPHONE)", u: "../images/pptGames/Teenage Mutant Ninja Turtles/Turtle Comm (Shellphone).jpg" },

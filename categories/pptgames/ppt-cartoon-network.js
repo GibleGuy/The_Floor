@@ -2,7 +2,7 @@
 const pptCartoonNetwork = [
     { n: "6TEEN", u: "../images/pptGames/Cartoon Network/6teen.jpg" },
     { n: "ADVENTURE TIME", u: "../images/pptGames/Cartoon Network/Adventure Time.jpg" },
-    { n: "APPLE & ONION", u: "../images/pptGames/Cartoon Network/Apple & Onion.jpg" },
+    { n: "APPLE & ONION", u: "../images/pptGames/Cartoon Network/Apple and Onion.jpg" },
     { n: "BEN 10", u: "../images/pptGames/Cartoon Network/Ben 10.jpg" },
     { n: "CAMP LAZLO", u: "../images/pptGames/Cartoon Network/Camp Lazlo.jpg" },
     { n: "CHOWDER", u: "../images/pptGames/Cartoon Network/Chowder.jpg" },
@@ -31,7 +31,7 @@ const pptCartoonNetwork = [
     { n: "TEEN TITANS GO!", u: "../images/pptGames/Cartoon Network/Teen Titans Go!.jpg" },
     { n: "TEEN TITANS", u: "../images/pptGames/Cartoon Network/Teen Titans.jpg" },
     { n: "THE AMAZING WORLD OF GUMBALL", u: "../images/pptGames/Cartoon Network/The Amazing World of Gumball.jpg" },
-    { n: "THE GRIM ADVENTURES OF BILLY & MANDY", u: "../images/pptGames/Cartoon Network/The Grim Adventures of Billy & Mandy.jpg" },
+    { n: "THE GRIM ADVENTURES OF BILLY & MANDY", u: "../images/pptGames/Cartoon Network/The Grim Adventures of Billy and Mandy.jpg" },
     { n: "THE LOONEY TUNES SHOW", u: "../images/pptGames/Cartoon Network/The Looney Tunes Show.jpg" },
     { n: "THE MARVELOUS MISADVENTURES OF FLAPJACK", u: "../images/pptGames/Cartoon Network/The Marvelous Misadventures of Flapjack.jpg" },
     { n: "THE POWERPUFF GIRLS", u: "../images/pptGames/Cartoon Network/The Powerpuff Girls.jpg" },

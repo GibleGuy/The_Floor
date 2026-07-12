@@ -23,7 +23,7 @@ const pptNintendoCharacters = [
     { n: "MARTH", u: "../images/pptGames/Nintendo Characters/Marth.jpg" },
     { n: "META KNIGHT", u: "../images/pptGames/Nintendo Characters/Meta Knight.jpg" },
     { n: "MEWTWO", u: "../images/pptGames/Nintendo Characters/Mewtwo.jpg" },
-    { n: "MR. GAME & WATCH", u: "../images/pptGames/Nintendo Characters/Mr. Game & Watch.jpg" },
+    { n: "MR. GAME & WATCH", u: "../images/pptGames/Nintendo Characters/Mr. Game and Watch.jpg" },
     { n: "NESS", u: "../images/pptGames/Nintendo Characters/Ness.jpg" },
     { n: "OLIMAR", u: "../images/pptGames/Nintendo Characters/Olimar.jpg" },
     { n: "PIKACHU", u: "../images/pptGames/Nintendo Characters/Pikachu.jpg" },

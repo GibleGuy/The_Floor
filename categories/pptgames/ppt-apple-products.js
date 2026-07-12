@@ -7,7 +7,7 @@ const pptAppleProducts = [
     { n: "APPLE CARPLAY", u: "../images/pptGames/Apple Products/Apple CarPlay.jpg" },
     { n: "APPLE CARD", u: "../images/pptGames/Apple Products/Apple Card.jpg" },
     { n: "APPLE CINEMA DISPLAY", u: "../images/pptGames/Apple Products/Apple Cinema Display.jpg" },
-    { n: "APPLE FITNESS+", u: "../images/pptGames/Apple Products/Apple Fitness+.jpg" },
+    { n: "APPLE FITNESS+", u: "../images/pptGames/Apple Products/Apple Fitness Plus.jpg" },
     { n: "APPLE HOMEKIT", u: "../images/pptGames/Apple Products/Apple HomeKit.jpg" },
     { n: "APPLE MAGIC TRACKPAD", u: "../images/pptGames/Apple Products/Apple Magic Trackpad.jpg" },
     { n: "APPLE MAPS", u: "../images/pptGames/Apple Products/Apple Maps.jpg" },

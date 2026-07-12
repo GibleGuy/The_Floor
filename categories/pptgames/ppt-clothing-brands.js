@@ -1,6 +1,6 @@
 // Clothing Brands — images in images/pptgames/Clothing Brands/
 const pptClothingBrands = [
-    { n: "ABERCROMBIE & FITCH", u: "../images/pptGames/Clothing Brands/Abercrombie & Fitch.jpg" },
+    { n: "ABERCROMBIE & FITCH", u: "../images/pptGames/Clothing Brands/Abercrombie and Fitch.jpg" },
     { n: "ADIDAS", u: "../images/pptGames/Clothing Brands/Adidas.jpg" },
     { n: "AMERICAN EAGLE", u: "../images/pptGames/Clothing Brands/American Eagle.jpg" },
     { n: "BURBERRY", u: "../images/pptGames/Clothing Brands/Burberry.jpg" },
@@ -11,13 +11,13 @@ const pptClothingBrands = [
     { n: "CONVERSE", u: "../images/pptGames/Clothing Brands/Converse.jpg" },
     { n: "DICKIES", u: "../images/pptGames/Clothing Brands/Dickies.jpg" },
     { n: "DIESEL", u: "../images/pptGames/Clothing Brands/Diesel.jpg" },
-    { n: "DOLCE & GABBANA", u: "../images/pptGames/Clothing Brands/Dolce & Gabbana.jpg" },
+    { n: "DOLCE & GABBANA", u: "../images/pptGames/Clothing Brands/Dolce and Gabbana.jpg" },
     { n: "FENDI", u: "../images/pptGames/Clothing Brands/Fendi.jpg" },
     { n: "FOREVER 21", u: "../images/pptGames/Clothing Brands/Forever 21.jpg" },
     { n: "GAP", u: "../images/pptGames/Clothing Brands/Gap.jpg" },
     { n: "GIVENCHY", u: "../images/pptGames/Clothing Brands/Givenchy.jpg" },
     { n: "GUCCI", u: "../images/pptGames/Clothing Brands/Gucci.jpg" },
-    { n: "H&M", u: "../images/pptGames/Clothing Brands/H&M.jpg" },
+    { n: "H&M", u: "../images/pptGames/Clothing Brands/H and M.jpg" },
     { n: "HOLLISTER", u: "../images/pptGames/Clothing Brands/Hollister.jpg" },
     { n: "HUGO BOSS", u: "../images/pptGames/Clothing Brands/Hugo Boss.jpg" },
     { n: "LACOSTE", u: "../images/pptGames/Clothing Brands/Lacoste.jpg" },

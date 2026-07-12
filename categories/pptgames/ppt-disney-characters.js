@@ -21,7 +21,7 @@ const pptDisneyCharacters = [
     { n: "GOOFY", u: "../images/pptGames/Disney Characters/Goofy.jpg" },
     { n: "HADES", u: "../images/pptGames/Disney Characters/Hades.jpg" },
     { n: "HERCULES", u: "../images/pptGames/Disney Characters/Hercules.jpg" },
-    { n: "HUEY, DEWEY & LOUIE", u: "../images/pptGames/Disney Characters/Huey, Dewey & Louie.jpg" },
+    { n: "HUEY, DEWEY & LOUIE", u: "../images/pptGames/Disney Characters/Huey, Dewey and Louie.jpg" },
     { n: "JACK SKELLINGTON", u: "../images/pptGames/Disney Characters/Jack Skellington.jpg" },
     { n: "JAFAR", u: "../images/pptGames/Disney Characters/Jafar.jpg" },
     { n: "JIMINY CRICKET", u: "../images/pptGames/Disney Characters/Jiminy Cricket.jpg" },

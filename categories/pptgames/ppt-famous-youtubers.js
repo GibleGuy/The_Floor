@@ -27,7 +27,7 @@ const pptFamousYoutubers = [
     { n: "PEWDIEPIE", u: "../images/pptGames/Famous YouTubers/PewDiePie.jpg" },
     { n: "POPULARMMOS", u: "../images/pptGames/Famous YouTubers/PopularMMOs.jpg" },
     { n: "REACTION TIME (TAL FISHMAN)", u: "../images/pptGames/Famous YouTubers/Reaction Time (Tal Fishman).jpg" },
-    { n: "RHETT & LINK (GOOD MYTHICAL MORNING)", u: "../images/pptGames/Famous YouTubers/Rhett & Link (Good Mythical Morning).jpg" },
+    { n: "RHETT & LINK (GOOD MYTHICAL MORNING)", u: "../images/pptGames/Famous YouTubers/Rhett and Link (Good Mythical Morning).jpg" },
     { n: "ROSANNA PANSINO", u: "../images/pptGames/Famous YouTubers/Rosanna Pansino.jpg" },
     { n: "RYAN HIGA, NIGAHIGA", u: "../images/pptGames/Famous YouTubers/Ryan Higa, Nigahiga.jpg" },
     { n: "SSSNIPERWOLF", u: "../images/pptGames/Famous YouTubers/SSSniperwolf.jpg" },
