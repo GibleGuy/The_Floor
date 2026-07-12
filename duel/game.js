@@ -269,18 +269,42 @@ function playPassSound() {
     passIndex = (passIndex + 1) % PASS_COUNT;
 }
 
-const PRELOAD_COUNT = 5;
-function preloadCategoryImages() {
+const SESSION_VERSION = Date.now();
+const preloadedUrls = new Set();
+
+function resolveImageSrc(rawSrc) {
+    if (!rawSrc) return '';
+    const isFileProtocol = typeof window !== 'undefined' && window.location.protocol === 'file:';
+    const cb = isFileProtocol ? '' : (rawSrc.includes('?') ? '&v=' + SESSION_VERSION : '?v=' + SESSION_VERSION);
+    if (rawSrc.match(/^https?:\/\//) || rawSrc.startsWith('//')) {
+        return rawSrc + cb;
+    } else if (rawSrc.startsWith('../')) {
+        return rawSrc + cb;
+    } else {
+        return '../' + rawSrc + cb;
+    }
+}
+
+function preloadRange(startIndex, count) {
     if (!currentPool || !currentPool.length) return;
-    const n = Math.min(PRELOAD_COUNT, currentPool.length);
-    for (let i = 0; i < n; i++) {
-        const item = currentPool[i];
+    for (let i = 0; i < count; i++) {
+        const idx = (startIndex + i) % currentPool.length;
+        const item = currentPool[idx];
         const url = item && item.u;
         if (url) {
-            const img = new Image();
-            img.src = url;
+            const resolvedUrl = resolveImageSrc(url);
+            if (!preloadedUrls.has(resolvedUrl)) {
+                preloadedUrls.add(resolvedUrl);
+                const img = new Image();
+                img.src = resolvedUrl;
+            }
         }
     }
+}
+
+function preloadCategoryImages() {
+    preloadedUrls.clear();
+    preloadRange(0, 10);
 }
 
 // ========== CATEGORY REVEAL ==========
@@ -432,6 +456,7 @@ async function setupGame(cat, opts) {
         }
     }
 
+    preloadCategoryImages();
     updateClueDropdown();
 
     // In single player or study mode, always use player 1
@@ -1323,20 +1348,6 @@ function loadImage() {
 
     const mp = document.getElementById('math-problem');
 
-    // Resolve image src: absolute URLs stay as-is, relative paths that already
-    // start with ../ are used directly, otherwise prepend ../ for duel/ context.
-    function resolveImageSrc(rawSrc) {
-        const isFileProtocol = typeof window !== 'undefined' && window.location.protocol === 'file:';
-        const cb = isFileProtocol ? '' : (rawSrc.includes('?') ? '&v=' + Date.now() : '?v=' + Date.now());
-        if (rawSrc.match(/^https?:\/\//) || rawSrc.startsWith('//')) {
-            return rawSrc + cb;
-        } else if (rawSrc.startsWith('../')) {
-            return rawSrc + cb;
-        } else {
-            return '../' + rawSrc + cb;
-        }
-    }
-
     if (isMath) {
         img.style.display = 'none';
         if (mp) {
@@ -1349,6 +1360,9 @@ function loadImage() {
         if (mp) mp.classList.remove('show');
         img.src = resolveImageSrc(item.u);
     }
+
+    // Preload next clues in the background
+    preloadRange(currentIndex, 5);
 }
 
 function formatTimer(val) {
