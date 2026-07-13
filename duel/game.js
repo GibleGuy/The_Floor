@@ -855,8 +855,10 @@ document.addEventListener('keydown', (e) => {
         }
     }
     
-    // Reset Game works for everyone
-    if (e.key === 'r' || e.key === 'R') {
+    // Reset Game works for everyone UNLESS typing in an input
+    const focused = document.activeElement;
+    const isTyping = focused && (focused.tagName === 'INPUT' || focused.tagName === 'TEXTAREA');
+    if ((e.key === 'r' || e.key === 'R') && !isTyping) {
         e.preventDefault();
         resetGame();
     }
