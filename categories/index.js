@@ -9,6 +9,7 @@
  */
 const CATEGORY_REGISTRY = [
     // REAL DEAL
+    { key: 'niche-survivor-players', label: 'Niche Survivor Players', emoji: '🏝️', script: 'niche-survivor-players.js', global: 'nicheSurvivorPlayersData', tier: 'Gible Verified' },
     { key: '2000s-artists', label: '2000s Artists', emoji: '🎤', script: '2000s-artists.js', global: 'artists2000sData', tier: 'Gible Verified' },
     { key: 'anime', label: 'Anime', emoji: '⛩️', script: 'anime.js', global: 'animeData', tier: 'Gible Verified' },
     { key: 'best-picture', label: 'Best Picture', emoji: '🏆', script: 'best-picture.js', global: 'bestPictureData', tier: 'Gible Verified' },
