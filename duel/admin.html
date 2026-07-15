@@ -1193,24 +1193,20 @@
                 }
                 categoryLoaded = !!d.categoryLoaded;
                 updateStartButton();
-                if (d.gameTimerStart === 3 || d.gameTimerStart === 2) {
-                    var sec = d.gameTimerStart;
-                    if (window._adminGameTimerIv) clearInterval(window._adminGameTimerIv);
-                    var gtEl = document.getElementById('admin-game-timer');
-                    var v = sec;
-                    function tick() {
-                        v = Math.max(0, v - 0.1);
-                        if (gtEl) gtEl.textContent = v > 0 ? v.toFixed(1) : '—';
-                        if (v <= 0) {
-                            clearInterval(window._adminGameTimerIv);
-                            window._adminGameTimerIv = null;
-                        }
-                    }
-                    tick();
-                    window._adminGameTimerIv = setInterval(tick, 100);
-                }
                 var gt = document.getElementById('admin-game-timer');
-                if (gt && !window._adminGameTimerIv) gt.textContent = '—';
+                if (typeof d.gameTimer === 'number') {
+                    if (window._adminGameTimerIv) {
+                        clearInterval(window._adminGameTimerIv);
+                        window._adminGameTimerIv = null;
+                    }
+                    if (gt) gt.textContent = d.gameTimer.toFixed(1);
+                } else if (gt) {
+                    if (window._adminGameTimerIv) {
+                        clearInterval(window._adminGameTimerIv);
+                        window._adminGameTimerIv = null;
+                    }
+                    gt.textContent = '—';
+                }
                 if (d.currentTheme) {
                     var th = document.getElementById('admin-theme-' + d.currentTheme);
                     if (th && !th.checked) th.checked = true;

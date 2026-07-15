@@ -81,6 +81,9 @@ let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
 let currentStreak = 0;
 let inPassPhase = false;
 let unpauseCountdownActive = false;
+let startingGame = false;
+let lastTickAt = 0;
+let displayCache = {};
 let shuffleCluesNormal = false;
 let shuffleCluesStudy = false;
 
@@ -393,6 +396,38 @@ async function showCategoryReveal(categoryName) {
 }
 
 // ========== GAME FLOW (setup, start, loop, correct, pass, end) ==========
+
+function clearFeedbackState() {
+    inPassPhase = false;
+    gameTimerRemaining = null;
+    gameTimerStartNext = null;
+    unpauseCountdownActive = false;
+}
+
+function getCurrentItem() {
+    const item = currentPool && currentPool[currentIndex];
+    if (!item || typeof item.n !== 'string') return null;
+    return item;
+}
+
+function shouldTickClock() {
+    if (!gameActive || isPaused || categoryComplete) return false;
+    if (gamemode === 'study') return false;
+    // Unified policy: clock keeps running during correct/pass feedback
+    return true;
+}
+
+function startClock() {
+    if (clockInterval) clearInterval(clockInterval);
+    lastTickAt = performance.now();
+    displayCache = {};
+    if (gamemode === 'study') {
+        clockInterval = null;
+        return;
+    }
+    clockInterval = setInterval(gameLoop, 50);
+}
+
 async function setupGame(cat, opts) {
     if (gameActive) return;
     const fromAdminWindow = !!(opts && opts.fromAdminWindow);
@@ -413,6 +448,7 @@ async function setupGame(cat, opts) {
         answerCount: 0
     };
     gameActive = false;
+    clearFeedbackState();
     currentStreak = 0;
     answerStartTime = Date.now();
 
@@ -625,10 +661,10 @@ async function setupGame(cat, opts) {
 
         gameActive = true;
         inputLocked = false;
+        answerStartTime = Date.now();
         loadImage();
         updateMenuVisibility();
-        if (clockInterval) clearInterval(clockInterval);
-        clockInterval = setInterval(gameLoop, 100);
+        startClock();
 
         // Handle answer input
         const answerInput = document.getElementById('answer-input');
@@ -650,7 +686,10 @@ async function setupGame(cat, opts) {
 }
 
 async function startGameFromHost() {
+    if (startingGame || gameActive) return;
+    startingGame = true;
     categoryLoadedForHost = false;
+    try {
     // Apply first-player selection (from main or admin) before starting
     const fl = document.getElementById('first-left');
     if (fl) firstPlayerIsLeft = fl.checked;
@@ -726,31 +765,33 @@ async function startGameFromHost() {
     }
 
     updateMenuVisibility();
-    if (clockInterval) clearInterval(clockInterval);
-    clockInterval = setInterval(gameLoop, 100);
+    startClock();
+    } finally {
+        startingGame = false;
+    }
 }
 
 function gameLoop() {
     if (!gameActive || categoryComplete) return;
 
     if (gamemode === 'study') {
-        // Study mode: no timer logic needed, just update display
-        updateDisplay();
         return;
     }
 
-    if (gamemode === 'singleplayer') {
-        // Single player: count up
-        if (!inputLocked && !isPaused) {
-            timers[0] += 0.1;
-        }
-    } else {
-        // Classic/Host: count down (continue during pass phase)
-        if ((!inputLocked || inPassPhase) && !isPaused) timers[activePlayer - 1] -= 0.1;
+    const now = performance.now();
+    const dt = Math.min(0.25, (now - lastTickAt) / 1000);
+    lastTickAt = now;
 
-        if (timers[activePlayer - 1] <= 0) {
-            timers[activePlayer - 1] = 0;
-            endGame();
+    if (shouldTickClock()) {
+        if (gamemode === 'singleplayer') {
+            timers[0] += dt;
+        } else {
+            timers[activePlayer - 1] -= dt;
+            if (timers[activePlayer - 1] <= 0) {
+                timers[activePlayer - 1] = 0;
+                endGame();
+                return;
+            }
         }
     }
     updateDisplay();
@@ -784,32 +825,38 @@ function normalizeAnswer(str) {
 
 document.getElementById('answer-input').addEventListener('input', (e) => {
     if (!gameActive || inputLocked) return;
+    const item = getCurrentItem();
+    if (!item) return;
     let val = e.target.value;
     // Match Logic: ignore spaces and punctuation
-    if (normalizeAnswer(val) === normalizeAnswer(currentPool[currentIndex].n)) handleCorrect();
+    if (normalizeAnswer(val) === normalizeAnswer(item.n)) handleCorrect();
 });
 
 document.getElementById('answer-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && gameActive && !inputLocked) {
+        const item = getCurrentItem();
+        if (!item) return;
         const val = e.target.value.trim();
         if (gamemode === 'study') {
             // In study mode: Enter with wrong/empty answer reveals it
-            if (val === "" || normalizeAnswer(val) !== normalizeAnswer(currentPool[currentIndex].n)) {
+            if (val === "" || normalizeAnswer(val) !== normalizeAnswer(item.n)) {
                 revealAnswer();
             }
             return;
         }
         if (val === "") {
             handlePass();
-        } else if (normalizeAnswer(val) !== normalizeAnswer(currentPool[currentIndex].n)) {
-            // Incorrect answer - flash red and clear
+        } else if (normalizeAnswer(val) !== normalizeAnswer(item.n)) {
+            // Incorrect answer - flash red and clear; brief lock to avoid accidental pass
             const input = e.target;
             input.style.backgroundColor = 'rgba(231, 76, 60, 0.3)';
             input.style.borderColor = 'var(--floor-red)';
+            inputLocked = true;
             setTimeout(() => {
                 input.style.backgroundColor = '';
                 input.style.borderColor = '';
-            }, 300);
+                if (gameActive && !isPaused) inputLocked = false;
+            }, 250);
             input.value = '';
         }
     }
@@ -879,8 +926,9 @@ function toggleMoreSpecific(forceState) {
 
 function revealAnswer() {
     if (!gameActive || gamemode !== 'study') return;
-    const answerText = currentPool[currentIndex].n;
-    document.getElementById('reveal-text').innerText = answerText;
+    const item = getCurrentItem();
+    if (!item) return;
+    document.getElementById('reveal-text').innerText = item.n;
     document.getElementById('reveal-text').style.color = 'var(--floor-yellow)';
     document.getElementById('study-reveal-btn').style.display = 'none';
     document.getElementById('study-knew-btn').style.display = 'inline-block';
@@ -891,11 +939,13 @@ function revealAnswer() {
 
 async function handleStudyKnewIt() {
     if (!gameActive || gamemode !== 'study') return;
+    const item = getCurrentItem();
+    if (!item) return;
     inputLocked = true;
     playDingSound();
     
     // Show correct answer with green flash
-    document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
+    document.getElementById('reveal-text').innerText = item.n;
     document.getElementById('reveal-text').style.color = 'var(--floor-green)';
     document.getElementById('img-frame').classList.add('correct-border');
     
@@ -918,11 +968,13 @@ async function handleStudyKnewIt() {
 
 async function handleStudyAgain() {
     if (!gameActive || gamemode !== 'study') return;
+    const item = getCurrentItem();
+    if (!item) return;
     inputLocked = true;
     playPassSound();
     
     // Show answer with red flash
-    document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
+    document.getElementById('reveal-text').innerText = item.n;
     document.getElementById('reveal-text').style.color = 'var(--floor-red)';
     document.getElementById('img-frame').classList.add('pass-border');
     
@@ -960,11 +1012,15 @@ async function handleCorrect() {
         handleStudyKnewIt();
         return;
     }
+    if (!gameActive || inputLocked) return;
+    const item = getCurrentItem();
+    if (!item) return;
+
     inputLocked = true;
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('correct-border');
     if (hostMode) {
-        document.getElementById('reveal-text').innerText = currentPool[currentIndex].n;
+        document.getElementById('reveal-text').innerText = item.n;
     } else {
         document.getElementById('reveal-text').innerText = "CORRECT!";
     }
@@ -1024,7 +1080,10 @@ async function handleCorrect() {
         if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 2 - (i + 1) * 0.1);
     }
-    if (!gameActive) return;
+    if (!gameActive) {
+        clearFeedbackState();
+        return;
+    }
     gameTimerRemaining = null;
     // Switch players only in classic mode
     if (gamemode === 'classic') {
@@ -1039,11 +1098,15 @@ async function handlePass() {
         handleStudyAgain();
         return;
     }
+    if (!gameActive || inputLocked) return;
+    const item = getCurrentItem();
+    if (!item) return;
+
     inputLocked = true;
-    inPassPhase = true; // Mark as pass phase so timer continues
+    inPassPhase = true; // Mark as pass phase (legacy flag; clock always ticks now)
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('pass-border');
-    document.getElementById('reveal-text').innerText = `PASSED: ${currentPool[currentIndex].n}`;
+    document.getElementById('reveal-text').innerText = `PASSED: ${item.n}`;
 
     // Calculate time taken for this answer
     const timeTaken = (Date.now() - answerStartTime) / 1000;
@@ -1095,7 +1158,10 @@ async function handlePass() {
         if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
     }
-    if (!gameActive) return;
+    if (!gameActive) {
+        clearFeedbackState();
+        return;
+    }
     gameTimerRemaining = null;
     inPassPhase = false;
     answerStartTime = Date.now();
@@ -1251,8 +1317,10 @@ function handleCategoryComplete() {
     categoryComplete = true;
     gameActive = false;
     isPaused = false;
+    clearFeedbackState();
     toggleMoreSpecific(false);
     clearInterval(clockInterval);
+    clockInterval = null;
 
     // Stop timers
     inputLocked = true;
@@ -1389,8 +1457,9 @@ function loadImage() {
         imgContainer.style.visibility = 'visible';
     }
 
-    const item = currentPool[currentIndex];
-    const isMath = item && typeof item.q === 'string';
+    const item = getCurrentItem();
+    if (!item) return;
+    const isMath = typeof item.q === 'string';
 
     // Remove fallback if it exists
     if (fallback) {
@@ -1419,7 +1488,7 @@ function loadImage() {
         if (!img) {
             img = document.createElement('img');
             img.id = imgId;
-            img.src = resolveImageSrc(item.u);
+            img.src = resolveImageSrc(item.u || '');
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'contain';
@@ -1495,10 +1564,18 @@ function updateDisplay() {
 
         p1Display.className = `clock editable ${activePlayer === 1 ? 'active' : ''}`;
         p2Display.className = `clock editable ${activePlayer === 2 ? 'active' : ''}`;
+        displayCache = { editable: true, t1, t2, activePlayer };
     } else {
-        // Regular display
-        p1Display.innerHTML = t1;
-        p2Display.innerHTML = t2;
+        // Regular display — only touch DOM when values change
+        if (displayCache.editable || displayCache.t1 !== t1) {
+            p1Display.textContent = t1;
+            displayCache.t1 = t1;
+        }
+        if (displayCache.editable || displayCache.t2 !== t2) {
+            p2Display.textContent = t2;
+            displayCache.t2 = t2;
+        }
+        displayCache.editable = false;
 
         // Timer warnings (only if category not complete)
         if (!categoryComplete) {
@@ -1516,10 +1593,19 @@ function updateDisplay() {
                 else if (t2Num <= 10) p2Class += ' warning';
             }
 
-            p1Display.className = p1Class;
-            p2Display.className = p2Class;
+            if (displayCache.p1Class !== p1Class) {
+                p1Display.className = p1Class;
+                displayCache.p1Class = p1Class;
+            }
+            if (displayCache.p2Class !== p2Class) {
+                p2Display.className = p2Class;
+                displayCache.p2Class = p2Class;
+            }
+        } else if (displayCache.activePlayer !== activePlayer) {
+            p1Display.className = `clock ${activePlayer === 1 ? 'active' : ''}`;
+            p2Display.className = `clock ${activePlayer === 2 ? 'active' : ''}`;
         }
-
+        displayCache.activePlayer = activePlayer;
     }
 
     // Update player names
@@ -1625,8 +1711,11 @@ async function selectCategory(cat) {
 function endGame() {
     gameActive = false;
     isPaused = false;
+    inputLocked = true;
+    clearFeedbackState();
     toggleMoreSpecific(false);
     clearInterval(clockInterval);
+    clockInterval = null;
 
     if (!isMuted) {
         sounds.duelMusic.pause();
@@ -1660,7 +1749,8 @@ function endGame() {
     currentStreak = 0;
 
     // Get the answer that the player failed on
-    const finalAnswer = currentPool[currentIndex].n;
+    const failedItem = getCurrentItem();
+    const finalAnswer = failedItem ? failedItem.n : '';
 
     // Just add red border to image
     document.getElementById('img-frame').classList.add('pass-border');
@@ -1719,6 +1809,7 @@ async function runUnpauseCountdown() {
     overlay.style.zIndex = '20';
     isPaused = false;
     unpauseCountdownActive = false;
+    lastTickAt = performance.now();
     if (!isMuted && gameActive && !categoryComplete) {
         sounds.duelMusic.play().catch(() => {});
     }
@@ -1843,6 +1934,7 @@ function resetGame(skipConfirm) {
     gameActive = false;
     isPaused = false;
     inputLocked = true;
+    clearFeedbackState();
     activePlayer = firstPlayerIsLeft ? 1 : 2;
 
     // Reset timers based on gamemode
@@ -2117,6 +2209,8 @@ function postStateToAdmin() {
             sfxVolume,
             gameActive,
             isPaused,
+            inputLocked,
+            inPassPhase,
             activePlayer,
             categoryLoaded: categoryLoadedForHost,
             gameTimer: gameTimerRemaining,
@@ -2460,9 +2554,10 @@ function handleImageError(img) {
     // Mark handled immediately so the inline onerror doesn't re-enter
     img.dataset.errorHandled = 'true';
 
-    const item = currentPool[currentIndex];
+    const item = getCurrentItem();
+    if (!item) return;
     const itemName = item.n;
-    const isMath = item && typeof item.q === 'string';
+    const isMath = typeof item.q === 'string';
 
     // Skip fallback for math category - it uses its own display element
     if (isMath) {
@@ -2793,9 +2888,11 @@ if (document.readyState === 'loading') {
 
 function createConfetti() {
     const container = document.getElementById('confetti-container');
+    if (!container || document.hidden) return;
     const colors = ['var(--floor-yellow)', 'var(--floor-green)', 'var(--floor-red)', '#fff'];
+    const count = 15;
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < count; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * 100 + '%';
@@ -2804,9 +2901,9 @@ function createConfetti() {
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         container.appendChild(confetti);
 
-        setTimeout(() => {
-            confetti.remove();
-        }, 3000);
+        const remove = () => confetti.remove();
+        confetti.addEventListener('animationend', remove, { once: true });
+        setTimeout(remove, 3000);
     }
 }
 
