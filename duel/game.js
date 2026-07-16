@@ -49,7 +49,6 @@ let clockInterval = null;
 let isPaused = false;
 let gamemode = 'classic'; // 'singleplayer' or 'classic'
 let hostMode = false; // Separate toggle that works with either gamemode
-// let gibleMode = false; // Gible mode: removed [/]
 let isPinned = false;
 let adminWindow = null;
 let adminWindowOpen = false;
@@ -81,7 +80,6 @@ let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
 let projectorMode = false;
 let projectorSnapshot = null;
 let currentStreak = 0;
-let inPassPhase = false;
 let unpauseCountdownActive = false;
 let startingGame = false;
 let lastTickAt = 0;
@@ -273,12 +271,10 @@ const PASS_COUNT = 5;
 let sounds = {
     countdown: new Audio('../sounds/countdown.mp3'),
     right: new Audio('../sounds/RIGHT.wav'),
-    passes: Array.from({ length: PASS_COUNT }, (_, i) => new Audio(`../sounds/pass${i + 1}.mp3`)),
     duelMusic: new Audio('../sounds/DUEL MUSIC.wav'),
     duelOver: new Audio('../sounds/DUEL OVER.wav')
 };
 sounds.countdown.volume = sfxVolume;
-sounds.passes.forEach(s => { s.volume = sfxVolume; });
 sounds.duelMusic.loop = true;
 sounds.duelMusic.volume = musicVolume;
 sounds.duelOver.volume = musicVolume;
@@ -301,7 +297,6 @@ function playPassSound() {
 }
 
 const SESSION_VERSION = Date.now();
-const preloadedUrls = new Set();
 
 function resolveImageSrc(rawSrc) {
     if (!rawSrc) return '';
@@ -362,7 +357,6 @@ function preloadRange(startIndex, count) {
 }
 
 function preloadCategoryImages() {
-    preloadedUrls.clear();
     return preloadRange(0, 10);
 }
 
@@ -426,7 +420,6 @@ async function showCategoryReveal(categoryName) {
 // ========== GAME FLOW (setup, start, loop, correct, pass, end) ==========
 
 function clearFeedbackState() {
-    inPassPhase = false;
     gameTimerRemaining = null;
     gameTimerStartNext = null;
     unpauseCountdownActive = false;
@@ -764,9 +757,7 @@ async function startGameFromHost() {
     // Reset answerStartTime now that the game actually begins (after countdown)
     answerStartTime = Date.now();
 
-    // Now show and load the image after countdown
-    const img = document.getElementById('prompt-image');
-    if (img) img.style.display = 'block';
+    // Now load the image after countdown
     loadImage();
 
     if (gamemode === 'study') {
@@ -1118,7 +1109,6 @@ async function handlePass() {
     if (!item) return;
 
     inputLocked = true;
-    inPassPhase = true; // Mark as pass phase (legacy flag; clock always ticks now)
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('pass-border');
     document.getElementById('reveal-text').innerText = `PASSED: ${item.n}`;
@@ -1178,7 +1168,6 @@ async function handlePass() {
         return;
     }
     gameTimerRemaining = null;
-    inPassPhase = false;
     answerStartTime = Date.now();
     nextSlide();
 }
@@ -1975,7 +1964,6 @@ function resetGame(skipConfirm) {
     currentIndex = 0;
     itemsCompleted = 0;
     categoryComplete = false;
-    inPassPhase = false;
     // Reset time boosts
     timeBoostsUsed = [false, false];
     const p1Boost = document.getElementById('p1-boost-btn');
@@ -2263,7 +2251,6 @@ function postStateToAdmin() {
             gameActive,
             isPaused,
             inputLocked,
-            inPassPhase,
             activePlayer,
             categoryLoaded: categoryLoadedForHost,
             gameTimer: gameTimerRemaining,
@@ -2365,7 +2352,6 @@ window.addEventListener('message', function (e) {
     else if (d.action === 'volume' && d.type === 'sfx' && d.value != null) {
         sfxVolume = d.value;
         sounds.countdown.volume = sfxVolume;
-        sounds.passes.forEach(s => { s.volume = sfxVolume; });
         savePreferences();
     }
     else if (d.action === 'changeActivePlayer' && (d.playerNum === 1 || d.playerNum === 2)) {
@@ -2587,8 +2573,6 @@ document.getElementById('first-right').addEventListener('change', function () {
 // UPDATED FAIL-SAFE (Better for Logos)
 function showTextFallback(itemName) {
     const container = document.getElementById('img-frame');
-    const img = document.getElementById('prompt-image');
-    if (img) img.style.display = 'none';
 
     let fallback = document.getElementById('text-fallback');
     if (!fallback) {
@@ -2681,7 +2665,7 @@ function toggleMute() {
 
 function changeTheme(theme) {
     currentTheme = theme;
-    document.body.classList.remove('light-theme', 'gible-theme');
+    document.body.classList.remove('light-theme');
     if (theme === 'light') {
         document.body.classList.add('light-theme');
     }

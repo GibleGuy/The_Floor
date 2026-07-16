@@ -451,74 +451,6 @@
             border-top-color: #ccc;
         }
 
-        body.gible-theme {
-            background: #1a0f00;
-            color: #fff;
-        }
-        body.gible-theme :root {
-            --floor-primary: #ff8800;
-        }
-        body.gible-theme .clock.active {
-            border-color: #ff8800;
-            color: #ff8800;
-            box-shadow: 0 0 30px rgba(255, 136, 0, 0.5);
-        }
-        body.gible-theme .clock.warning {
-            border-color: #ffaa44;
-            color: #ffaa44;
-        }
-        body.gible-theme .clock.danger {
-            border-color: #ff6600;
-            color: #ff6600;
-        }
-        body.gible-theme .answer-reveal {
-            color: #ff8800;
-        }
-        body.gible-theme #category-display {
-            color: #ff8800;
-        }
-        body.gible-theme .streak-display {
-            color: #ff8800;
-        }
-        body.gible-theme .score-display {
-            color: #ff8800;
-        }
-        body.gible-theme .admin-board,
-        body.gible-theme .customization-table,
-        body.gible-theme .help-content,
-        body.gible-theme .stats-menu {
-            border-color: #ff8800;
-        }
-        body.gible-theme .customization-table {
-            border-color: #ff8800;
-            box-shadow: 0 0 32px rgba(255, 136, 0, 0.3);
-        }
-        body.gible-theme .admin-board h3,
-        body.gible-theme .customization-table h3,
-        body.gible-theme .help-content h2,
-        body.gible-theme .stats-menu h2 {
-            color: #ff8800;
-        }
-        body.gible-theme .admin-btn {
-            background: #ff8800;
-            color: #1a0f00;
-        }
-        body.gible-theme .admin-btn:hover {
-            background: #ffaa44;
-        }
-        body.gible-theme .play-btn {
-            background: #ff8800;
-        }
-        body.gible-theme .play-btn:hover {
-            background: #ffaa44;
-        }
-        body.gible-theme .slider:before {
-            background-color: #ff8800;
-        }
-        body.gible-theme input:checked + .slider {
-            background-color: #ff8800;
-        }
-
         /* HELP BUTTON & FULLSCREEN BUTTON */
         .help-button, .fullscreen-button {
             position: fixed;
@@ -554,11 +486,6 @@
         body.light-theme .help-button,
         body.light-theme .fullscreen-button {
             background: rgba(255, 255, 255, 0.9);
-            border-color: #ff8800;
-            color: #ff8800;
-        }
-        body.gible-theme .help-button,
-        body.gible-theme .fullscreen-button {
             border-color: #ff8800;
             color: #ff8800;
         }

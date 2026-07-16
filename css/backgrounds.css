@@ -81,35 +81,6 @@
             );
             background-size: auto;
         }
-        body.gible-theme.bg-grid {
-            --bg-drift-duration: calc(50s / (var(--bg-drift-speed, 1) * 2));
-            background-image:
-                linear-gradient(rgba(255,136,0,0.12) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,136,0,0.12) 1px, transparent 1px);
-            background-size: 36px 36px;
-            animation: bg-drift-grid var(--bg-drift-duration) linear infinite;
-        }
-        body.gible-theme.bg-tiles {
-            --bg-drift-duration: calc(60s / (var(--bg-drift-speed, 1) * 2));
-            background-image:
-                linear-gradient(45deg, rgba(255,136,0,0.08) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(255,136,0,0.08) 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, rgba(255,136,0,0.08) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(255,136,0,0.08) 75%);
-            background-size: 48px 48px;
-            background-position: 0 0, 0 24px, 24px 24px, 24px 0;
-            animation: bg-drift-tiles var(--bg-drift-duration) linear infinite;
-        }
-        body.gible-theme.bg-diagonal {
-            background-image: repeating-linear-gradient(
-                45deg,
-                transparent 0,
-                transparent 12px,
-                rgba(255,136,0,0.1) 12px,
-                rgba(255,136,0,0.1) 24px
-            );
-            background-size: auto;
-        }
 
         /* Pop squares layer */
         #bg-pop-layer {
@@ -131,7 +102,6 @@
             animation: bg-pop-cell ease-in-out infinite;
         }
         body.light-theme #bg-pop-layer .pop-cell { background: rgba(0,0,0,0.06); }
-        body.gible-theme #bg-pop-layer .pop-cell { background: rgba(255,136,0,0.12); }
         body.high-contrast-reduced-motion #bg-pop-layer .pop-cell { animation: none; }
 
         body.high-contrast-reduced-motion.bg-grid,
@@ -139,9 +109,6 @@
         body.high-contrast-reduced-motion.bg-diagonal,
         body.high-contrast-reduced-motion.light-theme.bg-grid,
         body.high-contrast-reduced-motion.light-theme.bg-tiles,
-        body.high-contrast-reduced-motion.light-theme.bg-diagonal,
-        body.high-contrast-reduced-motion.gible-theme.bg-grid,
-        body.high-contrast-reduced-motion.gible-theme.bg-tiles,
-        body.high-contrast-reduced-motion.gible-theme.bg-diagonal {
+        body.high-contrast-reduced-motion.light-theme.bg-diagonal {
             animation: none;
         }

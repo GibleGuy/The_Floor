@@ -12,10 +12,8 @@ import {
     applyBattleResult,
     getBattleCategory,
     absorbGreySquares,
-    isOrthogonalAdjacent,
     pickOne,
     getOrderedEligible,
-    getEligiblePlayers,
     createUndoManager,
 } from '../floor-core/index.js';
 
@@ -350,16 +348,74 @@ function getTileEl(r, c) {
     return gridEl.querySelector(`.floor-tile[data-row="${r}"][data-col="${c}"]`);
 }
 
+let gridFitFrame = null;
+
+function fitGridToViewport() {
+    if (!gridEl || !state) return;
+
+    const main = gridEl.closest('.floor-host-main');
+    if (!main) return;
+
+    const mainStyle = getComputedStyle(main);
+    const horizontalPadding =
+        (parseFloat(mainStyle.paddingLeft) || 0) +
+        (parseFloat(mainStyle.paddingRight) || 0);
+    const bottomPadding = parseFloat(mainStyle.paddingBottom) || 0;
+    const availableWidth = main.clientWidth - horizontalPadding;
+    const gridTop = gridEl.getBoundingClientRect().top;
+    const availableHeight = window.innerHeight - gridTop - bottomPadding;
+
+    if (availableWidth <= 0 || availableHeight <= 0) return;
+
+    const ratio = state.cols / state.rows;
+    const widthFromHeight = availableHeight * ratio;
+    const targetWidth = Math.floor(Math.min(availableWidth, widthFromHeight, 1200));
+
+    gridEl.style.width = Math.max(1, targetWidth) + 'px';
+}
+
+function scheduleGridFit() {
+    if (gridFitFrame !== null) cancelAnimationFrame(gridFitFrame);
+    gridFitFrame = requestAnimationFrame(() => {
+        gridFitFrame = null;
+        fitGridToViewport();
+    });
+}
+
+function initGridViewportFit() {
+    window.addEventListener('resize', scheduleGridFit);
+
+    if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(scheduleGridFit);
+        const main = gridEl.closest('.floor-host-main');
+        const header = document.querySelector('.floor-host-header');
+        if (main) observer.observe(main);
+        if (header) observer.observe(header);
+    }
+}
+
 function showContextMenu(x, y, tile) {
     contextTile = tile;
-    contextMenuEl.style.left = x + 'px';
-    contextMenuEl.style.top = y + 'px';
     // Hide kill button for grey (unowned) tiles
     if (killContextBtn) {
         const tileData = state ? state.getTile(tile.r, tile.c) : null;
         killContextBtn.style.display = (tileData && tileData.ownerId) ? '' : 'none';
     }
+
+    // Show invisibly first so its dimensions can be measured, then keep it
+    // beside the pointer without allowing it to leave the viewport.
+    contextMenuEl.style.visibility = 'hidden';
     contextMenuEl.setAttribute('aria-hidden', 'false');
+    const menuRect = contextMenuEl.getBoundingClientRect();
+    const gutter = 8;
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+    const left = Math.max(gutter, Math.min(x + 4, viewportWidth - menuRect.width - gutter));
+    const top = Math.max(gutter, Math.min(y + 4, viewportHeight - menuRect.height - gutter));
+
+    contextMenuEl.style.left = left + 'px';
+    contextMenuEl.style.top = top + 'px';
+    contextMenuEl.style.visibility = 'visible';
 }
 
 function hideContextMenu() {
@@ -509,9 +565,6 @@ function cancelBattleMode() {
     hideDuelOverlay();
     render();
 }
-
-/** Tiles that just had category swap — add reappear animation in render. */
-let swapReappearTiles = null;
 
 function runSwap(first, second) {
     if (uiBusy) return;
@@ -1154,7 +1207,6 @@ function runRandomizer() {
     // Ensure area counts are fresh before selection
     state.refreshAreas();
 
-    const statusEl = document.getElementById('floor-debug-status');
     const modeSelect = document.getElementById('floor-randomizer-mode');
     const strategy = modeSelect ? modeSelect.value : 'show';
 
@@ -1165,9 +1217,6 @@ function runRandomizer() {
         alert('No eligible players with tiles.');
         return;
     }
-
-    const eligible = getEligiblePlayers(state);
-    if (statusEl) statusEl.textContent = `Randomizer: Pool ${eligible.length} eligible`;
 
     // Cycle through eligible players; highlight each player's full territory
     const ordered = getOrderedEligible(state, { strategy });
@@ -1454,7 +1503,6 @@ function render() {
     const rows = state.rows;
     const cols = state.cols;
     const mode = getDisplayMode();
-    const statusEl = document.getElementById('floor-debug-status');
 
     try {
         // Clear grid
@@ -1691,14 +1739,9 @@ function render() {
             labelsLayer.appendChild(label);
         }
 
-        if (statusEl) statusEl.textContent = `Render OK: ${rows}x${cols} | Children: ${gridEl.childElementCount}`;
-
+        scheduleGridFit();
     } catch (err) {
         console.error(err);
-        if (statusEl) {
-            statusEl.textContent = `ERROR: ${err.message}`;
-            statusEl.style.color = 'red';
-        }
     }
 }
 function applyGrid() {
@@ -2613,6 +2656,7 @@ function init() {
     initResizableTimerSidebar();
     initPresentationFeatures();
     initHeaderAutoHide();
+    initGridViewportFit();
     loadHostPreferences();
     updateHostPreferencesUI();
     applyHostPreferencesToDOM();
@@ -2689,6 +2733,4 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
-
-export { animationHooks };
 
