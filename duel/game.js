@@ -78,6 +78,8 @@ const BG_STYLES = ['solid', 'grid', 'tiles', 'diagonal', 'pop'];
 let backgroundStyle = 'pop';
 let backgroundDriftSpeed = 1;   // 0.25–2, multiplier for drift
 let blueVariant = 'b';          // 'a'|'b'|'c'|'d'
+let projectorMode = false;
+let projectorSnapshot = null;
 let currentStreak = 0;
 let inPassPhase = false;
 let unpauseCountdownActive = false;
@@ -119,6 +121,26 @@ function saveLifetimeStats() {
     localStorage.setItem('floorLifetimeStats', JSON.stringify(lifetimeStats));
 }
 
+function updatePlayerPanelLayout() {
+    const stage = document.getElementById('duel-stage');
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
+    if (!stage || !p1Panel || !p2Panel) return;
+
+    stage.classList.remove('duel-stage--solo', 'duel-stage--study');
+    p1Panel.classList.remove('panel-hidden');
+    p2Panel.classList.remove('panel-hidden');
+
+    if (gamemode === 'study') {
+        p1Panel.classList.add('panel-hidden');
+        p2Panel.classList.add('panel-hidden');
+        stage.classList.add('duel-stage--study');
+    } else if (gamemode === 'singleplayer') {
+        p2Panel.classList.add('panel-hidden');
+        stage.classList.add('duel-stage--solo');
+    }
+}
+
 const PREFS_KEY = 'floorPreferences';
 function loadPreferences() {
     try {
@@ -144,6 +166,7 @@ function loadPreferences() {
         if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
         if (typeof p.shuffleCluesNormal === 'boolean') shuffleCluesNormal = p.shuffleCluesNormal;
         if (typeof p.shuffleCluesStudy === 'boolean') shuffleCluesStudy = p.shuffleCluesStudy;
+        if (typeof p.projectorMode === 'boolean') projectorMode = p.projectorMode;
     } catch (e) { }
 }
 function applyPreferencesToDOM() {
@@ -173,6 +196,7 @@ function applyPreferencesToDOM() {
     if (tl) tl.checked = (currentTheme === 'light');
     changeTheme(currentTheme);
     document.body.classList.toggle('high-contrast-reduced-motion', highContrastReducedMotion);
+    document.body.classList.toggle('projector-mode', projectorMode);
     document.body.style.setProperty('--bg-drift-speed', String(backgroundDriftSpeed));
     ['a', 'b', 'c', 'd'].forEach(function (v) { document.body.classList.remove('blue-' + v); });
     document.body.classList.add('blue-' + blueVariant);
@@ -190,11 +214,13 @@ function applyPreferencesToDOM() {
     if (shuffleToggle) {
         shuffleToggle.checked = (gamemode === 'study' ? shuffleCluesStudy : shuffleCluesNormal);
     }
+    const projectorBtn = document.getElementById('projector-preset-btn');
+    if (projectorBtn) projectorBtn.classList.toggle('active', projectorMode);
     const helpBtn = document.getElementById('help-button');
     const fullscreenBtn = document.getElementById('fullscreen-button');
     const streakDisplay = document.getElementById('streak-display');
     const scoreDisplay = document.getElementById('score-display');
-    if (disableExtras) {
+    if (disableExtras || projectorMode) {
         if (helpBtn) helpBtn.classList.add('hidden');
         if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
         if (streakDisplay) streakDisplay.classList.add('hidden');
@@ -205,6 +231,7 @@ function applyPreferencesToDOM() {
         if (streakDisplay) streakDisplay.classList.remove('hidden');
         if (scoreDisplay) scoreDisplay.classList.remove('hidden');
     }
+    updatePlayerPanelLayout();
 }
 function savePreferences() {
     try {
@@ -232,7 +259,8 @@ function savePreferences() {
             backgroundDriftSpeed,
             blueVariant,
             shuffleCluesNormal,
-            shuffleCluesStudy
+            shuffleCluesStudy,
+            projectorMode
         };
         localStorage.setItem(PREFS_KEY, JSON.stringify(p));
         postStateToAdmin();
@@ -556,20 +584,7 @@ async function setupGame(cat, opts) {
         activePlayer = 1;
     }
 
-    const p1Container = document.querySelector('.clocks > div:nth-child(1)');
-    const p2Container = document.querySelector('.clocks > div:nth-child(2)');
-
-    if (gamemode === 'study') {
-        // Study mode: hide both timer containers entirely
-        if (p1Container) p1Container.style.display = 'none';
-        if (p2Container) p2Container.style.display = 'none';
-    } else if (gamemode === 'singleplayer') {
-        if (p1Container) p1Container.style.display = 'block';
-        if (p2Container) p2Container.style.display = 'none';
-    } else {
-        if (p1Container) p1Container.style.display = 'block';
-        if (p2Container) p2Container.style.display = 'block';
-    }
+    updatePlayerPanelLayout();
 
     updateDisplay();
     updatePauseButton();
@@ -1381,7 +1396,8 @@ function handleCategoryComplete() {
         p1Display.classList.add('active');
         p1Display.style.borderColor = 'var(--floor-green)';
         p1Display.style.color = 'var(--floor-green)';
-        p1Display.style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.5)';
+        p1Display.style.borderWidth = '10px';
+        p1Display.style.boxShadow = 'none';
     } else {
         // Classic/Host: Determine winner (player with more time)
         const winner = timers[0] > timers[1] ? 1 : 2;
@@ -1391,20 +1407,24 @@ function handleCategoryComplete() {
             p1Display.classList.add('active');
             p1Display.style.borderColor = 'var(--floor-green)';
             p1Display.style.color = 'var(--floor-green)';
-            p1Display.style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.5)';
+            p1Display.style.borderWidth = '10px';
+            p1Display.style.boxShadow = 'none';
 
             p2Display.style.borderColor = 'var(--floor-red)';
             p2Display.style.color = 'var(--floor-red)';
-            p2Display.style.boxShadow = '0 0 30px rgba(231, 76, 60, 0.5)';
+            p2Display.style.borderWidth = '10px';
+            p2Display.style.boxShadow = 'none';
         } else {
             p2Display.classList.add('active');
             p2Display.style.borderColor = 'var(--floor-green)';
             p2Display.style.color = 'var(--floor-green)';
-            p2Display.style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.5)';
+            p2Display.style.borderWidth = '10px';
+            p2Display.style.boxShadow = 'none';
 
             p1Display.style.borderColor = 'var(--floor-red)';
             p1Display.style.color = 'var(--floor-red)';
-            p1Display.style.boxShadow = '0 0 30px rgba(231, 76, 60, 0.5)';
+            p1Display.style.borderWidth = '10px';
+            p1Display.style.boxShadow = 'none';
         }
 
         // Record win in stats
@@ -1531,14 +1551,8 @@ function updateDisplay() {
 
     const p1Display = document.getElementById('p1-display');
     const p2Display = document.getElementById('p2-display');
-    const p2Container = document.querySelector('.clocks > div:nth-child(2)');
 
-    // Hide/show second timer based on gamemode
-    if (gamemode === 'singleplayer') {
-        if (p2Container) p2Container.style.display = 'none';
-    } else {
-        if (p2Container) p2Container.style.display = 'block';
-    }
+    updatePlayerPanelLayout();
 
     // Check if we should make timers editable (host mode + paused OR before game starts)
     const shouldBeEditable = hostMode && ((isPaused && gameActive) || (!gameActive && !categoryComplete));
@@ -1608,14 +1622,24 @@ function updateDisplay() {
         displayCache.activePlayer = activePlayer;
     }
 
-    // Update player names
-    document.getElementById('p1-name').innerText = playerNames[0];
-    document.getElementById('p2-name').innerText = playerNames[1];
-    document.getElementById('p1-name').style.color = activePlayer === 1 ? 'var(--floor-yellow)' : '#888';
-    document.getElementById('p2-name').style.color = activePlayer === 2 ? 'var(--floor-yellow)' : '#888';
+    // Update player names + side active state (colors come from CSS)
+    const p1NameEl = document.getElementById('p1-name');
+    const p2NameEl = document.getElementById('p2-name');
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
+    if (p1NameEl) {
+        p1NameEl.innerText = playerNames[0];
+        p1NameEl.style.color = '';
+    }
+    if (p2NameEl) {
+        p2NameEl.innerText = playerNames[1];
+        p2NameEl.style.color = '';
+    }
+    if (p1Panel) p1Panel.classList.toggle('is-active', activePlayer === 1);
+    if (p2Panel) p2Panel.classList.toggle('is-active', activePlayer === 2);
 
     // Update in-game displays (only if extras not disabled)
-    if (!disableExtras) {
+    if (!disableExtras && !projectorMode) {
         document.getElementById('streak-display').classList.add('show');
         document.getElementById('streak-display').textContent = `STREAK: ${currentStreak}`;
 
@@ -2041,25 +2065,15 @@ function changeGamemode() {
     savePreferences();
 
     // Update UI based on gamemode
-    const p1Container = document.querySelector('.clocks > div:nth-child(1)');
-    const p2Container = document.querySelector('.clocks > div:nth-child(2)');
+    updatePlayerPanelLayout();
     const studyControls = document.getElementById('study-controls');
     const shuffleRow = document.getElementById('shuffle-clues-row');
 
     if (shuffleRow) shuffleRow.style.display = 'flex';
 
     if (gamemode === 'study') {
-        // Hide both timer containers for study
-        if (p1Container) p1Container.style.display = 'none';
-        if (p2Container) p2Container.style.display = 'none';
-        if (studyControls) studyControls.style.display = 'none';
-    } else if (gamemode === 'singleplayer') {
-        if (p1Container) p1Container.style.display = 'block';
-        if (p2Container) p2Container.style.display = 'none';
         if (studyControls) studyControls.style.display = 'none';
     } else {
-        if (p1Container) p1Container.style.display = 'block';
-        if (p2Container) p2Container.style.display = 'block';
         if (studyControls) studyControls.style.display = 'none';
     }
 
@@ -2113,14 +2127,29 @@ function togglePin() {
     }
 }
 
-function openAdminWindow() {
-    if (adminWindowOpen && adminWindow && !adminWindow.closed) {
-        adminWindow.focus();
-        return;
+function showAdminLaunchOverlay() {
+    let el = document.getElementById('admin-launch-overlay');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'admin-launch-overlay';
+        el.className = 'admin-launch-overlay';
+        el.innerHTML =
+            '<p>Host mode is ready. Browsers block auto-opening the admin window — click once to open it.</p>' +
+            '<button type="button" class="admin-launch-btn" id="admin-launch-btn">OPEN ADMIN WINDOW</button>';
+        document.body.appendChild(el);
+        el.querySelector('#admin-launch-btn').addEventListener('click', function () {
+            openAdminWindow();
+        });
     }
-    adminWindow = window.open('admin.html', 'floor-admin', 'width=720,height=720,menubar=no,toolbar=no,location=no');
-    if (!adminWindow) return;
-    adminWindowOpen = true;
+    el.classList.add('show');
+}
+
+function hideAdminLaunchOverlay() {
+    const el = document.getElementById('admin-launch-overlay');
+    if (el) el.classList.remove('show');
+}
+
+function prepareHostModeForAdmin() {
     hostMode = true;
     const hostToggle = document.getElementById('host-mode-toggle');
     if (hostToggle) hostToggle.checked = true;
@@ -2131,16 +2160,40 @@ function openAdminWindow() {
     const fullscreenBtn = document.getElementById('fullscreen-button');
     const streakDisplay = document.getElementById('streak-display');
     const scoreDisplay = document.getElementById('score-display');
-    if (helpBtn) helpBtn.classList.add('hidden');
+    if (helpBtn) {
+        helpBtn.classList.add('hidden');
+        helpBtn.style.display = 'none';
+    }
     if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
     if (streakDisplay) streakDisplay.classList.add('hidden');
     if (scoreDisplay) scoreDisplay.classList.add('hidden');
-    updateDisplay();
     const galleryBtn = document.getElementById('gallery-btn');
     if (galleryBtn) galleryBtn.style.display = 'block';
-    document.getElementById('admin-board').style.display = 'none';
+    const adminWindowBtn = document.getElementById('admin-window-btn');
+    if (adminWindowBtn) adminWindowBtn.style.display = 'block';
+    const adminBoard = document.getElementById('admin-board');
+    if (adminBoard) adminBoard.style.display = 'none';
+}
+
+function openAdminWindow() {
+    if (adminWindowOpen && adminWindow && !adminWindow.closed) {
+        adminWindow.focus();
+        hideAdminLaunchOverlay();
+        return;
+    }
+    adminWindow = window.open('admin.html', 'floor-admin', 'width=720,height=720,menubar=no,toolbar=no,location=no');
+    if (!adminWindow) {
+        prepareHostModeForAdmin();
+        updateDisplay();
+        updateMenuVisibility();
+        showAdminLaunchOverlay();
+        return;
+    }
+    hideAdminLaunchOverlay();
+    adminWindowOpen = true;
+    prepareHostModeForAdmin();
+    updateDisplay();
     updateMenuVisibility();
-    document.getElementById('help-button').style.display = 'none';
     document.body.classList.add('admin-window-open');
     if (!gameActive) showWelcomeOnMain();
 
@@ -2220,6 +2273,7 @@ function postStateToAdmin() {
             disableExtras: disableExtras,
             showTimerDecimal: showTimerDecimal,
             highContrastReducedMotion: highContrastReducedMotion,
+            projectorMode: projectorMode,
             backgroundStyle: backgroundStyle,
             backgroundDriftSpeed: backgroundDriftSpeed,
             blueVariant: blueVariant,
@@ -2367,6 +2421,9 @@ window.addEventListener('message', function (e) {
         var hc = document.getElementById('high-contrast-reduced-motion-toggle');
         if (hc && hc.checked !== highContrastReducedMotion) hc.checked = highContrastReducedMotion;
         savePreferences();
+    }
+    else if (d.action === 'projectorMode' && d.value != null) {
+        setProjectorMode(!!d.value);
     }
     else if (d.action === 'backgroundStyle' && d.value && BG_STYLES.includes(d.value)) {
         backgroundStyle = d.value;
@@ -2773,6 +2830,81 @@ function toggleHighContrastReducedMotion() {
     savePreferences();
 }
 
+function syncProjectorUi() {
+    document.body.classList.toggle('projector-mode', projectorMode);
+    const projectorBtn = document.getElementById('projector-preset-btn');
+    if (projectorBtn) projectorBtn.classList.toggle('active', projectorMode);
+    const de = document.getElementById('disable-extras-toggle');
+    if (de) de.checked = disableExtras;
+    const std = document.getElementById('show-timer-decimal-toggle');
+    if (std) std.checked = showTimerDecimal;
+    const td = document.getElementById('theme-dark');
+    const tl = document.getElementById('theme-light');
+    if (td) td.checked = (currentTheme === 'dark');
+    if (tl) tl.checked = (currentTheme === 'light');
+    const bsRadios = document.querySelectorAll('input[name="background-style"]');
+    bsRadios.forEach(function (r) { r.checked = (r.value === backgroundStyle); });
+    const helpBtn = document.getElementById('help-button');
+    const fullscreenBtn = document.getElementById('fullscreen-button');
+    const streakDisplay = document.getElementById('streak-display');
+    const scoreDisplay = document.getElementById('score-display');
+    if (disableExtras || projectorMode) {
+        if (helpBtn) helpBtn.classList.add('hidden');
+        if (fullscreenBtn) fullscreenBtn.classList.add('hidden');
+        if (streakDisplay) streakDisplay.classList.add('hidden');
+        if (scoreDisplay) scoreDisplay.classList.add('hidden');
+    } else {
+        if (helpBtn) helpBtn.classList.remove('hidden');
+        if (fullscreenBtn) fullscreenBtn.classList.remove('hidden');
+        if (streakDisplay) streakDisplay.classList.remove('hidden');
+        if (scoreDisplay) scoreDisplay.classList.remove('hidden');
+    }
+    updateDisplay();
+}
+
+function setProjectorMode(on) {
+    on = !!on;
+    if (on === projectorMode) {
+        syncProjectorUi();
+        return;
+    }
+    if (on) {
+        projectorSnapshot = {
+            theme: currentTheme,
+            backgroundStyle: backgroundStyle,
+            disableExtras: disableExtras,
+            showTimerDecimal: showTimerDecimal,
+            confettiEnabled: confettiEnabled
+        };
+        projectorMode = true;
+        disableExtras = true;
+        showTimerDecimal = false;
+        confettiEnabled = false;
+        changeTheme('dark');
+        setBackgroundStyle('solid');
+    } else {
+        projectorMode = false;
+        if (projectorSnapshot) {
+            disableExtras = !!projectorSnapshot.disableExtras;
+            showTimerDecimal = !!projectorSnapshot.showTimerDecimal;
+            confettiEnabled = !!projectorSnapshot.confettiEnabled;
+            changeTheme(projectorSnapshot.theme || 'dark');
+            if (projectorSnapshot.backgroundStyle && BG_STYLES.includes(projectorSnapshot.backgroundStyle)) {
+                setBackgroundStyle(projectorSnapshot.backgroundStyle);
+            }
+            projectorSnapshot = null;
+        }
+    }
+    const ct = document.getElementById('confetti-toggle');
+    if (ct) ct.checked = confettiEnabled;
+    syncProjectorUi();
+    savePreferences();
+}
+
+function toggleProjectorMode() {
+    setProjectorMode(!projectorMode);
+}
+
 function setBackgroundStyle(style) {
     backgroundStyle = style;
     BG_STYLES.forEach(function (b) { document.body.classList.remove('bg-' + b); });
@@ -2878,7 +3010,7 @@ function initPage() {
     applyPreferencesToDOM();
     changeGamemode();
     updateFirstPlayerLabels();
-
+    openAdminWindow();
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPage);
@@ -2912,19 +3044,25 @@ function resetTimerStyles() {
     const p2Display = document.getElementById('p2-display');
     const p1Name = document.getElementById('p1-name');
     const p2Name = document.getElementById('p2-name');
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
 
     if (p1Display) {
         p1Display.style.borderColor = '';
         p1Display.style.color = '';
         p1Display.style.boxShadow = '';
+        p1Display.style.borderWidth = '';
         p1Display.className = 'clock';
     }
     if (p2Display) {
         p2Display.style.borderColor = '';
         p2Display.style.color = '';
         p2Display.style.boxShadow = '';
+        p2Display.style.borderWidth = '';
         p2Display.className = 'clock';
     }
-    if (p1Name) p1Name.style.color = '#888';
-    if (p2Name) p2Name.style.color = '#888';
+    if (p1Name) p1Name.style.color = '';
+    if (p2Name) p2Name.style.color = '';
+    if (p1Panel) p1Panel.classList.remove('is-active');
+    if (p2Panel) p2Panel.classList.remove('is-active');
 }

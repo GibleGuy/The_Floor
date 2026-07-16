@@ -740,6 +740,10 @@
         </div>
         <div id="admin-tab-graphics" class="custom-tab-panel">
             <div class="custom-row">
+                <label class="custom-label">Projector / Live Preset:</label>
+                <input type="checkbox" id="admin-projector-mode" style="width: auto;">
+            </div>
+            <div class="custom-row">
                 <span class="custom-label">Theme:</span>
                 <div class="radio-group">
                     <div class="radio-option"><input type="radio" id="admin-theme-dark" name="admin-theme" value="dark"
@@ -894,7 +898,7 @@
                 'admin-first-left', 'admin-first-right', 'admin-boost-p1', 'admin-boost-p2', 'admin-mute', 'admin-shuffle',
                 'admin-vol-music', 'admin-vol-sfx',
                 'admin-theme-dark', 'admin-theme-light', 'admin-confetti', 'admin-disable-extras',
-                'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion',
+                'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion', 'admin-projector-mode',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
                 'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
                 'admin-active-p1', 'admin-active-p2'];
@@ -1067,6 +1071,9 @@
         document.getElementById('admin-high-contrast-reduced-motion').addEventListener('change', function () {
             send({ action: 'highContrastReducedMotion', value: this.checked });
         });
+        document.getElementById('admin-projector-mode').addEventListener('change', function () {
+            send({ action: 'projectorMode', value: this.checked });
+        });
         ['solid', 'grid', 'tiles', 'diagonal', 'pop'].forEach(function (bgVal) {
             var el = document.getElementById('admin-bg-' + bgVal);
             if (el) el.addEventListener('change', function () { if (this.checked) send({ action: 'backgroundStyle', value: bgVal }); });
@@ -1226,6 +1233,10 @@
                 if (d.highContrastReducedMotion != null) {
                     var hc = document.getElementById('admin-high-contrast-reduced-motion');
                     if (hc && hc.checked !== d.highContrastReducedMotion) hc.checked = !!d.highContrastReducedMotion;
+                }
+                if (d.projectorMode != null) {
+                    var pm = document.getElementById('admin-projector-mode');
+                    if (pm && pm.checked !== d.projectorMode) pm.checked = !!d.projectorMode;
                 }
                 if (d.backgroundStyle) {
                     var ab = document.getElementById('admin-bg-' + d.backgroundStyle);

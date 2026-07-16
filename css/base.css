@@ -4,6 +4,16 @@
             --floor-yellow: #ffcc00;
             --floor-green: #2ecc71;
             --floor-red: #e74c3c;
+            --player-left: #ffcc00;
+            --player-right: #ffcc00;
+            --player-left-muted: #c4a84a;
+            --player-right-muted: #c4a84a;
+            --clock-inactive: #c8c8c8;
+        }
+
+        html {
+            zoom: 1.5;
+            overflow-x: hidden;
         }
 
         body { 
@@ -12,10 +22,27 @@
             background: var(--floor-blue); 
             color: white; 
             margin: 0;
-            padding: 20px;
+            padding: 0;
             transition: background 0.3s ease;
+            min-height: 100vh;
+            box-sizing: border-box;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         body.game-ended {
             background: #000511;
+        }
+        body.admin-window-open {
+            overflow: hidden;
+        }
+        body.projector-mode #page-footer,
+        body.admin-window-open #page-footer {
+            display: none !important;
+        }
+        body.projector-mode .help-button,
+        body.projector-mode .fullscreen-button,
+        body.admin-window-open .help-button,
+        body.admin-window-open .fullscreen-button {
+            display: none !important;
         }
 

@@ -148,21 +148,25 @@
             background: #ffd700;
         }
 
-        /* TIMER WARNINGS */
+        /* TIMER WARNINGS — hard borders (projector-friendly, no soft glow) */
         .clock.warning {
             border-color: #ff8800 !important;
             color: #ff8800 !important;
-            box-shadow: 0 0 30px rgba(255, 136, 0, 0.5) !important;
+            background: #1a0c00 !important;
+            border-width: 8px !important;
+            box-shadow: none !important;
         }
         .clock.danger {
             border-color: var(--floor-red) !important;
             color: var(--floor-red) !important;
-            box-shadow: 0 0 30px rgba(231, 76, 60, 0.5) !important;
+            background: #1a0505 !important;
+            border-width: 8px !important;
+            box-shadow: none !important;
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.04); }
         }
 
         /* STATS MENU */
@@ -245,26 +249,100 @@
         }
         .streak-display {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
+            top: 12px;
+            right: 16px;
+            font-size: clamp(1.4rem, 2.8vh, 2.2rem);
             color: var(--floor-yellow);
             font-weight: bold;
             text-shadow: 2px 2px 0px #000;
             display: none;
+            z-index: 50;
         }
         .streak-display.show {
             display: block;
         }
         .score-display {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: clamp(1.35rem, 2.8vh, 2rem);
             color: var(--floor-yellow);
-            margin: 5px 0;
+            margin: 4px 0 2px;
             display: none;
+            letter-spacing: 0.04em;
         }
         .score-display.show {
             display: block;
+        }
+        .projector-preset-btn {
+            width: 100%;
+            margin: 4px 0 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            background: var(--floor-yellow);
+            color: var(--floor-blue);
+            border: none;
+            border-radius: 8px;
+        }
+        .projector-preset-btn:hover {
+            filter: brightness(1.08);
+        }
+        .projector-preset-btn.active {
+            background: var(--floor-green);
+            color: #fff;
+        }
+        body.projector-mode .duel-stage,
+        body.admin-window-open .duel-stage {
+            max-width: 1600px;
+        }
+        body.projector-mode .image-container,
+        body.admin-window-open .image-container {
+            width: 58vw;
+            max-width: 960px;
+            aspect-ratio: 4 / 3;
+            height: auto;
+        }
+        body.admin-window-open .menu {
+            display: none !important;
+        }
+
+        .admin-launch-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            background: rgba(0, 0, 0, 0.92);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 18px;
+            padding: 24px;
+        }
+        .admin-launch-overlay.show {
+            display: flex;
+        }
+        .admin-launch-overlay p {
+            color: var(--floor-yellow);
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+            max-width: 28em;
+        }
+        .admin-launch-overlay .admin-launch-btn {
+            padding: 18px 36px;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-weight: bold;
+            letter-spacing: 0.04em;
+            background: var(--floor-green);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .admin-launch-overlay .admin-launch-btn:hover {
+            filter: brightness(1.08);
         }
 
         /* HELP MENU */
@@ -317,15 +395,22 @@
         body.light-theme {
             background: #f0f0f0;
             color: #000;
+            --player-left: #d97700;
+            --player-right: #d97700;
+            --player-left-muted: #8a6a30;
+            --player-right-muted: #8a6a30;
+            --clock-inactive: #444;
         }
         body.light-theme .clock {
             background: #fff;
             border-color: #333;
-            color: #000;
+            color: var(--clock-inactive);
         }
-        body.light-theme .clock.active {
-            border-color: #ff8800;
-            color: #ff8800;
+        body.light-theme .player-left .clock.active,
+        body.light-theme .player-right .clock.active {
+            border-color: var(--player-right) !important;
+            color: var(--player-right) !important;
+            background: #fff6e0;
         }
         body.light-theme .admin-board,
         body.light-theme .customization-table,
@@ -347,10 +432,6 @@
         body.light-theme .switch-label,
         body.light-theme .radio-option label {
             color: #000;
-        }
-        body.light-theme #p1-name,
-        body.light-theme #p2-name {
-            color: #666;
         }
         body.light-theme .answer-reveal {
             color: #ff8800;
