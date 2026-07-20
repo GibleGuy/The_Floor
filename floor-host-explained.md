@@ -1,6 +1,6 @@
 # The Floor — Host Visualization Tool
 ## Setup (Fixing "Could not load")
-Because this project uses modern JavaScript modules, you cannot simply double-click `floor-host.html` to open it. Browsers block this for security reasons (CORS).
+Because this project uses modern JavaScript modules, you cannot simply double-click `floor/index.html` to open it. Browsers block this for security reasons (CORS).
 
 To run it, you need a local server.
 
@@ -12,7 +12,7 @@ Macs usually come with Python installed.
    ```bash
    python3 -m http.server 8000
    ```
-4. Open `http://localhost:8000/floor-host.html` in your browser.
+4. Open `http://localhost:8000/floor/` in your browser.
 
 **Option 2: Using Node.js (If installed)**
 If you have Node.js installed:

@@ -2,7 +2,7 @@
  * floor-core — Core game state and rules for The Floor–style grid game.
  * Logic only; no UI, HTML, or animations.
  *
- * Public surface used by host/; internals stay in their modules.
+ * Public surface used by floor/; internals stay in their modules.
  */
 
 export {

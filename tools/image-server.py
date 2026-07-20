@@ -295,7 +295,7 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     print(f"🖼️  Image Picker Server running at http://localhost:{PORT}")
     print(f"📂 Project root: {PROJECT_ROOT}")
-    print(f"   Open http://localhost:{PORT}/tools/image-picker.html")
+    print(f"   Open http://localhost:{PORT}/tools/images/")
     print(f"   Press Ctrl+C to stop\n")
 
     server = http.server.HTTPServer(('', PORT), ImagePickerHandler)

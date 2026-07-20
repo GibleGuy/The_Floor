@@ -559,7 +559,7 @@
                     try {
                         await new Promise((resolve, reject) => {
                             const s = document.createElement('script');
-                            s.src = `../categories/index.js?v=${Date.now()}`;
+                            s.src = `../../categories/index.js?v=${Date.now()}`;
                             s.onload = resolve;
                             s.onerror = reject;
                             document.head.appendChild(s);
@@ -594,7 +594,7 @@
                         }
                         return new Promise((resolve) => {
                             const s = document.createElement('script');
-                            s.src = `../categories/${cat.script}?v=${Date.now()}`;
+                            s.src = `../../categories/${cat.script}?v=${Date.now()}`;
                             s.onload = () => {
                                 loadedCount++;
                                 select.options[0].textContent = `— Loading Categories (${Math.round(loadedCount / cats.length * 100)}%)... —`;
@@ -763,7 +763,7 @@
                 if (!window[globalName]) {
                     await new Promise((resolve, reject) => {
                         const s = document.createElement('script');
-                        s.src = `../categories/${scriptFile}?v=${Date.now()}`;
+                        s.src = `../../categories/${scriptFile}?v=${Date.now()}`;
                         s.onload = resolve;
                         s.onerror = reject;
                         document.head.appendChild(s);
@@ -836,7 +836,7 @@
                     card.dataset.index = idx;
 
                     const existingFile = currentImages[stem] || '';
-                    const imgSrc = hasImage ? `../images/${category}/${existingFile}?v=${Date.now()}` : '';
+                    const imgSrc = hasImage ? `../../images/${category}/${existingFile}?v=${Date.now()}` : '';
                     const escapedName = item.n.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     card.innerHTML = `
@@ -932,7 +932,7 @@
                         // Update the card visually
                         const preview = card.querySelector('.card-preview');
                         const timestamp = Date.now();
-                        preview.innerHTML = `<img src="../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
+                        preview.innerHTML = `<img src="../../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
 
                         const status = card.querySelector('.card-status');
                         status.className = 'card-status has-image';

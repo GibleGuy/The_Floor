@@ -103,7 +103,7 @@ Use the built-in **Image Picker** to streamline finding and saving images:
 ```bash
 # Start the server from the project root
 python3 tools/image-server.py
-# Open http://localhost:8642/tools/image-picker.html
+# Open http://localhost:8642/tools/images/
 ```
 
 # gible note - to kill servers type pkill -f python3

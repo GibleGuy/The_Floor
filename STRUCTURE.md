@@ -9,7 +9,7 @@ Quick reference for navigating the codebase.
 The standalone duel/quiz game — players identify images from a chosen category under a timer.
 
 ### HTML
-- **game.html** — Main game UI: timers, image area, category selector, admin board, customization modal, stats menu, help overlay.
+- **index.html** — Main game UI: timers, image area, category selector, admin board, customization modal, stats menu, help overlay.
 - **admin.html** — Detachable admin control panel. Communicates with game via `postMessage`.
 - **gallery.html** — Browse all items across every category. Loads all category scripts up front.
 
@@ -30,15 +30,15 @@ Use **`// ========== SECTION ==========`** to jump to a block:
 
 ---
 
-## Floor Host (`host/`)
+## Floor (`floor/`)
 
 The main grid-based "Floor" game — players own tiles, battle neighbors, and the last one standing wins.
 
 | File | Purpose |
 |------|---------|
-| **floor-host.html** | Grid layout, duel overlay, edit/kill modals, settings panel |
-| **floor-host.js** (~1700 lines) | Grid rendering, tile interaction, context menus, duel flow, swap animations, CSV import/export, randomizer |
-| **floor-host.css** | All Floor Host styling including grid, overlays, modals, animations |
+| **index.html** | Grid layout, duel overlay, edit/kill modals, settings panel |
+| **floor.js** (~1700 lines) | Grid rendering, tile interaction, context menus, duel flow, swap animations, CSV import/export, randomizer |
+| **floor.css** | All Floor styling including grid, overlays, modals, animations |
 
 Imports from `floor-core/` for game logic.
 
@@ -46,7 +46,7 @@ Imports from `floor-core/` for game logic.
 
 ## Floor Core (`floor-core/`)
 
-Pure logic layer — no UI, HTML, or animations. Used by `host/`.
+Pure logic layer — no UI, HTML, or animations. Used by `floor/`.
 
 | File | Exports |
 |------|---------|
@@ -76,7 +76,7 @@ The duel game **lazy-loads** category scripts on demand. The gallery loads them 
 
 ## CSS (`css/`)
 
-Shared styles used by `duel/game.html`. Load order: **base → game → customization → backgrounds**.
+Shared styles used by `duel/index.html`. Load order: **base → game → customization → backgrounds**.
 
 | File | Contents |
 |------|----------|
@@ -112,6 +112,6 @@ One subdirectory per category (e.g., `images/hockey/`, `images/logos/`). Image p
 | File | Purpose |
 |------|---------|
 | **image-server.py** | Local dev server for serving files + image download API |
-| **image-picker.html** | Browser UI for finding and saving category images |
+| **images/index.html** | Browser UI for finding and saving category images |
 
-Run with: `python3 tools/image-server.py` → open `http://localhost:8642`
+Run with: `python3 tools/image-server.py` → open `http://localhost:8642/tools/images/`
