@@ -63,6 +63,7 @@ const CATEGORY_REGISTRY = [
     { key: 'the-90s', label: 'The 90s', emoji: '📼', script: 'the-90s.js', global: 'the90sData', tier: 'Gible Verified' },
     { key: 'famous-books', label: 'Famous Books', emoji: '📚', script: 'famous-books.js', global: 'famousBooksData', tier: 'Gible Verified' },
     { key: 'food', label: 'Food', emoji: '🍕', script: 'food.js', global: 'foodData', tier: 'Gible Verified' },
+    { key: 'japan', label: 'Japan', emoji: '🇯🇵', script: 'japan.js', global: 'japanData', tier: 'Gible Verified' },
     { key: 'historic-events', label: 'Historic Events', emoji: '📜', script: 'historic-events.js', global: 'historicEventsData', tier: 'Gible Verified' },
     { key: 'nintendo', label: 'Nintendo', emoji: '🎮', script: 'nintendo.js', global: 'nintendoData', tier: 'Gible Verified' },
     { key: 'flowers', label: 'Flowers', emoji: '🌻', script: 'flowers.js', global: 'flowersData', tier: 'Gible Verified' },

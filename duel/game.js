@@ -639,7 +639,6 @@ async function setupGame(cat, opts) {
             // Normal mode - Category Reveal then 3-Second Countdown
             if (gamemode !== 'study') {
                 await showCategoryReveal(currentCategory);
-                if (currentPool.length === 0) return;
                 const overlay = document.getElementById('overlay');
                 overlay.style.display = 'flex';
                 // Play countdown sound once at the start
@@ -648,24 +647,38 @@ async function setupGame(cat, opts) {
                     sounds.countdown.play().catch(() => { });
                 }
                 for (let i = 3; i > 0; i--) {
-                    if (currentPool.length === 0) {
+                    // Abort if game was reset mid-countdown
+                    if (!currentCategory) {
                         overlay.style.display = 'none';
                         return;
                     }
                     overlay.innerText = i;
                     await new Promise(r => setTimeout(r, 1000));
                 }
-                if (currentPool.length === 0) {
+                if (!currentCategory) {
                     overlay.style.display = 'none';
                     return;
                 }
                 overlay.style.display = 'none';
+
+                // Empty placeholder category: countdown then complete
+                if (currentPool.length === 0) {
+                    handleCategoryComplete();
+                    updateMenuVisibility();
+                    return;
+                }
 
                 if (!isMuted) {
                     sounds.duelMusic.currentTime = 0;
                     sounds.duelMusic.play().catch(() => { });
                 }
             }
+
+        if (currentPool.length === 0) {
+            handleCategoryComplete();
+            updateMenuVisibility();
+            return;
+        }
 
         gameActive = true;
         inputLocked = false;
@@ -717,7 +730,6 @@ async function startGameFromHost() {
     
     if (gamemode !== 'study') {
         await showCategoryReveal(currentCategory);
-        if (currentPool.length === 0) return;
         overlay.style.display = 'flex';
         overlay.style.zIndex = '20';
         overlay.style.background = 'rgba(0,0,0,1)';
@@ -727,7 +739,8 @@ async function startGameFromHost() {
             sounds.countdown.play().catch(() => { });
         }
         for (let i = 3; i > 0; i--) {
-            if (currentPool.length === 0) {
+            // Abort if game was reset mid-countdown
+            if (!currentCategory) {
                 overlay.style.display = 'none';
                 overlay.style.background = 'rgba(0,0,0,0.9)';
                 return;
@@ -735,7 +748,7 @@ async function startGameFromHost() {
             overlay.innerText = i;
             await new Promise(r => setTimeout(r, 1000));
         }
-        if (currentPool.length === 0) {
+        if (!currentCategory) {
             overlay.style.display = 'none';
             overlay.style.background = 'rgba(0,0,0,0.9)';
             return;
@@ -743,12 +756,25 @@ async function startGameFromHost() {
         overlay.style.display = 'none';
         overlay.style.background = 'rgba(0,0,0,0.9)'; // Reset for other uses
 
+        // Empty placeholder category: countdown then complete
+        if (currentPool.length === 0) {
+            handleCategoryComplete();
+            updateMenuVisibility();
+            return;
+        }
+
         if (!isMuted) {
             sounds.duelMusic.currentTime = 0;
             sounds.duelMusic.play().catch(() => { });
         }
     } else {
         overlay.style.display = 'none';
+    }
+
+    if (currentPool.length === 0) {
+        handleCategoryComplete();
+        updateMenuVisibility();
+        return;
     }
 
     gameActive = true;
