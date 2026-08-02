@@ -55,6 +55,7 @@ let adminWindowOpen = false;
 let adminInterval = null;
 let gameTimerRemaining = null;
 let gameTimerStartNext = null;
+let inPassPhase = false; // Pass feedback keeps the clock running; correct freezes it
 let categoryLoadedForHost = false;
 let playerNames = ["Challenger", "Expert"];
 let firstPlayerIsLeft = true;
@@ -423,6 +424,7 @@ function clearFeedbackState() {
     gameTimerRemaining = null;
     gameTimerStartNext = null;
     unpauseCountdownActive = false;
+    inPassPhase = false;
 }
 
 function getCurrentItem() {
@@ -434,8 +436,8 @@ function getCurrentItem() {
 function shouldTickClock() {
     if (!gameActive || isPaused || categoryComplete) return false;
     if (gamemode === 'study') return false;
-    // Unified policy: clock keeps running during correct/pass feedback
-    return true;
+    // Freeze during correct feedback; keep running during pass (and normal play)
+    return !inputLocked || inPassPhase;
 }
 
 function startClock() {
@@ -1049,6 +1051,7 @@ async function handleCorrect() {
     if (!item) return;
 
     inputLocked = true;
+    inPassPhase = false;
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('correct-border');
     if (hostMode) {
@@ -1116,7 +1119,7 @@ async function handleCorrect() {
         clearFeedbackState();
         return;
     }
-    gameTimerRemaining = null;
+    clearFeedbackState();
     // Switch players only in classic mode
     if (gamemode === 'classic') {
         activePlayer = (activePlayer === 1) ? 2 : 1;
@@ -1135,6 +1138,7 @@ async function handlePass() {
     if (!item) return;
 
     inputLocked = true;
+    inPassPhase = true;
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('pass-border');
     document.getElementById('reveal-text').innerText = `PASSED: ${item.n}`;
@@ -1193,7 +1197,7 @@ async function handlePass() {
         clearFeedbackState();
         return;
     }
-    gameTimerRemaining = null;
+    clearFeedbackState();
     answerStartTime = Date.now();
     nextSlide();
 }
