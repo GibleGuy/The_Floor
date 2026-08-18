@@ -445,6 +445,24 @@
             background: var(--floor-green);
             color: white;
         }
+        .pass-fix-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        #toggle-pass-btn.pass-on {
+            background: var(--floor-red);
+            color: white;
+        }
+        #toggle-pass-btn.pass-off {
+            background: #555;
+            color: white;
+        }
+        #refund-pass-btn:disabled,
+        #toggle-pass-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
         .switch-container {
             display: flex;
             align-items: center;

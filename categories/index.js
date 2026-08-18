@@ -8,6 +8,13 @@
  * global — the window.* variable name the script creates
  */
 const CATEGORY_REGISTRY = [
+    // RHAPCON
+    { key: 'baseball', label: 'Baseball', emoji: '⚾', script: 'baseball.js', global: 'baseballData', tier: 'RHAPCon' },
+    { key: 'rob-lowe', label: 'Rob Lowe', emoji: '🎬', script: 'rob-lowe.js', global: 'robLoweData', tier: 'RHAPCon' },
+    { key: 'state-capitals', label: 'State Capitals', emoji: '🏛️', script: 'state-capitals.js', global: 'stateCapitalsData', tier: 'RHAPCon' },
+    { key: 'broadway-musicals', label: 'Broadway Musicals', emoji: '🎭', script: 'broadway-musicals.js', global: 'broadwayMusicalsData', tier: 'RHAPCon' },
+    { key: 'us-presidents', label: 'US Presidents', emoji: '🇺🇸', script: 'us-presidents.js', global: 'usPresidentsData', tier: 'RHAPCon' },
+
     // REAL DEAL
     { key: 'niche-survivor-players', label: 'Niche Survivor Players', emoji: '🏝️', script: 'niche-survivor-players.js', global: 'nicheSurvivorPlayersData', tier: 'Gible Verified' },
     { key: '2000s-artists', label: '2000s Artists', emoji: '🎤', script: '2000s-artists.js', global: 'artists2000sData', tier: 'Gible Verified' },
@@ -56,8 +63,6 @@ const CATEGORY_REGISTRY = [
     { key: 'furniture', label: 'Furniture', emoji: '🪑', script: 'furniture.js', global: 'furnitureData', tier: 'Gible Verified' },
 
     // EXTRAS
-    { key: 'mega', label: 'Mega Category', emoji: '🌟', script: 'mega.js', global: 'megaData', tier: 'Gible Verified' },
-    { key: 'mega-filtered', label: 'Mega-Filtered', emoji: '✨', script: 'mega-filtered.js', global: 'megaFilteredData', tier: 'Gible Verified' },
     { key: 'religion', label: 'Religion', emoji: '⛪', script: 'religion.js', global: 'religionData', tier: 'Gible Verified' },
     { key: 'mobile-apps', label: 'Mobile Apps', emoji: '📱', script: 'mobile-apps.js', global: 'mobileAppsData', tier: 'Gible Verified' },
     { key: 'the-90s', label: 'The 90s', emoji: '📼', script: 'the-90s.js', global: 'the90sData', tier: 'Gible Verified' },

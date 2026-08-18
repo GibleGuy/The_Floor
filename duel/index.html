@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Floor Simulator</title>
     <link href="../css/base.css?v=3" rel="stylesheet">
-    <link href="../css/game.css?v=11" rel="stylesheet">
+    <link href="../css/game.css?v=12" rel="stylesheet">
     <link href="../css/customization.css?v=4" rel="stylesheet">
     <link href="../css/backgrounds.css" rel="stylesheet">
 </head>
@@ -221,7 +221,16 @@
             <button type="button" class="admin-btn" id="gallery-btn" onclick="window.location.href='gallery.html'"
                 style="display: none;">GALLERY</button>
             <div id="host-pause-controls" style="display: none;">
-                <div class="custom-row" style="margin-top: 15px;">
+                <div class="custom-row" id="host-pass-controls-row" style="margin-top: 15px;">
+                    <label class="custom-label">Pass State:</label>
+                    <div class="pass-fix-btns">
+                        <button type="button" id="toggle-pass-btn" class="boost-btn pass-off"
+                            onclick="togglePassState()">PASS: OFF</button>
+                        <button type="button" id="refund-pass-btn" class="boost-btn" onclick="refundPassTime()"
+                            disabled>REFUND PASS TIME</button>
+                    </div>
+                </div>
+                <div class="custom-row" id="host-active-player-row" style="margin-top: 15px;">
                     <label class="custom-label">Active Player:</label>
                     <div class="radio-group">
                         <div class="radio-option">
@@ -442,6 +451,7 @@
                 <p><span class="help-key">Space</span> or <span class="help-key">J</span> - Mark as correct</p>
                 <p><span class="help-key">K</span> - Pause/Resume</p>
                 <p><span class="help-key">L</span> - Pass</p>
+                <p>While paused: use Pass State to undo an accidental pass, and Refund Pass Time to give back the time spent in the pass delay</p>
                 <p><span class="help-key">R</span> - Reset game</p>
                 <p><span class="help-key">F</span> - Toggle fullscreen</p>
                 <p><strong>Gameplay (Non-Host Mode):</strong></p>
@@ -483,7 +493,7 @@
     </footer>
 
     <script src="../categories/index.js?v=3"></script>
-    <script src="game.js?v=11"></script>
+    <script src="game.js?v=13"></script>
     <script>
         populateCategoryGrid();
     </script>

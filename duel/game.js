@@ -56,6 +56,10 @@ let adminInterval = null;
 let gameTimerRemaining = null;
 let gameTimerStartNext = null;
 let inPassPhase = false; // Pass feedback keeps the clock running; correct freezes it
+let passGeneration = 0; // Bumped to abort a pending pass wait loop
+let passStatsSnapshot = null;
+let passTimerSnapshot = null;
+let passTimeRefunded = false;
 let categoryLoadedForHost = false;
 let playerNames = ["Challenger", "Expert"];
 let firstPlayerIsLeft = true;
@@ -231,6 +235,11 @@ function applyPreferencesToDOM() {
         if (scoreDisplay) scoreDisplay.classList.remove('hidden');
     }
     updatePlayerPanelLayout();
+    if (sounds) {
+        sounds.countdown.volume = sfxVolume;
+        sounds.duelMusic.volume = musicVolume;
+        sounds.duelOver.volume = musicVolume;
+    }
 }
 function savePreferences() {
     try {
@@ -267,34 +276,56 @@ function savePreferences() {
 }
 
 // ========== SOUNDS ==========
-// Passes play in order, loop after last.
-const PASS_COUNT = 5;
 let sounds = {
     countdown: new Audio('../sounds/countdown.mp3'),
     right: new Audio('../sounds/RIGHT.wav'),
     duelMusic: new Audio('../sounds/DUEL MUSIC.wav'),
-    duelOver: new Audio('../sounds/DUEL OVER.wav')
+    duelOver: new Audio('../sounds/DUEL OVER.wav'),
+    anthem: new Audio('../sounds/MainAnthem.mp3')
 };
 sounds.countdown.volume = sfxVolume;
 sounds.duelMusic.loop = true;
 sounds.duelMusic.volume = musicVolume;
 sounds.duelOver.volume = musicVolume;
 
+const PASS_COUNT = 5;
+const passSounds = Array.from({ length: PASS_COUNT }, (_, i) => {
+    const a = new Audio('../sounds/pass' + (i + 1) + '.mp3');
+    a.preload = 'auto';
+    return a;
+});
+
 let passIndex = 0;
 
 function playDingSound() {
-    if (isMuted) return;
-    const s = sounds.right.cloneNode();
-    s.volume = sfxVolume;
-    s.play().catch(() => { });
+    playSfx(sounds.right);
 }
 
 function playPassSound() {
-    if (isMuted) return;
-    const s = new Audio('../sounds/pass' + (passIndex + 1) + '.mp3');
-    s.volume = sfxVolume;
-    s.play().catch(() => { });
+    playSfx(passSounds[passIndex]);
     passIndex = (passIndex + 1) % PASS_COUNT;
+}
+
+function playSfx(audioEl) {
+    if (isMuted || !audioEl) return;
+    try {
+        const s = audioEl.cloneNode();
+        s.volume = sfxVolume;
+        const p = s.play();
+        if (p && typeof p.catch === 'function') {
+            p.catch(function () {
+                audioEl.volume = sfxVolume;
+                try { audioEl.currentTime = 0; } catch (e) { }
+                audioEl.play().catch(function () { });
+            });
+        }
+    } catch (e) {
+        try {
+            audioEl.volume = sfxVolume;
+            audioEl.currentTime = 0;
+            audioEl.play().catch(function () { });
+        } catch (e2) { }
+    }
 }
 
 const SESSION_VERSION = Date.now();
@@ -377,9 +408,14 @@ async function showCategoryReveal(categoryName) {
 
         // Play anthem sound
         if (!isMuted) {
-            categoryRevealAudio = new Audio('../sounds/MainAnthem.mp3');
+            categoryRevealAudio = sounds.anthem.cloneNode();
             categoryRevealAudio.volume = sfxVolume;
-            categoryRevealAudio.play().catch(() => {});
+            categoryRevealAudio.play().catch(function () {
+                sounds.anthem.volume = sfxVolume;
+                try { sounds.anthem.currentTime = 0; } catch (e) { }
+                sounds.anthem.play().catch(function () { });
+                categoryRevealAudio = sounds.anthem;
+            });
         }
 
         // Trigger fade-in
@@ -427,6 +463,48 @@ function clearFeedbackState() {
     inPassPhase = false;
 }
 
+function clearPassCorrectionState() {
+    passStatsSnapshot = null;
+    passTimerSnapshot = null;
+    passTimeRefunded = false;
+}
+
+function getPassRefundSeconds() {
+    try {
+        if (!passTimerSnapshot || passTimeRefunded || !timers) return 0;
+        const idx = passTimerSnapshot.playerIndex;
+        if (typeof idx !== 'number' || idx < 0 || idx >= timers.length) return 0;
+        const current = timers[idx];
+        const start = passTimerSnapshot.timerValue;
+        if (typeof current !== 'number' || typeof start !== 'number') return 0;
+        if (gamemode === 'singleplayer') {
+            return Math.max(0, current - start);
+        }
+        return Math.max(0, start - current);
+    } catch (e) {
+        return 0;
+    }
+}
+
+function toAbsoluteMediaUrl(rawSrc) {
+    if (!rawSrc) return null;
+    const resolved = resolveImageSrc(rawSrc);
+    try {
+        return new URL(resolved, window.location.href).href;
+    } catch (e) {
+        return resolved;
+    }
+}
+
+function getPreviewImageUrl(item, index) {
+    if (!item || typeof item.q === 'string') return null;
+    const img = document.getElementById('clue-img-' + index);
+    if (img && img.getAttribute('src')) {
+        try { return new URL(img.src, window.location.href).href; } catch (e) { return img.src; }
+    }
+    return item.u ? toAbsoluteMediaUrl(item.u) : null;
+}
+
 function getCurrentItem() {
     const item = currentPool && currentPool[currentIndex];
     if (!item || typeof item.n !== 'string') return null;
@@ -472,6 +550,7 @@ async function setupGame(cat, opts) {
     };
     gameActive = false;
     clearFeedbackState();
+    clearPassCorrectionState();
     currentStreak = 0;
     answerStartTime = Date.now();
 
@@ -1137,6 +1216,7 @@ async function handlePass() {
     const item = getCurrentItem();
     if (!item) return;
 
+    const myPassId = ++passGeneration;
     inputLocked = true;
     inPassPhase = true;
     toggleMoreSpecific(false);
@@ -1147,10 +1227,16 @@ async function handlePass() {
     const timeTaken = (Date.now() - answerStartTime) / 1000;
 
     // Stats tracking
+    const previousStreak = currentStreak;
     currentStreak = 0;
     const currentPlayer = activePlayer === 1 ? 'p1' : 'p2';
     const currentSlot = activePlayer === 1 ? 'left' : 'right';
     const currentPlayerName = playerNames[activePlayer - 1];
+    const playerIndex = gamemode === 'singleplayer' ? 0 : activePlayer - 1;
+
+    passStatsSnapshot = { currentPlayer, currentSlot, currentPlayerName, timeTaken, previousStreak };
+    passTimerSnapshot = { playerIndex, timerValue: timers[playerIndex] };
+    passTimeRefunded = false;
 
     // Last round stats
     lastRoundStats[currentPlayer].passed++;
@@ -1184,22 +1270,111 @@ async function handlePass() {
 
     // Play sound
     playPassSound();
+    updateHostPauseControls();
+    postStateToAdmin();
 
     gameTimerRemaining = 3;
     gameTimerStartNext = 3;
     for (let i = 0; i < 30; i++) {
-        if (!gameActive) break;
+        if (!gameActive || myPassId !== passGeneration) break;
         await new Promise(r => setTimeout(r, 100));
+        if (myPassId !== passGeneration) break;
         if (isPaused) { i--; continue; }
         gameTimerRemaining = Math.max(0, 3 - (i + 1) * 0.1);
     }
-    if (!gameActive) {
-        clearFeedbackState();
+    if (!gameActive || myPassId !== passGeneration) {
+        if (myPassId === passGeneration) clearFeedbackState();
         return;
     }
     clearFeedbackState();
+    clearPassCorrectionState();
     answerStartTime = Date.now();
     nextSlide();
+}
+
+function reversePassStats(snap) {
+    if (!snap) return;
+    const { currentPlayer, currentSlot, currentPlayerName, timeTaken, previousStreak } = snap;
+    currentStreak = previousStreak || 0;
+    if (lastRoundStats[currentPlayer]) {
+        lastRoundStats[currentPlayer].passed = Math.max(0, lastRoundStats[currentPlayer].passed - 1);
+    }
+    lastRoundStats.totalPassed = Math.max(0, lastRoundStats.totalPassed - 1);
+    lastRoundStats.totalTime = Math.max(0, lastRoundStats.totalTime - timeTaken);
+    lastRoundStats.answerCount = Math.max(0, lastRoundStats.answerCount - 1);
+
+    const playerStats = perPlayerStats[currentPlayerName];
+    if (playerStats) {
+        playerStats.passed = Math.max(0, playerStats.passed - 1);
+        playerStats.totalTime = Math.max(0, playerStats.totalTime - timeTaken);
+        playerStats.answerCount = Math.max(0, playerStats.answerCount - 1);
+    }
+
+    if (perSlotStats[currentSlot]) {
+        perSlotStats[currentSlot].passed = Math.max(0, perSlotStats[currentSlot].passed - 1);
+        perSlotStats[currentSlot].totalTime = Math.max(0, perSlotStats[currentSlot].totalTime - timeTaken);
+        perSlotStats[currentSlot].answerCount = Math.max(0, perSlotStats[currentSlot].answerCount - 1);
+    }
+
+    sessionStats.totalPassed = Math.max(0, sessionStats.totalPassed - 1);
+    sessionStats.totalTime = Math.max(0, sessionStats.totalTime - timeTaken);
+    sessionStats.answerCount = Math.max(0, sessionStats.answerCount - 1);
+
+    lifetimeStats.totalPassed = Math.max(0, lifetimeStats.totalPassed - 1);
+    lifetimeStats.totalTime = Math.max(0, lifetimeStats.totalTime - timeTaken);
+    lifetimeStats.answerCount = Math.max(0, lifetimeStats.answerCount - 1);
+    saveLifetimeStats();
+}
+
+function restoreAfterCancelledPass() {
+    inPassPhase = false;
+    inputLocked = false;
+    gameTimerRemaining = null;
+    gameTimerStartNext = null;
+    const imgFrame = document.getElementById('img-frame');
+    if (imgFrame) imgFrame.classList.remove('pass-border');
+    const reveal = document.getElementById('reveal-text');
+    if (reveal) reveal.innerText = '';
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) {
+        answerInput.value = '';
+        if (!hostMode) {
+            answerInput.disabled = false;
+            answerInput.focus();
+        }
+    }
+    answerStartTime = Date.now();
+}
+
+function cancelPass() {
+    if (!gameActive || !inPassPhase) return;
+    passGeneration++;
+    reversePassStats(passStatsSnapshot);
+    passStatsSnapshot = null;
+    restoreAfterCancelledPass();
+    updateHostPauseControls();
+    postStateToAdmin();
+}
+
+function togglePassState() {
+    if (!gameActive || !isPaused || categoryComplete) return;
+    if (gamemode === 'study') return;
+    if (inPassPhase) {
+        cancelPass();
+        return;
+    }
+    if (!inputLocked) handlePass();
+}
+
+function refundPassTime() {
+    if (!gameActive || !isPaused) return;
+    const secs = getPassRefundSeconds();
+    if (!passTimerSnapshot || secs < 0.05) return;
+    timers[passTimerSnapshot.playerIndex] = passTimerSnapshot.timerValue;
+    passTimeRefunded = true;
+    updateDisplay();
+    updateHostPauseControls();
+    postStateToAdmin();
 }
 
 function nextSlide() {
@@ -1326,6 +1501,15 @@ function jumpToClue(index) {
     currentIndex = newIndex;
     itemsCompleted = currentIndex; // Adjust items completed so completion logic works
     categoryComplete = false; // Reset if we jump back from end
+
+    if (inPassPhase) {
+        passGeneration++;
+        inPassPhase = false;
+        inputLocked = false;
+        gameTimerRemaining = null;
+        gameTimerStartNext = null;
+        passStatsSnapshot = null;
+    }
     
     if (gameActive) {
         const answerInput = document.getElementById('answer-input');
@@ -1344,6 +1528,7 @@ function jumpToClue(index) {
     }
     
     updateClueDropdown();
+    updateHostPauseControls();
     postStateToAdmin();
 }
 
@@ -1352,12 +1537,14 @@ function handleCategoryComplete() {
     gameActive = false;
     isPaused = false;
     clearFeedbackState();
+    clearPassCorrectionState();
     toggleMoreSpecific(false);
     clearInterval(clockInterval);
     clockInterval = null;
 
     // Stop timers
     inputLocked = true;
+    updateHostPauseControls();
 
     // Hide study controls
     const studyControls = document.getElementById('study-controls');
@@ -1756,9 +1943,12 @@ function endGame() {
     isPaused = false;
     inputLocked = true;
     clearFeedbackState();
+    clearPassCorrectionState();
+    passGeneration++;
     toggleMoreSpecific(false);
     clearInterval(clockInterval);
     clockInterval = null;
+    updateHostPauseControls();
 
     if (!isMuted) {
         sounds.duelMusic.pause();
@@ -1826,10 +2016,7 @@ async function runUnpauseCountdown() {
     overlay.style.zIndex = '30';
     overlay.style.background = 'rgba(0,0,0,1)';
     if (!isMuted) {
-        const c = sounds.countdown.cloneNode();
-        c.volume = sfxVolume;
-        c.currentTime = 0;
-        c.play().catch(() => { });
+        playSfx(sounds.countdown);
     }
     for (let i = 3; i > 0; i--) {
         if (currentPool.length === 0) {
@@ -1852,6 +2039,7 @@ async function runUnpauseCountdown() {
     overlay.style.zIndex = '20';
     isPaused = false;
     unpauseCountdownActive = false;
+    if (!inPassPhase) clearPassCorrectionState();
     lastTickAt = performance.now();
     if (!isMuted && gameActive && !categoryComplete) {
         sounds.duelMusic.play().catch(() => {});
@@ -1859,8 +2047,7 @@ async function runUnpauseCountdown() {
     updatePauseButton();
     updateDisplay();
     updatePauseOverlay();
-    const hostControls = document.getElementById('host-pause-controls');
-    if (hostControls) hostControls.style.display = 'none';
+    updateHostPauseControls();
     postStateToAdmin();
 }
 
@@ -1879,16 +2066,7 @@ function togglePause() {
     updatePauseButton();
     updateDisplay(); // Update to show/hide editable timers
     updatePauseOverlay();
-
-    // Show/hide host pause controls
-    const hostControls = document.getElementById('host-pause-controls');
-    if (hostMode && isPaused && gameActive) {
-        hostControls.style.display = 'block';
-        updateActivePlayerLabels();
-        document.getElementById(`active-p${activePlayer}`).checked = true;
-    } else {
-        hostControls.style.display = 'none';
-    }
+    updateHostPauseControls();
 }
 
 function updateActivePlayerLabels() {
@@ -1896,6 +2074,47 @@ function updateActivePlayerLabels() {
     const l2 = document.querySelector('label[for="active-p2"]');
     if (l1) l1.textContent = playerNames[0] || 'Player 1';
     if (l2) l2.textContent = playerNames[1] || 'Player 2';
+}
+
+function updatePassControlButtons() {
+    const toggleBtn = document.getElementById('toggle-pass-btn');
+    const refundBtn = document.getElementById('refund-pass-btn');
+    if (toggleBtn) {
+        toggleBtn.textContent = inPassPhase ? 'PASS: ON' : 'PASS: OFF';
+        toggleBtn.classList.toggle('pass-on', inPassPhase);
+        toggleBtn.classList.toggle('pass-off', !inPassPhase);
+        toggleBtn.disabled = !isPaused || !gameActive || gamemode === 'study';
+    }
+    if (refundBtn) {
+        const secs = getPassRefundSeconds();
+        refundBtn.disabled = !isPaused || !gameActive || secs < 0.05;
+        refundBtn.textContent = secs >= 0.05
+            ? `REFUND PASS TIME (${secs.toFixed(1)}s)`
+            : 'REFUND PASS TIME';
+    }
+}
+
+function updateHostPauseControls() {
+    try {
+        const hostControls = document.getElementById('host-pause-controls');
+        if (!hostControls) return;
+        const show = isPaused && gameActive && !categoryComplete;
+        const showPass = show && gamemode !== 'study';
+        const showActive = show && hostMode && gamemode === 'classic';
+        hostControls.style.display = (showPass || showActive) ? 'block' : 'none';
+        const passRow = document.getElementById('host-pass-controls-row');
+        if (passRow) passRow.style.display = showPass ? '' : 'none';
+        const activeRow = document.getElementById('host-active-player-row');
+        if (activeRow) activeRow.style.display = showActive ? '' : 'none';
+        if (showActive) {
+            updateActivePlayerLabels();
+            const p1 = document.getElementById('active-p1');
+            const p2 = document.getElementById('active-p2');
+            if (p1) p1.checked = activePlayer === 1;
+            if (p2) p2.checked = activePlayer === 2;
+        }
+        updatePassControlButtons();
+    } catch (e) { }
 }
 
 function updateFirstPlayerLabels() {
@@ -1978,6 +2197,8 @@ function resetGame(skipConfirm) {
     isPaused = false;
     inputLocked = true;
     clearFeedbackState();
+    clearPassCorrectionState();
+    passGeneration++;
     activePlayer = firstPlayerIsLeft ? 1 : 2;
 
     // Reset timers based on gamemode
@@ -2001,8 +2222,7 @@ function resetGame(skipConfirm) {
     const p2Boost = document.getElementById('p2-boost-btn');
     if (p2Boost) { p2Boost.classList.remove('used'); p2Boost.disabled = false; p2Boost.textContent = 'Time Boost? (+5s)'; }
 
-    const hostPause = document.getElementById('host-pause-controls');
-    if (hostPause) hostPause.style.display = 'none';
+    updateHostPauseControls();
     const studyControls = document.getElementById('study-controls');
     if (studyControls) studyControls.style.display = 'none';
     const catDisplay = document.getElementById('category-display');
@@ -2125,10 +2345,8 @@ function toggleHostMode() {
     const adminWindowBtn = document.getElementById('admin-window-btn');
     if (adminWindowBtn) adminWindowBtn.style.display = hostMode ? 'block' : 'none';
 
-
-
-
     updateDisplay();
+    updateHostPauseControls();
 }
 
 /* toggleGibleMode removed */
@@ -2254,11 +2472,11 @@ function postStateToAdmin() {
     if (currentPool.length) {
         const cur = currentPool[currentIndex];
         if (cur) {
-            current = { answer: cur.n, isMath: !!cur.q, question: cur.q || null, imageUrl: (!cur.q && cur.u) ? cur.u : null };
+            current = { answer: cur.n, isMath: !!cur.q, question: cur.q || null, imageUrl: getPreviewImageUrl(cur, currentIndex) };
         }
         const nextIdx = (currentIndex + 1) % currentPool.length;
         const nxt = currentPool[nextIdx];
-        if (nxt) next = { answer: nxt.n, isMath: !!nxt.q, question: nxt.q || null, imageUrl: (!nxt.q && nxt.u) ? nxt.u : null };
+        if (nxt) next = { answer: nxt.n, isMath: !!nxt.q, question: nxt.q || null, imageUrl: getPreviewImageUrl(nxt, nextIdx) };
     }
     try {
         adminWindow.postMessage({
@@ -2285,6 +2503,8 @@ function postStateToAdmin() {
             categoryLoaded: categoryLoadedForHost,
             gameTimer: gameTimerRemaining,
             gameTimerStart: gameTimerStartNext,
+            inPassPhase: !!inPassPhase,
+            passRefundSeconds: getPassRefundSeconds(),
             currentTheme: currentTheme,
             confettiEnabled: confettiEnabled,
             disableExtras: disableExtras,
@@ -2386,6 +2606,12 @@ window.addEventListener('message', function (e) {
     }
     else if (d.action === 'changeActivePlayer' && (d.playerNum === 1 || d.playerNum === 2)) {
         changeActivePlayer(d.playerNum);
+    }
+    else if (d.action === 'togglePassState') {
+        togglePassState();
+    }
+    else if (d.action === 'refundPassTime') {
+        refundPassTime();
     }
     else if (d.action === 'theme' && d.value) {
         currentTheme = d.value;

@@ -276,6 +276,21 @@
             filter: brightness(1.1);
         }
 
+        .host-btn.pass-on {
+            background: var(--floor-red);
+            color: white;
+        }
+
+        .host-btn.pass-off {
+            background: #555;
+            color: white;
+        }
+
+        .host-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
         .help-overlay {
             position: fixed;
             inset: 0;
@@ -661,6 +676,11 @@
             <button type="button" class="host-btn k" id="admin-btn-k"><strong>K</strong> Pause</button>
             <button type="button" class="host-btn l" id="admin-btn-l"><strong>L</strong> Pass</button>
         </div>
+        <div id="admin-pass-controls" class="custom-row" style="display: none; margin-top: 12px;">
+            <span class="custom-label">Pass State:</span>
+            <button type="button" class="host-btn pass-off" id="admin-btn-toggle-pass">PASS: OFF</button>
+            <button type="button" class="host-btn k" id="admin-btn-refund-pass" disabled>REFUND PASS TIME</button>
+        </div>
         <div id="admin-active-player" class="custom-row" style="display: none; margin-top: 12px;">
             <span class="custom-label">Active Player:</span>
             <div class="radio-group">
@@ -826,6 +846,7 @@
             <p><span class="help-key">J</span> Mark as correct</p>
             <p><span class="help-key">K</span> Pause / Resume</p>
             <p><span class="help-key">L</span> Pass</p>
+            <p>While paused: toggle pass state (undo an accidental pass) or refund pass time</p>
             <p><span class="help-key">R</span> Reset (with confirmation)</p>
             <button type="button" class="host-btn k" onclick="closeAdminHelp()" style="margin-top:12px">CLOSE</button>
         </div>
@@ -901,7 +922,7 @@
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion', 'admin-projector-mode',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
                 'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
-                'admin-active-p1', 'admin-active-p2'];
+                'admin-active-p1', 'admin-active-p2', 'admin-btn-toggle-pass', 'admin-btn-refund-pass'];
             ids.forEach(function (id) {
                 const el = document.getElementById(id);
                 if (el) el.disabled = !enabled;
@@ -1092,6 +1113,12 @@
         document.getElementById('admin-active-p2').addEventListener('change', function () {
             if (this.checked) send({ action: 'changeActivePlayer', playerNum: 2 });
         });
+        document.getElementById('admin-btn-toggle-pass').addEventListener('click', function () {
+            send({ action: 'togglePassState' });
+        });
+        document.getElementById('admin-btn-refund-pass').addEventListener('click', function () {
+            send({ action: 'refundPassTime' });
+        });
 
         document.addEventListener('keydown', function (e) {
             if (!hasOpener()) return;
@@ -1254,12 +1281,35 @@
                     document.getElementById('admin-ss-passed').textContent = d.session.totalPassed != null ? d.session.totalPassed : 0;
                 }
                 if (d.isPaused && d.gameActive) {
-                    const ap = document.getElementById('admin-active-player');
-                    ap.style.display = 'flex';
-                    document.getElementById('admin-active-p1').checked = d.activePlayer === 1;
-                    document.getElementById('admin-active-p2').checked = d.activePlayer === 2;
+                    try {
+                        const ap = document.getElementById('admin-active-player');
+                        if (ap) ap.style.display = d.gamemode === 'classic' ? 'flex' : 'none';
+                        const ap1 = document.getElementById('admin-active-p1');
+                        const ap2 = document.getElementById('admin-active-p2');
+                        if (ap1) ap1.checked = d.activePlayer === 1;
+                        if (ap2) ap2.checked = d.activePlayer === 2;
+                        const pc = document.getElementById('admin-pass-controls');
+                        if (pc) pc.style.display = d.gamemode === 'study' ? 'none' : 'flex';
+                        const togglePass = document.getElementById('admin-btn-toggle-pass');
+                        const refundPass = document.getElementById('admin-btn-refund-pass');
+                        if (togglePass) {
+                            togglePass.textContent = d.inPassPhase ? 'PASS: ON' : 'PASS: OFF';
+                            togglePass.classList.toggle('pass-on', !!d.inPassPhase);
+                            togglePass.classList.toggle('pass-off', !d.inPassPhase);
+                        }
+                        if (refundPass) {
+                            const secs = typeof d.passRefundSeconds === 'number' && !isNaN(d.passRefundSeconds) ? d.passRefundSeconds : 0;
+                            refundPass.disabled = secs < 0.05;
+                            refundPass.textContent = secs >= 0.05
+                                ? 'REFUND PASS TIME (' + secs.toFixed(1) + 's)'
+                                : 'REFUND PASS TIME';
+                        }
+                    } catch (err) { }
                 } else {
-                    document.getElementById('admin-active-player').style.display = 'none';
+                    const ap = document.getElementById('admin-active-player');
+                    if (ap) ap.style.display = 'none';
+                    const pc = document.getElementById('admin-pass-controls');
+                    if (pc) pc.style.display = 'none';
                 }
 
                 if (d.gameActive && d.gamemode !== 'singleplayer') {

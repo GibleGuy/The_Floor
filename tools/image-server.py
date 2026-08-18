@@ -33,6 +33,8 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/api/download':
             self._handle_download()
+        elif self.path == '/api/upload-image':
+            self._handle_upload_image()
         elif self.path == '/api/list-images':
             self._handle_list_images()
         elif self.path == '/api/delete-item':
@@ -108,6 +110,70 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
 
         except urllib.error.URLError as e:
             self._send_error(502, f"Failed to fetch image: {e}")
+        except Exception as e:
+            self._send_error(500, f"Server error: {e}")
+
+    def _handle_upload_image(self):
+        """Save a pasted image (base64 data) directly to the images folder."""
+        try:
+            import base64
+
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length))
+
+            data_url = body['data']           # e.g. "data:image/png;base64,iVBOR..."
+            category = body['category']       # e.g. "baseball"
+            filename = body['filename']        # e.g. "home-plate"
+
+            # Parse the data URL
+            # Format: data:<mime>;base64,<data>
+            if not data_url.startswith('data:'):
+                self._send_error(400, "Invalid data URL format")
+                return
+
+            header, encoded = data_url.split(',', 1)
+            # header = "data:image/png;base64"
+            mime = header.split(':')[1].split(';')[0]  # "image/png"
+
+            ext_map = {
+                'image/webp': 'webp',
+                'image/png': 'png',
+                'image/jpeg': 'jpg',
+                'image/jpg': 'jpg',
+                'image/avif': 'avif',
+                'image/gif': 'gif',
+                'image/svg+xml': 'svg',
+                'image/bmp': 'bmp',
+            }
+            ext = ext_map.get(mime, 'png')  # default to png
+
+            image_data = base64.b64decode(encoded)
+
+            # Ensure the images directory exists
+            img_dir = PROJECT_ROOT / 'images' / category
+            img_dir.mkdir(parents=True, exist_ok=True)
+
+            # Remove any existing file with the same base name (different ext)
+            for existing in img_dir.glob(f"{filename}.*"):
+                existing.unlink()
+
+            # Save the image
+            save_path = img_dir / f"{filename}.{ext}"
+            save_path.write_bytes(image_data)
+
+            result = {
+                'success': True,
+                'savedAs': f"{filename}.{ext}",
+                'path': str(save_path.relative_to(PROJECT_ROOT)),
+                'size': len(image_data),
+            }
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
+
         except Exception as e:
             self._send_error(500, f"Server error: {e}")
 

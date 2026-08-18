@@ -220,6 +220,54 @@
             opacity: .5;
         }
 
+        /* Paste zone */
+        .card-preview.paste-target {
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+        }
+
+        .card-preview.paste-target:hover,
+        .card-preview.paste-target:focus-within {
+            background: rgba(108, 92, 231, .08);
+        }
+
+        .card-preview.paste-target.drag-over {
+            background: rgba(108, 92, 231, .15);
+            border: 2px dashed var(--accent);
+        }
+
+        .paste-hint {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            font-size: .6rem;
+            color: var(--text-dim);
+            opacity: 0;
+            transition: opacity .2s;
+            pointer-events: none;
+            background: rgba(15, 15, 19, .8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .card-preview.paste-target:hover .paste-hint,
+        .card-preview.paste-target:focus-within .paste-hint {
+            opacity: 1;
+        }
+
+        .paste-uploading {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 15, 19, .85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: .75rem;
+            color: var(--accent);
+        }
+
         /* Actions */
         .card-actions {
             padding: 10px 14px;
@@ -846,10 +894,11 @@
           <div class="card-filename">${stem}</div>
           <button class="btn-delete" title="Delete clue" onclick="deleteItem(${idx}, event)">🗑️</button>
         </div>
-        <div class="card-preview">
+        <div class="card-preview paste-target" tabindex="0" data-idx="${idx}">
           ${hasImage
                             ? `<img src="${imgSrc}" alt="${item.n}" loading="lazy">`
                             : `<span class="no-img">No image yet</span>`}
+          <span class="paste-hint">📋 Click & Ctrl+V to paste</span>
         </div>
         <div class="card-actions">
           <div class="btn-row">
@@ -869,6 +918,42 @@
           <div class="card-toast" id="toast-${idx}"></div>
         </div>
       `;
+
+                    // Attach paste + drag-drop handlers to the preview area
+                    const preview = card.querySelector('.card-preview.paste-target');
+                    if (preview) {
+                        preview.addEventListener('paste', (e) => {
+                            e.preventDefault();
+                            const items = e.clipboardData?.items;
+                            if (!items) return;
+                            for (const item of items) {
+                                if (item.type.startsWith('image/')) {
+                                    const file = item.getAsFile();
+                                    if (file) uploadPastedFile(file, idx);
+                                    return;
+                                }
+                            }
+                            // If no image in clipboard, show hint
+                            const toast = document.getElementById(`toast-${idx}`);
+                            if (toast) showToast(toast, 'error', 'No image found in clipboard');
+                        });
+
+                        preview.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            preview.classList.add('drag-over');
+                        });
+                        preview.addEventListener('dragleave', () => {
+                            preview.classList.remove('drag-over');
+                        });
+                        preview.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            preview.classList.remove('drag-over');
+                            const file = e.dataTransfer?.files?.[0];
+                            if (file && file.type.startsWith('image/')) {
+                                uploadPastedFile(file, idx);
+                            }
+                        });
+                    }
 
                     grid.appendChild(card);
                 });
@@ -955,6 +1040,78 @@
                     spinner.classList.remove('active');
                 }
             };
+
+            // ── Upload pasted/dropped image file ─────────────
+            async function uploadPastedFile(file, idx) {
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                const toast = document.getElementById(`toast-${idx}`);
+                const preview = card.querySelector('.card-preview');
+
+                if (!serverAvailable) {
+                    showToast(toast, 'error', 'Server not running — start image-server.py');
+                    return;
+                }
+
+                // Show uploading indicator
+                const uploadingEl = document.createElement('div');
+                uploadingEl.className = 'paste-uploading';
+                uploadingEl.innerHTML = '<div class="spinner active"></div> Uploading...';
+                preview.appendChild(uploadingEl);
+
+                try {
+                    // Read the file as a data URL (base64)
+                    const dataUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+
+                    const res = await fetch(`${API}/api/upload-image`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            data: dataUrl,
+                            category: card.dataset.category,
+                            filename: card.dataset.stem
+                        })
+                    });
+                    const result = await res.json();
+
+                    if (result.success) {
+                        showToast(toast, 'success', `✓ Pasted & saved as ${result.savedAs} (${formatBytes(result.size)})`);
+
+                        // Update the card visually
+                        const timestamp = Date.now();
+                        // Remove the uploading overlay first
+                        uploadingEl.remove();
+                        // Remove old paste hint and no-img text
+                        const hint = preview.querySelector('.paste-hint');
+                        preview.innerHTML = `<img src="../../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
+                        // Re-add the paste hint
+                        const newHint = document.createElement('span');
+                        newHint.className = 'paste-hint';
+                        newHint.textContent = '📋 Click & Ctrl+V to paste';
+                        preview.appendChild(newHint);
+
+                        const status = card.querySelector('.card-status');
+                        status.className = 'card-status has-image';
+                        card.dataset.hasImage = 'true';
+
+                        // Update current images map
+                        currentImages[card.dataset.stem] = result.savedAs;
+
+                        // Update stats
+                        updateStats();
+                    } else {
+                        uploadingEl.remove();
+                        showToast(toast, 'error', result.error || 'Upload failed');
+                    }
+                } catch (e) {
+                    uploadingEl.remove();
+                    showToast(toast, 'error', `Error: ${e.message}`);
+                }
+            }
 
             function showToast(el, type, msg) {
                 el.className = `card-toast ${type}`;
