@@ -1,0 +1,72 @@
+// RuPaul's Drag Race — images in images/rupauls-drag-race/
+const rupaulsDragRaceData = [
+    // Tier 1 — Obvious (1–15)
+    { n: "RUPAUL", u: "../images/rupauls-drag-race/rupaul.webp" },
+    { n: "MICHELLE VISAGE", u: "../images/rupauls-drag-race/michelle-visage.webp" },
+    { n: "TRIXIE MATTEL", u: "../images/rupauls-drag-race/trixie-mattel.webp" },
+    { n: "BIANCA DEL RIO", u: "../images/rupauls-drag-race/bianca-del-rio.webp" },
+    { n: "WERK ROOM", u: "../images/rupauls-drag-race/werk-room.webp" },
+    { n: "KATYA", u: "../images/rupauls-drag-race/katya.webp" },
+    { n: "JINKX MONSOON", u: "../images/rupauls-drag-race/jinkx-monsoon.webp" },
+    { n: "BOB THE DRAG QUEEN", u: "../images/rupauls-drag-race/bob-the-drag-queen.webp" },
+    { n: "PIT CREW", u: "../images/rupauls-drag-race/pit-crew.webp" },
+    { n: "SASHA VELOUR", u: "../images/rupauls-drag-race/sasha-velour.webp" },
+    { n: "ALASKA", u: "../images/rupauls-drag-race/alaska.webp" },
+    { n: "SNATCH GAME", u: "../images/rupauls-drag-race/snatch-game.webp" },
+    { n: "SHANGELA", u: "../images/rupauls-drag-race/shangela.webp" },
+    { n: "ALYSSA EDWARDS", u: "../images/rupauls-drag-race/alyssa-edwards.webp" },
+    { n: "LIP SYNC FOR YOUR LIFE", u: "../images/rupauls-drag-race/lip-sync-for-your-life.webp" },
+
+    // Tier 2 — Familiar (16–30)
+    { n: "CARSON KRESSLEY", u: "../images/rupauls-drag-race/carson-kressley.webp" },
+    { n: "RAJA", u: "../images/rupauls-drag-race/raja.webp" },
+    { n: "VALENTINA", u: "../images/rupauls-drag-race/valentina.webp" },
+    { n: "ROSS MATHEWS", u: "../images/rupauls-drag-race/ross-mathews.webp" },
+    { n: "ADORE DELANO", u: "../images/rupauls-drag-race/adore-delano.webp" },
+    { n: "SHEA COULEÉ", u: "../images/rupauls-drag-race/shea-coulee.webp" },
+    { n: "CROWN AND SCEPTRE", u: "../images/rupauls-drag-race/crown-and-sceptre.webp" },
+    { n: "SYMONE", u: "../images/rupauls-drag-race/symone.webp" },
+    { n: "GOTTMIK", u: "../images/rupauls-drag-race/gottmik.webp" },
+    { n: "CHAD MICHAELS", u: "../images/rupauls-drag-race/chad-michaels.webp" },
+    { n: "MANILA LUZON", u: "../images/rupauls-drag-race/manila-luzon.webp" },
+    { n: "LATRICE ROYALE", u: "../images/rupauls-drag-race/latrice-royale.webp" },
+    { n: "GOLDEN CHOCOLATE BAR", u: "../images/rupauls-drag-race/golden-chocolate-bar.webp" },
+    { n: "DETOX", u: "../images/rupauls-drag-race/detox.webp" },
+    { n: "MONÉT X CHANGE", u: "../images/rupauls-drag-race/monet-x-change.webp" },
+
+    // Tier 3 — Knowledgeable (31–40)
+    { n: "TRINITY THE TUCK", u: "../images/rupauls-drag-race/trinity-the-tuck.webp" },
+    { n: "JAIDA ESSENCE HALL", u: "../images/rupauls-drag-race/jaida-essence-hall.webp" },
+    { n: "RUPETER BADGE", u: "../images/rupauls-drag-race/rupeter-badge.webp" },
+    { n: "WILLOW PILL", u: "../images/rupauls-drag-race/willow-pill.webp" },
+    { n: "PANGINA HEALS", u: "../images/rupauls-drag-race/pangina-heals.webp" },
+    { n: "KIM CHI", u: "../images/rupauls-drag-race/kim-chi.webp" },
+    { n: "NAOMI SMALLS", u: "../images/rupauls-drag-race/naomi-smalls.webp" },
+    { n: "JIMBO", u: "../images/rupauls-drag-race/jimbo.webp" },
+    { n: "ANETRA", u: "../images/rupauls-drag-race/anetra.webp" },
+    { n: "SANTINO RICE", u: "../images/rupauls-drag-race/santino-rice.webp" },
+
+    // Tier 4 — Expert (41–50)
+    { n: "VICTORIA PORKCHOP PARKER", u: "../images/rupauls-drag-race/victoria-porkchop-parker.webp" },
+    { n: "TAMMIE BROWN", u: "../images/rupauls-drag-race/tammie-brown.webp" },
+    { n: "BEBE ZAHARA BENET", u: "../images/rupauls-drag-race/bebe-zahara-benet.webp" },
+    { n: "NINA FLOWERS", u: "../images/rupauls-drag-race/nina-flowers.webp" },
+    { n: "TATIANNA", u: "../images/rupauls-drag-race/tatianna.webp" },
+    { n: "STACY LAYNE MATTHEWS", u: "../images/rupauls-drag-race/stacy-layne-matthews.webp" },
+    { n: "MILK", u: "../images/rupauls-drag-race/milk.webp" },
+    { n: "THORGY THOR", u: "../images/rupauls-drag-race/thorgy-thor.webp" },
+    { n: "UTICA QUEEN", u: "../images/rupauls-drag-race/utica-queen.webp" },
+    { n: "MERLE GINSBERG", u: "../images/rupauls-drag-race/merle-ginsberg.webp" },
+
+    // ── BACKUPS (51–60) ────────────────
+    { n: "PEPPERMINT", u: "../images/rupauls-drag-race/peppermint.webp" },
+    { n: "GIGI GOODE", u: "../images/rupauls-drag-race/gigi-goode.webp" },
+    { n: "PLANE JANE", u: "../images/rupauls-drag-race/plane-jane.webp" },
+    { n: "MARINA SUMMERS", u: "../images/rupauls-drag-race/marina-summers.webp" },
+    { n: "PLASTIQUE TIARA", u: "../images/rupauls-drag-race/plastique-tiara.webp" },
+    { n: "LADY CAMDEN", u: "../images/rupauls-drag-race/lady-camden.webp" },
+    { n: "KANDY MUSE", u: "../images/rupauls-drag-race/kandy-muse.webp" },
+    { n: "YVIE ODDLY", u: "../images/rupauls-drag-race/yvie-oddly.webp" },
+    { n: "KRYSTAL VERSACE", u: "../images/rupauls-drag-race/krystal-versace.webp" },
+];
+if (typeof window !== 'undefined') window.rupaulsDragRaceData = rupaulsDragRaceData;
