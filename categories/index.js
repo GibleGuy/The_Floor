@@ -17,6 +17,9 @@ const CATEGORY_REGISTRY = [
     { key: 'rupauls-drag-race', label: "RuPaul's Drag Race", emoji: '👑', script: 'rupauls-drag-race.js', global: 'rupaulsDragRaceData', tier: 'RHAPCon' },
     { key: 'chess', label: 'Chess', emoji: '♟️', script: 'chess.js', global: 'chessData', tier: 'RHAPCon' },
     { key: 'summer-camp', label: 'Summer Camp', emoji: '🏕️', script: 'summer-camp.js', global: 'summerCampData', tier: 'RHAPCon' },
+    { key: 'professional-wrestlers', label: 'Professional Wrestlers', emoji: '🤼', script: 'professional-wrestlers.js', global: 'professionalWrestlersData', tier: 'RHAPCon' },
+    { key: 'kitchen-items', label: 'Kitchen Items', emoji: '🍳', script: 'kitchen-items.js', global: 'kitchenItemsData', tier: 'RHAPCon' },
+    { key: 'childrens-tv-shows', label: "Children's TV Shows", emoji: '📺', script: 'childrens-tv-shows.js', global: 'childrensTvShowsData', tier: 'RHAPCon' },
 
     // REAL DEAL
     { key: 'niche-survivor-players', label: 'Niche Survivor Players', emoji: '🏝️', script: 'niche-survivor-players.js', global: 'nicheSurvivorPlayersData', tier: 'Gible Verified' },

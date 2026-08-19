@@ -34,7 +34,6 @@ const summerCampData = [
 
     // Tier 3 — Knowledgeable (31–40)
     { n: "LANYARD / BOONDOGGLE", u: "../images/summer-camp/lanyard-boondoggle.webp" },
-    { n: "COLOR WAR SHIRTS", u: "../images/summer-camp/color-war-shirts.webp" },
     { n: "WOODEN DOCK", u: "../images/summer-camp/wooden-dock.webp" },
     { n: "LANTERN", u: "../images/summer-camp/lantern.webp" },
     { n: "WATER SLIDE", u: "../images/summer-camp/water-slide.webp" },
@@ -51,7 +50,6 @@ const summerCampData = [
     { n: "MESS TRAY", u: "../images/summer-camp/mess-tray.webp" },
     { n: "MOSQUITO NET", u: "../images/summer-camp/mosquito-net.webp" },
     { n: "CAMP INFIRMARY/NURSE", u: "../images/summer-camp/camp-infirmarynurse.webp" },
-    { n: "CANOE RACK", u: "../images/summer-camp/canoe-rack.webp" },
     { n: "CAMP DUFFEL BAG", u: "../images/summer-camp/camp-duffel-bag.webp" },
 
     // ── BACKUPS (51–60) ────────────────
