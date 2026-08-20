@@ -29,6 +29,10 @@ const CATEGORY_REGISTRY = [
     { key: 'harry-potter', label: 'Harry Potter', emoji: '⚡', script: 'harry-potter.js', global: 'harryPotterData', tier: 'RHAPCon' },
     { key: 'cats', label: 'Cats', emoji: '🐱', script: 'cats.js', global: 'catsData', tier: 'RHAPCon' },
     { key: 'superheroes', label: 'Superheroes', emoji: '🦸', script: 'superheroes.js', global: 'superheroesData', tier: 'RHAPCon' },
+    { key: 'cartoons', label: 'Cartoons', emoji: '🎨', script: 'cartoons.js', global: 'cartoonsData', tier: 'RHAPCon' },
+    { key: 'rom-coms', label: 'Rom Coms', emoji: '💐', script: 'rom-coms.js', global: 'romComsData', tier: 'RHAPCon' },
+    { key: 'sitcoms', label: 'Sitcoms', emoji: '🛋️', script: 'sitcoms.js', global: 'sitcomsData', tier: 'RHAPCon' },
+    { key: 'sports', label: 'Sports', emoji: '🏅', script: 'sports.js', global: 'sportsData', tier: 'RHAPCon' },
 
     // REAL DEAL
     { key: 'niche-survivor-players', label: 'Niche Survivor Players', emoji: '🏝️', script: 'niche-survivor-players.js', global: 'nicheSurvivorPlayersData', tier: 'Gible Verified' },
