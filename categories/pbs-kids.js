@@ -1,18 +1,7 @@
 // PBS Kids — images in images/pbs-kids/
 const pbsKidsData = [
     // Tier 1 — Obvious (1–15)
-    { n: "ARTHUR", u: "../images/pbs-kids/arthur.webp" },
-    { n: "SESAME STREET", u: "../images/pbs-kids/sesame-street.webp" },
-    { n: "THE MAGIC SCHOOL BUS", u: "../images/pbs-kids/the-magic-school-bus.webp" },
-    { n: "CLIFFORD THE BIG RED DOG", u: "../images/pbs-kids/clifford-the-big-red-dog.webp" },
-    { n: "CURIOUS GEORGE", u: "../images/pbs-kids/curious-george.webp" },
-    { n: "MISTER ROGERS' NEIGHBORHOOD", u: "../images/pbs-kids/mister-rogers-neighborhood.webp" },
-    { n: "READING RAINBOW", u: "../images/pbs-kids/reading-rainbow.webp" },
-    { n: "DANIEL TIGER'S NEIGHBORHOOD", u: "../images/pbs-kids/daniel-tigers-neighborhood.webp" },
-    { n: "BARNEY & FRIENDS", u: "../images/pbs-kids/barney-and-friends.webp" },
-    { n: "TELETUBBIES", u: "../images/pbs-kids/teletubbies.webp" },
     { n: "DRAGON TALES", u: "../images/pbs-kids/dragon-tales.webp" },
-    { n: "CAILLOU", u: "../images/pbs-kids/caillou.webp" },
     { n: "WILD KRATTS", u: "../images/pbs-kids/wild-kratts.webp" },
     { n: "ZOOM", u: "../images/pbs-kids/zoom.webp" },
     { n: "SUPER WHY!", u: "../images/pbs-kids/super-why.webp" },
@@ -60,14 +49,5 @@ const pbsKidsData = [
 
     // ── BACKUPS (51–60) ────────────────
     { n: "ALMA'S WAY", u: "../images/pbs-kids/almas-way.webp" },
-    { n: "WORK IT OUT WOMBATS!", u: "../images/pbs-kids/work-it-out-wombats.webp" },
-    { n: "PINKALICIOUS & PETERRIFIC", u: "../images/pbs-kids/pinkalicious-and-peterrific.webp" },
-    { n: "XAVIER RIDDLE", u: "../images/pbs-kids/xavier-riddle.webp" },
-    { n: "CYBERCHASE DIGIT", u: "../images/pbs-kids/cyberchase-digit.webp" },
-    { n: "BOOHBAH", u: "../images/pbs-kids/boohbah.webp" },
-    { n: "BILL NYE THE SCIENCE GUY", u: "../images/pbs-kids/bill-nye-the-science-guy.webp" },
-    { n: "ANNE OF GREEN GABLES", u: "../images/pbs-kids/anne-of-green-gables.webp" },
-    { n: "THE BERENSTAIN BEARS", u: "../images/pbs-kids/the-berenstain-bears.webp" },
-    { n: "DESIGN SQUAD", u: "../images/pbs-kids/design-squad.webp" }
 ];
 if (typeof window !== 'undefined') window.pbsKidsData = pbsKidsData;

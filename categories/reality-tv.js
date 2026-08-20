@@ -49,25 +49,7 @@ const realityTvData = [
     // Tier 4 — Expert (41–50)
     { n: "THE SIMPLE LIFE", u: "../images/reality-tv/the-simple-life.webp" },
     { n: "THE HILLS", u: "../images/reality-tv/the-hills.webp" },
-    { n: "HARDCORE PAWN", u: "../images/reality-tv/hardcore-pawn.webp" },
-    { n: "STORAGE WARS", u: "../images/reality-tv/storage-wars.webp" },
-    { n: "PAWN STARS", u: "../images/reality-tv/pawn-stars.webp" },
-    { n: "MY SUPER SWEET 16", u: "../images/reality-tv/my-super-sweet-16.webp" },
-    { n: "DEADLIEST CATCH", u: "../images/reality-tv/deadliest-catch.webp" },
-    { n: "FLAVOR OF LOVE", u: "../images/reality-tv/flavor-of-love.webp" },
-    { n: "HOARDERS", u: "../images/reality-tv/hoarders.webp" },
-    { n: "THE MOLE", u: "../images/reality-tv/the-mole.webp" },
 
     // ── BACKUPS (51–60) ────────────────
-    { n: "SO YOU THINK YOU CAN DANCE", u: "../images/reality-tv/so-you-think-you-can-dance.webp" },
-    { n: "THE BIGGEST LOSER", u: "../images/reality-tv/the-biggest-loser.webp" },
-    { n: "MASTERCHEF", u: "../images/reality-tv/masterchef.webp" },
-    { n: "BEAUTY AND THE GEEK", u: "../images/reality-tv/beauty-and-the-geek.webp" },
-    { n: "TEMPTATION ISLAND", u: "../images/reality-tv/temptation-island.webp" },
-    { n: "SOUTHERN CHARM", u: "../images/reality-tv/southern-charm.webp" },
-    { n: "BAR RESCUE", u: "../images/reality-tv/bar-rescue.webp" },
-    { n: "PIMP MY RIDE", u: "../images/reality-tv/pimp-my-ride.webp" },
-    { n: "FORGED IN FIRE", u: "../images/reality-tv/forged-in-fire.webp" },
-    { n: "AMERICA'S NEXT TOP MODEL", u: "../images/reality-tv/americas-next-top-model.webp" }
 ];
 if (typeof window !== 'undefined') window.realityTvData = realityTvData;

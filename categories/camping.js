@@ -37,7 +37,6 @@ const campingData = [
     // Tier 3 — Knowledgeable (31–40)
     { n: "BEAR CANISTER", u: "../images/camping/bear-canister.webp" },
     { n: "FERRO ROD", u: "../images/camping/ferro-rod.webp" },
-    { n: "CAMPING MESS KIT", u: "../images/camping/camping-mess-kit.webp" },
     { n: "DRY BAG", u: "../images/camping/dry-bag.webp" },
     { n: "TENT RAINFLY", u: "../images/camping/tent-rainfly.webp" },
     { n: "SURVIVAL WHISTLE", u: "../images/camping/survival-whistle.webp" },
@@ -50,24 +49,8 @@ const campingData = [
     { n: "BIVY SACK", u: "../images/camping/bivy-sack.webp" },
     { n: "CAMP TROWEL", u: "../images/camping/camp-trowel.webp" },
     { n: "TINDER BOX", u: "../images/camping/tinder-box.webp" },
-    { n: "CAMPING COT", u: "../images/camping/camping-cot.webp" },
     { n: "SPACE BLANKET", u: "../images/camping/space-blanket.webp" },
-    { n: "BEAR SPRAY", u: "../images/camping/bear-spray.webp" },
-    { n: "CAMPFIRE TRIPOD", u: "../images/camping/campfire-tripod.webp" },
-    { n: "TENT REPAIR TAPE", u: "../images/camping/tent-repair-tape.webp" },
-    { n: "WATER JUG", u: "../images/camping/water-jug.webp" },
-    { n: "CAMP STOVE WINDSCREEN", u: "../images/camping/camp-stove-windscreen.webp" },
 
     // ── BACKUPS (51–60) ────────────────
-    { n: "CAMPING PILLOW", u: "../images/camping/camping-pillow.webp" },
-    { n: "TITANIUM CAMP CUP", u: "../images/camping/titanium-camp-cup.webp" },
-    { n: "HAND WARMERS", u: "../images/camping/hand-warmers.webp" },
-    { n: "SEAM SEALER", u: "../images/camping/seam-sealer.webp" },
-    { n: "CAMPING GRIDDLE", u: "../images/camping/camping-griddle.webp" },
-    { n: "GAITERS", u: "../images/camping/gaiters.webp" },
-    { n: "MRE MEAL", u: "../images/camping/mre-meal.webp" },
-    { n: "CAMP CLOTHESLINE", u: "../images/camping/camp-clothesline.webp" },
-    { n: "MULTI-TOOL", u: "../images/camping/multi-tool.webp" },
-    { n: "CANVAS TENT", u: "../images/camping/canvas-tent.webp" }
 ];
 if (typeof window !== 'undefined') window.campingData = campingData;
