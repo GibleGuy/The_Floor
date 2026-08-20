@@ -20,6 +20,12 @@ const CATEGORY_REGISTRY = [
     { key: 'professional-wrestlers', label: 'Professional Wrestlers', emoji: '🤼', script: 'professional-wrestlers.js', global: 'professionalWrestlersData', tier: 'RHAPCon' },
     { key: 'kitchen-items', label: 'Kitchen Items', emoji: '🍳', script: 'kitchen-items.js', global: 'kitchenItemsData', tier: 'RHAPCon' },
     { key: 'childrens-tv-shows', label: "Children's TV Shows", emoji: '📺', script: 'childrens-tv-shows.js', global: 'childrensTvShowsData', tier: 'RHAPCon' },
+    { key: 'computers', label: 'Computers', emoji: '💻', script: 'computers.js', global: 'computersData', tier: 'RHAPCon' },
+    { key: 'makeup', label: 'Makeup', emoji: '💄', script: 'makeup.js', global: 'makeupData', tier: 'RHAPCon' },
+    { key: 'disney-theme-parks', label: 'Disney Theme Parks', emoji: '🏰', script: 'disney-theme-parks.js', global: 'disneyThemeParksData', tier: 'RHAPCon' },
+    { key: 'reality-tv', label: 'Reality TV', emoji: '📺', script: 'reality-tv.js', global: 'realityTvData', tier: 'RHAPCon' },
+    { key: 'pbs-kids', label: 'PBS Kids', emoji: '🟢', script: 'pbs-kids.js', global: 'pbsKidsData', tier: 'RHAPCon' },
+    { key: 'camping', label: 'Camping', emoji: '⛺', script: 'camping.js', global: 'campingData', tier: 'RHAPCon' },
 
     // REAL DEAL
     { key: 'niche-survivor-players', label: 'Niche Survivor Players', emoji: '🏝️', script: 'niche-survivor-players.js', global: 'nicheSurvivorPlayersData', tier: 'Gible Verified' },
