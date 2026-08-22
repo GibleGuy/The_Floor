@@ -41,9 +41,7 @@ const superMarioData = [
     { n: "DAISY", u: "../images/super-mario/daisy.jpg" },
     { n: "BIRDO", u: "../images/super-mario/birdo.jpg" },
     { n: "DIDDY KONG", u: "../images/super-mario/diddy-kong.jpg" },
-    { n: "POW BLOCK", u: "../images/super-mario/pow-block.jpg" },
     { n: "P-SWITCH", u: "../images/super-mario/p-switch.jpg" },
-    { n: "CAPE FEATHER", u: "../images/super-mario/cape-feather.jpg" },
 
     // Tier 4 — Expert (items 41–50)
     { n: "SUPER LEAF", u: "../images/super-mario/super-leaf.jpg" },
