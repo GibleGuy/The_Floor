@@ -1703,6 +1703,7 @@ function loadImage() {
         });
         if (mp) {
             mp.textContent = item.q;
+            mp.style.display = '';  // Clear inline override so .show class works
             mp.classList.add('show');
         }
     } else {

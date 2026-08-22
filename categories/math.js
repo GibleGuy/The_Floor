@@ -1,110 +1,81 @@
 (function () {
     const TRANSPARENT_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
-    function item(n, q) {
-        return { n: String(n), q: q, u: TRANSPARENT_PIXEL };
-    }
-
-    // Addition: easy → hard, double-digit earlier. 12 problems.
-    const add = [
-        item(9, "4+5"),
-        item(10, "7+3"),
-        item(14, "6+8"),
-        item(19, "12+7"),
-        item(24, "10+14"),
-        item(23, "15+8"),
-        item(26, "17+9"),
-        item(17, "8+9"),
-        item(43, "24+19"),
-        item(62, "35+27"),
-        item(74, "28+46"),
-        item(97, "39+58")
-    ];
-
-    // Subtraction: easy → hard. 12 problems.
-    const sub = [
-        item(7, "10-3"),
-        item(7, "12-5"),
-        item(8, "15-7"),
-        item(12, "20-8"),
-        item(7, "22-15"),
-        item(16, "30-14"),
-        item(24, "41-17"),
-        item(25, "53-28"),
-        item(33, "72-39"),
-        item(34, "81-47"),
-        item(37, "95-58"),
-        item(46, "103-57")
-    ];
-
-    // Multiplication: easy → hard. 12 problems.
-    const mult = [
-        item(24, "6×4"),
-        item(45, "5×9"),
-        item(56, "7×8"),
-        item(36, "3×12"),
-        item(54, "9×6"),
-        item(44, "4×11"),
-        item(56, "8×7"),
-        item(36, "6×6"),
-        item(50, "10×5"),
-        item(48, "12×4"),
-        item(81, "9×9"),
-        item(88, "11×8")
-    ];
-
-    // Division: easy → hard. 12 problems.
-    const div = [
-        item(6, "24÷4"),
-        item(6, "36÷6"),
-        item(6, "42÷7"),
-        item(7, "56÷8"),
-        item(9, "81÷9"),
-        item(7, "35÷5"),
-        item(8, "48÷6"),
-        item(9, "63÷7"),
-        item(9, "72÷8"),
-        item(9, "54÷6"),
-        item(5, "45÷9"),
-        item(8, "32÷4")
-    ];
-
-    // Exponents. 6 problems.
-    const exp = [
-        item(8, "2³"),
-        item(9, "3²"),
-        item(16, "4²"),
-        item(25, "5²"),
-        item(16, "2⁴"),
-        item(100, "10²")
-    ];
-
-    // Square roots. 6 problems.
-    const roots = [
-        item(3, "√9"),
-        item(4, "√16"),
-        item(5, "√25"),
-        item(6, "√36"),
-        item(7, "√49"),
-        item(8, "√64")
-    ];
-
-    /** Interleave in pairs of 2 */
-    function interleavePairs(a, b) {
-        const out = [];
-        for (let i = 0; i < a.length || i < b.length; i += 2) {
-            if (a[i] != null) out.push(a[i]);
-            if (a[i + 1] != null) out.push(a[i + 1]);
-            if (b[i] != null) out.push(b[i]);
-            if (b[i + 1] != null) out.push(b[i + 1]);
-        }
-        return out;
+    function item(answer, question) {
+        return { n: String(answer), q: question, u: TRANSPARENT_PIXEL };
     }
 
     const mathData = [
-        ...interleavePairs(add, sub),
-        ...interleavePairs(mult, div),
-        ...interleavePairs(exp, roots)
+        // Tier 1 — Obvious (items 1–15)
+        item("15", "8 + 7"),
+        item("9", "15 - 6"),
+        item("72", "9 × 8"),
+        item("7", "42 ÷ 6"),
+        item("121", "11 × 11"),
+        item("39", "25 + 14"),
+        item("36", "60 - 24"),
+        item("84", "7 × 12"),
+        item("7", "56 ÷ 8"),
+        item("8", "√64"),
+        item("27", "3³"),
+        item("12", "120 ÷ 10"),
+        item("83", "45 + 38"),
+        item("55", "82 - 27"),
+        item("52", "13 × 4"),
+
+        // Tier 2 — Familiar (items 16–30)
+        item("16", "64 ÷ 4"),
+        item("75", "15 × 5"),
+        item("12", "√144"),
+        item("64", "4³"),
+        item("150", "25 × 6"),
+        item("33", "72 - 39"),
+        item("13", "91 ÷ 7"),
+        item("84", "14 × 6"),
+        item("13", "√169"),
+        item("92", "18 + 74"),
+        item("25", "125 ÷ 5"),
+        item("64", "16 × 4"),
+        item("16", "2⁴"),
+        item("55", "111 - 56"),
+        item("120", "15 × 8"),
+
+        // Tier 3 — Knowledgeable (items 31–40)
+        item("98", "14 × 7"),
+        item("18", "108 ÷ 6"),
+        item("15", "√225"),
+        item("125", "5³"),
+        item("156", "13 × 12"),
+        item("65", "112 - 47"),
+        item("80", "16 × 5"),
+        item("17", "204 ÷ 12"),
+        item("17", "√289"),
+        item("81", "3⁴"),
+
+        // Tier 4 — Expert (items 41–50)
+        item("225", "15 × 15"),
+        item("18", "√324"),
+        item("210", "14 × 15"),
+        item("32", "256 ÷ 8"),
+        item("216", "6³"),
+        item("20", "√400"),
+        item("133", "19 × 7"),
+        item("140", "28 × 5"),
+        item("21", "315 ÷ 15"),
+        item("1024", "2¹⁰"),
+
+        // ── BACKUPS (items 51–60) ────────────────
+        item("102", "17 × 6"),
+        item("19", "√361"),
+        item("343", "7³"),
+        item("12", "144 ÷ 12"),
+        item("144", "24 × 6"),
+        item("36", "2² × 3²"),
+        item("25", "√625"),
+        item("140", "35 × 4"),
+        item("169", "13 × 13"),
+        item("512", "8³")
     ];
+
     if (typeof window !== 'undefined') window.mathData = mathData;
 })();
