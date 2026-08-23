@@ -10,7 +10,6 @@ const circusActsData = [
     { n: "UNICYCLE", u: "../images/circus-acts/unicycle.jpg" },
     { n: "TIGHTROPE WALKER", u: "../images/circus-acts/tightrope-walker.jpg" },
     { n: "FIRE BREATHER", u: "../images/circus-acts/fire-breather.jpg" },
-    { n: "ACROBAT", u: "../images/circus-acts/acrobat.jpg" },
     { n: "MAGICIAN", u: "../images/circus-acts/magician.jpg" },
     { n: "POPCORN", u: "../images/circus-acts/popcorn.jpg" },
     { n: "COTTON CANDY", u: "../images/circus-acts/cotton-candy.jpg" },
@@ -51,22 +50,7 @@ const circusActsData = [
     { n: "TIGHTWIRE", u: "../images/circus-acts/tightwire.jpg" },
     { n: "GLOBE OF DEATH", u: "../images/circus-acts/globe-of-death.jpg" },
     { n: "HUMAN PYRAMID", u: "../images/circus-acts/human-pyramid.jpg" },
-    { n: "STRONGMAN", u: "../images/circus-acts/strongman.jpg" },
-    { n: "BEARDED LADY", u: "../images/circus-acts/bearded-lady.jpg" },
-    { n: "FIRE EATER", u: "../images/circus-acts/fire-eater.jpg" },
-    { n: "TRAPEZE BAR", u: "../images/circus-acts/trapeze-bar.jpg" },
-    { n: "ACROBATIC SWING", u: "../images/circus-acts/acrobatic-swing.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "SPRINGBOARD", u: "../images/circus-acts/springboard.jpg" },
-    { n: "CHAIR STACKING", u: "../images/circus-acts/chair-stacking.jpg" },
-    { n: "SLACKLINE", u: "../images/circus-acts/slackline.jpg" },
-    { n: "CLOWN SHOES", u: "../images/circus-acts/clown-shoes.jpg" },
-    { n: "MAGIC WAND", u: "../images/circus-acts/magic-wand.jpg" },
-    { n: "TOP HAT", u: "../images/circus-acts/top-hat.jpg" },
-    { n: "PEANUTS", u: "../images/circus-acts/peanuts.jpg" },
-    { n: "TICKET BOOTH", u: "../images/circus-acts/ticket-booth.jpg" },
-    { n: "CAROUSEL", u: "../images/circus-acts/carousel.jpg" },
-    { n: "FUNHOUSE MIRROR", u: "../images/circus-acts/funhouse-mirror.jpg" },
 ];
 if (typeof window !== 'undefined') window.circusActsData = circusActsData;

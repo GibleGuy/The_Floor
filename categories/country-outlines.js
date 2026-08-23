@@ -51,22 +51,7 @@ const countryOutlinesData = [
     { n: "MOROCCO", u: "../images/country-outlines/morocco.jpg" },
     { n: "ALGERIA", u: "../images/country-outlines/algeria.jpg" },
     { n: "COLOMBIA", u: "../images/country-outlines/colombia.jpg" },
-    { n: "PERU", u: "../images/country-outlines/peru.jpg" },
-    { n: "VENEZUELA", u: "../images/country-outlines/venezuela.jpg" },
-    { n: "BOLIVIA", u: "../images/country-outlines/bolivia.jpg" },
-    { n: "PORTUGAL", u: "../images/country-outlines/portugal.jpg" },
-    { n: "SOMALIA", u: "../images/country-outlines/somalia.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "AUSTRIA", u: "../images/country-outlines/austria.jpg" },
-    { n: "BELGIUM", u: "../images/country-outlines/belgium.jpg" },
-    { n: "NETHERLANDS", u: "../images/country-outlines/netherlands.jpg" },
-    { n: "DENMARK", u: "../images/country-outlines/denmark.jpg" },
-    { n: "POLAND", u: "../images/country-outlines/poland.jpg" },
-    { n: "UKRAINE", u: "../images/country-outlines/ukraine.jpg" },
-    { n: "ROMANIA", u: "../images/country-outlines/romania.jpg" },
-    { n: "HUNGARY", u: "../images/country-outlines/hungary.jpg" },
-    { n: "CZECH REPUBLIC", u: "../images/country-outlines/czech-republic.jpg" },
-    { n: "MALAYSIA", u: "../images/country-outlines/malaysia.jpg" },
 ];
 if (typeof window !== 'undefined') window.countryOutlinesData = countryOutlinesData;

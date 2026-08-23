@@ -25,10 +25,8 @@ const chemistryData = [
     { n: "SILVER (Ag)", u: "../images/chemistry/silver.jpg" },
     { n: "COPPER (Cu)", u: "../images/chemistry/copper.jpg" },
     { n: "IRON (Fe)", u: "../images/chemistry/iron.jpg" },
-    { n: "CARBON (DIAMOND)", u: "../images/chemistry/diamond.jpg" },
     { n: "CARBON (COAL)", u: "../images/chemistry/coal.jpg" },
     { n: "NEON (SIGN)", u: "../images/chemistry/neon-sign.jpg" },
-    { n: "HELIUM (BALLOONS)", u: "../images/chemistry/helium-balloons.jpg" },
     { n: "SULFUR (YELLOW POWDER)", u: "../images/chemistry/sulfur-powder.jpg" },
     { n: "MERCURY (LIQUID METAL)", u: "../images/chemistry/mercury.jpg" },
     { n: "LITMUS PAPER", u: "../images/chemistry/litmus-paper.jpg" },
@@ -48,25 +46,11 @@ const chemistryData = [
     // Tier 4 — Expert (items 41–50)
     { n: "DRY ICE", u: "../images/chemistry/dry-ice.jpg" },
     { n: "LIQUID NITROGEN", u: "../images/chemistry/liquid-nitrogen.jpg" },
-    { n: "CRYSTALS", u: "../images/chemistry/crystals.jpg" },
-    { n: "RUST (OXIDATION)", u: "../images/chemistry/rust.jpg" },
     { n: "PH METER", u: "../images/chemistry/ph-meter.jpg" },
     { n: "BALANCE SCALE", u: "../images/chemistry/balance-scale.jpg" },
     { n: "HOT PLATE", u: "../images/chemistry/hot-plate.jpg" },
     { n: "MAGNETIC STIRRER", u: "../images/chemistry/magnetic-stirrer.jpg" },
-    { n: "CORK STOPPER", u: "../images/chemistry/cork-stopper.jpg" },
-    { n: "RUBBER STOPPER", u: "../images/chemistry/rubber-stopper.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "TEST TUBE RACK", u: "../images/chemistry/test-tube-rack.jpg" },
-    { n: "TEST TUBE BRUSH", u: "../images/chemistry/test-tube-brush.jpg" },
-    { n: "SPATULA", u: "../images/chemistry/spatula.jpg" },
-    { n: "FORCEPS", u: "../images/chemistry/forceps.jpg" },
-    { n: "DESICCATOR", u: "../images/chemistry/desiccator.jpg" },
-    { n: "CONDENSER", u: "../images/chemistry/condenser.jpg" },
-    { n: "CALORIMETER", u: "../images/chemistry/calorimeter.jpg" },
-    { n: "SPECTROPHOTOMETER", u: "../images/chemistry/spectrophotometer.jpg" },
-    { n: "CHROMATOGRAPHY PAPER", u: "../images/chemistry/chromatography-paper.jpg" },
-    { n: "DISTILLATION APPARATUS", u: "../images/chemistry/distillation-apparatus.jpg" },
 ];
 if (typeof window !== 'undefined') window.chemistryData = chemistryData;

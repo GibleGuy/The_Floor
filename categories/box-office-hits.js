@@ -17,7 +17,6 @@ const boxOfficeHitsData = [
     { n: "FINDING NEMO", u: "../images/box-office-hits/finding-nemo.jpg" },
 
     // Tier 2 — Familiar (items 16–30)
-    { n: "SHREK 2", u: "../images/box-office-hits/shrek-2.jpg" },
     { n: "TRANSFORMERS", u: "../images/box-office-hits/transformers.jpg" },
     { n: "THE DARK KNIGHT", u: "../images/box-office-hits/the-dark-knight.jpg" },
     { n: "IRON MAN", u: "../images/box-office-hits/iron-man.jpg" },
@@ -36,12 +35,10 @@ const boxOfficeHitsData = [
     // Tier 3 — Knowledgeable (items 31–40)
     { n: "MINIONS", u: "../images/box-office-hits/minions.jpg" },
     { n: "DESPICABLE ME", u: "../images/box-office-hits/despicable-me.jpg" },
-    { n: "FURIOUS 7", u: "../images/box-office-hits/furious-7.jpg" },
     { n: "SKYFALL", u: "../images/box-office-hits/skyfall.jpg" },
     { n: "JOKER", u: "../images/box-office-hits/joker.jpg" },
     { n: "ALICE IN WONDERLAND", u: "../images/box-office-hits/alice-in-wonderland.jpg" },
     { n: "ZOOTOPIA", u: "../images/box-office-hits/zootopia.jpg" },
-    { n: "INCREDIBLES 2", u: "../images/box-office-hits/incredibles-2.jpg" },
     { n: "CAPTAIN MARVEL", u: "../images/box-office-hits/captain-marvel.jpg" },
     { n: "THE HOBBIT", u: "../images/box-office-hits/the-hobbit.jpg" },
 
@@ -66,7 +63,5 @@ const boxOfficeHitsData = [
     { n: "GLADIATOR", u: "../images/box-office-hits/gladiator.jpg" },
     { n: "TWILIGHT", u: "../images/box-office-hits/twilight.jpg" },
     { n: "THE HANGOVER", u: "../images/box-office-hits/the-hangover.jpg" },
-    { n: "DUNE: PART TWO", u: "../images/box-office-hits/dune-part-two.jpg" },
-    { n: "SPIDER-MAN: NO WAY HOME", u: "../images/box-office-hits/spider-man-no-way-home.jpg" },
 ];
 if (typeof window !== 'undefined') window.boxOfficeHitsData = boxOfficeHitsData;
