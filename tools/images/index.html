@@ -536,6 +536,144 @@
         .confirm-delete:hover {
             filter: brightness(1.15);
         }
+
+        /* ── Auto Mode Toggle ──────────────── */
+        .auto-mode-btn {
+            display: none;  /* hidden until a category is loaded */
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .25s;
+            white-space: nowrap;
+        }
+
+        .auto-mode-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .auto-mode-btn.active {
+            background: linear-gradient(135deg, rgba(108,92,231,.25), rgba(162,155,254,.20));
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .auto-mode-btn .auto-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            transition: background .25s, box-shadow .25s;
+        }
+
+        .auto-mode-btn.active .auto-dot {
+            background: #00e676;
+            box-shadow: 0 0 8px #00e676;
+            animation: auto-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes auto-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+
+        /* ── Auto Mode Status Bar ──────────── */
+        .auto-status {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: linear-gradient(90deg, rgba(108,92,231,.08), rgba(0,230,118,.06));
+            border-bottom: 1px solid var(--border);
+            font-size: .8rem;
+        }
+
+        .auto-status.visible {
+            display: flex;
+        }
+
+        .auto-status .auto-label {
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .auto-status .auto-label .recording-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00e676;
+            animation: auto-pulse 1.5s ease-in-out infinite;
+        }
+
+        .auto-status .auto-current {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .auto-status .auto-progress {
+            color: var(--text-dim);
+            margin-left: auto;
+        }
+
+        .auto-status .auto-instruction {
+            color: var(--text-dim);
+            font-size: .72rem;
+            font-style: italic;
+        }
+
+        .btn-stop-auto {
+            padding: 4px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(225,112,85,.4);
+            background: var(--red-dim);
+            color: var(--red);
+            font-family: inherit;
+            font-size: .7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-stop-auto:hover {
+            background: rgba(225,112,85,.3);
+            border-color: var(--red);
+        }
+
+        /* ── Delete Missing Button ─────────── */
+        .delete-missing-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(225,112,85,.3);
+            background: var(--surface);
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .25s;
+            white-space: nowrap;
+        }
+
+        .delete-missing-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-dim);
+        }
     </style>
 </head>
 
@@ -548,6 +686,13 @@
             <option value="">— Loading Categories... —</option>
         </select>
         <input type="text" id="searchSuffix" placeholder="Search suffix (e.g. GAMESHOW)" style="min-width:200px">
+        <button class="auto-mode-btn" id="autoModeBtn" onclick="toggleAutoMode()">
+            <span class="auto-dot"></span>
+            Auto Mode
+        </button>
+        <button class="delete-missing-btn" id="deleteMissingBtn" onclick="deleteMissing()">
+            🗑️ Delete Missing
+        </button>
         <div class="stats" id="stats"></div>
     </div>
 
@@ -556,6 +701,15 @@
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="missing">Missing</button>
         <button class="filter-btn" data-filter="found">Has Image</button>
+    </div>
+
+    <!-- ── Auto Mode Status Bar ──────────── -->
+    <div class="auto-status" id="autoStatus">
+        <span class="auto-label"><span class="recording-dot"></span> AUTO MODE</span>
+        <span class="auto-current" id="autoCurrentName">—</span>
+        <span class="auto-instruction" id="autoInstruction">Copy an image from the tab, then switch back here</span>
+        <span class="auto-progress" id="autoProgress"></span>
+        <button class="btn-stop-auto" onclick="stopAutoMode()">■ Stop</button>
     </div>
 
     <!-- ── Server Warning ─────────────────── -->
@@ -800,6 +954,12 @@
             let currentCategoryKey = '';
             let currentCategoryScript = '';
             let currentCategoryGlobal = '';
+
+            // ── Auto Mode state ─────────────────────────────
+            let autoModeActive = false;
+            let autoModeQueue = [];      // indices of clues missing images
+            let autoModeQueuePos = 0;    // current position in the queue
+            let autoModeProcessing = false;  // prevent double-processing
 
             // ── Load a category ────────────────────────────
             async function loadCategory(key, scriptFile, globalName) {
@@ -1290,6 +1450,331 @@
                     if (e.key === 'Escape') { e.preventDefault(); finish(false); }
                 });
                 input.addEventListener('blur', () => finish(true));
+            };
+
+            // ── Delete Missing ─────────────────────────────
+            window.deleteMissing = async function () {
+                const data = window[currentCategoryGlobal];
+                if (!data || !data.length) return;
+                if (!serverAvailable) {
+                    alert('Server not running — start image-server.py first');
+                    return;
+                }
+
+                // Find all missing clues
+                const missingItems = [];
+                data.forEach((item, idx) => {
+                    const stem = extractStem(item.u);
+                    if (!(stem in currentImages)) {
+                        missingItems.push(item);
+                    }
+                });
+
+                if (missingItems.length === 0) {
+                    alert('No missing clues to delete!');
+                    return;
+                }
+
+                // Show confirmation
+                const confirmed = await showDeleteMissingConfirm(missingItems.length);
+                if (!confirmed) return;
+
+                // Delete them one by one (must be sequential since each modifies the JS file)
+                let deleted = 0;
+                let failed = 0;
+                for (const item of missingItems) {
+                    const category = extractCategory(item.u);
+                    try {
+                        const res = await fetch(`${API}/api/delete-item`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                script: currentCategoryScript,
+                                itemName: item.n,
+                                category: category
+                            })
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            deleted++;
+                        } else {
+                            failed++;
+                            console.warn(`Failed to delete "${item.n}":`, result.error);
+                        }
+                    } catch (e) {
+                        failed++;
+                        console.warn(`Error deleting "${item.n}":`, e);
+                    }
+                }
+
+                // Remove deleted items from in-memory data (filter to only those with images)
+                const remaining = data.filter(item => {
+                    const stem = extractStem(item.u);
+                    return stem in currentImages;
+                });
+                window[currentCategoryGlobal] = remaining;
+
+                // Re-render
+                loadCategory(currentCategoryKey, currentCategoryScript, currentCategoryGlobal);
+
+                if (failed > 0) {
+                    alert(`Done! Deleted ${deleted} clues. ${failed} failed.`);
+                }
+            };
+
+            function showDeleteMissingConfirm(count) {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'confirm-overlay';
+                    overlay.innerHTML = `
+                        <div class="confirm-box">
+                            <h3>🗑️ Delete All Missing</h3>
+                            <p>This will permanently remove <span class="confirm-name">${count} clue${count !== 1 ? 's' : ''}</span> that don't have images from the category file.<br><br>This is <strong>lowkey kinda permanent</strong> — you'd have to manually re-add them.</p>
+                            <div class="confirm-btns">
+                                <button class="confirm-cancel">Cancel</button>
+                                <button class="confirm-delete">Delete ${count} Clue${count !== 1 ? 's' : ''}</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay);
+
+                    overlay.querySelector('.confirm-cancel').onclick = () => {
+                        overlay.remove();
+                        resolve(false);
+                    };
+                    overlay.querySelector('.confirm-delete').onclick = () => {
+                        overlay.remove();
+                        resolve(true);
+                    };
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) {
+                            overlay.remove();
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+
+            // ── Auto Mode ──────────────────────────────────
+
+            // Show the toggle button once a category is loaded
+            function showAutoModeBtn() {
+                document.getElementById('autoModeBtn').style.display = 'inline-flex';
+            }
+
+            window.toggleAutoMode = function () {
+                if (autoModeActive) {
+                    stopAutoModeInternal('Stopped by user');
+                } else {
+                    startAutoMode();
+                }
+            };
+
+            window.stopAutoMode = function () {
+                stopAutoModeInternal('Stopped by user');
+            };
+
+            function startAutoMode() {
+                const data = window[currentCategoryGlobal];
+                if (!data || !data.length) return;
+                if (!serverAvailable) {
+                    alert('Server not running — start image-server.py first');
+                    return;
+                }
+
+                // Build queue of missing-image clue indices
+                autoModeQueue = [];
+                data.forEach((item, idx) => {
+                    const stem = extractStem(item.u);
+                    if (!(stem in currentImages)) {
+                        autoModeQueue.push(idx);
+                    }
+                });
+
+                if (autoModeQueue.length === 0) {
+                    alert('All clues already have images!');
+                    return;
+                }
+
+                autoModeActive = true;
+                autoModeQueuePos = 0;
+                autoModeProcessing = false;
+
+                // Update UI
+                document.getElementById('autoModeBtn').classList.add('active');
+                document.getElementById('autoStatus').classList.add('visible');
+
+                // Open the first one
+                openNextAutoClue();
+            }
+
+            function stopAutoModeInternal(reason) {
+                autoModeActive = false;
+                autoModeQueue = [];
+                autoModeQueuePos = 0;
+                autoModeProcessing = false;
+
+                document.getElementById('autoModeBtn').classList.remove('active');
+                document.getElementById('autoStatus').classList.remove('visible');
+            }
+
+            function openNextAutoClue() {
+                if (!autoModeActive) return;
+
+                // Skip any that got filled in the meantime
+                const data = window[currentCategoryGlobal];
+                while (autoModeQueuePos < autoModeQueue.length) {
+                    const idx = autoModeQueue[autoModeQueuePos];
+                    const stem = extractStem(data[idx].u);
+                    if (!(stem in currentImages)) break;  // still missing, use this one
+                    autoModeQueuePos++;  // already has image, skip
+                }
+
+                if (autoModeQueuePos >= autoModeQueue.length) {
+                    stopAutoModeInternal('All done!');
+                    return;
+                }
+
+                const idx = autoModeQueue[autoModeQueuePos];
+                const item = data[idx];
+                const remaining = autoModeQueue.length - autoModeQueuePos;
+
+                // Update status bar
+                document.getElementById('autoCurrentName').textContent = item.n;
+                document.getElementById('autoProgress').textContent =
+                    `${autoModeQueuePos + 1} of ${autoModeQueue.length} remaining`;
+                document.getElementById('autoInstruction').textContent =
+                    'Copy an image from the tab, then switch back here';
+
+                // Scroll to the card
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                // Open Google Images for this clue
+                const suffix = document.getElementById('searchSuffix').value.trim();
+                const query = suffix ? `${item.n} ${suffix}` : item.n;
+                const q = encodeURIComponent(query);
+                window.open(`https://www.google.com/search?tbm=isch&q=${q}`, '_blank');
+            }
+
+            // ── Listen for tab re-focus ─────────────────────
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState !== 'visible') return;
+                if (!autoModeActive) return;
+                if (autoModeProcessing) return;
+
+                // Small delay to let clipboard settle after tab switch
+                setTimeout(handleAutoReturn, 600);
+            });
+
+            async function handleAutoReturn() {
+                if (!autoModeActive || autoModeProcessing) return;
+                autoModeProcessing = true;
+
+                const data = window[currentCategoryGlobal];
+                const idx = autoModeQueue[autoModeQueuePos];
+
+                document.getElementById('autoInstruction').textContent = '⏳ Reading clipboard...';
+
+                try {
+                    const clipItems = await navigator.clipboard.read();
+                    let imageBlob = null;
+
+                    for (const clipItem of clipItems) {
+                        for (const type of clipItem.types) {
+                            if (type.startsWith('image/')) {
+                                imageBlob = await clipItem.getType(type);
+                                break;
+                            }
+                        }
+                        if (imageBlob) break;
+                    }
+
+                    if (!imageBlob) {
+                        // No image in clipboard — stop auto mode
+                        stopAutoModeInternal('No image in clipboard');
+                        return;
+                    }
+
+                    document.getElementById('autoInstruction').textContent = '⬆️ Uploading image...';
+
+                    // Convert blob to File and use the existing upload function
+                    const file = new File([imageBlob], 'pasted-image', { type: imageBlob.type });
+                    await uploadPastedFileAutoMode(file, idx);
+
+                    // Advance to next
+                    autoModeQueuePos++;
+                    autoModeProcessing = false;
+
+                    // Brief pause before opening next tab so user can see the result
+                    setTimeout(() => {
+                        openNextAutoClue();
+                    }, 400);
+
+                } catch (e) {
+                    console.error('Auto Mode clipboard error:', e);
+                    // Clipboard permission denied or other error
+                    stopAutoModeInternal('Clipboard error: ' + e.message);
+                }
+            }
+
+            // Variant of uploadPastedFile that returns a promise (for auto mode)
+            async function uploadPastedFileAutoMode(file, idx) {
+                const card = document.querySelector(`.card[data-index="${idx}"]`);
+                const toast = document.getElementById(`toast-${idx}`);
+                const preview = card.querySelector('.card-preview');
+
+                // Read the file as a data URL (base64)
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+
+                const res = await fetch(`${API}/api/upload-image`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        data: dataUrl,
+                        category: card.dataset.category,
+                        filename: card.dataset.stem
+                    })
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    showToast(toast, 'success', `✓ Auto-saved as ${result.savedAs} (${formatBytes(result.size)})`);
+
+                    // Update the card visually
+                    const timestamp = Date.now();
+                    preview.innerHTML = `<img src="../../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
+                    const newHint = document.createElement('span');
+                    newHint.className = 'paste-hint';
+                    newHint.textContent = '📋 Click & Ctrl+V to paste';
+                    preview.appendChild(newHint);
+
+                    const status = card.querySelector('.card-status');
+                    status.className = 'card-status has-image';
+                    card.dataset.hasImage = 'true';
+
+                    currentImages[card.dataset.stem] = result.savedAs;
+                    updateStats();
+                } else {
+                    throw new Error(result.error || 'Upload failed');
+                }
+            }
+
+            // Hook into loadCategory to show the Auto Mode button
+            const _origLoadCategory = loadCategory;
+            loadCategory = async function(...args) {
+                // Stop auto mode if category changes
+                if (autoModeActive) stopAutoModeInternal('Category changed');
+                await _origLoadCategory(...args);
+                showAutoModeBtn();
+                document.getElementById('deleteMissingBtn').style.display = 'inline-flex';
             };
         })();
     </script>

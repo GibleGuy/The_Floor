@@ -23,7 +23,6 @@ const craftsData = [
     { n: "CROCHET HOOK", u: "../images/crafts/crochet-hook.jpg" },
     { n: "KNITTING NEEDLES", u: "../images/crafts/knitting-needles.jpg" },
     { n: "WATERCOLORS", u: "../images/crafts/watercolors.jpg" },
-    { n: "ACRYLIC PAINT", u: "../images/crafts/acrylic-paint.jpg" },
     { n: "CANVAS", u: "../images/crafts/canvas.jpg" },
     { n: "EASEL", u: "../images/crafts/easel.jpg" },
     { n: "TAPE MEASURE", u: "../images/crafts/tape-measure.jpg" },
@@ -42,8 +41,6 @@ const craftsData = [
     { n: "STENCIL", u: "../images/crafts/stencil.jpg" },
     { n: "SCRAPBOOK", u: "../images/crafts/scrapbook.jpg" },
     { n: "EMBROIDERY HOOP", u: "../images/crafts/embroidery-hoop.jpg" },
-    { n: "POLYMER CLAY", u: "../images/crafts/polymer-clay.jpg" },
-    { n: "RESIN", u: "../images/crafts/resin.jpg" },
 
     // Tier 4 — Expert (items 41–50)
     { n: "MACRAME", u: "../images/crafts/macrame.jpg" },
@@ -53,20 +50,7 @@ const craftsData = [
     { n: "POTTERY WHEEL", u: "../images/crafts/pottery-wheel.jpg" },
     { n: "KILN", u: "../images/crafts/kiln.jpg" },
     { n: "QUILLING", u: "../images/crafts/quilling.jpg" },
-    { n: "DECOUPAGE", u: "../images/crafts/decoupage.jpg" },
-    { n: "LOOM", u: "../images/crafts/loom.jpg" },
-    { n: "WEEDING TOOL", u: "../images/crafts/weeding-tool.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "CRICUT MACHINE", u: "../images/crafts/cricut-machine.jpg" },
-    { n: "HEAT PRESS", u: "../images/crafts/heat-press.jpg" },
-    { n: "FABRIC SHEARS", u: "../images/crafts/fabric-shears.jpg" },
-    { n: "ROTARY CUTTER", u: "../images/crafts/rotary-cutter.jpg" },
-    { n: "CUTTING MAT", u: "../images/crafts/cutting-mat.jpg" },
-    { n: "BONE FOLDER", u: "../images/crafts/bone-folder.jpg" },
-    { n: "SPRAY PAINT", u: "../images/crafts/spray-paint.jpg" },
-    { n: "CHALK", u: "../images/crafts/chalk.jpg" },
-    { n: "PASTELS", u: "../images/crafts/pastels.jpg" },
-    { n: "SKETCHBOOK", u: "../images/crafts/sketchbook.jpg" },
 ];
 if (typeof window !== 'undefined') window.craftsData = craftsData;

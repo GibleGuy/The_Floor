@@ -46,27 +46,7 @@ const famousCouplesData = [
     { n: "RICHARD BURTON & ELIZABETH TAYLOR", u: "../images/famous-couples/richard-elizabeth.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "MARILYN MONROE & JOE DIMAGGIO", u: "../images/famous-couples/marilyn-joe.jpg" },
-    { n: "JOHN F. KENNEDY & JACKIE KENNEDY", u: "../images/famous-couples/jfk-jackie.jpg" },
-    { n: "CLEOPATRA & MARK ANTONY", u: "../images/famous-couples/cleopatra-mark.jpg" },
-    { n: "BONNIE & CLYDE", u: "../images/famous-couples/bonnie-clyde.jpg" },
-    { n: "PIERRE & MARIE CURIE", u: "../images/famous-couples/pierre-marie.jpg" },
-    { n: "DIEGO RIVERA & FRIDA KAHLO", u: "../images/famous-couples/diego-frida.jpg" },
-    { n: "QUEEN VICTORIA & PRINCE ALBERT", u: "../images/famous-couples/victoria-albert.jpg" },
-    { n: "KING HENRY VIII & ANNE BOLEYN", u: "../images/famous-couples/henry-anne.jpg" },
-    { n: "NAPOLEON & JOSEPHINE", u: "../images/famous-couples/napoleon-josephine.jpg" },
-    { n: "DONALD & MELANIA TRUMP", u: "../images/famous-couples/donald-melania.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "BILL & HILLARY CLINTON", u: "../images/famous-couples/bill-hillary.jpg" },
-    { n: "RONALD & NANCY REAGAN", u: "../images/famous-couples/ronald-nancy.jpg" },
-    { n: "GOMEZ & MORTICIA ADDAMS", u: "../images/famous-couples/gomez-morticia.jpg" },
-    { n: "BATMAN & CATWOMAN", u: "../images/famous-couples/batman-catwoman.jpg" },
-    { n: "SUPERMAN & LOIS LANE", u: "../images/famous-couples/superman-lois.jpg" },
-    { n: "SPIDER-MAN & MARY JANE", u: "../images/famous-couples/spiderman-maryjane.jpg" },
-    { n: "ROSS & RACHEL", u: "../images/famous-couples/ross-rachel.jpg" },
-    { n: "JIM & PAM", u: "../images/famous-couples/jim-pam.jpg" },
-    { n: "JACK & ROSE", u: "../images/famous-couples/jack-rose.jpg" },
-    { n: "MARIO & PRINCESS PEACH", u: "../images/famous-couples/mario-peach.jpg" },
 ];
 if (typeof window !== 'undefined') window.famousCouplesData = famousCouplesData;

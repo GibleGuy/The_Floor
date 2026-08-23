@@ -46,27 +46,7 @@ const sportsMvpsData = [
     { n: "KEN GRIFFEY JR.", u: "../images/sports-mvps/ken-griffey-jr.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "CONNOR MCDAVID", u: "../images/sports-mvps/connor-mcdavid.jpg" },
-    { n: "AUSTON MATTHEWS", u: "../images/sports-mvps/auston-matthews.jpg" },
-    { n: "ALEXANDER OVECHKIN", u: "../images/sports-mvps/alexander-ovechkin.jpg" },
-    { n: "MATT RYAN", u: "../images/sports-mvps/matt-ryan.jpg" },
-    { n: "CAM NEWTON", u: "../images/sports-mvps/cam-newton.jpg" },
-    { n: "LARRY BIRD", u: "../images/sports-mvps/larry-bird.jpg" },
-    { n: "WILT CHAMBERLAIN", u: "../images/sports-mvps/wilt-chamberlain.jpg" },
-    { n: "BILL RUSSELL", u: "../images/sports-mvps/bill-russell.jpg" },
-    { n: "KAREEM ABDUL-JABBAR", u: "../images/sports-mvps/kareem-abdul-jabbar.jpg" },
-    { n: "JULIUS ERVING", u: "../images/sports-mvps/julius-erving.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "CODY BELLINGER", u: "../images/sports-mvps/cody-bellinger.jpg" },
-    { n: "RONALD ACUNA JR.", u: "../images/sports-mvps/ronald-acuna-jr.jpg" },
-    { n: "FREDDIE FREEMAN", u: "../images/sports-mvps/freddie-freeman.jpg" },
-    { n: "CLAYTON KERSHAW", u: "../images/sports-mvps/clayton-kershaw.jpg" },
-    { n: "JUSTIN VERLANDER", u: "../images/sports-mvps/justin-verlander.jpg" },
-    { n: "DERRICK ROSE", u: "../images/sports-mvps/derrick-rose.jpg" },
-    { n: "CHARLES BARKLEY", u: "../images/sports-mvps/charles-barkley.jpg" },
-    { n: "KARL MALONE", u: "../images/sports-mvps/karl-malone.jpg" },
-    { n: "HAKEEM OLAJUWON", u: "../images/sports-mvps/hakeem-olajuwon.jpg" },
-    { n: "DAVID ROBINSON", u: "../images/sports-mvps/david-robinson.jpg" },
 ];
 if (typeof window !== 'undefined') window.sportsMvpsData = sportsMvpsData;

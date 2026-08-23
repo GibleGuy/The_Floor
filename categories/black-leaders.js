@@ -46,27 +46,7 @@ const blackLeadersData = [
     { n: "CORY BOOKER", u: "../images/black-leaders/cory-booker.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "RAPHAEL WARNOCK", u: "../images/black-leaders/raphael-warnock.jpg" },
-    { n: "CAROL MOSELEY BRAUN", u: "../images/black-leaders/carol-moseley-braun.jpg" },
-    { n: "ERIC HOLDER", u: "../images/black-leaders/eric-holder.jpg" },
-    { n: "LLOYD AUSTIN", u: "../images/black-leaders/lloyd-austin.jpg" },
-    { n: "JULIAN BOND", u: "../images/black-leaders/julian-bond.jpg" },
-    { n: "BAYARD RUSTIN", u: "../images/black-leaders/bayard-rustin.jpg" },
-    { n: "FANNIE LOU HAMER", u: "../images/black-leaders/fannie-lou-hamer.jpg" },
-    { n: "ELLA BAKER", u: "../images/black-leaders/ella-baker.jpg" },
-    { n: "A. PHILIP RANDOLPH", u: "../images/black-leaders/a-philip-randolph.jpg" },
-    { n: "WHITNEY YOUNG", u: "../images/black-leaders/whitney-young.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "HARRY BELAFONTE", u: "../images/black-leaders/harry-belafonte.jpg" },
-    { n: "JAMES BALDWIN", u: "../images/black-leaders/james-baldwin.jpg" },
-    { n: "ARTHUR ASHE", u: "../images/black-leaders/arthur-ashe.jpg" },
-    { n: "MARY MCLEOD BETHUNE", u: "../images/black-leaders/mary-mcleod-bethune.jpg" },
-    { n: "SHIRLEY FRANKLIN", u: "../images/black-leaders/shirley-franklin.jpg" },
-    { n: "EDWARD BROOKE", u: "../images/black-leaders/edward-brooke.jpg" },
-    { n: "DOUGLAS WILDER", u: "../images/black-leaders/douglas-wilder.jpg" },
-    { n: "DEVAL PATRICK", u: "../images/black-leaders/deval-patrick.jpg" },
-    { n: "DAVID DINKINS", u: "../images/black-leaders/david-dinkins.jpg" },
-    { n: "HAROLD WASHINGTON", u: "../images/black-leaders/harold-washington.jpg" },
 ];
 if (typeof window !== 'undefined') window.blackLeadersData = blackLeadersData;

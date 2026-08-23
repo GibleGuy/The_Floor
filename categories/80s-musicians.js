@@ -54,19 +54,7 @@ const the80sMusiciansData = [
     { n: "TOM PETTY", u: "../images/80s-musicians/tom-petty.jpg" },
     { n: "JOHN MELLENCAMP", u: "../images/80s-musicians/john-mellencamp.jpg" },
     { n: "BRYAN ADAMS", u: "../images/80s-musicians/bryan-adams.jpg" },
-    { n: "RICHARD MARX", u: "../images/80s-musicians/richard-marx.jpg" },
-    { n: "RICK ASTLEY", u: "../images/80s-musicians/rick-astley.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "KENNY LOGGINS", u: "../images/80s-musicians/kenny-loggins.jpg" },
-    { n: "HUEY LEWIS AND THE NEWS", u: "../images/80s-musicians/huey-lewis.jpg" },
-    { n: "MEN AT WORK", u: "../images/80s-musicians/men-at-work.jpg" },
-    { n: "THE CARS", u: "../images/80s-musicians/the-cars.jpg" },
-    { n: "CHEAP TRICK", u: "../images/80s-musicians/cheap-trick.jpg" },
-    { n: "REO SPEEDWAGON", u: "../images/80s-musicians/reo-speedwagon.jpg" },
-    { n: "STYX", u: "../images/80s-musicians/styx.jpg" },
-    { n: "FOREIGNER", u: "../images/80s-musicians/foreigner.jpg" },
-    { n: "TOTO", u: "../images/80s-musicians/toto.jpg" },
-    { n: "THE B-52'S", u: "../images/80s-musicians/the-b-52s.jpg" },
 ];
 if (typeof window !== 'undefined') window.the80sMusiciansData = the80sMusiciansData;

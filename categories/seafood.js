@@ -23,8 +23,6 @@ const seafoodData = [
     { n: "GROUPER", u: "../images/seafood/grouper.jpg" },
     { n: "RED SNAPPER", u: "../images/seafood/red-snapper.jpg" },
     { n: "COD", u: "../images/seafood/cod.jpg" },
-    { n: "HADDOCK", u: "../images/seafood/haddock.jpg" },
-    { n: "TROUT", u: "../images/seafood/trout.jpg" },
     { n: "CATFISH", u: "../images/seafood/catfish.jpg" },
     { n: "TILAPIA", u: "../images/seafood/tilapia.jpg" },
     { n: "SARDINES", u: "../images/seafood/sardines.jpg" },
@@ -49,24 +47,7 @@ const seafoodData = [
     { n: "MACKEREL", u: "../images/seafood/mackerel.jpg" },
     { n: "HERRING", u: "../images/seafood/herring.jpg" },
     { n: "FLOUNDER", u: "../images/seafood/flounder.jpg" },
-    { n: "SOLE", u: "../images/seafood/sole.jpg" },
-    { n: "MONKFISH", u: "../images/seafood/monkfish.jpg" },
-    { n: "STURGEON", u: "../images/seafood/sturgeon.jpg" },
-    { n: "CHILEAN SEA BASS", u: "../images/seafood/chilean-sea-bass.jpg" },
-    { n: "YELLOWTAIL", u: "../images/seafood/yellowtail.jpg" },
-    { n: "BARRAMUNDI", u: "../images/seafood/barramundi.jpg" },
-    { n: "BRANZINO", u: "../images/seafood/branzino.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "IMITATION CRAB", u: "../images/seafood/imitation-crab.jpg" },
-    { n: "FISH STICKS", u: "../images/seafood/fish-sticks.jpg" },
-    { n: "SMOKED SALMON", u: "../images/seafood/smoked-salmon.jpg" },
-    { n: "CEVICHE", u: "../images/seafood/ceviche.jpg" },
-    { n: "POKE BOWL", u: "../images/seafood/poke-bowl.jpg" },
-    { n: "PAELLA", u: "../images/seafood/paella.jpg" },
-    { n: "CLAM CHOWDER", u: "../images/seafood/clam-chowder.jpg" },
-    { n: "LOBSTER ROLL", u: "../images/seafood/lobster-roll.jpg" },
-    { n: "SCAMPI", u: "../images/seafood/scampi.jpg" },
-    { n: "SHRIMP COCKTAIL", u: "../images/seafood/shrimp-cocktail.jpg" },
 ];
 if (typeof window !== 'undefined') window.seafoodData = seafoodData;
