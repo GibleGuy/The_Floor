@@ -80,6 +80,9 @@ const CATEGORY_REGISTRY = [
     { key: '80s-musicians', label: '80s Musicians', emoji: '🎸', script: '80s-musicians.js', global: 'the80sMusiciansData', tier: 'Gible Verified' },
     { key: 'airport-codes', label: 'Airport Codes', emoji: '✈️', script: 'airport-codes.js', global: 'airportCodesData', tier: 'Gible Verified' },
     { key: 'lego-minifigs', label: 'Lego Minifigs', emoji: '🧱', script: 'lego-minifigs.js', global: 'legoMinifigsData', tier: 'Gible Verified' },
+    { key: 'talk-show-hosts', label: 'Talk Show Hosts', emoji: '🎙️', script: 'talk-show-hosts.js', global: 'talkShowHostsData', tier: 'Gible Verified' },
+    { key: 'landmarks', label: 'Landmarks', emoji: '🗿', script: 'landmarks.js', global: 'landmarksData', tier: 'Gible Verified' },
+    { key: 'movie-musicals', label: 'Movie Musicals', emoji: '🎬', script: 'movie-musicals.js', global: 'movieMusicalsData', tier: 'Gible Verified' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'Gible Verified' },
