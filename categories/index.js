@@ -68,7 +68,6 @@ const CATEGORY_REGISTRY = [
     { key: 'track-and-field', label: 'Track & Field', emoji: '🏃', script: 'track-and-field.js', global: 'trackAndFieldData', tier: 'Gible Verified' },
     { key: 'visual-novels', label: 'Visual Novels', emoji: '📖', script: 'visual-novels.js', global: 'visualNovelsData', tier: 'Gible Verified' },
     { key: 'circus-acts', label: 'Circus Acts', emoji: '🎪', script: 'circus-acts.js', global: 'circusActsData', tier: 'Gible Verified' },
-    { key: '90s-albums', label: '90s Albums', emoji: '💿', script: '90s-albums.js', global: 'the90sAlbumsData', tier: 'Gible Verified' },
     { key: 'country-outlines', label: 'Country Outlines', emoji: '🗺️', script: 'country-outlines.js', global: 'countryOutlinesData', tier: 'Gible Verified' },
     { key: 'super-mario', label: 'Super Mario', emoji: '🍄', script: 'super-mario.js', global: 'superMarioData', tier: 'Gible Verified' },
     { key: 'box-office-hits', label: 'Box Office Hits', emoji: '🍿', script: 'box-office-hits.js', global: 'boxOfficeHitsData', tier: 'Gible Verified' },
@@ -78,8 +77,9 @@ const CATEGORY_REGISTRY = [
     { key: 'seafood', label: 'Seafood', emoji: '🦐', script: 'seafood.js', global: 'seafoodData', tier: 'Gible Verified' },
     { key: 'chemistry', label: 'Chemistry', emoji: '🧪', script: 'chemistry.js', global: 'chemistryData', tier: 'Gible Verified' },
     { key: 'famous-couples', label: 'Famous Couples', emoji: '👩‍❤️‍👨', script: 'famous-couples.js', global: 'famousCouplesData', tier: 'Gible Verified' },
-    { key: '80s-music', label: '80s Music', emoji: '🎸', script: '80s-music.js', global: 'the80sMusicData', tier: 'Gible Verified' },
+    { key: '80s-musicians', label: '80s Musicians', emoji: '🎸', script: '80s-musicians.js', global: 'the80sMusiciansData', tier: 'Gible Verified' },
     { key: 'airport-codes', label: 'Airport Codes', emoji: '✈️', script: 'airport-codes.js', global: 'airportCodesData', tier: 'Gible Verified' },
+    { key: 'lego-minifigs', label: 'Lego Minifigs', emoji: '🧱', script: 'lego-minifigs.js', global: 'legoMinifigsData', tier: 'Gible Verified' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'Gible Verified' },

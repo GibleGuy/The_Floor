@@ -60,7 +60,6 @@ const sportsData = [
     // ── BACKUPS (51–60) ────────────────
     { n: "POLE VAULT", u: "../images/sports/pole-vault.webp" },
     { n: "TAEKWONDO", u: "../images/sports/taekwondo.webp" },
-    { n: "AUSTRALIAN RULES FOOTBALL", u: "../images/sports/australian-rules-football.webp" },
     { n: "DISC GOLF", u: "../images/sports/disc-golf.webp" },
     { n: "GAELIC FOOTBALL", u: "../images/sports/gaelic-football.webp" },
     { n: "WAKEBOARDING", u: "../images/sports/wakeboarding.webp" },
