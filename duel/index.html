@@ -193,6 +193,14 @@
                     <span class="slider"></span>
                 </label>
             </div>
+            <div class="custom-row" id="underscore-mode-row"
+                style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+                <label class="custom-label" style="margin: 0; cursor: pointer;" for="sidebar-underscore-mode-toggle">Underscore Mode:</label>
+                <label class="switch" style="transform: scale(0.8); margin: 0;">
+                    <input type="checkbox" id="sidebar-underscore-mode-toggle" onchange="toggleUnderscoreMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
             <div class="custom-row" id="clue-jump-row" style="display: none;">
                 <label class="custom-label">Jump to Clue:</label>
                 <select id="clue-jump-select" class="custom-input" onchange="jumpToClue(this.value)"
@@ -297,6 +305,13 @@
                 <span class="switch-label">Mute Sounds</span>
                 <label class="switch">
                     <input type="checkbox" id="mute-toggle" onchange="toggleMute()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="switch-container">
+                <span class="switch-label">Underscore Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="underscore-mode-toggle" onchange="toggleUnderscoreMode()">
                     <span class="slider"></span>
                 </label>
             </div>

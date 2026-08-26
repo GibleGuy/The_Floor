@@ -91,6 +91,7 @@ let lastTickAt = 0;
 let displayCache = {};
 let shuffleCluesNormal = false;
 let shuffleCluesStudy = false;
+let underscoreMode = false;
 
 // Stats tracking
 let answerStartTime = 0;
@@ -169,6 +170,7 @@ function loadPreferences() {
         if (p.blueVariant && ['a', 'b', 'c', 'd'].includes(p.blueVariant)) blueVariant = p.blueVariant;
         if (typeof p.shuffleCluesNormal === 'boolean') shuffleCluesNormal = p.shuffleCluesNormal;
         if (typeof p.shuffleCluesStudy === 'boolean') shuffleCluesStudy = p.shuffleCluesStudy;
+        if (typeof p.underscoreMode === 'boolean') underscoreMode = p.underscoreMode;
         if (typeof p.projectorMode === 'boolean') projectorMode = p.projectorMode;
     } catch (e) { }
 }
@@ -217,6 +219,10 @@ function applyPreferencesToDOM() {
     if (shuffleToggle) {
         shuffleToggle.checked = (gamemode === 'study' ? shuffleCluesStudy : shuffleCluesNormal);
     }
+    const underscoreToggle = document.getElementById('underscore-mode-toggle');
+    if (underscoreToggle) underscoreToggle.checked = underscoreMode;
+    const sidebarUnderscoreToggle = document.getElementById('sidebar-underscore-mode-toggle');
+    if (sidebarUnderscoreToggle) sidebarUnderscoreToggle.checked = underscoreMode;
     const projectorBtn = document.getElementById('projector-preset-btn');
     if (projectorBtn) projectorBtn.classList.toggle('active', projectorMode);
     const helpBtn = document.getElementById('help-button');
@@ -268,6 +274,7 @@ function savePreferences() {
             blueVariant,
             shuffleCluesNormal,
             shuffleCluesStudy,
+            underscoreMode,
             projectorMode
         };
         localStorage.setItem(PREFS_KEY, JSON.stringify(p));
@@ -1138,6 +1145,7 @@ async function handleCorrect() {
     } else {
         document.getElementById('reveal-text').innerText = "CORRECT!";
     }
+    document.getElementById('reveal-text').style.color = 'var(--floor-green)';
 
     // Calculate time taken for this answer
     const timeTaken = (Date.now() - answerStartTime) / 1000;
@@ -1222,6 +1230,7 @@ async function handlePass() {
     toggleMoreSpecific(false);
     document.getElementById('img-frame').classList.add('pass-border');
     document.getElementById('reveal-text').innerText = `PASSED: ${item.n}`;
+    document.getElementById('reveal-text').style.color = 'var(--floor-red)';
 
     // Calculate time taken for this answer
     const timeTaken = (Date.now() - answerStartTime) / 1000;
@@ -1334,7 +1343,7 @@ function restoreAfterCancelledPass() {
     const imgFrame = document.getElementById('img-frame');
     if (imgFrame) imgFrame.classList.remove('pass-border');
     const reveal = document.getElementById('reveal-text');
-    if (reveal) reveal.innerText = '';
+    if (reveal) updateClueHint();
     const answerInput = document.getElementById('answer-input');
     if (answerInput) {
         answerInput.value = '';
@@ -1412,8 +1421,9 @@ function nextSlide() {
                         </div>
                     `;
         }
-        loadImage();
         inputLocked = false;
+        inPassPhase = false;
+        loadImage();
         answerStartTime = Date.now();
         updateClueDropdown();
         // Update category display to show progress
@@ -1453,8 +1463,9 @@ function nextSlide() {
                     </div>
                 `;
     }
-    loadImage();
     inputLocked = false;
+    inPassPhase = false;
+    loadImage();
     answerStartTime = Date.now();
     updateClueDropdown();
 }
@@ -1736,6 +1747,50 @@ function loadImage() {
 
     // Preload next clues in the background
     preloadRange(currentIndex, 5);
+    updateClueHint();
+}
+
+function updateClueHint() {
+    const reveal = document.getElementById('reveal-text');
+    if (!reveal) return;
+    if (!gameActive) {
+        reveal.innerText = '';
+        return;
+    }
+    const item = getCurrentItem();
+    if (!item || inPassPhase || inputLocked) return;
+
+    if (underscoreMode) {
+        reveal.innerText = generateUnderscoreHint(item.n);
+        reveal.style.color = 'var(--floor-yellow)';
+    } else if (item.h || item.hint) {
+        reveal.innerText = item.h || item.hint;
+        reveal.style.color = 'var(--floor-yellow)';
+    } else {
+        reveal.innerText = '';
+    }
+}
+
+function generateUnderscoreHint(name) {
+    if (!name || typeof name !== 'string') return '';
+    return name.replace(/\b([A-Za-z])([A-Za-z]*)\b/g, (match, first, rest) => {
+        return first + "_".repeat(rest.length);
+    });
+}
+
+function toggleUnderscoreMode(val) {
+    if (typeof val === 'boolean') {
+        underscoreMode = val;
+    } else {
+        underscoreMode = !underscoreMode;
+    }
+    const ut = document.getElementById('underscore-mode-toggle');
+    if (ut) ut.checked = underscoreMode;
+    const sut = document.getElementById('sidebar-underscore-mode-toggle');
+    if (sut) sut.checked = underscoreMode;
+    savePreferences();
+    updateClueHint();
+    postStateToAdmin();
 }
 
 function formatTimer(val) {
@@ -2473,11 +2528,15 @@ function postStateToAdmin() {
     if (currentPool.length) {
         const cur = currentPool[currentIndex];
         if (cur) {
-            current = { answer: cur.n, isMath: !!cur.q, question: cur.q || null, imageUrl: getPreviewImageUrl(cur, currentIndex) };
+            const curHint = underscoreMode ? generateUnderscoreHint(cur.n) : (cur.h || cur.hint || null);
+            current = { answer: cur.n, hint: curHint, isMath: !!cur.q, question: cur.q || null, imageUrl: getPreviewImageUrl(cur, currentIndex) };
         }
         const nextIdx = (currentIndex + 1) % currentPool.length;
         const nxt = currentPool[nextIdx];
-        if (nxt) next = { answer: nxt.n, isMath: !!nxt.q, question: nxt.q || null, imageUrl: getPreviewImageUrl(nxt, nextIdx) };
+        if (nxt) {
+            const nextHint = underscoreMode ? generateUnderscoreHint(nxt.n) : (nxt.h || nxt.hint || null);
+            next = { answer: nxt.n, hint: nextHint, isMath: !!nxt.q, question: nxt.q || null, imageUrl: getPreviewImageUrl(nxt, nextIdx) };
+        }
     }
     try {
         adminWindow.postMessage({
@@ -2487,6 +2546,7 @@ function postStateToAdmin() {
             playerNames: playerNames.slice(),
             gamemode,
             shuffleClues: (document.getElementById('shuffle-clues-toggle') ? document.getElementById('shuffle-clues-toggle').checked : false),
+            underscoreMode: !!underscoreMode,
             moreSpecificActive: moreSpecificActive,
             poolNames: currentPool.map(c => c.n),
             currentIndex: currentIndex,
@@ -2613,6 +2673,12 @@ window.addEventListener('message', function (e) {
     }
     else if (d.action === 'refundPassTime') {
         refundPassTime();
+    }
+    else if (d.action === 'toggleUnderscoreMode') {
+        toggleUnderscoreMode();
+    }
+    else if (d.action === 'setUnderscoreMode' && d.value != null) {
+        toggleUnderscoreMode(!!d.value);
     }
     else if (d.action === 'theme' && d.value) {
         currentTheme = d.value;

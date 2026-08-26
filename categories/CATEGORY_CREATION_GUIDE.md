@@ -159,6 +159,7 @@ if (typeof window !== 'undefined') window.<category>Data = <category>Data;
 |----------|------|-------------|
 | `n` | `string` | Display name, ALL CAPS |
 | `u` | `string` | Image URL (local relative path or remote URL) |
+| `h` | `string` | *(Optional)* Hint text shown at bottom during clue (e.g., State for U.S. Capitals) |
 | `q` | `string` | *(Optional)* Question text, used only for non-image categories like Math |
 
 ### 6.2 Registry Entry
@@ -184,6 +185,13 @@ Some categories don't display images — they display text questions instead. Th
 - The answer goes in the `n` property
 
 This is an exception to the standard format. Most categories should be image-based.
+
+### 7.2 Hint Categories (e.g., State Capitals)
+
+Categories where each clue displays an on-screen hint to assist players (such as the State name for a State Capital).
+- Use `h: "HINT TEXT"` on each item
+- The hint automatically displays at the bottom in place of the answer banner while the clue is active on screen
+- The hint clears/replaces when the clue is answered correctly or passed
 
 ---
 

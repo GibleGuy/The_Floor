@@ -1050,7 +1050,7 @@
                     card.innerHTML = `
         <div class="card-header">
           <div class="card-status ${hasImage ? 'has-image' : 'no-image'}"></div>
-          <div class="card-name" title="${item.n}" onclick="startRename(${idx})">${item.n}</div>
+          <div class="card-name" title="${item.n}${item.h || item.hint ? ` (${item.h || item.hint})` : ''}" onclick="startRename(${idx})">${item.n}${item.h || item.hint ? ` <span style="opacity:0.75;font-size:0.85em;">(${item.h || item.hint})</span>` : ''}</div>
           <div class="card-filename">${stem}</div>
           <button class="btn-delete" title="Delete clue" onclick="deleteItem(${idx}, event)">🗑️</button>
         </div>

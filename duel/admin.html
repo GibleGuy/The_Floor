@@ -697,6 +697,7 @@
             <button type="button" class="admin-ctrl-btn" id="admin-btn-pause">PAUSE</button>
             <button type="button" class="admin-ctrl-btn danger" id="admin-btn-reset">RESET</button>
             <button type="button" class="admin-ctrl-btn" id="admin-btn-more-specific" style="background:#555; color:white;">MORE SPECIFIC (H)</button>
+            <button type="button" class="admin-ctrl-btn" id="admin-btn-underscore-mode" style="background:#555; color:white;">UNDERSCORES: OFF</button>
             <label class="admin-ctrl-label">Gamemode:</label>
             <select id="admin-gamemode" class="admin-ctrl-select">
                 <option value="singleplayer">Singleplayer</option>
@@ -746,6 +747,10 @@
             <div class="custom-row">
                 <label class="custom-label">Shuffle Clues:</label>
                 <input type="checkbox" id="admin-shuffle" style="width: auto;">
+            </div>
+            <div class="custom-row">
+                <label class="custom-label">Underscore Mode:</label>
+                <input type="checkbox" id="admin-underscore-mode" style="width: auto;">
             </div>
             <div class="custom-row">
                 <label class="custom-label">Music Volume:</label>
@@ -1060,6 +1065,12 @@
         document.getElementById('admin-shuffle').addEventListener('change', function () {
             send({ action: 'shuffleClues', value: this.checked });
         });
+        document.getElementById('admin-underscore-mode').addEventListener('change', function () {
+            send({ action: 'setUnderscoreMode', value: this.checked });
+        });
+        document.getElementById('admin-btn-underscore-mode').addEventListener('click', function () {
+            send({ action: 'toggleUnderscoreMode' });
+        });
         document.getElementById('admin-vol-music').addEventListener('input', function () {
             var v = parseFloat(this.value);
             if (!isNaN(v)) { 
@@ -1257,6 +1268,16 @@
                     var pm = document.getElementById('admin-projector-mode');
                     if (pm && pm.checked !== d.projectorMode) pm.checked = !!d.projectorMode;
                 }
+                if (d.underscoreMode != null) {
+                    var um = document.getElementById('admin-underscore-mode');
+                    if (um && um.checked !== d.underscoreMode) um.checked = !!d.underscoreMode;
+                    var uBtn = document.getElementById('admin-btn-underscore-mode');
+                    if (uBtn) {
+                        uBtn.textContent = d.underscoreMode ? 'UNDERSCORES: ON' : 'UNDERSCORES: OFF';
+                        uBtn.style.background = d.underscoreMode ? 'var(--floor-yellow)' : '#555';
+                        uBtn.style.color = d.underscoreMode ? '#000' : '#fff';
+                    }
+                }
                 if (d.backgroundStyle) {
                     var ab = document.getElementById('admin-bg-' + d.backgroundStyle);
                     if (ab && !ab.checked) ab.checked = true;
@@ -1327,10 +1348,10 @@
                 const curBox = document.getElementById('admin-current-img');
                 const curAns = document.getElementById('admin-current-answer');
                 if (d.current) {
-                    const currentId = d.current.answer + '|' + (d.current.imageUrl || d.current.question);
+                    const currentId = d.current.answer + '|' + (d.current.hint || '') + '|' + (d.current.imageUrl || d.current.question);
                     if (curBox.dataset.renderedId !== currentId) {
                         curBox.dataset.renderedId = currentId;
-                        curAns.textContent = d.current.answer;
+                        curAns.textContent = d.current.answer + (d.current.hint ? ' (' + d.current.hint + ')' : '');
                         curBox.innerHTML = '';
                         if (d.current.isMath) {
                             const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.current.question; curBox.appendChild(span);
@@ -1349,10 +1370,10 @@
                 const nextBox = document.getElementById('admin-next-img');
                 const nextAns = document.getElementById('admin-next-answer');
                 if (d.next) {
-                    const nextId = d.next.answer + '|' + (d.next.imageUrl || d.next.question);
+                    const nextId = d.next.answer + '|' + (d.next.hint || '') + '|' + (d.next.imageUrl || d.next.question);
                     if (nextBox.dataset.renderedId !== nextId) {
                         nextBox.dataset.renderedId = nextId;
-                        nextAns.textContent = d.next.answer;
+                        nextAns.textContent = d.next.answer + (d.next.hint ? ' (' + d.next.hint + ')' : '');
                         nextBox.innerHTML = '';
                         if (d.next.isMath) {
                             const span = document.createElement('span'); span.className = 'math-text'; span.textContent = d.next.question; nextBox.appendChild(span);

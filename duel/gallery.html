@@ -431,7 +431,7 @@
                         imgWrap.appendChild(fallback);
                         const nameEl = document.createElement('div');
                         nameEl.className = 'gallery-name';
-                        nameEl.textContent = item.n;
+                        nameEl.textContent = item.n + (item.h || item.hint ? ' (' + (item.h || item.hint) + ')' : '');
                         div.appendChild(imgWrap);
                         div.appendChild(nameEl);
                     }

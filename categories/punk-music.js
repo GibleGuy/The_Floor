@@ -37,8 +37,19 @@ const punkMusicData = [
     // Tier 3 — Knowledgeable (31–40)
     { n: "BLACK FLAG", u: "../images/punk-music/black-flag.jpg" },
     { n: "NOFX", u: "../images/punk-music/nofx.jpg" },
+    { n: "PENNYWISE", u: "../images/punk-music/pennywise.jpg" },
+    { n: "DESCENDENTS", u: "../images/punk-music/descendents.jpg" },
+    { n: "THE STOOGES", u: "../images/punk-music/the-stooges.jpg" },
+    { n: "SIOUXSIE AND THE BANSHEES", u: "../images/punk-music/siouxsie-and-the-banshees.jpg" },
+    { n: "BUZZCOCKS", u: "../images/punk-music/buzzcocks.jpg" },
+    { n: "THE DAMNED", u: "../images/punk-music/the-damned.jpg" },
+    { n: "TAKING BACK SUNDAY", u: "../images/punk-music/taking-back-sunday.jpg" },
+    { n: "ALKALINE TRIO", u: "../images/punk-music/alkaline-trio.jpg" },
 
     // Tier 4 — Expert (41–50)
+    { n: "FUGAZI", u: "../images/punk-music/fugazi.jpg" },
+    { n: "MINOR THREAT", u: "../images/punk-music/minor-threat.jpg" },
+    { n: "TELEVISION", u: "../images/punk-music/television.jpg" },
 
     // ── BACKUPS (51–60) ────────────────
 ];
