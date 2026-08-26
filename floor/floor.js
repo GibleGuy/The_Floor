@@ -374,11 +374,65 @@ function fitGridToViewport() {
     gridEl.style.width = Math.max(1, targetWidth) + 'px';
 }
 
+/**
+ * Auto-shrink category labels whose individual words overflow the tile
+ * (e.g. "PROFESSIONAL" is one word that's wider than the tile).
+ * Uses an off-screen span to accurately measure word widths,
+ * then reduces font-size directly so centering is preserved.
+ * Multi-word text still wraps at spaces normally.
+ */
+function autoFitCategoryLabels() {
+    const cats = document.querySelectorAll('.floor-player-label .label-cat');
+    if (!cats.length) return;
+
+    // Shared hidden measurement element
+    const measure = document.createElement('span');
+    measure.style.cssText =
+        'position:absolute;visibility:hidden;white-space:nowrap;pointer-events:none;';
+    document.body.appendChild(measure);
+
+    cats.forEach(cat => {
+        // Reset to CSS-defined size
+        cat.style.fontSize = '';
+
+        const parent = cat.closest('.floor-player-label');
+        if (!parent) return;
+        const containerW = parent.offsetWidth;
+        if (containerW <= 0) return;
+
+        // Copy font properties to measurement span
+        const style = getComputedStyle(cat);
+        const currentSize = parseFloat(style.fontSize);
+        measure.style.fontSize = style.fontSize;
+        measure.style.fontWeight = style.fontWeight;
+        measure.style.fontFamily = style.fontFamily;
+        measure.style.letterSpacing = style.letterSpacing;
+        measure.style.textTransform = style.textTransform;
+
+        // Find the widest individual word
+        const words = cat.textContent.split(/\s+/);
+        let maxWordW = 0;
+        for (const w of words) {
+            measure.textContent = w;
+            maxWordW = Math.max(maxWordW, measure.offsetWidth);
+        }
+
+        // Shrink font only if a single word exceeds the container
+        if (maxWordW > containerW && containerW > 0) {
+            const scale = Math.max(0.4, (containerW / maxWordW) * 0.95);
+            cat.style.fontSize = (currentSize * scale) + 'px';
+        }
+    });
+
+    document.body.removeChild(measure);
+}
+
 function scheduleGridFit() {
     if (gridFitFrame !== null) cancelAnimationFrame(gridFitFrame);
     gridFitFrame = requestAnimationFrame(() => {
         gridFitFrame = null;
         fitGridToViewport();
+        autoFitCategoryLabels();
     });
 }
 
@@ -1738,6 +1792,9 @@ function render() {
             label.appendChild(stack);
             labelsLayer.appendChild(label);
         }
+
+        // Auto-shrink long category names to fit on one line
+        autoFitCategoryLabels();
 
         scheduleGridFit();
     } catch (err) {

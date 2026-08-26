@@ -31,7 +31,6 @@ const blackLeadersData = [
     { n: "IDA B. WELLS", u: "../images/black-leaders/ida-b-wells.jpg" },
     { n: "MARCUS GARVEY", u: "../images/black-leaders/marcus-garvey.jpg" },
     { n: "MEDGAR EVERS", u: "../images/black-leaders/medgar-evers.jpg" },
-    { n: "DESMOND TUTU", u: "../images/black-leaders/desmond-tutu.jpg" },
 
     // Tier 3 — Knowledgeable (items 31–40)
     { n: "LANGSTON HUGHES", u: "../images/black-leaders/langston-hughes.jpg" },

@@ -83,6 +83,8 @@ const CATEGORY_REGISTRY = [
     { key: 'talk-show-hosts', label: 'Talk Show Hosts', emoji: '🎙️', script: 'talk-show-hosts.js', global: 'talkShowHostsData', tier: 'Gible Verified' },
     { key: 'landmarks', label: 'Landmarks', emoji: '🗿', script: 'landmarks.js', global: 'landmarksData', tier: 'Gible Verified' },
     { key: 'movie-musicals', label: 'Movie Musicals', emoji: '🎬', script: 'movie-musicals.js', global: 'movieMusicalsData', tier: 'Gible Verified' },
+    { key: 'roller-coasters', label: 'Roller Coasters', emoji: '🎢', script: 'roller-coasters.js', global: 'rollerCoastersData', tier: 'Gible Verified' },
+    { key: 'punk-music', label: 'Punk Music', emoji: '🎸', script: 'punk-music.js', global: 'punkMusicData', tier: 'Gible Verified' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'Gible Verified' },
