@@ -30,6 +30,12 @@ os.chdir(PROJECT_ROOT)
 class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
     """Extends the static file server with a /api/download endpoint."""
 
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def do_POST(self):
         if self.path == '/api/download':
             self._handle_download()
@@ -50,30 +56,28 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             body = json.loads(self.rfile.read(content_length))
 
-            image_url = body['url']
+            image_url = body['url'].strip()
             category = body['category']       # e.g. "historic-events"
             filename = body['filename']        # e.g. "hindenburg-disaster"
             fmt = body.get('format', 'webp')   # desired extension
+
+            # If user pasted a Google Images result link, extract the actual imgurl
+            if 'google.com/imgres' in image_url or 'google.' in image_url:
+                from urllib.parse import parse_qs
+                parsed = urlparse(image_url)
+                qs = parse_qs(parsed.query)
+                if 'imgurl' in qs and qs['imgurl']:
+                    image_url = qs['imgurl'][0]
 
             # Ensure the images directory exists
             img_dir = PROJECT_ROOT / 'images' / category
             img_dir.mkdir(parents=True, exist_ok=True)
 
             # Remove any existing file with the same base name (different ext)
-            for existing in img_dir.glob(f"{filename}.*"):
-                existing.unlink()
+            for existing in img_dir.iterdir():
+                if existing.is_file() and existing.stem == filename:
+                    existing.unlink()
 
-            # Download the image
-            req = urllib.request.Request(image_url, headers={
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
-                              'AppleWebKit/537.36 (KHTML, like Gecko) '
-                              'Chrome/120.0.0.0 Safari/537.36'
-            })
-            with urllib.request.urlopen(req, timeout=15, context=ssl_context) as resp:
-                data = resp.read()
-                content_type = resp.headers.get('Content-Type', '')
-
-            # Determine actual extension from content type or URL
             ext_map = {
                 'image/webp': 'webp',
                 'image/png': 'png',
@@ -82,14 +86,32 @@ class ImagePickerHandler(http.server.SimpleHTTPRequestHandler):
                 'image/avif': 'avif',
                 'image/gif': 'gif',
                 'image/svg+xml': 'svg',
+                'image/bmp': 'bmp',
             }
 
-            # Use the content type to determine actual format
-            actual_ext = ext_map.get(content_type.split(';')[0].strip(), '')
-            if not actual_ext:
-                # Fallback: guess from URL
-                url_path = urlparse(image_url).path
-                actual_ext = Path(url_path).suffix.lstrip('.') or fmt
+            if image_url.startswith('data:'):
+                import base64
+                header, encoded = image_url.split(',', 1)
+                mime = header.split(':')[1].split(';')[0] if ':' in header else 'image/png'
+                actual_ext = ext_map.get(mime, 'png')
+                data = base64.b64decode(encoded)
+            else:
+                # Download the image
+                req = urllib.request.Request(image_url, headers={
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                                  'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                  'Chrome/120.0.0.0 Safari/537.36'
+                })
+                with urllib.request.urlopen(req, timeout=15, context=ssl_context) as resp:
+                    data = resp.read()
+                    content_type = resp.headers.get('Content-Type', '')
+
+                # Use the content type to determine actual format
+                actual_ext = ext_map.get(content_type.split(';')[0].strip(), '')
+                if not actual_ext:
+                    # Fallback: guess from URL
+                    url_path = urlparse(image_url).path
+                    actual_ext = Path(url_path).suffix.lstrip('.') or fmt
 
             # Save with actual extension (preserving original format)
             save_path = img_dir / f"{filename}.{actual_ext}"

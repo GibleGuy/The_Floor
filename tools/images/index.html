@@ -590,11 +590,12 @@
         .auto-status {
             display: none;
             align-items: center;
-            gap: 12px;
-            padding: 10px 24px;
-            background: linear-gradient(90deg, rgba(108,92,231,.08), rgba(0,230,118,.06));
+            gap: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, rgba(108,92,231,.12), rgba(0,230,118,.08));
             border-bottom: 1px solid var(--border);
             font-size: .8rem;
+            flex-wrap: wrap;
         }
 
         .auto-status.visible {
@@ -619,18 +620,39 @@
 
         .auto-status .auto-current {
             color: var(--text);
-            font-weight: 500;
+            font-weight: 600;
+            background: rgba(255,255,255,0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
         }
 
         .auto-status .auto-progress {
             color: var(--text-dim);
             margin-left: auto;
+            font-weight: 500;
         }
 
         .auto-status .auto-instruction {
             color: var(--text-dim);
+            font-size: .75rem;
+        }
+
+        .btn-auto-action {
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-family: inherit;
             font-size: .72rem;
-            font-style: italic;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-auto-action:hover {
+            border-color: var(--accent);
+            background: var(--surface-hover);
         }
 
         .btn-stop-auto {
@@ -640,7 +662,7 @@
             background: var(--red-dim);
             color: var(--red);
             font-family: inherit;
-            font-size: .7rem;
+            font-size: .72rem;
             font-weight: 600;
             cursor: pointer;
             transition: all .2s;
@@ -707,7 +729,10 @@
     <div class="auto-status" id="autoStatus">
         <span class="auto-label"><span class="recording-dot"></span> AUTO MODE</span>
         <span class="auto-current" id="autoCurrentName">—</span>
-        <span class="auto-instruction" id="autoInstruction">Copy an image from the tab, then switch back here</span>
+        <span class="auto-instruction" id="autoInstruction">Copy an image or image address, then switch back here</span>
+        <button class="btn-auto-action" id="autoSearchBtn" onclick="reopenAutoSearchTab()">🔍 Search Tab</button>
+        <button class="btn-auto-action" id="autoPasteBtn" onclick="triggerAutoPaste()">📋 Paste</button>
+        <button class="btn-auto-action" id="autoSkipBtn" onclick="skipAutoClue()">⏭ Skip</button>
         <span class="auto-progress" id="autoProgress"></span>
         <button class="btn-stop-auto" onclick="stopAutoMode()">■ Stop</button>
     </div>
@@ -1557,6 +1582,9 @@
 
             // ── Auto Mode ──────────────────────────────────
 
+            let autoSearchWindow = null;
+            let lastAutoProcessedData = '';
+
             // Show the toggle button once a category is loaded
             function showAutoModeBtn() {
                 document.getElementById('autoModeBtn').style.display = 'inline-flex';
@@ -1574,12 +1602,50 @@
                 stopAutoModeInternal('Stopped by user');
             };
 
-            function startAutoMode() {
+            window.skipAutoClue = function () {
+                if (!autoModeActive) return;
+                autoModeProcessing = false;
+                autoModeQueuePos++;
+                openNextAutoClue();
+            };
+
+            window.reopenAutoSearchTab = function () {
+                if (!autoModeActive) return;
+                const data = window[currentCategoryGlobal];
+                if (!data || !autoModeQueue.length || autoModeQueuePos >= autoModeQueue.length) return;
+                const idx = autoModeQueue[autoModeQueuePos];
+                const item = data[idx];
+                const searchUrl = getAutoSearchUrl(item);
+                autoSearchWindow = window.open(searchUrl, 'TheFloorSearchTab');
+            };
+
+            window.triggerAutoPaste = async function () {
+                if (!autoModeActive) return;
+                await handleAutoReturn();
+            };
+
+            function getAutoSearchUrl(item) {
+                const suffix = document.getElementById('searchSuffix').value.trim();
+                const query = suffix ? `${item.n} ${suffix}` : item.n;
+                const q = encodeURIComponent(query);
+                return `https://www.google.com/search?tbm=isch&q=${q}`;
+            }
+
+            async function startAutoMode() {
                 const data = window[currentCategoryGlobal];
                 if (!data || !data.length) return;
                 if (!serverAvailable) {
                     alert('Server not running — start image-server.py first');
                     return;
+                }
+
+                // Request clipboard permission during the click gesture so Chrome grants permanent access
+                if (navigator.clipboard && navigator.clipboard.read) {
+                    try {
+                        await navigator.clipboard.read();
+                    } catch (permErr) {
+                        console.log('Initial clipboard check:', permErr.message);
+                    }
                 }
 
                 // Build queue of missing-image clue indices
@@ -1599,12 +1665,13 @@
                 autoModeActive = true;
                 autoModeQueuePos = 0;
                 autoModeProcessing = false;
+                lastAutoProcessedData = '';
 
                 // Update UI
                 document.getElementById('autoModeBtn').classList.add('active');
                 document.getElementById('autoStatus').classList.add('visible');
 
-                // Open the first one
+                // Open the first search tab
                 openNextAutoClue();
             }
 
@@ -1613,6 +1680,7 @@
                 autoModeQueue = [];
                 autoModeQueuePos = 0;
                 autoModeProcessing = false;
+                lastAutoProcessedData = '';
 
                 document.getElementById('autoModeBtn').classList.remove('active');
                 document.getElementById('autoStatus').classList.remove('visible');
@@ -1632,19 +1700,19 @@
 
                 if (autoModeQueuePos >= autoModeQueue.length) {
                     stopAutoModeInternal('All done!');
+                    alert('🎉 Auto Mode complete! All missing clues have images.');
                     return;
                 }
 
                 const idx = autoModeQueue[autoModeQueuePos];
                 const item = data[idx];
-                const remaining = autoModeQueue.length - autoModeQueuePos;
 
                 // Update status bar
                 document.getElementById('autoCurrentName').textContent = item.n;
                 document.getElementById('autoProgress').textContent =
-                    `${autoModeQueuePos + 1} of ${autoModeQueue.length} remaining`;
+                    `${autoModeQueuePos + 1} of ${autoModeQueue.length}`;
                 document.getElementById('autoInstruction').textContent =
-                    'Copy an image from the tab, then switch back here';
+                    'Copy an image or image address, then switch back (or click anywhere)';
 
                 // Scroll to the card
                 const card = document.querySelector(`.card[data-index="${idx}"]`);
@@ -1652,118 +1720,267 @@
                     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
 
-                // Open Google Images for this clue
-                const suffix = document.getElementById('searchSuffix').value.trim();
-                const query = suffix ? `${item.n} ${suffix}` : item.n;
-                const q = encodeURIComponent(query);
-                window.open(`https://www.google.com/search?tbm=isch&q=${q}`, '_blank');
+                // Open / reuse Google Images search tab
+                const searchUrl = getAutoSearchUrl(item);
+                try {
+                    if (autoSearchWindow && !autoSearchWindow.closed) {
+                        autoSearchWindow.location.href = searchUrl;
+                        autoSearchWindow.focus();
+                    } else {
+                        autoSearchWindow = window.open(searchUrl, 'TheFloorSearchTab');
+                    }
+                } catch {
+                    autoSearchWindow = window.open(searchUrl, 'TheFloorSearchTab');
+                }
             }
 
-            // ── Listen for tab re-focus ─────────────────────
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState !== 'visible') return;
-                if (!autoModeActive) return;
-                if (autoModeProcessing) return;
+            // ── Listen for tab re-focus with intelligent retries ──────────────
+            let autoRetryTimeouts = [];
+            function clearAutoRetries() {
+                autoRetryTimeouts.forEach(t => clearTimeout(t));
+                autoRetryTimeouts = [];
+            }
 
-                // Small delay to let clipboard settle after tab switch
-                setTimeout(handleAutoReturn, 600);
+            function scheduleAutoReturn() {
+                if (!autoModeActive || autoModeProcessing) return;
+                clearAutoRetries();
+                // Attempt clipboard read at intervals to ensure document focus is captured
+                [100, 300, 600, 1000].forEach(delay => {
+                    const t = setTimeout(() => {
+                        if (autoModeActive && !autoModeProcessing) {
+                            handleAutoReturn();
+                        }
+                    }, delay);
+                    autoRetryTimeouts.push(t);
+                });
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    scheduleAutoReturn();
+                }
+            });
+
+            window.addEventListener('focus', () => {
+                scheduleAutoReturn();
+            });
+
+            // Click anywhere or press key to immediately trigger paste if browser blocked background read
+            window.addEventListener('pointerdown', (e) => {
+                if (!autoModeActive || autoModeProcessing) return;
+                // Ignore clicks on stop or skip buttons
+                if (e.target && (e.target.closest('.btn-stop-auto') || e.target.closest('.btn-auto-action') || e.target.tagName === 'INPUT')) {
+                    return;
+                }
+                handleAutoReturn();
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (!autoModeActive || autoModeProcessing) return;
+                if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAutoReturn();
+                }
+            });
+
+            // ── Global keyboard paste listener for Auto Mode ──────────────
+            window.addEventListener('paste', async (e) => {
+                if (!autoModeActive || autoModeProcessing) return;
+                if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+                    return;
+                }
+
+                e.preventDefault();
+                autoModeProcessing = true;
+
+                let imageBlob = null;
+                let textContent = '';
+
+                const items = e.clipboardData?.items;
+                if (items) {
+                    for (const item of items) {
+                        if (item.type.startsWith('image/')) {
+                            imageBlob = item.getAsFile();
+                            break;
+                        }
+                    }
+                }
+
+                if (!imageBlob && e.clipboardData) {
+                    textContent = e.clipboardData.getData('text').trim();
+                }
+
+                await processAutoItem(imageBlob, textContent);
             });
 
             async function handleAutoReturn() {
                 if (!autoModeActive || autoModeProcessing) return;
-                autoModeProcessing = true;
 
-                const data = window[currentCategoryGlobal];
-                const idx = autoModeQueue[autoModeQueuePos];
+                let imageBlob = null;
+                let textContent = '';
 
-                document.getElementById('autoInstruction').textContent = '⏳ Reading clipboard...';
-
+                // Try reading clipboard blob or text
                 try {
-                    const clipItems = await navigator.clipboard.read();
-                    let imageBlob = null;
-
-                    for (const clipItem of clipItems) {
-                        for (const type of clipItem.types) {
-                            if (type.startsWith('image/')) {
-                                imageBlob = await clipItem.getType(type);
-                                break;
+                    if (navigator.clipboard && navigator.clipboard.read) {
+                        try {
+                            const clipItems = await navigator.clipboard.read();
+                            for (const clipItem of clipItems) {
+                                for (const type of clipItem.types) {
+                                    if (type.startsWith('image/')) {
+                                        imageBlob = await clipItem.getType(type);
+                                        break;
+                                    } else if (type === 'text/plain' || type === 'text/uri-list') {
+                                        const textBlob = await clipItem.getType(type);
+                                        textContent = (await textBlob.text()).trim();
+                                    }
+                                }
+                                if (imageBlob) break;
                             }
+                        } catch (readErr) {
+                            // Ignored: might be pending focus
                         }
-                        if (imageBlob) break;
                     }
 
-                    if (!imageBlob) {
-                        // No image in clipboard — stop auto mode
-                        stopAutoModeInternal('No image in clipboard');
-                        return;
+                    if (!imageBlob && !textContent && navigator.clipboard && navigator.clipboard.readText) {
+                        try {
+                            textContent = (await navigator.clipboard.readText()).trim();
+                        } catch {}
                     }
 
-                    document.getElementById('autoInstruction').textContent = '⬆️ Uploading image...';
+                    const isUrl = textContent && (
+                        textContent.startsWith('http://') ||
+                        textContent.startsWith('https://') ||
+                        textContent.startsWith('data:image/') ||
+                        textContent.includes('google.com/imgres')
+                    );
 
-                    // Convert blob to File and use the existing upload function
-                    const file = new File([imageBlob], 'pasted-image', { type: imageBlob.type });
-                    await uploadPastedFileAutoMode(file, idx);
-
-                    // Advance to next
-                    autoModeQueuePos++;
-                    autoModeProcessing = false;
-
-                    // Brief pause before opening next tab so user can see the result
-                    setTimeout(() => {
-                        openNextAutoClue();
-                    }, 400);
+                    if (imageBlob || isUrl) {
+                        autoModeProcessing = true;
+                        clearAutoRetries();
+                        await processAutoItem(imageBlob, textContent);
+                    }
 
                 } catch (e) {
-                    console.error('Auto Mode clipboard error:', e);
-                    // Clipboard permission denied or other error
-                    stopAutoModeInternal('Clipboard error: ' + e.message);
+                    console.error('Auto Mode error:', e);
                 }
             }
 
-            // Variant of uploadPastedFile that returns a promise (for auto mode)
-            async function uploadPastedFileAutoMode(file, idx) {
+            async function processAutoItem(imageBlob, textContent) {
+                if (!autoModeActive) {
+                    autoModeProcessing = false;
+                    return;
+                }
+
+                const data = window[currentCategoryGlobal];
+                if (!data || autoModeQueuePos >= autoModeQueue.length) {
+                    autoModeProcessing = false;
+                    return;
+                }
+
+                const idx = autoModeQueue[autoModeQueuePos];
                 const card = document.querySelector(`.card[data-index="${idx}"]`);
                 const toast = document.getElementById(`toast-${idx}`);
-                const preview = card.querySelector('.card-preview');
 
-                // Read the file as a data URL (base64)
-                const dataUrl = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
+                if (!card) {
+                    autoModeProcessing = false;
+                    return;
+                }
 
-                const res = await fetch(`${API}/api/upload-image`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        data: dataUrl,
-                        category: card.dataset.category,
-                        filename: card.dataset.stem
-                    })
-                });
-                const result = await res.json();
+                const isUrl = textContent && (
+                    textContent.startsWith('http://') ||
+                    textContent.startsWith('https://') ||
+                    textContent.startsWith('data:image/') ||
+                    textContent.includes('google.com/imgres')
+                );
 
-                if (result.success) {
-                    showToast(toast, 'success', `✓ Auto-saved as ${result.savedAs} (${formatBytes(result.size)})`);
+                if (!imageBlob && !isUrl) {
+                    // Clipboard doesn't have an image or URL yet. Keep waiting without disabling Auto Mode!
+                    autoModeProcessing = false;
+                    document.getElementById('autoInstruction').textContent =
+                        '⏳ Waiting for image: Copy an image or image address, then switch back (or press Cmd+V)';
+                    return;
+                }
 
-                    // Update the card visually
-                    const timestamp = Date.now();
-                    preview.innerHTML = `<img src="../../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
-                    const newHint = document.createElement('span');
-                    newHint.className = 'paste-hint';
-                    newHint.textContent = '📋 Click & Ctrl+V to paste';
-                    preview.appendChild(newHint);
+                document.getElementById('autoInstruction').textContent = '⬆️ Saving image...';
 
-                    const status = card.querySelector('.card-status');
-                    status.className = 'card-status has-image';
-                    card.dataset.hasImage = 'true';
+                try {
+                    let result = null;
 
-                    currentImages[card.dataset.stem] = result.savedAs;
-                    updateStats();
-                } else {
-                    throw new Error(result.error || 'Upload failed');
+                    if (imageBlob) {
+                        // Read the file as a data URL (base64)
+                        const file = new File([imageBlob], 'pasted-image', { type: imageBlob.type });
+                        const dataUrl = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(file);
+                        });
+
+                        const res = await fetch(`${API}/api/upload-image`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                data: dataUrl,
+                                category: card.dataset.category,
+                                filename: card.dataset.stem
+                            })
+                        });
+                        result = await res.json();
+                    } else if (isUrl) {
+                        const res = await fetch(`${API}/api/download`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                url: textContent,
+                                category: card.dataset.category,
+                                filename: card.dataset.stem,
+                                format: 'webp'
+                            })
+                        });
+                        result = await res.json();
+                    }
+
+                    if (result && result.success) {
+                        showToast(toast, 'success', `✓ Auto-saved as ${result.savedAs} (${formatBytes(result.size)})`);
+
+                        // Update the card visually
+                        const preview = card.querySelector('.card-preview');
+                        const timestamp = Date.now();
+                        preview.innerHTML = `<img src="../../images/${card.dataset.category}/${result.savedAs}?t=${timestamp}" alt="" loading="lazy">`;
+                        const newHint = document.createElement('span');
+                        newHint.className = 'paste-hint';
+                        newHint.textContent = '📋 Click & Ctrl+V to paste';
+                        preview.appendChild(newHint);
+
+                        const status = card.querySelector('.card-status');
+                        status.className = 'card-status has-image';
+                        card.dataset.hasImage = 'true';
+
+                        currentImages[card.dataset.stem] = result.savedAs;
+                        updateStats();
+
+                        document.getElementById('autoInstruction').textContent = '✓ Saved! Opening next clue...';
+
+                        // Advance to next
+                        autoModeQueuePos++;
+                        autoModeProcessing = false;
+
+                        // Pause briefly then open next
+                        setTimeout(() => {
+                            openNextAutoClue();
+                        }, 400);
+
+                    } else {
+                        throw new Error(result?.error || 'Save failed');
+                    }
+
+                } catch (err) {
+                    console.error('Auto Mode save error:', err);
+                    autoModeProcessing = false;
+                    showToast(toast, 'error', `Auto-save failed: ${err.message}`);
+                    document.getElementById('autoInstruction').textContent =
+                        `❌ Save error (${err.message}). Try another image or click "⏭ Skip".`;
                 }
             }
 

@@ -85,6 +85,8 @@ const CATEGORY_REGISTRY = [
     { key: 'movie-musicals', label: 'Movie Musicals', emoji: '🎬', script: 'movie-musicals.js', global: 'movieMusicalsData', tier: 'Gible Verified' },
     { key: 'roller-coasters', label: 'Roller Coasters', emoji: '🎢', script: 'roller-coasters.js', global: 'rollerCoastersData', tier: 'Gible Verified' },
     { key: 'punk-music', label: 'Punk Music', emoji: '🎸', script: 'punk-music.js', global: 'punkMusicData', tier: 'Gible Verified' },
+    { key: 'cocktails', label: 'Cocktails', emoji: '🍸', script: 'cocktails.js', global: 'cocktailsData', tier: 'Gible Verified' },
+    { key: 'star-wars', label: 'Star Wars', emoji: '⚔️', script: 'star-wars.js', global: 'starWarsData', tier: 'Gible Verified' },
 
     // EXAMPLES
     { key: 'flags', label: 'Flags', emoji: '🏁', script: 'flags.js', global: 'flagData', tier: 'Gible Verified' },
