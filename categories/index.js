@@ -48,6 +48,7 @@ const CATEGORY_REGISTRY = [
     { key: 'dolls', label: 'Dolls', emoji: '🎎', script: 'dolls.js', global: 'dollsData', tier: 'Gible Verified' },
     { key: 'f1', label: 'F1', emoji: '🏎️', script: 'f1.js', global: 'f1Data', tier: 'Gible Verified' },
     { key: 'fishing', label: 'Fishing', emoji: '🎣', script: 'fishing.js', global: 'fishingData', tier: 'Gible Verified' },
+    { key: 'fonts', label: 'Fonts', emoji: '🔤', script: 'fonts.js', global: 'fontsData', tier: 'Gible Verified' },
     { key: 'football', label: 'Football', emoji: '🏈', script: 'football.js', global: 'footballData', tier: 'Gible Verified' },
     { key: 'soccer', label: 'Soccer', emoji: '⚽', script: 'soccer.js', global: 'soccerData', tier: 'Gible Verified' },
     { key: 'gameshows', label: 'Gameshows', emoji: '🎰', script: 'gameshows.js', global: 'gameshowsData', tier: 'Gible Verified' },
