@@ -458,7 +458,7 @@
             background: #555;
             color: white;
         }
-        #refund-pass-btn:disabled,
+        #misinput-btn:disabled,
         #toggle-pass-btn:disabled {
             opacity: 0.45;
             cursor: not-allowed;

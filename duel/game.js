@@ -1375,13 +1375,61 @@ function togglePassState() {
     if (!inputLocked) handlePass();
 }
 
-function refundPassTime() {
-    if (!gameActive || !isPaused) return;
-    const secs = getPassRefundSeconds();
-    if (!passTimerSnapshot || secs < 0.05) return;
-    timers[passTimerSnapshot.playerIndex] = passTimerSnapshot.timerValue;
-    passTimeRefunded = true;
+function convertPassStatsToCorrect(snap) {
+    if (!snap) return;
+    const { currentPlayer, currentSlot, currentPlayerName, previousStreak } = snap;
+    currentStreak = (previousStreak || 0) + 1;
+
+    if (lastRoundStats[currentPlayer]) {
+        lastRoundStats[currentPlayer].passed = Math.max(0, lastRoundStats[currentPlayer].passed - 1);
+        lastRoundStats[currentPlayer].correct = (lastRoundStats[currentPlayer].correct || 0) + 1;
+    }
+    lastRoundStats.totalPassed = Math.max(0, lastRoundStats.totalPassed - 1);
+    lastRoundStats.totalCorrect = (lastRoundStats.totalCorrect || 0) + 1;
+
+    const playerStats = perPlayerStats[currentPlayerName];
+    if (playerStats) {
+        playerStats.passed = Math.max(0, playerStats.passed - 1);
+        playerStats.correct = (playerStats.correct || 0) + 1;
+    }
+
+    if (perSlotStats[currentSlot]) {
+        perSlotStats[currentSlot].passed = Math.max(0, perSlotStats[currentSlot].passed - 1);
+        perSlotStats[currentSlot].correct = (perSlotStats[currentSlot].correct || 0) + 1;
+    }
+
+    sessionStats.totalPassed = Math.max(0, sessionStats.totalPassed - 1);
+    sessionStats.totalCorrect = (sessionStats.totalCorrect || 0) + 1;
+
+    lifetimeStats.totalPassed = Math.max(0, lifetimeStats.totalPassed - 1);
+    lifetimeStats.totalCorrect = (lifetimeStats.totalCorrect || 0) + 1;
+    saveLifetimeStats();
+}
+
+function handleMisinput() {
+    if (!gameActive || !isPaused || !inPassPhase || categoryComplete) return;
+    if (gamemode === 'study') return;
+
+    passGeneration++;
+
+    if (passTimerSnapshot && timers && typeof passTimerSnapshot.playerIndex === 'number') {
+        const idx = passTimerSnapshot.playerIndex;
+        if (idx >= 0 && idx < timers.length && typeof passTimerSnapshot.timerValue === 'number') {
+            timers[idx] = passTimerSnapshot.timerValue;
+        }
+    }
+
+    convertPassStatsToCorrect(passStatsSnapshot);
+    clearFeedbackState();
+    clearPassCorrectionState();
+
+    if (gamemode === 'classic') {
+        activePlayer = (activePlayer === 1) ? 2 : 1;
+    }
+
     updateDisplay();
+    nextSlide();
+    updatePauseOverlay();
     updateHostPauseControls();
     postStateToAdmin();
 }
@@ -2134,19 +2182,20 @@ function updateActivePlayerLabels() {
 
 function updatePassControlButtons() {
     const toggleBtn = document.getElementById('toggle-pass-btn');
-    const refundBtn = document.getElementById('refund-pass-btn');
+    const misinputBtn = document.getElementById('misinput-btn');
     if (toggleBtn) {
         toggleBtn.textContent = inPassPhase ? 'PASS: ON' : 'PASS: OFF';
         toggleBtn.classList.toggle('pass-on', inPassPhase);
         toggleBtn.classList.toggle('pass-off', !inPassPhase);
         toggleBtn.disabled = !isPaused || !gameActive || gamemode === 'study';
     }
-    if (refundBtn) {
+    if (misinputBtn) {
+        const canMisinput = isPaused && gameActive && inPassPhase && gamemode !== 'study';
         const secs = getPassRefundSeconds();
-        refundBtn.disabled = !isPaused || !gameActive || secs < 0.05;
-        refundBtn.textContent = secs >= 0.05
-            ? `REFUND PASS TIME (${secs.toFixed(1)}s)`
-            : 'REFUND PASS TIME';
+        misinputBtn.disabled = !canMisinput;
+        misinputBtn.textContent = canMisinput && secs >= 0.05
+            ? `MISINPUT (${secs.toFixed(1)}s)`
+            : 'MISINPUT';
     }
 }
 
@@ -2671,8 +2720,8 @@ window.addEventListener('message', function (e) {
     else if (d.action === 'togglePassState') {
         togglePassState();
     }
-    else if (d.action === 'refundPassTime') {
-        refundPassTime();
+    else if (d.action === 'misinput') {
+        handleMisinput();
     }
     else if (d.action === 'toggleUnderscoreMode') {
         toggleUnderscoreMode();

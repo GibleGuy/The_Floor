@@ -5,8 +5,6 @@ const summerCampData = [
     { n: "S'MORES", u: "../images/summer-camp/smores.webp" },
     { n: "TENT", u: "../images/summer-camp/tent.webp" },
     { n: "CANOE", u: "../images/summer-camp/canoe.webp" },
-    { n: "SLEEPING BAG", u: "../images/summer-camp/sleeping-bag.webp" },
-    { n: "BUNK BEDS", u: "../images/summer-camp/bunk-beds.webp" },
     { n: "FLASHLIGHT", u: "../images/summer-camp/flashlight.webp" },
     { n: "ARCHERY TARGET", u: "../images/summer-camp/archery-target.webp" },
     { n: "MARSHMALLOW ROASTING STICK", u: "../images/summer-camp/marshmallow-roasting-stick.webp" },

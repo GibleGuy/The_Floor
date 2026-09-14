@@ -679,7 +679,7 @@
         <div id="admin-pass-controls" class="custom-row" style="display: none; margin-top: 12px;">
             <span class="custom-label">Pass State:</span>
             <button type="button" class="host-btn pass-off" id="admin-btn-toggle-pass">PASS: OFF</button>
-            <button type="button" class="host-btn k" id="admin-btn-refund-pass" disabled>REFUND PASS TIME</button>
+            <button type="button" class="host-btn j" id="admin-btn-misinput" disabled>MISINPUT</button>
         </div>
         <div id="admin-active-player" class="custom-row" style="display: none; margin-top: 12px;">
             <span class="custom-label">Active Player:</span>
@@ -851,7 +851,7 @@
             <p><span class="help-key">J</span> Mark as correct</p>
             <p><span class="help-key">K</span> Pause / Resume</p>
             <p><span class="help-key">L</span> Pass</p>
-            <p>While paused: toggle pass state (undo an accidental pass) or refund pass time</p>
+            <p>While paused: toggle pass state (undo an accidental pass) or use Misinput if you meant to hit Correct instead of Pass</p>
             <p><span class="help-key">R</span> Reset (with confirmation)</p>
             <button type="button" class="host-btn k" onclick="closeAdminHelp()" style="margin-top:12px">CLOSE</button>
         </div>
@@ -927,7 +927,7 @@
                 'admin-show-timer-decimal', 'admin-high-contrast-reduced-motion', 'admin-projector-mode',
                 'admin-bg-solid', 'admin-bg-grid', 'admin-bg-tiles', 'admin-bg-diagonal', 'admin-bg-pop',
                 'admin-bg-drift-speed', 'admin-blue-a', 'admin-blue-b', 'admin-blue-c', 'admin-blue-d',
-                'admin-active-p1', 'admin-active-p2', 'admin-btn-toggle-pass', 'admin-btn-refund-pass'];
+                'admin-active-p1', 'admin-active-p2', 'admin-btn-toggle-pass', 'admin-btn-misinput'];
             ids.forEach(function (id) {
                 const el = document.getElementById(id);
                 if (el) el.disabled = !enabled;
@@ -1126,8 +1126,8 @@
         document.getElementById('admin-btn-toggle-pass').addEventListener('click', function () {
             send({ action: 'togglePassState' });
         });
-        document.getElementById('admin-btn-refund-pass').addEventListener('click', function () {
-            send({ action: 'refundPassTime' });
+        document.getElementById('admin-btn-misinput').addEventListener('click', function () {
+            send({ action: 'misinput' });
         });
 
         document.addEventListener('keydown', function (e) {
@@ -1311,18 +1311,18 @@
                         const pc = document.getElementById('admin-pass-controls');
                         if (pc) pc.style.display = d.gamemode === 'study' ? 'none' : 'flex';
                         const togglePass = document.getElementById('admin-btn-toggle-pass');
-                        const refundPass = document.getElementById('admin-btn-refund-pass');
+                        const misinputBtn = document.getElementById('admin-btn-misinput');
                         if (togglePass) {
                             togglePass.textContent = d.inPassPhase ? 'PASS: ON' : 'PASS: OFF';
                             togglePass.classList.toggle('pass-on', !!d.inPassPhase);
                             togglePass.classList.toggle('pass-off', !d.inPassPhase);
                         }
-                        if (refundPass) {
+                        if (misinputBtn) {
                             const secs = typeof d.passRefundSeconds === 'number' && !isNaN(d.passRefundSeconds) ? d.passRefundSeconds : 0;
-                            refundPass.disabled = secs < 0.05;
-                            refundPass.textContent = secs >= 0.05
-                                ? 'REFUND PASS TIME (' + secs.toFixed(1) + 's)'
-                                : 'REFUND PASS TIME';
+                            misinputBtn.disabled = !d.inPassPhase;
+                            misinputBtn.textContent = d.inPassPhase && secs >= 0.05
+                                ? 'MISINPUT (' + secs.toFixed(1) + 's)'
+                                : 'MISINPUT';
                         }
                     } catch (err) { }
                 } else {

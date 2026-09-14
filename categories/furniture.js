@@ -23,7 +23,6 @@ const furnitureData = [
     { n: "BENCH", u: "../images/furniture/bench.webp" },
     { n: "FUTON", u: "../images/furniture/futon.webp" },
     { n: "MATTRESS", u: "../images/furniture/mattress.webp" },
-    { n: "BEAN BAG", u: "../images/furniture/bean-bag.webp" },
     { n: "HAMMOCK", u: "../images/furniture/hammock.webp" },
     { n: "CRIB", u: "../images/furniture/crib.webp" },
     { n: "HIGH CHAIR", u: "../images/furniture/high-chair.webp" },
