@@ -398,11 +398,10 @@
                 section.innerHTML = '<h2>' + label + '</h2>';
                 const grid = document.createElement('div');
                 grid.className = 'gallery-grid';
-                const isMath = key === 'math';
                 items.forEach(function (item) {
                     const div = document.createElement('div');
                     div.className = 'gallery-item';
-                    if (isMath && item.q) {
+                    if (typeof item.q === 'string') {
                         const mathWrap = document.createElement('div');
                         mathWrap.className = 'img-wrap math-wrap';
                         const prob = document.createElement('div');
