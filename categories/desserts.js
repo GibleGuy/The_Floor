@@ -9,7 +9,6 @@ const dessertsData = [
     { n: "DONUT", u: "../images/desserts/donut.jpg" },
     { n: "PIE", u: "../images/desserts/pie.jpg" },
     { n: "APPLE PIE", u: "../images/desserts/apple-pie.jpg" },
-    { n: "CHOCOLATE CAKE", u: "../images/desserts/chocolate-cake.jpg" },
     { n: "CHEESECAKE", u: "../images/desserts/cheesecake.jpg" },
     { n: "SUNDAE", u: "../images/desserts/sundae.jpg" },
     { n: "MILKSHAKE", u: "../images/desserts/milkshake.jpg" },
@@ -52,23 +51,8 @@ const dessertsData = [
     { n: "BREAD PUDDING", u: "../images/desserts/bread-pudding.jpg" },
     { n: "MOCHI", u: "../images/desserts/mochi.jpg" },
     { n: "TAIYAKI", u: "../images/desserts/taiyaki.jpg" },
-    { n: "AFFOGATO", u: "../images/desserts/affogato.jpg" },
-    { n: "TRIFLE", u: "../images/desserts/trifle.jpg" },
-    { n: "COBBLER", u: "../images/desserts/cobbler.jpg" },
-    { n: "SOPAPILLA", u: "../images/desserts/sopapilla.jpg" },
-    { n: "RICE PUDDING", u: "../images/desserts/rice-pudding.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "BAKED ALASKA", u: "../images/desserts/baked-alaska.jpg" },
-    { n: "CROQUEMBOUCHE", u: "../images/desserts/croquembouche.jpg" },
-    { n: "BEIGNET", u: "../images/desserts/beignet.jpg" },
-    { n: "MADELEINE", u: "../images/desserts/madeleine.jpg" },
-    { n: "CANELE", u: "../images/desserts/canele.jpg" },
-    { n: "NANAIMO BAR", u: "../images/desserts/nanaimo-bar.jpg" },
-    { n: "S'MORE", u: "../images/desserts/smore.jpg" },
-    { n: "BANOFFEE PIE", u: "../images/desserts/banoffee-pie.jpg" },
-    { n: "LAMINGTON", u: "../images/desserts/lamington.jpg" },
-    { n: "KOUIGN-AMANN", u: "../images/desserts/kouign-amann.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.dessertsData = dessertsData;

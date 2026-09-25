@@ -9,8 +9,6 @@ const dcComicsData = [
     { n: "JOKER", u: "../images/dc-comics/joker.jpg" },
     { n: "HARLEY QUINN", u: "../images/dc-comics/harley-quinn.jpg" },
     { n: "BATMOBILE", u: "../images/dc-comics/batmobile.jpg" },
-    { n: "SUPERMAN SHIELD", u: "../images/dc-comics/superman-shield.jpg" },
-    { n: "BATMAN LOGO", u: "../images/dc-comics/batman-logo.jpg" },
     { n: "ROBIN", u: "../images/dc-comics/robin.jpg" },
     { n: "CATWOMAN", u: "../images/dc-comics/catwoman.jpg" },
     { n: "GREEN LANTERN", u: "../images/dc-comics/green-lantern.jpg" },
@@ -18,10 +16,8 @@ const dcComicsData = [
     { n: "JUSTICE LEAGUE LOGO", u: "../images/dc-comics/justice-league-logo.jpg" },
 
     // Tier 2 — Familiar (items 16–30)
-    { n: "BATARANG", u: "../images/dc-comics/batarang.jpg" },
     { n: "LASSO OF TRUTH", u: "../images/dc-comics/lasso-of-truth.jpg" },
     { n: "KRYPTONITE", u: "../images/dc-comics/kryptonite.jpg" },
-    { n: "SHAZAM", u: "../images/dc-comics/shazam.jpg" },
     { n: "GREEN ARROW", u: "../images/dc-comics/green-arrow.jpg" },
     { n: "NIGHTWING", u: "../images/dc-comics/nightwing.jpg" },
     { n: "SUPERGIRL", u: "../images/dc-comics/supergirl.jpg" },
@@ -60,15 +56,6 @@ const dcComicsData = [
 
     // ── BACKUPS (items 51–60) ────────────────
     { n: "BOOSTER GOLD", u: "../images/dc-comics/booster-gold.jpg" },
-    { n: "BLUE BEETLE", u: "../images/dc-comics/blue-beetle.jpg" },
-    { n: "PLASTIC MAN", u: "../images/dc-comics/plastic-man.jpg" },
-    { n: "BLACK CANARY", u: "../images/dc-comics/black-canary.jpg" },
-    { n: "HUNTRESS", u: "../images/dc-comics/huntress.jpg" },
-    { n: "BATWOMAN", u: "../images/dc-comics/batwoman.jpg" },
-    { n: "HAWKGIRL", u: "../images/dc-comics/hawkgirl.jpg" },
-    { n: "PEACEMAKER", u: "../images/dc-comics/peacemaker.jpg" },
-    { n: "THE SPECTRE", u: "../images/dc-comics/the-spectre.jpg" },
-    { n: "THE QUESTION", u: "../images/dc-comics/the-question.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.dcComicsData = dcComicsData;

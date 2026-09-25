@@ -32,7 +32,6 @@ const horrorVillainsData = [
     { n: "SLENDER MAN", u: "../images/horror-villains/slender-man.jpg" },
     { n: "CARRIE WHITE", u: "../images/horror-villains/carrie-white.jpg" },
     { n: "REGAN MACNEIL", u: "../images/horror-villains/regan-macneil.jpg" },
-    { n: "PAZUZU", u: "../images/horror-villains/pazuzu.jpg" },
 
     // Tier 3 — Knowledgeable (items 31–40)
     { n: "THE PALE MAN", u: "../images/horror-villains/the-pale-man.jpg" },
@@ -43,32 +42,10 @@ const horrorVillainsData = [
     { n: "TIFFANY VALENTINE", u: "../images/horror-villains/tiffany-valentine.jpg" },
     { n: "BEN WILLIS", u: "../images/horror-villains/ben-willis.jpg" },
     { n: "THE TALL MAN", u: "../images/horror-villains/the-tall-man.jpg" },
-    { n: "THE CREEPER", u: "../images/horror-villains/the-creeper.jpg" },
-    { n: "BRIDE OF FRANKENSTEIN", u: "../images/horror-villains/bride-of-frankenstein.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "PUMPKINHEAD", u: "../images/horror-villains/pumpkinhead.jpg" },
-    { n: "THE LEPRECHAUN", u: "../images/horror-villains/the-leprechaun.jpg" },
-    { n: "CHATTERER", u: "../images/horror-villains/chatterer.jpg" },
-    { n: "THE THING", u: "../images/horror-villains/the-thing.jpg" },
-    { n: "BLACK PHILLIP", u: "../images/horror-villains/black-phillip.jpg" },
-    { n: "THE GRABBER", u: "../images/horror-villains/the-grabber.jpg" },
-    { n: "OTIS DRIFTWOOD", u: "../images/horror-villains/otis-driftwood.jpg" },
-    { n: "INVISIBLE MAN", u: "../images/horror-villains/invisible-man.jpg" },
-    { n: "PHANTOM OF THE OPERA", u: "../images/horror-villains/phantom-of-the-opera.jpg" },
-    { n: "MR. HYDE", u: "../images/horror-villains/mr-hyde.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "DAMIEN THORN", u: "../images/horror-villains/damien-thorn.jpg" },
-    { n: "BLAIR WITCH", u: "../images/horror-villains/blair-witch.jpg" },
-    { n: "TOMIE", u: "../images/horror-villains/tomie.jpg" },
-    { n: "JACK TORRANCE", u: "../images/horror-villains/jack-torrance.jpg" },
-    { n: "JIGSAW", u: "../images/horror-villains/jigsaw.jpg" },
-    { n: "AMANDA YOUNG", u: "../images/horror-villains/amanda-young.jpg" },
-    { n: "JOHN KRAMER", u: "../images/horror-villains/john-kramer.jpg" },
-    { n: "BATHSHEBA", u: "../images/horror-villains/bathsheba.jpg" },
-    { n: "CENOBITE", u: "../images/horror-villains/cenobite.jpg" },
-    { n: "THE CROOKED MAN", u: "../images/horror-villains/the-crooked-man.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.horrorVillainsData = horrorVillainsData;

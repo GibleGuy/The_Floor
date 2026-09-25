@@ -42,33 +42,10 @@ const dragQueensData = [
     { n: "GIGI GOODE", u: "../images/drag-queens/gigi-goode.jpg" },
     { n: "NAOMI SMALLS", u: "../images/drag-queens/naomi-smalls.jpg" },
     { n: "PEARL", u: "../images/drag-queens/pearl.jpg" },
-    { n: "DETOX", u: "../images/drag-queens/detox.jpg" },
-    { n: "ROXXXY ANDREWS", u: "../images/drag-queens/roxxxy-andrews.jpg" },
-    { n: "COCO MONTRESE", u: "../images/drag-queens/coco-montrese.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "LADY BUNNY", u: "../images/drag-queens/lady-bunny.jpg" },
-    { n: "LYPSINKA", u: "../images/drag-queens/lypsinka.jpg" },
-    { n: "CHI CHI DEVAYNE", u: "../images/drag-queens/chi-chi-devayne.jpg" },
-    { n: "LAGANJA ESTRANJA", u: "../images/drag-queens/laganja-estranja.jpg" },
-    { n: "VALENTINA", u: "../images/drag-queens/valentina.jpg" },
-    { n: "AJA", u: "../images/drag-queens/aja.jpg" },
-    { n: "MISS VANJIE", u: "../images/drag-queens/miss-vanjie.jpg" },
-    { n: "HEIDI N CLOSET", u: "../images/drag-queens/heidi-n-closet.jpg" },
-    { n: "KYLIE SONIQUE LOVE", u: "../images/drag-queens/kylie-sonique-love.jpg" },
-    { n: "JOEY ARIAS", u: "../images/drag-queens/joey-arias.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "YARA SOFIA", u: "../images/drag-queens/yara-sofia.jpg" },
-    { n: "ALEXIS MATEO", u: "../images/drag-queens/alexis-mateo.jpg" },
-    { n: "PANDORA BOXX", u: "../images/drag-queens/pandora-boxx.jpg" },
-    { n: "TATIANNA", u: "../images/drag-queens/tatianna.jpg" },
-    { n: "DENALI", u: "../images/drag-queens/denali.jpg" },
-    { n: "CRYSTAL METHYD", u: "../images/drag-queens/crystal-methyd.jpg" },
-    { n: "TIA KOFI", u: "../images/drag-queens/tia-kofi.jpg" },
-    { n: "JAYMES MANSFIELD", u: "../images/drag-queens/jaymes-mansfield.jpg" },
-    { n: "FARRAH MOAN", u: "../images/drag-queens/farrah-moan.jpg" },
-    { n: "MORGAN MCNICHAELS", u: "../images/drag-queens/morgan-mcnichaels.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.dragQueensData = dragQueensData;

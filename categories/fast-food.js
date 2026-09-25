@@ -2,9 +2,7 @@
 const fastFoodData = [
     // Tier 1 — Obvious (items 1–15)
     { n: "MCDONALD'S", u: "../images/fast-food/mcdonalds.jpg" },
-    { n: "BIG MAC", u: "../images/fast-food/big-mac.jpg" },
     { n: "BURGER KING", u: "../images/fast-food/burger-king.jpg" },
-    { n: "WHOPPER", u: "../images/fast-food/whopper.jpg" },
     { n: "TACO BELL", u: "../images/fast-food/taco-bell.jpg" },
     { n: "FRENCH FRIES", u: "../images/fast-food/french-fries.jpg" },
     { n: "KFC", u: "../images/fast-food/kfc.jpg" },
@@ -37,10 +35,7 @@ const fastFoodData = [
     // Tier 3 — Knowledgeable (items 31–40)
     { n: "WHATABURGER", u: "../images/fast-food/whataburger.jpg" },
     { n: "ORANGE CHICKEN", u: "../images/fast-food/orange-chicken.jpg" },
-    { n: "WHITE CASTLE", u: "../images/fast-food/white-castle.jpg" },
     { n: "SHAKE SHACK", u: "../images/fast-food/shake-shack.jpg" },
-    { n: "RAISING CANE'S", u: "../images/fast-food/raising-canes.jpg" },
-    { n: "CULVER'S", u: "../images/fast-food/culvers.jpg" },
     { n: "JACK IN THE BOX", u: "../images/fast-food/jack-in-the-box.jpg" },
     { n: "WINGSTOP", u: "../images/fast-food/wingstop.jpg" },
     { n: "JIMMY JOHN'S", u: "../images/fast-food/jimmy-johns.jpg" },
@@ -48,27 +43,8 @@ const fastFoodData = [
 
     // Tier 4 — Expert (items 41–50)
     { n: "BOJANGLES", u: "../images/fast-food/bojangles.jpg" },
-    { n: "ANIMAL STYLE FRIES", u: "../images/fast-food/animal-style-fries.jpg" },
-    { n: "ZAXBY'S", u: "../images/fast-food/zaxbys.jpg" },
-    { n: "COOK OUT", u: "../images/fast-food/cook-out.jpg" },
-    { n: "KRYSTAL", u: "../images/fast-food/krystal.jpg" },
-    { n: "STEAK N SHAKE", u: "../images/fast-food/steak-n-shake.jpg" },
-    { n: "A&W", u: "../images/fast-food/aandw.jpg" },
-    { n: "LONG JOHN SILVER'S", u: "../images/fast-food/long-john-silvers.jpg" },
-    { n: "DEL TACO", u: "../images/fast-food/del-taco.jpg" },
-    { n: "EL POLLO LOCO", u: "../images/fast-food/el-pollo-loco.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "QDOBA", u: "../images/fast-food/qdoba.jpg" },
-    { n: "MOE'S", u: "../images/fast-food/moes.jpg" },
-    { n: "FIREHOUSE SUBS", u: "../images/fast-food/firehouse-subs.jpg" },
-    { n: "JERSEY MIKE'S", u: "../images/fast-food/jersey-mikes.jpg" },
-    { n: "CHECKERS", u: "../images/fast-food/checkers.jpg" },
-    { n: "CARL'S JR", u: "../images/fast-food/carls-jr.jpg" },
-    { n: "HARDEE'S", u: "../images/fast-food/hardees.jpg" },
-    { n: "CHURCH'S CHICKEN", u: "../images/fast-food/churchs-chicken.jpg" },
-    { n: "BOSTON MARKET", u: "../images/fast-food/boston-market.jpg" },
-    { n: "QUIZNOS", u: "../images/fast-food/quiznos.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.fastFoodData = fastFoodData;

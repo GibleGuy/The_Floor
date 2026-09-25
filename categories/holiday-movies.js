@@ -47,28 +47,8 @@ const holidayMoviesData = [
     { n: "DUTCH", u: "../images/holiday-movies/dutch.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "THE HEBREW HAMMER", u: "../images/holiday-movies/the-hebrew-hammer.jpg" },
-    { n: "RARE EXPORTS", u: "../images/holiday-movies/rare-exports.jpg" },
-    { n: "TOKYO GODFATHERS", u: "../images/holiday-movies/tokyo-godfathers.jpg" },
-    { n: "HAPPIEST SEASON", u: "../images/holiday-movies/happiest-season.jpg" },
-    { n: "CAROL", u: "../images/holiday-movies/carol.jpg" },
-    { n: "THE NIGHT BEFORE", u: "../images/holiday-movies/the-night-before.jpg" },
-    { n: "OFFICE CHRISTMAS PARTY", u: "../images/holiday-movies/office-christmas-party.jpg" },
-    { n: "FRED CLAUS", u: "../images/holiday-movies/fred-claus.jpg" },
-    { n: "DECK THE HALLS", u: "../images/holiday-movies/deck-the-halls.jpg" },
-    { n: "THE BISHOP'S WIFE", u: "../images/holiday-movies/the-bishops-wife.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "JACK FROST", u: "../images/holiday-movies/jack-frost.jpg" },
-    { n: "ERNEST SAVES CHRISTMAS", u: "../images/holiday-movies/ernest-saves-christmas.jpg" },
-    { n: "SPIRITED", u: "../images/holiday-movies/spirited.jpg" },
-    { n: "HOLIDAY INN", u: "../images/holiday-movies/holiday-inn.jpg" },
-    { n: "MEET ME IN ST. LOUIS", u: "../images/holiday-movies/meet-me-in-st-louis.jpg" },
-    { n: "THE FAMILY MAN", u: "../images/holiday-movies/the-family-man.jpg" },
-    { n: "JINGLE JANGLE", u: "../images/holiday-movies/jingle-jangle.jpg" },
-    { n: "CANDY CANE LANE", u: "../images/holiday-movies/candy-cane-lane.jpg" },
-    { n: "A CHRISTMAS CAROL", u: "../images/holiday-movies/a-christmas-carol.jpg" },
-    { n: "THE MAN WHO INVENTED CHRISTMAS", u: "../images/holiday-movies/the-man-who-invented-christmas.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.holidayMoviesData = holidayMoviesData;

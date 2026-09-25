@@ -47,28 +47,8 @@ const comedyMoviesData = [
     { n: "BOOKSMART", u: "../images/comedy-movies/booksmart.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "HOT FUZZ", u: "../images/comedy-movies/hot-fuzz.jpg" },
-    { n: "SHAUN OF THE DEAD", u: "../images/comedy-movies/shaun-of-the-dead.jpg" },
-    { n: "GAME NIGHT", u: "../images/comedy-movies/game-night.jpg" },
-    { n: "PALM SPRINGS", u: "../images/comedy-movies/palm-springs.jpg" },
-    { n: "WHAT WE DO IN THE SHADOWS", u: "../images/comedy-movies/what-we-do-in-the-shadows.jpg" },
-    { n: "POPSTAR", u: "../images/comedy-movies/popstar.jpg" },
-    { n: "THE OTHER GUYS", u: "../images/comedy-movies/the-other-guys.jpg" },
-    { n: "WET HOT AMERICAN SUMMER", u: "../images/comedy-movies/wet-hot-american-summer.jpg" },
-    { n: "BEST IN SHOW", u: "../images/comedy-movies/best-in-show.jpg" },
-    { n: "NAPOLEON DYNAMITE", u: "../images/comedy-movies/napoleon-dynamite.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "SUPER TROOPERS", u: "../images/comedy-movies/super-troopers.jpg" },
-    { n: "PINEAPPLE EXPRESS", u: "../images/comedy-movies/pineapple-express.jpg" },
-    { n: "THIS IS THE END", u: "../images/comedy-movies/this-is-the-end.jpg" },
-    { n: "WE'RE THE MILLERS", u: "../images/comedy-movies/were-the-millers.jpg" },
-    { n: "TED", u: "../images/comedy-movies/ted.jpg" },
-    { n: "NEIGHBORS", u: "../images/comedy-movies/neighbors.jpg" },
-    { n: "DUE DATE", u: "../images/comedy-movies/due-date.jpg" },
-    { n: "MINIONS", u: "../images/comedy-movies/minions.jpg" },
-    { n: "THE INTERN", u: "../images/comedy-movies/the-intern.jpg" },
-    { n: "BAD TEACHER", u: "../images/comedy-movies/bad-teacher.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.comedyMoviesData = comedyMoviesData;

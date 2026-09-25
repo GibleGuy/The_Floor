@@ -13,7 +13,6 @@ const modernVideoGamesData = [
     { n: "ANIMAL CROSSING", u: "../images/modern-video-games/animal-crossing.jpg" },
     { n: "OVERWATCH", u: "../images/modern-video-games/overwatch.jpg" },
     { n: "LEAGUE OF LEGENDS", u: "../images/modern-video-games/league-of-legends.jpg" },
-    { n: "EA SPORTS FC", u: "../images/modern-video-games/ea-sports-fc.jpg" },
     { n: "THE LAST OF US", u: "../images/modern-video-games/the-last-of-us.jpg" },
     { n: "MARVEL'S SPIDER-MAN", u: "../images/modern-video-games/marvels-spider-man.jpg" },
 
@@ -36,7 +35,6 @@ const modernVideoGamesData = [
 
     // Tier 3 — Knowledgeable (items 31–40)
     { n: "HELLDIVERS 2", u: "../images/modern-video-games/helldivers-2.jpg" },
-    { n: "TEARS OF THE KINGDOM", u: "../images/modern-video-games/tears-of-the-kingdom.jpg" },
     { n: "HADES", u: "../images/modern-video-games/hades.jpg" },
     { n: "SEKIRO", u: "../images/modern-video-games/sekiro.jpg" },
     { n: "HOLLOW KNIGHT", u: "../images/modern-video-games/hollow-knight.jpg" },
@@ -50,25 +48,8 @@ const modernVideoGamesData = [
     { n: "LETHAL COMPANY", u: "../images/modern-video-games/lethal-company.jpg" },
     { n: "BALATRO", u: "../images/modern-video-games/balatro.jpg" },
     { n: "CULT OF THE LAMB", u: "../images/modern-video-games/cult-of-the-lamb.jpg" },
-    { n: "PIKMIN 4", u: "../images/modern-video-games/pikmin-4.jpg" },
-    { n: "LIES OF P", u: "../images/modern-video-games/lies-of-p.jpg" },
-    { n: "SEA OF STARS", u: "../images/modern-video-games/sea-of-stars.jpg" },
-    { n: "ARMORED CORE VI", u: "../images/modern-video-games/armored-core-vi.jpg" },
-    { n: "DIABLO IV", u: "../images/modern-video-games/diablo-iv.jpg" },
-    { n: "STREET FIGHTER 6", u: "../images/modern-video-games/street-fighter-6.jpg" },
-    { n: "MORTAL KOMBAT 1", u: "../images/modern-video-games/mortal-kombat-1.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "FALL GUYS", u: "../images/modern-video-games/fall-guys.jpg" },
-    { n: "WARZONE", u: "../images/modern-video-games/warzone.jpg" },
-    { n: "NBA 2K", u: "../images/modern-video-games/nba-2k.jpg" },
-    { n: "MADDEN", u: "../images/modern-video-games/madden.jpg" },
-    { n: "OVERCOOKED", u: "../images/modern-video-games/overcooked.jpg" },
-    { n: "JACKBOX", u: "../images/modern-video-games/jackbox.jpg" },
-    { n: "JUST DANCE", u: "../images/modern-video-games/just-dance.jpg" },
-    { n: "FIRE EMBLEM ENGAGE", u: "../images/modern-video-games/fire-emblem-engage.jpg" },
-    { n: "LORDS OF THE FALLEN", u: "../images/modern-video-games/lords-of-the-fallen.jpg" },
-    { n: "CONTENT WARNING", u: "../images/modern-video-games/content-warning.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.modernVideoGamesData = modernVideoGamesData;
