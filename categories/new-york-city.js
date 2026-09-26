@@ -15,7 +15,6 @@ const newYorkCityData = [
     { n: "NEW YORK METS", u: "../images/new-york-city/new-york-mets.jpg" },
     { n: "ONE WORLD TRADE CENTER", u: "../images/new-york-city/one-world-trade-center.jpg" },
     { n: "PRETZEL", u: "../images/new-york-city/pretzel.jpg" },
-    { n: "I LOVE NY", u: "../images/new-york-city/i-love-ny.jpg" },
 
     // Tier 2 — Familiar (items 16–30)
     { n: "CHRYSLER BUILDING", u: "../images/new-york-city/chrysler-building.jpg" },
@@ -31,7 +30,6 @@ const newYorkCityData = [
     { n: "HIGH LINE", u: "../images/new-york-city/high-line.jpg" },
     { n: "FLATIRON BUILDING", u: "../images/new-york-city/flatiron-building.jpg" },
     { n: "ST. PATRICK'S CATHEDRAL", u: "../images/new-york-city/st-patricks-cathedral.jpg" },
-    { n: "NYPD", u: "../images/new-york-city/nypd.jpg" },
     { n: "TKTS BOOTH", u: "../images/new-york-city/tkts-booth.jpg" },
 
     // Tier 3 — Knowledgeable (items 31–40)
@@ -59,16 +57,6 @@ const newYorkCityData = [
     { n: "NEW YORK PUBLIC LIBRARY", u: "../images/new-york-city/new-york-public-library.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "CHINATOWN ARCH", u: "../images/new-york-city/chinatown-arch.jpg" },
-    { n: "LITTLE ITALY", u: "../images/new-york-city/little-italy.jpg" },
-    { n: "FIRE ESCAPE", u: "../images/new-york-city/fire-escape.jpg" },
-    { n: "CITI BIKE", u: "../images/new-york-city/citi-bike.jpg" },
-    { n: "BRONX ZOO", u: "../images/new-york-city/bronx-zoo.jpg" },
-    { n: "9/11 MEMORIAL", u: "../images/new-york-city/9-11-memorial.jpg" },
-    { n: "BROOKLYN MUSEUM", u: "../images/new-york-city/brooklyn-museum.jpg" },
-    { n: "LITTLE ISLAND", u: "../images/new-york-city/little-island.jpg" },
-    { n: "SOHO CAST IRON", u: "../images/new-york-city/soho-cast-iron.jpg" },
-    { n: "BLACK TOWN CAR", u: "../images/new-york-city/black-town-car.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.newYorkCityData = newYorkCityData;

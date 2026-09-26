@@ -40,35 +40,10 @@ const housePlantsData = [
     { n: "PEPEROMIA", u: "../images/house-plants/peperomia.jpg" },
     { n: "BEGONIA", u: "../images/house-plants/begonia.jpg" },
     { n: "PRAYER PLANT", u: "../images/house-plants/prayer-plant.jpg" },
-    { n: "ARECA PALM", u: "../images/house-plants/areca-palm.jpg" },
-    { n: "PONYTAIL PALM", u: "../images/house-plants/ponytail-palm.jpg" },
-    { n: "YUCCA", u: "../images/house-plants/yucca.jpg" },
-    { n: "ECHEVERIA", u: "../images/house-plants/echeveria.jpg" },
-    { n: "HAWORTHIA", u: "../images/house-plants/haworthia.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "LITHOPS", u: "../images/house-plants/lithops.jpg" },
-    { n: "VENUS FLYTRAP", u: "../images/house-plants/venus-flytrap.jpg" },
-    { n: "PITCHER PLANT", u: "../images/house-plants/pitcher-plant.jpg" },
-    { n: "ALOCASIA", u: "../images/house-plants/alocasia.jpg" },
-    { n: "CALADIUM", u: "../images/house-plants/caladium.jpg" },
-    { n: "STRING OF BANANAS", u: "../images/house-plants/string-of-bananas.jpg" },
-    { n: "FISHBONE CACTUS", u: "../images/house-plants/fishbone-cactus.jpg" },
-    { n: "STROMANTHE", u: "../images/house-plants/stromanthe.jpg" },
-    { n: "REX BEGONIA", u: "../images/house-plants/rex-begonia.jpg" },
-    { n: "RHIPSALIS", u: "../images/house-plants/rhipsalis.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "MAJESTY PALM", u: "../images/house-plants/majesty-palm.jpg" },
-    { n: "TRADESCANTIA", u: "../images/house-plants/tradescantia.jpg" },
-    { n: "COLEUS", u: "../images/house-plants/coleus.jpg" },
-    { n: "KALANCHOE", u: "../images/house-plants/kalanchoe.jpg" },
-    { n: "CROWN OF THORNS", u: "../images/house-plants/crown-of-thorns.jpg" },
-    { n: "LAVENDER", u: "../images/house-plants/lavender.jpg" },
-    { n: "ROSEMARY", u: "../images/house-plants/rosemary.jpg" },
-    { n: "BASIL", u: "../images/house-plants/basil.jpg" },
-    { n: "MINT", u: "../images/house-plants/mint.jpg" },
-    { n: "GERANIUM", u: "../images/house-plants/geranium.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.housePlantsData = housePlantsData;

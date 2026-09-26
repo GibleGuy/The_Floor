@@ -43,32 +43,10 @@ const tennisData = [
     { n: "ROD LAVER", u: "../images/tennis/rod-laver.jpg" },
     { n: "ALTHEA GIBSON", u: "../images/tennis/althea-gibson.jpg" },
     { n: "HAWK-EYE", u: "../images/tennis/hawk-eye.jpg" },
-    { n: "CENTRE COURT", u: "../images/tennis/centre-court.jpg" },
-    { n: "ROLAND GARROS", u: "../images/tennis/roland-garros.jpg" },
 
     // Tier 4 — Expert (items 41–50)
-    { n: "ARTHUR ASHE STADIUM", u: "../images/tennis/arthur-ashe-stadium.jpg" },
-    { n: "DAVIS CUP", u: "../images/tennis/davis-cup.jpg" },
-    { n: "OVERGRIP", u: "../images/tennis/overgrip.jpg" },
-    { n: "VIBRATION DAMPENER", u: "../images/tennis/vibration-dampener.jpg" },
-    { n: "BALL PERSON", u: "../images/tennis/ball-person.jpg" },
-    { n: "LINE JUDGE", u: "../images/tennis/line-judge.jpg" },
-    { n: "LAVER CUP", u: "../images/tennis/laver-cup.jpg" },
-    { n: "INDIAN WELLS", u: "../images/tennis/indian-wells.jpg" },
-    { n: "MONTE CARLO", u: "../images/tennis/monte-carlo.jpg" },
-    { n: "BILLIE JEAN KING CUP", u: "../images/tennis/billie-jean-king-cup.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "STAN SMITH", u: "../images/tennis/stan-smith.jpg" },
-    { n: "DANIIL MEDVEDEV", u: "../images/tennis/daniil-medvedev.jpg" },
-    { n: "ONS JABEUR", u: "../images/tennis/ons-jabeur.jpg" },
-    { n: "BEN SHELTON", u: "../images/tennis/ben-shelton.jpg" },
-    { n: "EMMA RADUCANU", u: "../images/tennis/emma-raducanu.jpg" },
-    { n: "JESSICA PEGULA", u: "../images/tennis/jessica-pegula.jpg" },
-    { n: "TAYLOR FRITZ", u: "../images/tennis/taylor-fritz.jpg" },
-    { n: "STEFAN EDBERG", u: "../images/tennis/stefan-edberg.jpg" },
-    { n: "BORIS BECKER", u: "../images/tennis/boris-becker.jpg" },
-    { n: "CASPER RUUD", u: "../images/tennis/casper-ruud.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.tennisData = tennisData;

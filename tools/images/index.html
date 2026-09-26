@@ -799,7 +799,7 @@
 
                 if (!window.CATEGORY_REGISTRY) return;
 
-                const cats = window.CATEGORY_REGISTRY.filter(c => c.key !== 'math' && c.key !== 'the-beatles' && c.key !== 'mathematics-2');
+                const cats = window.CATEGORY_REGISTRY.filter(c => c.key !== 'math' && c.key !== 'the-beatles' && c.key !== 'mathematics-2' && c.key !== 'mystery-box');
                 const needsImages = [];
                 const complete = [];
                 const doNotTouch = [];
@@ -1036,6 +1036,25 @@
                 return dot > 0 ? file.substring(0, dot) : file;
             }
 
+            function slugifyName(s) {
+                return String(s || '').toLowerCase()
+                    .replace(/&/g, 'and')
+                    .replace(/'/g, '')
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+            }
+
+            function getSearchTerm(item) {
+                if (!item) return '';
+                const hint = item.h || item.hint;
+                if (!hint) return item.n;
+                const reg = (window.CATEGORY_REGISTRY || []).find(c => c.key === currentCategoryKey);
+                if (reg && reg.searchHint) return hint;
+                const stem = extractStem(item.u || '');
+                if (stem && slugifyName(hint) === stem) return hint;
+                return item.n;
+            }
+
             function extractCategory(urlPath) {
                 // Standard: "../images/gameshows/wheel-of-fortune.webp" -> "gameshows"
                 // PPT: "../images/pptGames/Tennis/ball.jpg" -> "pptGames/Tennis"
@@ -1070,7 +1089,8 @@
 
                     const existingFile = currentImages[stem] || '';
                     const imgSrc = hasImage ? `../../images/${category}/${existingFile}?v=${Date.now()}` : '';
-                    const escapedName = item.n.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const searchTerm = getSearchTerm(item);
+                    const escapedSearch = searchTerm.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     card.innerHTML = `
         <div class="card-header">
@@ -1087,7 +1107,7 @@
         </div>
         <div class="card-actions">
           <div class="btn-row">
-            <button class="btn btn-search" onclick="searchGoogle('${escapedName}')">
+            <button class="btn btn-search" onclick="searchGoogle('${escapedSearch}')">
               🔍 Search Google
             </button>
           </div>
@@ -1626,7 +1646,8 @@
 
             function getAutoSearchUrl(item) {
                 const suffix = document.getElementById('searchSuffix').value.trim();
-                const query = suffix ? `${item.n} ${suffix}` : item.n;
+                const term = getSearchTerm(item);
+                const query = suffix ? `${term} ${suffix}` : term;
                 const q = encodeURIComponent(query);
                 return `https://www.google.com/search?tbm=isch&q=${q}`;
             }
@@ -1708,7 +1729,7 @@
                 const item = data[idx];
 
                 // Update status bar
-                document.getElementById('autoCurrentName').textContent = item.n;
+                document.getElementById('autoCurrentName').textContent = getSearchTerm(item);
                 document.getElementById('autoProgress').textContent =
                     `${autoModeQueuePos + 1} of ${autoModeQueue.length}`;
                 document.getElementById('autoInstruction').textContent =

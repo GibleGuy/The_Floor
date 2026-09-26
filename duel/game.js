@@ -4,7 +4,7 @@ const CATEGORY_SCRIPTS = {};
 const CATEGORY_GLOBALS = {};
 if (window.CATEGORY_REGISTRY) {
     window.CATEGORY_REGISTRY.forEach(function (c) {
-        CATEGORY_SCRIPTS[c.key] = '../categories/' + c.script + '?v=4';
+        CATEGORY_SCRIPTS[c.key] = '../categories/' + c.script + '?v=5';
         CATEGORY_GLOBALS[c.key] = c.global;
     });
 }
@@ -25,6 +25,19 @@ function loadCategoryScript(cat) {
 
 async function getCategoryData(cat) {
     await loadCategoryScript(cat);
+    if (cat === 'mystery-box') {
+        const registry = window.CATEGORY_REGISTRY || [];
+        const toLoad = registry.filter(function (c) {
+            return c && c.key && c.key !== 'mystery-box' && c.tier !== 'PPTGAMES';
+        });
+        await Promise.all(toLoad.map(function (c) {
+            return loadCategoryScript(c.key).catch(function () { return null; });
+        }));
+        if (typeof window.buildMysteryBoxData === 'function') {
+            return await window.buildMysteryBoxData();
+        }
+        return [];
+    }
     const g = typeof window !== 'undefined' ? window[CATEGORY_GLOBALS[cat]] : undefined;
     let data = Array.isArray(g) ? [...g] : [];
     const reg = window.CATEGORY_REGISTRY && window.CATEGORY_REGISTRY.find(function(c) { return c.key === cat; });
@@ -1791,6 +1804,10 @@ function loadImage() {
                 child.style.display = 'none';
             }
         });
+
+        if (img.complete && img.naturalWidth === 0) {
+            handleImageError(img);
+        }
     }
 
     // Preload next clues in the background
@@ -2967,7 +2984,9 @@ function handleImageError(img) {
     // Mark handled immediately so the inline onerror doesn't re-enter
     img.dataset.errorHandled = 'true';
 
-    const item = getCurrentItem();
+    const idMatch = (img.id || '').match(/^clue-img-(\d+)$/);
+    const poolIndex = idMatch ? parseInt(idMatch[1], 10) : NaN;
+    const item = (Number.isInteger(poolIndex) && currentPool[poolIndex]) || getCurrentItem();
     if (!item) return;
     const itemName = item.n;
     const isMath = typeof item.q === 'string';
@@ -3003,8 +3022,10 @@ function handleImageError(img) {
 
     function tryNextExtension() {
         if (probeIndex >= toTry.length) {
-            // All alternatives exhausted — show text fallback
-            showTextFallback(itemName);
+            // Only replace the on-screen clue; preloads stay hidden
+            if (item === getCurrentItem()) {
+                showTextFallback(itemName);
+            }
             return;
         }
         const probe = new Image();

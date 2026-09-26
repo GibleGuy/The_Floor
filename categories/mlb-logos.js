@@ -40,7 +40,6 @@ const mlbLogosData = [
     { n: "NATIONAL LEAGUE", u: "../images/mlb-logos/national-league.jpg" },
     { n: "BROOKLYN DODGERS", u: "../images/mlb-logos/brooklyn-dodgers.jpg" },
     { n: "MONTREAL EXPOS", u: "../images/mlb-logos/montreal-expos.jpg" },
-    { n: "WORLD SERIES LOGO", u: "../images/mlb-logos/world-series-logo.jpg" },
     { n: "FLORIDA MARLINS", u: "../images/mlb-logos/florida-marlins.jpg" },
     { n: "TAMPA BAY DEVIL RAYS", u: "../images/mlb-logos/tampa-bay-devil-rays.jpg" },
     { n: "CALIFORNIA ANGELS", u: "../images/mlb-logos/california-angels.jpg" },
@@ -55,20 +54,9 @@ const mlbLogosData = [
     { n: "ST. LOUIS BROWNS", u: "../images/mlb-logos/st-louis-browns.jpg" },
     { n: "BOSTON BRAVES", u: "../images/mlb-logos/boston-braves.jpg" },
     { n: "PHILADELPHIA ATHLETICS", u: "../images/mlb-logos/philadelphia-athletics.jpg" },
-    { n: "MONTREAL EXPOS ALT", u: "../images/mlb-logos/montreal-expos-alt.jpg" },
-    { n: "TEXAS RANGERS ALT", u: "../images/mlb-logos/texas-rangers-alt.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "ANAHEIM ANGELS", u: "../images/mlb-logos/anaheim-angels.jpg" },
-    { n: "LOS ANGELES ANGELS OF ANAHEIM", u: "../images/mlb-logos/los-angeles-angels-of-anaheim.jpg" },
-    { n: "FLORIDA MARLINS ALT", u: "../images/mlb-logos/florida-marlins-alt.jpg" },
     { n: "CLEVELAND NAPS", u: "../images/mlb-logos/cleveland-naps.jpg" },
-    { n: "BOSTON AMERICANS", u: "../images/mlb-logos/boston-americans.jpg" },
-    { n: "BROOKLYN ROBINS", u: "../images/mlb-logos/brooklyn-robins.jpg" },
-    { n: "WASHINGTON NATIONALS ALT", u: "../images/mlb-logos/washington-nationals-alt.jpg" },
-    { n: "SEATTLE MARINERS TRIDENT", u: "../images/mlb-logos/seattle-mariners-trident.jpg" },
-    { n: "HOUSTON ASTROS RAINBOW", u: "../images/mlb-logos/houston-astros-rainbow.jpg" },
-    { n: "SAN DIEGO PADRES BROWN", u: "../images/mlb-logos/san-diego-padres-brown.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.mlbLogosData = mlbLogosData;

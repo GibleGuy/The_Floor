@@ -11,7 +11,6 @@ const nbaTeamsData = [
     { n: "BROOKLYN NETS", u: "../images/nba-teams/brooklyn-nets.jpg" },
     { n: "DALLAS MAVERICKS", u: "../images/nba-teams/dallas-mavericks.jpg" },
     { n: "PHOENIX SUNS", u: "../images/nba-teams/phoenix-suns.jpg" },
-    { n: "PHILADELPHIA 76ERS", u: "../images/nba-teams/philadelphia-76ers.jpg" },
     { n: "MILWAUKEE BUCKS", u: "../images/nba-teams/milwaukee-bucks.jpg" },
     { n: "DENVER NUGGETS", u: "../images/nba-teams/denver-nuggets.jpg" },
     { n: "LOS ANGELES CLIPPERS", u: "../images/nba-teams/los-angeles-clippers.jpg" },
@@ -40,9 +39,7 @@ const nbaTeamsData = [
     { n: "NEW JERSEY NETS", u: "../images/nba-teams/new-jersey-nets.jpg" },
     { n: "CHARLOTTE BOBCATS", u: "../images/nba-teams/charlotte-bobcats.jpg" },
     { n: "VANCOUVER GRIZZLIES", u: "../images/nba-teams/vancouver-grizzlies.jpg" },
-    { n: "WASHINGTON BULLETS", u: "../images/nba-teams/washington-bullets.jpg" },
     { n: "NEW ORLEANS HORNETS", u: "../images/nba-teams/new-orleans-hornets.jpg" },
-    { n: "KANSAS CITY KINGS", u: "../images/nba-teams/kansas-city-kings.jpg" },
     { n: "BUFFALO BRAVES", u: "../images/nba-teams/buffalo-braves.jpg" },
     { n: "SAN DIEGO CLIPPERS", u: "../images/nba-teams/san-diego-clippers.jpg" },
 
@@ -50,25 +47,9 @@ const nbaTeamsData = [
     { n: "MINNEAPOLIS LAKERS", u: "../images/nba-teams/minneapolis-lakers.jpg" },
     { n: "PHILADELPHIA WARRIORS", u: "../images/nba-teams/philadelphia-warriors.jpg" },
     { n: "CINCINNATI ROYALS", u: "../images/nba-teams/cincinnati-royals.jpg" },
-    { n: "ST. LOUIS HAWKS", u: "../images/nba-teams/st-louis-hawks.jpg" },
-    { n: "BALTIMORE BULLETS", u: "../images/nba-teams/baltimore-bullets.jpg" },
-    { n: "SYRACUSE NATIONALS", u: "../images/nba-teams/syracuse-nationals.jpg" },
-    { n: "CHICAGO ZEPHYRS", u: "../images/nba-teams/chicago-zephyrs.jpg" },
-    { n: "ROCHESTER ROYALS", u: "../images/nba-teams/rochester-royals.jpg" },
     { n: "FORT WAYNE PISTONS", u: "../images/nba-teams/fort-wayne-pistons.jpg" },
-    { n: "TRI-CITIES BLACKHAWKS", u: "../images/nba-teams/tri-cities-blackhawks.jpg" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "ABA LOGO", u: "../images/nba-teams/aba-logo.jpg" },
-    { n: "NEW YORK NETS", u: "../images/nba-teams/new-york-nets.jpg" },
-    { n: "SAN DIEGO ROCKETS", u: "../images/nba-teams/san-diego-rockets.jpg" },
-    { n: "NEW ORLEANS JAZZ", u: "../images/nba-teams/new-orleans-jazz.jpg" },
-    { n: "KANSAS CITY-OMAHA KINGS", u: "../images/nba-teams/kansas-city-omaha-kings.jpg" },
-    { n: "CAPITAL BULLETS", u: "../images/nba-teams/capital-bullets.jpg" },
-    { n: "CINCINNATI ROYALS ALT", u: "../images/nba-teams/cincinnati-royals-alt.jpg" },
-    { n: "ST. LOUIS BOMBERS", u: "../images/nba-teams/st-louis-bombers.jpg" },
-    { n: "INDIANAPOLIS OLYMPIANS", u: "../images/nba-teams/indianapolis-olympians.jpg" },
-    { n: "CHICAGO STAGS", u: "../images/nba-teams/chicago-stags.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.nbaTeamsData = nbaTeamsData;

@@ -63,12 +63,6 @@ const nintendoGameSeriesData = [
     { n: "MARIO STRIKERS", u: "../images/nintendo-game-series/mario-strikers.jpg" },
     { n: "WII FIT", u: "../images/nintendo-game-series/wii-fit.jpg" },
     { n: "SUPER MARIO MAKER", u: "../images/nintendo-game-series/super-mario-maker.jpg" },
-    { n: "GAME AND WATCH", u: "../images/nintendo-game-series/game-and-watch.jpg" },
-    { n: "PUSHMO", u: "../images/nintendo-game-series/pushmo.jpg" },
-    { n: "BOXBOY", u: "../images/nintendo-game-series/boxboy.jpg" },
-    { n: "STEEL DIVER", u: "../images/nintendo-game-series/steel-diver.jpg" },
-    { n: "WII PLAY", u: "../images/nintendo-game-series/wii-play.jpg" },
-    { n: "NINTENDO LAND", u: "../images/nintendo-game-series/nintendo-land.jpg" },
 
 ];
 if (typeof window !== 'undefined') window.nintendoGameSeriesData = nintendoGameSeriesData;
