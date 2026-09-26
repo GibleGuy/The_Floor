@@ -9,19 +9,14 @@ const tvChannelsData = [
     { n: "CARTOON NETWORK", u: "../images/tv-channels/adventure-time.jpg", h: "ADVENTURE TIME" },
     { n: "ESPN", u: "../images/tv-channels/sportscenter.jpg", h: "SPORTSCENTER" },
     { n: "BRAVO", u: "../images/tv-channels/the-real-housewives.jpg", h: "THE REAL HOUSEWIVES" },
-    { n: "NBC", u: "../images/tv-channels/saturday-night-live.jpg", h: "SATURDAY NIGHT LIVE" },
     { n: "MTV", u: "../images/tv-channels/the-challenge.jpg", h: "THE CHALLENGE" },
 
     // Tier 2 — Familiar (items 16–30)
     { n: "AMC", u: "../images/tv-channels/breaking-bad.jpg", h: "BREAKING BAD" },
     { n: "ABC", u: "../images/tv-channels/greys-anatomy.jpg", h: "GREY'S ANATOMY" },
-    { n: "NBC", u: "../images/tv-channels/the-office.jpg", h: "THE OFFICE" },
     { n: "CBS", u: "../images/tv-channels/ncis.jpg", h: "NCIS" },
     { n: "ADULT SWIM", u: "../images/tv-channels/rick-and-morty.jpg", h: "RICK AND MORTY" },
-    { n: "HBO", u: "../images/tv-channels/the-sopranos.jpg", h: "THE SOPRANOS" },
     { n: "COMEDY CENTRAL", u: "../images/tv-channels/south-park.jpg", h: "SOUTH PARK" },
-    { n: "NICKELODEON", u: "../images/tv-channels/icarly.jpg", h: "ICARLY" },
-    { n: "FOX", u: "../images/tv-channels/family-guy.jpg", h: "FAMILY GUY" },
     { n: "ABC", u: "../images/tv-channels/lost.jpg", h: "LOST" },
     { n: "DISNEY CHANNEL", u: "../images/tv-channels/wizards-of-waverly-place.jpg", h: "WIZARDS OF WAVERLY PLACE" },
     { n: "CBS", u: "../images/tv-channels/big-brother.jpg", h: "BIG BROTHER" },
@@ -44,12 +39,6 @@ const tvChannelsData = [
     { n: "LIFETIME", u: "../images/tv-channels/dance-moms.jpg", h: "DANCE MOMS" },
 
     // ── BACKUPS (items 51–60) ────────────────
-    { n: "HBO", u: "../images/tv-channels/succession.jpg", h: "SUCCESSION" },
-    { n: "NICKELODEON", u: "../images/tv-channels/avatar-the-last-airbender.jpg", h: "AVATAR THE LAST AIRBENDER" },
     { n: "NBC", u: "../images/tv-channels/this-is-us.jpg", h: "THIS IS US" },
-    { n: "FOX", u: "../images/tv-channels/the-masked-singer.jpg", h: "THE MASKED SINGER" },
-    { n: "FOOD NETWORK", u: "../images/tv-channels/chopped.jpg", h: "CHOPPED" },
-    { n: "HGTV", u: "../images/tv-channels/property-brothers.jpg", h: "PROPERTY BROTHERS" },
-    { n: "DISCOVERY", u: "../images/tv-channels/mythbusters.jpg", h: "MYTHBUSTERS" },
 ];
 if (typeof window !== 'undefined') window.tvChannelsData = tvChannelsData;
